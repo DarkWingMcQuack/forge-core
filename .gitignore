@@ -45,3 +45,5 @@ CTestTestfile.cmake
 
 #ignore build folder
 build/
+#ignore external projects
+external/
