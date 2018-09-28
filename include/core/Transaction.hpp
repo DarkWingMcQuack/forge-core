@@ -23,6 +23,14 @@ public:
                 util::Opt<Metadata>&& metadata,
                 std::string&& txid);
 
+    Transaction(Transaction&&) = default;
+    Transaction(const Transaction&) = delete;
+
+    auto operator=(Transaction&&)
+        -> Transaction& = default;
+    auto operator=(const Transaction&)
+        -> Transaction& = delete;
+
 
     auto getFromAddresses() const
         -> const std::vector<std::string>&;
