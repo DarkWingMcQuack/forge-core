@@ -633,10 +633,13 @@ private:
 
 template<class E, class Func, class... Params>
 auto Try(Func&& f, Params&&... x)
-    -> Result<decltype(f(std::forward<Params>(x)...)), E>
+    -> Result<decltype(std::invoke(std::forward<Func>(f),
+                                   std::forward<Params>(x)...)),
+              E>
 {
     try {
-        return f(std::forward<Params>(x)...);
+        return std::invoke(std::forward<Func>(f),
+                           std::forward<Params>(x)...);
     } catch(E const& e) {
         return e;
     }
@@ -713,7 +716,7 @@ auto traverse(const std::vector<T>& vec, F&& func)
     std::vector<typename FuncRet::result_type> ret_vec;
 
     for(const auto& elem : vec) {
-        auto res = func(elem);
+        auto res = std::invoke(std::forward<F>(func), elem);
 
         if(!res) {
             return res.getError();
@@ -741,7 +744,7 @@ auto traverse(const std::vector<T>& vec, F&& func)
                   "return of the traversing function must be a result");
 
     for(auto&& elem : vec) {
-        auto res = func(elem);
+        auto res = std::invoke(std::forward<F>(func), elem);
 
         if(!res) {
             return res.getError();
