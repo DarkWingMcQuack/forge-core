@@ -15,6 +15,14 @@ class Block
           std::size_t time,
           std::string&& hash);
 
+    Block(Block&&) = default;
+    Block(const Block&) = delete;
+
+    auto operator=(Block&&)
+        -> Block& = default;
+    auto operator=(const Block&)
+        -> Block& = default;
+
     auto getTxids() const
         -> const std::vector<std::string>&;
     auto getTxids()
