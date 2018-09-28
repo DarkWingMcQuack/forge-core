@@ -79,6 +79,13 @@ auto Transaction::getTxid()
     return txid_;
 }
 
+
+auto Transaction::getBlock() const
+        -> std::size_t
+{
+    return block_;
+}
+
 auto Transaction::getNumberOfSenders() const
     -> std::size_t
 {

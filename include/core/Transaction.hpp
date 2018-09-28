@@ -44,6 +44,9 @@ public:
     auto getMetadata()
         -> util::Opt<Metadata>&;
 
+    auto getBlock() const
+        -> std::size_t;
+
     auto getTxid() const
         -> const std::string&;
     auto getTxid()
@@ -64,5 +67,6 @@ private:
     util::Opt<std::size_t> op_return_output_value_;
     util::Opt<Metadata> metadata_;
     std::string txid_;
+    std::size_t block_;
 };
 } // namespace buddy::core
