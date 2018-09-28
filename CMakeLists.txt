@@ -31,7 +31,9 @@ find_package(Threads)
 
 #sources
 add_executable(cppBUDDY
-  main.cpp)
+  main.cpp
+  src/core/Operation.cpp
+  src/core/Entry.cpp  )
 
 #use c++17 as standard
 set_target_properties(cppBUDDY PROPERTIES
