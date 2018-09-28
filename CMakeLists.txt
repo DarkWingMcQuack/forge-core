@@ -33,7 +33,12 @@ find_package(Threads)
 add_executable(cppBUDDY
   main.cpp
   src/core/Operation.cpp
-  src/core/Entry.cpp  )
+  src/core/Entry.cpp
+  src/core/EntryCreationOp.cpp
+  src/core/EntryRenewalOp.cpp
+  src/core/EntryDeletionOp.cpp
+  src/core/EntryUpdateOp.cpp
+  src/core/OwnershipTransferOp.cpp)
 
 #use c++17 as standard
 set_target_properties(cppBUDDY PROPERTIES

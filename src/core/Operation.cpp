@@ -18,3 +18,5 @@ auto buddy::core::startsWithBUDDYIdentifier(const std::vector<std::byte>& data)
                       std::begin(data),
                       std::end(data) + 3);
 }
+
+
