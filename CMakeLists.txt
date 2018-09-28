@@ -38,7 +38,8 @@ add_executable(cppBUDDY
   src/core/EntryRenewalOp.cpp
   src/core/EntryDeletionOp.cpp
   src/core/EntryUpdateOp.cpp
-  src/core/OwnershipTransferOp.cpp)
+  src/core/OwnershipTransferOp.cpp
+  src/core/Transaction.cpp)
 
 #use c++17 as standard
 set_target_properties(cppBUDDY PROPERTIES
