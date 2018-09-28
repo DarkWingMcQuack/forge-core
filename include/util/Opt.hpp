@@ -215,4 +215,18 @@ constexpr auto flatten(Opt<Opt<T>>&& opt)
     return std::nullopt;
 }
 
+template<class T, class U>
+constexpr auto combine(Opt<T>&& first, Opt<U>&& second)
+    -> Opt<std::pair<T, U>>
+{
+    if(first) {
+        if(second) {
+            return std::pair{std::move(first.getValue()),
+                             std::move(second.getValue())};
+        }
+    }
+
+    return std::nullopt;
+}
+
 } // namespace buddy::util
