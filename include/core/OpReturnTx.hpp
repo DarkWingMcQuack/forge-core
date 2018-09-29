@@ -12,24 +12,24 @@ constexpr static std::array<std::byte, 3> BUDDY_IDENTIFIER_MASK{static_cast<std:
                                                                 static_cast<std::byte>(0x75)};
 
 
-class Transaction
+class OpReturnTx
 {
 public:
     using Metadata = std::vector<std::byte>;
 
-    Transaction(std::vector<std::string>&& send_addresses,
-                std::vector<std::string>&& to_addresses,
-                util::Opt<std::size_t>&& op_return_output_value,
-                util::Opt<Metadata>&& metadata,
-                std::string&& txid);
+    OpReturnTx(std::vector<std::string>&& send_addresses,
+               std::vector<std::string>&& to_addresses,
+               std::size_t op_return_output_value,
+               Metadata&& metadata,
+               std::string&& txid);
 
-    Transaction(Transaction&&) = default;
-    Transaction(const Transaction&) = delete;
+    OpReturnTx(OpReturnTx&&) = default;
+    OpReturnTx(const OpReturnTx&) = delete;
 
-    auto operator=(Transaction&&)
-        -> Transaction& = default;
-    auto operator=(const Transaction&)
-        -> Transaction& = delete;
+    auto operator=(OpReturnTx &&)
+        -> OpReturnTx& = default;
+    auto operator=(const OpReturnTx&)
+        -> OpReturnTx& = delete;
 
 
     auto getFromAddresses() const
@@ -43,14 +43,14 @@ public:
         -> std::vector<std::string>&;
 
     auto getOpReturnOutputValue() const
-        -> const util::Opt<std::size_t>&;
+        -> const std::size_t&;
     auto getOpReturnOutputValue()
-        -> util::Opt<std::size_t>&;
+        -> std::size_t&;
 
     auto getMetadata() const
-        -> const util::Opt<Metadata>&;
+        -> const Metadata&;
     auto getMetadata()
-        -> util::Opt<Metadata>&;
+        -> Metadata&;
 
     auto getBlock() const
         -> std::size_t;
@@ -72,9 +72,10 @@ public:
 private:
     std::vector<std::string> send_addresses_;
     std::vector<std::string> to_addresses_;
-    util::Opt<std::size_t> op_return_output_value_;
-    util::Opt<Metadata> metadata_;
+    std::size_t op_return_output_value_;
+    Metadata metadata_;
     std::string txid_;
     std::size_t block_;
 };
+
 } // namespace buddy::core
