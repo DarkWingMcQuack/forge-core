@@ -40,16 +40,28 @@ find_package(Threads)
 #sources
 add_executable(cppBUDDY
   main.cpp
+  include/core/Operation.hpp
   src/core/Operation.cpp
   src/core/Entry.cpp
+  include/core/Entry.hpp
   src/core/EntryCreationOp.cpp
+  include/core/EntryCreationOp.hpp
   src/core/EntryRenewalOp.cpp
+  include/core/EntryRenewalOp.hpp
   src/core/EntryDeletionOp.cpp
+  include/core/EntryDeletionOp.hpp
   src/core/EntryUpdateOp.cpp
+  include/core/EntryUpdateOp.hpp
   src/core/OwnershipTransferOp.cpp
+  include/core/OwnershipTransferOp.hpp
   src/core/OpReturnTx.cpp
+  include/core/OpReturnTx.hpp
   src/core/Block.cpp
-  src/daemon/OdinDaemon.cpp)
+  include/core/Block.hpp
+  include/daemon/Coin.hpp
+  include/daemon/DaemonBase.hpp
+  src/daemon/OdinDaemon.cpp
+  include/daemon/OdinDaemon.hpp)
 
 #use c++17 as standard
 set_target_properties(cppBUDDY PROPERTIES
