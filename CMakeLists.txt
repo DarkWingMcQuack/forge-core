@@ -12,6 +12,7 @@ include(cmake/jsoncpp.cmake)
 include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
 include(cmake/boost.cmake)
+include(cmake/cxxopts.cmake)
 
 
 
@@ -59,6 +60,7 @@ set_target_properties(cppBUDDY PROPERTIES
 add_dependencies(cppBUDDY fmt-project)
 add_dependencies(cppBUDDY jsonrpc-project)
 add_dependencies(cppBUDDY boost-project)
+add_dependencies(cppBUDDY cxxopts-project)
 
 
 # make headers available
@@ -67,12 +69,11 @@ target_include_directories(cppBUDDY PUBLIC
   fmt
   jsonrpc::client
   jsoncpp
-  boost::program_options)
+  cxxopts)
 
 #link against boost and thread libs
 target_link_libraries(cppBUDDY LINK_PUBLIC
   fmt
   jsonrpc::client
   jsoncpp
-  boost::program_options
   ${CMAKE_THREAD_LIBS_INIT})

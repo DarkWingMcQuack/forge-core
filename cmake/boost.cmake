@@ -34,7 +34,6 @@ ExternalProject_Add(boost-project
   -d0
   --ignore-site-config
   --with-test
-  --with-program_options
   INSTALL_COMMAND ""
   )
 
@@ -44,7 +43,3 @@ set(BOOST_LIB_DIR ${CMAKE_BINARY_DIR}/deps/boost/stage/lib)
 add_library(boost::unit_test_framework STATIC IMPORTED)
 set_property(TARGET boost::unit_test_framework PROPERTY IMPORTED_LOCATION ${BOOST_LIB_DIR}/libboost_unit_test_framework${BOOST_LIBRARY_SUFFIX})
 add_dependencies(boost::unit_test_framework boost-project)
-
-add_library(boost::program_options STATIC IMPORTED)
-set_property(TARGET boost::program_options PROPERTY IMPORTED_LOCATION ${BOOST_LIB_DIR}/libboost_program_options${BOOST_LIBRARY_SUFFIX})
-add_dependencies(boost::program_options boost-project)
