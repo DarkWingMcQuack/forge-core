@@ -23,7 +23,7 @@ public:
         -> util::Result<core::Block, DaemonError> = 0;
 
     virtual auto getOpReturnTxFromTxid(const std::string& txid) const
-        -> util::Result<core::OpReturnTx, DaemonError> = 0;
+        -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> = 0;
 
     auto getCoin() const
         -> Coin;

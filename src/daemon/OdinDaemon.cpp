@@ -132,6 +132,6 @@ auto OdinDaemon::getNewestBlock() const
 }
 
 auto OdinDaemon::getOpReturnTxFromTxid(const std::string& txid) const
-    -> util::Result<core::OpReturnTx, DaemonError>
+    -> Result<Opt<OpReturnTx>, DaemonError>
 {
 }

@@ -24,7 +24,7 @@ public:
         -> util::Result<core::Block, DaemonError> override;
 
     auto getOpReturnTxFromTxid(const std::string& txid) const
-        -> util::Result<core::OpReturnTx, DaemonError> override;
+        -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> override;
 
 private:
     auto getBlockCount() const
