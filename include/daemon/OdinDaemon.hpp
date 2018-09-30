@@ -21,15 +21,29 @@ public:
                Coin coin);
 
     auto getNewestBlock() const
-        -> util::Result<core::Block, std::string> override;
+        -> util::Result<core::Block, DaemonError> override;
 
     auto getOpReturnTxFromTxid(const std::string& txid) const
-        -> util::Opt<core::OpReturnTx> override;
+        -> util::Result<core::OpReturnTx, DaemonError> override;
+
+private:
+    auto getBlockCount() const
+        -> util::Result<std::size_t, DaemonError>;
+
+    auto getBlockHash(std::size_t index) const
+        -> util::Result<std::string, DaemonError>;
+
+    auto getBlock(std::string&& hash) const
+        -> util::Result<core::Block, DaemonError>;
+
+    auto sendcommand(const std::string& command,
+                     const Json::Value& params) const
+        -> util::Result<Json::Value, DaemonError>;
 
 
 private:
-    jsonrpc::HttpClient _http_client;
-    jsonrpc::Client _client;
+    jsonrpc::HttpClient http_client_;
+    mutable jsonrpc::Client client_;
 };
 
 } // namespace buddy::daemon

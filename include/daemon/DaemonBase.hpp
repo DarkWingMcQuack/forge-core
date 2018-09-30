@@ -7,6 +7,12 @@
 
 namespace buddy::daemon {
 
+class DaemonError : public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
 class DaemonBase
 {
 public:
@@ -14,10 +20,10 @@ public:
         : coin_(coin) {}
 
     virtual auto getNewestBlock() const
-        -> util::Result<core::Block, std::string> = 0;
+        -> util::Result<core::Block, DaemonError> = 0;
 
     virtual auto getOpReturnTxFromTxid(const std::string& txid) const
-        -> util::Opt<core::OpReturnTx> = 0;
+        -> util::Result<core::OpReturnTx, DaemonError> = 0;
 
     auto getCoin() const
         -> Coin;
@@ -25,5 +31,7 @@ public:
 protected:
     Coin coin_;
 };
+
+
 
 } // namespace buddy::daemon

@@ -164,104 +164,92 @@ public:
     template<class Func>
     constexpr auto flatMap(Func&& f) &
     {
-        using result = std::invoke_result_t<Func, T&>;
-        static_assert(is_result<result>::value,
+        using ReturnType = std::invoke_result_t<Func, T&>;
+        static_assert(is_result<ReturnType>::value,
                       "F must return a result");
 
-        static_assert(std::is_same_v<typename result::error_type, Err>,
+        static_assert(std::is_same_v<typename ReturnType::error_type, Err>,
                       "error type of flatmat return musst be same as the original error type");
 
         return hasValue()
             ? std::invoke(std::forward<Func>(f), getValue())
-            : Result{getError()};
+            : ReturnType{getError()};
     }
 
     template<class Func>
     constexpr auto flatMap(Func&& f) const&
     {
-        using result = std::invoke_result_t<Func, const T&>;
-        static_assert(is_result<result>::value,
+        using ReturnType = std::invoke_result_t<Func, const T&>;
+        static_assert(is_result<ReturnType>::value,
                       "F must return a result");
 
-        static_assert(std::is_same_v<typename result::error_type, Err>,
+        static_assert(std::is_same_v<typename ReturnType::error_type, Err>,
                       "error type of flatmat return musst be same as the original error type");
 
         return hasValue()
             ? std::invoke(std::forward<Func>(f), getValue())
-            : Result{getError()};
+            : ReturnType{getError()};
     }
 
     template<class Func>
     constexpr auto flatMap(Func&& f) &&
     {
-        using result = std::invoke_result_t<Func, T&&>;
-        static_assert(is_result<result>::value,
+        using ReturnType = std::invoke_result_t<Func, T&&>;
+        static_assert(is_result<ReturnType>::value,
                       "F must return a result");
 
-        static_assert(std::is_same_v<typename result::error_type, Err>,
+        static_assert(std::is_same_v<typename ReturnType::error_type, Err>,
                       "error type of flatmat return musst be same as the original error type");
 
         return hasValue()
             ? std::invoke(std::forward<Func>(f), getValue())
-            : Result{getError()};
+            : ReturnType{getError()};
     }
 
     template<class Func>
     constexpr auto mapError(Func&& f) const&
     {
-        using result = std::invoke_result_t<Func, const Err&>;
-        static_assert(is_result<result>::value,
-                      "F must return a result");
+        using FuncRet = std::invoke_result_t<Func, Err>;
+        using ReturnType = Result<T, FuncRet>;
 
-        static_assert(std::is_same_v<typename result::value_type, Err>,
-                      "value type of flatmat return musst be same as the original value type");
-
-        return hasValue()
-            ? std::invoke(std::forward<Func>(f), getError())
-            : Result{getValue()};
+        return !hasValue()
+            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            : ReturnType{getValue()};
     }
 
     template<class Func>
     constexpr auto mapError(Func&& f) &
     {
-        using result = std::invoke_result_t<Func, Err&>;
-        static_assert(is_result<result>::value,
-                      "F must return a result");
+        using FuncRet = std::invoke_result_t<Func, Err>;
+        using ReturnType = Result<T, FuncRet>;
 
-        static_assert(std::is_same_v<typename result::value_type, Err>,
-                      "value type of flatmat return musst be same as the original value type");
-
-        return hasValue()
-            ? std::invoke(std::forward<Func>(f), getError())
-            : Result{getValue()};
+        return !hasValue()
+            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            : ReturnType{getValue()};
     }
 
     template<class Func>
     constexpr auto mapError(Func&& f) &&
     {
-        using result = std::invoke_result_t<Func, Err&&>;
-        static_assert(is_result<result>::value,
-                      "F must return a result");
+        using FuncRet = std::invoke_result_t<Func, Err>;
+        using ReturnType = Result<T, FuncRet>;
 
-        static_assert(std::is_same_v<typename result::value_type, Err>,
-                      "value type of flatmat return musst be same as the original value type");
-
-        return hasValue()
-            ? std::invoke(std::forward<Func>(f), getError())
-            : Result{getValue()};
+        return !hasValue()
+            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            : ReturnType{getValue()};
     }
 
     template<class Func>
     constexpr auto flatMapError(Func&& f) &
     {
-        using result = std::invoke_result_t<Func, Err&>;
-        static_assert(is_result<result>::value,
+        using Result = std::invoke_result_t<Func, Err&>;
+        static_assert(is_result<Result>::value,
                       "F must return a result");
 
-        static_assert(std::is_same_v<typename result::value_type, Err>,
+        static_assert(std::is_same_v<typename Result::value_type, Err>,
                       "value type of flatmat return musst be same as the original value type");
 
-        return hasValue()
+        return !hasValue()
             ? std::invoke(std::forward<Func>(f), getError())
             : Result{getValue()};
     }
@@ -269,14 +257,14 @@ public:
     template<class Func>
     constexpr auto flatMapError(Func&& f) const&
     {
-        using result = std::invoke_result_t<Func, const Err&>;
-        static_assert(is_result<result>::value,
+        using Result = std::invoke_result_t<Func, const Err&>;
+        static_assert(is_result<Result>::value,
                       "F must return a result");
 
-        static_assert(std::is_same_v<typename result::value_type, Err>,
+        static_assert(std::is_same_v<typename Result::value_type, Err>,
                       "value type of flatmat return musst be same as the original value type");
 
-        return hasValue()
+        return !hasValue()
             ? std::invoke(std::forward<Func>(f), getError())
             : Result{getValue()};
     }
@@ -284,14 +272,14 @@ public:
     template<class Func>
     constexpr auto flatMapError(Func&& f) &&
     {
-        using result = std::invoke_result_t<Func, Err&&>;
-        static_assert(is_result<result>::value,
+        using Result = std::invoke_result_t<Func, Err&&>;
+        static_assert(is_result<Result>::value,
                       "F must return a result");
 
-        static_assert(std::is_same_v<typename result::value_type, Err>,
+        static_assert(std::is_same_v<typename Result::value_type, Err>,
                       "value type of flatmat return musst be same as the original value type");
 
-        return hasValue()
+        return !hasValue()
             ? std::invoke(std::forward<Func>(f), getError())
             : Result{getValue()};
     }
@@ -334,7 +322,7 @@ public:
         static_assert(std::is_void_v<FuncRet>,
                       "return of changeValue function must be void");
 
-        if(*this) {
+        if(!*this) {
             func(getError());
         }
 
@@ -349,7 +337,7 @@ public:
         static_assert(std::is_void_v<FuncRet>,
                       "return of changeValue function must be void");
 
-        if(*this) {
+        if(!*this) {
             func(getError());
         }
 
