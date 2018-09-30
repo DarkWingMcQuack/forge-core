@@ -1,5 +1,5 @@
 #include <array>
-#include <core/Transaction.hpp>
+#include <core/OpReturnTx.hpp>
 #include <cstddef>
 #include <util/Opt.hpp>
 #include <vector>
