@@ -69,7 +69,7 @@ target_include_directories(cppBUDDY PUBLIC
   fmt
   jsonrpc::client
   jsoncpp
-  cxxopts)
+  ${CXXOPTS_INCLUDE_DIR})
 
 #link against boost and thread libs
 target_link_libraries(cppBUDDY LINK_PUBLIC

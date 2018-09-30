@@ -18,12 +18,8 @@ ExternalProject_Add(cxxopts-project
   INSTALL_COMMAND cmake --build <BINARY_DIR> --config Release --target install
   )
 
-
 ExternalProject_Get_Property(cxxopts-project INSTALL_DIR)
-add_library(cxxopts STATIC IMPORTED)
-set(CXXOPTS_LIBRARY ${INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}cxxopts${CMAKE_STATIC_LIBRARY_SUFFIX})
 set(CXXOPTS_INCLUDE_DIR ${INSTALL_DIR}/include)
-set_property(TARGET cxxopts PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CXXOPTS_INCLUDE_DIR})
 
 unset(INSTALL_DIR)
 unset(CMAKE_ARGS)
