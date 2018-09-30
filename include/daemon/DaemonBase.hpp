@@ -1,9 +1,11 @@
 #pragma once
 
 #include <core/OpReturnTx.hpp>
+#include <core/Block.hpp>
 #include <daemon/Coin.hpp>
 #include <util/Opt.hpp>
 #include <util/Result.hpp>
+#include <memory>
 
 namespace buddy::daemon {
 
@@ -31,6 +33,13 @@ public:
 protected:
     Coin coin_;
 };
+
+auto make_daemon(const std::string& host,
+                 const std::string& user,
+                 const std::string& password,
+                 std::size_t port,
+                 Coin coin)
+    -> std::unique_ptr<DaemonBase>;
 
 
 

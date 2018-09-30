@@ -59,6 +59,7 @@ add_executable(cppBUDDY
   src/core/Block.cpp
   include/core/Block.hpp
   include/daemon/Coin.hpp
+  src/daemon/DaemonBase.cpp
   include/daemon/DaemonBase.hpp
   src/daemon/OdinDaemon.cpp
   include/daemon/OdinDaemon.hpp)

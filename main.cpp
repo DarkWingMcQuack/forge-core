@@ -1,10 +1,60 @@
-#include <fmt/core.h>
-#include <util/Result.hpp>
-#include <util/Opt.hpp>
 #include <core/Operation.hpp>
 #include <cxxopts.hpp>
+#include <daemon/OdinDaemon.hpp>
+#include <fmt/core.h>
+#include <util/Opt.hpp>
+#include <util/Result.hpp>
 
-auto main() -> int
+using buddy::daemon::OdinDaemon;
+using buddy::daemon::Coin;
+
+auto main(int argc, char* argv[]) -> int
 {
-    fmt::print("Hello cppBUDDY\n");
+    cxxopts::Options options("cppBUDDY", "Implementation of the BUDDY protocol");
+
+    // clang-format off
+    options.add_options()
+        ("help", "Print help and exit.")
+        ("u,user", "daemon RPC user",cxxopts::value<std::string>())
+        ("x,password", "daemon RPC password",cxxopts::value<std::string>())
+        ("h,host", "hostname of the daemon",cxxopts::value<std::string>())
+        ("p,port", "port of the RPC daemon",cxxopts::value<std::size_t>());
+    // clang-format on
+
+    options
+        .positional_help("[optional args]")
+        .show_positional_help();
+
+
+    try {
+
+        auto result = options.parse(argc, argv);
+
+        if(result.count("help")) {
+            fmt::print("{}\n", options.help());
+            exit(0);
+        }
+
+        auto user = result["user"].as<std::string>();
+        auto password = result["password"].as<std::string>();
+        auto host = result["host"].as<std::string>();
+        auto port = result["port"].as<std::size_t>();
+
+        OdinDaemon daemon{std::move(host),
+                          std::move(user),
+                          std::move(password),
+                          port,
+                          Coin::Odin};
+        auto block_res = daemon.getNewestBlock();
+
+        if(block_res) {
+            fmt::print("block hash: {}\n",
+                       block_res.getValue().getHash());
+        } else{
+            throw block_res.getError();
+        }
+
+    } catch(const std::exception& e) {
+        fmt::print("{}\n", e.what());
+    }
 }
