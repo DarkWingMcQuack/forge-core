@@ -26,31 +26,31 @@ class Result
 {
 public:
     constexpr Result(T value)
-        : _var(std::move(value)) {}
+        : var_(std::move(value)) {}
     constexpr Result(Err error)
-        : _var(std::move(error)) {}
+        : var_(std::move(error)) {}
 
     using result_type = T;
     using error_type = Err;
 
     constexpr explicit operator bool() const
     {
-        return _var.type() == typeid(T);
+        return std::holds_alternative<T>(var_);
     }
 
     constexpr auto getValue() const& -> const T&
     {
-        return std::get<T>(_var);
+        return std::get<T>(var_);
     }
 
     constexpr auto getValue() & -> T&
     {
-        return std::get<T>(_var);
+        return std::get<T>(var_);
     }
 
     constexpr auto getValue() && -> T&&
     {
-        return std::get<T>(std::move(_var));
+        return std::get<T>(std::move(var_));
     }
 
     constexpr auto valueOr(T value) const
@@ -115,17 +115,17 @@ public:
 
     constexpr auto getError() const& -> const Err&
     {
-        return std::get<Err>(_var);
+        return std::get<Err>(var_);
     }
 
     constexpr auto getError() & -> Err&
     {
-        return std::get<Err>(_var);
+        return std::get<Err>(var_);
     }
 
     constexpr auto getError() && -> Err&&
     {
-        return std::get<Err>(std::move(_var));
+        return std::get<Err>(std::move(var_));
     }
 
     template<class Func>
@@ -394,7 +394,7 @@ public:
     }
 
 private:
-    std::variant<T, Err> _var;
+    std::variant<T, Err> var_;
 };
 
 
@@ -404,31 +404,31 @@ class Result<void, Err>
 {
 public:
     constexpr Result()
-        : _var() {}
+        : var_() {}
     constexpr Result(Err error)
-        : _var(std::move(error)) {}
+        : var_(std::move(error)) {}
 
     using result_type = void;
     using error_type = Err;
 
     constexpr explicit operator bool() const
     {
-        return !static_cast<bool>(_var);
+        return !static_cast<bool>(var_);
     }
 
     constexpr auto getError() const& -> const Err&
     {
-        return std::get<Err>(_var);
+        return std::get<Err>(var_);
     }
 
     constexpr auto getError() & -> Err&
     {
-        return std::get<Err>(_var);
+        return std::get<Err>(var_);
     }
 
     constexpr auto getError() && -> Err&&
     {
-        return std::get<Err>(std::move(_var));
+        return std::get<Err>(std::move(var_));
     }
 
     constexpr auto hasValue() const
@@ -628,7 +628,7 @@ public:
     }
 
 private:
-    std::optional<Err> _var;
+    std::optional<Err> var_;
 };
 
 template<class E, class Func, class... Params>
