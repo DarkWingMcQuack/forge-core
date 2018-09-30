@@ -7,6 +7,7 @@ namespace buddy::core {
 
 class Block
 {
+public: 
     Block(std::vector<std::string>&& txids,
           std::size_t height,
           std::size_t time,
