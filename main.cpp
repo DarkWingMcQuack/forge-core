@@ -6,9 +6,12 @@
 #include <util/Result.hpp>
 
 using buddy::daemon::OdinDaemon;
+using buddy::daemon::DaemonBase;
+using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
 
-auto main(int argc, char* argv[]) -> int
+auto daemon_from_args(int argc, char* argv[])
+    -> std::unique_ptr<DaemonBase>
 {
     cxxopts::Options options("cppBUDDY", "Implementation of the BUDDY protocol");
 
@@ -20,11 +23,6 @@ auto main(int argc, char* argv[]) -> int
         ("h,host", "hostname of the daemon",cxxopts::value<std::string>())
         ("p,port", "port of the RPC daemon",cxxopts::value<std::size_t>());
     // clang-format on
-
-    options
-        .positional_help("[optional args]")
-        .show_positional_help();
-
 
     try {
 
@@ -40,21 +38,30 @@ auto main(int argc, char* argv[]) -> int
         auto host = result["host"].as<std::string>();
         auto port = result["port"].as<std::size_t>();
 
-        OdinDaemon daemon{std::move(host),
-                          std::move(user),
-                          std::move(password),
-                          port,
-                          Coin::Odin};
-        auto block_res = daemon.getNewestBlock();
-
-        if(block_res) {
-            fmt::print("block hash: {}\n",
-                       block_res.getValue().getHash());
-        } else{
-            throw block_res.getError();
-        }
+        auto daemon = make_daemon(std::move(host),
+                                  std::move(user),
+                                  std::move(password),
+                                  port,
+                                  Coin::Odin);
+        return daemon;
 
     } catch(const std::exception& e) {
         fmt::print("{}\n", e.what());
+        std::exit(-1);
+    }
+}
+
+auto main(int argc, char* argv[]) -> int
+{
+    auto daemon = daemon_from_args(argc, argv);
+
+    auto block_res = daemon->getNewestBlock();
+
+    if(block_res) {
+        fmt::print("block hash: {}\n",
+                   block_res.getValue().getHash());
+    } else {
+        fmt::print("{}\n",
+                   block_res.getError().what());
     }
 }
