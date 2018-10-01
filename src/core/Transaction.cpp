@@ -142,6 +142,18 @@ auto Transaction::hasOpReturnOutput() const
 auto Transaction::hasExactlyOneOpReturnOutput() const
     -> bool
 {
+    bool found_op_ret{false};
+    for(auto&& out : outputs_) {
+        if(out.isOpReturnOutput()) {
+            if(found_op_ret) {
+                return false;
+            }
+
+            found_op_ret = true;
+        }
+    }
+
+    return found_op_ret;
 }
 
 auto Transaction::getOpReturnOutputs() const
