@@ -15,6 +15,8 @@ using buddy::util::Result;
 using buddy::util::Try;
 using buddy::core::Block;
 using buddy::core::OpReturnTx;
+using buddy::core::TxIn;
+using buddy::core::TxOut;
 
 using jsonrpc::Client;
 using jsonrpc::JSONRPC_CLIENT_V1;
@@ -128,6 +130,36 @@ auto OdinDaemon::getNewestBlock() const
                 .flatMap([this](auto&& hash) {
                     return getBlock(std::move(hash));
                 });
+        });
+}
+
+auto OdinDaemon::getAddressesOfTxIn(TxIn&& vin) const
+    -> util::Result<TxOut, DaemonError>
+{
+    static const auto command = "gettxout"s;
+
+    Json::Value params;
+    params.append(std::move(vin.getTxid()));
+    params.append(vin.getVoutIndex());
+
+    return sendcommand(command, params)
+        .map([](auto&& json) {
+            std::vector<std::string> address_vec;
+
+            const auto& json_vec = json["scriptPubKey"]["addresses"];
+            auto hex = std::move(json["scriptPubKey"]["hex"].asString());
+            auto value = json["value"].asUInt();
+
+            std::transform(std::cbegin(json_vec),
+                           std::cend(json_vec),
+                           std::back_inserter(address_vec),
+                           [](auto&& value) {
+                               return std::move(value.asString());
+                           });
+
+            return TxOut{value,
+                         std::move(hex),
+                         std::move(address_vec)};
         });
 }
 

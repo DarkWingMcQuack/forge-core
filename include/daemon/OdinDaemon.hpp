@@ -2,6 +2,7 @@
 
 #include <core/Block.hpp>
 #include <core/OpReturnTx.hpp>
+#include <core/Transaction.hpp>
 #include <daemon/Coin.hpp>
 #include <daemon/DaemonBase.hpp>
 #include <jsonrpccpp/client.h>
@@ -35,6 +36,9 @@ private:
 
     auto getBlock(std::string&& hash) const
         -> util::Result<core::Block, DaemonError>;
+
+    auto getAddressesOfTxIn(core::TxIn&& vin) const
+        -> util::Result<core::TxOut, DaemonError>;
 
     auto sendcommand(const std::string& command,
                      const Json::Value& params) const
