@@ -81,6 +81,14 @@ public:
                 std::vector<TxOut>&& outputs,
                 std::string&& txid);
 
+    Transaction(Transaction&&) = default;
+    Transaction(const Transaction&) = delete;
+
+    auto operator=(Transaction &&)
+        -> Transaction& = default;
+    auto operator=(const Transaction&)
+        -> Transaction& = delete;
+
     auto getInputs() const
         -> const std::vector<TxIn>&;
     auto getInputs()

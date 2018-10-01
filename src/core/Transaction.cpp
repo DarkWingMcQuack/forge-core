@@ -123,6 +123,7 @@ auto Transaction::getTxid() const
 {
     return txid_;
 }
+
 auto Transaction::getTxid()
     -> std::string&
 {
