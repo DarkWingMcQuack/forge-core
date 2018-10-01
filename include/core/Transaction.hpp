@@ -42,7 +42,7 @@ public:
           std::vector<std::string>&& addresses);
 
     TxOut(TxOut&&) = default;
-    TxOut(const TxOut&) = delete;
+    TxOut(const TxOut&) = default;
 
     auto operator=(TxOut &&)
         -> TxOut& = default;

@@ -62,7 +62,9 @@ add_executable(cppBUDDY
   src/daemon/DaemonBase.cpp
   include/daemon/DaemonBase.hpp
   src/daemon/OdinDaemon.cpp
-  include/daemon/OdinDaemon.hpp)
+  include/daemon/OdinDaemon.hpp
+  include/core/Transaction.hpp
+  src/core/Transaction.cpp)
 
 #use c++17 as standard
 set_target_properties(cppBUDDY PROPERTIES
