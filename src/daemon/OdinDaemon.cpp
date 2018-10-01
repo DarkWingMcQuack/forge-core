@@ -133,7 +133,7 @@ auto OdinDaemon::getNewestBlock() const
         });
 }
 
-auto OdinDaemon::getAddressesOfTxIn(TxIn&& vin) const
+auto OdinDaemon::resolveTxIn(TxIn&& vin) const
     -> util::Result<TxOut, DaemonError>
 {
     static const auto command = "gettxout"s;

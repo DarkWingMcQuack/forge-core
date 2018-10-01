@@ -37,7 +37,7 @@ private:
     auto getBlock(std::string&& hash) const
         -> util::Result<core::Block, DaemonError>;
 
-    auto getAddressesOfTxIn(core::TxIn&& vin) const
+    auto resolveTxIn(core::TxIn&& vin) const
         -> util::Result<core::TxOut, DaemonError>;
 
     auto sendcommand(const std::string& command,
