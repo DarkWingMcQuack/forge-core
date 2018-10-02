@@ -24,7 +24,7 @@ public:
     virtual auto getNewestBlock() const
         -> util::Result<core::Block, DaemonError> = 0;
 
-    virtual auto getOpReturnTxFromTxid(const std::string& txid) const
+    virtual auto getOpReturnTxFromTxid(std::string&& txid) const
         -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> = 0;
 
     auto getCoin() const

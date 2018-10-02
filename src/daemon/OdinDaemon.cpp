@@ -226,5 +226,7 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
 }
 
 
-auto getOpReturnTxFromTxid(const std::string& txid) const
-    -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> override;
+auto OdinDaemon::getOpReturnTxFromTxid(std::string&& txid) const
+    -> Result<Opt<OpReturnTx>, DaemonError>
+{
+}
