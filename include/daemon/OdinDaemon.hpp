@@ -40,6 +40,9 @@ private:
     auto resolveTxIn(core::TxIn&& vin) const
         -> util::Result<core::TxOut, DaemonError>;
 
+    auto getTransaction(std::string&& txid) const
+        -> util::Result<core::Transaction, DaemonError>;
+
     auto sendcommand(const std::string& command,
                      const Json::Value& params) const
         -> util::Result<Json::Value, DaemonError>;

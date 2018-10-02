@@ -17,6 +17,7 @@ using buddy::core::Block;
 using buddy::core::OpReturnTx;
 using buddy::core::TxIn;
 using buddy::core::TxOut;
+using buddy::core::Transaction;
 
 using jsonrpc::Client;
 using jsonrpc::JSONRPC_CLIENT_V1;
@@ -163,7 +164,67 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
         });
 }
 
-auto OdinDaemon::getOpReturnTxFromTxid(const std::string& txid) const
-    -> Result<Opt<OpReturnTx>, DaemonError>
+auto OdinDaemon::getTransaction(std::string&& txid) const
+    -> util::Result<core::Transaction, DaemonError>
 {
+    static const auto command = "getrawtransaction";
+
+    Json::Value params;
+    params.append(std::move(txid));
+    params.append(1);
+
+    return sendcommand(command, params)
+        .map([](auto&& json) {
+            //move txid out of json
+            auto txid = std::move(json["txid"].asString());
+            auto vin = std::move(json["vin"]);
+            auto vout = std::move(json["vout"]);
+
+            std::vector<TxIn> inputs;
+            std::vector<TxOut> outputs;
+
+            //get inputs
+            std::transform(std::cbegin(vin),
+                           std::cend(vin),
+                           std::back_inserter(inputs),
+                           [](auto&& input) {
+                               auto txid_in = std::move(input["txid"]).asString();
+                               auto vout_index = input["vout"].asUInt();
+
+                               return TxIn{std::move(txid_in),
+                                           vout_index};
+                           });
+
+            //get outputs
+            std::transform(std::cbegin(vout),
+                           std::cend(vout),
+                           std::back_inserter(outputs),
+                           [](auto&& output) {
+                               auto txid_out = std::move(output["txid"].asString());
+                               auto value = output["value"].asUInt();
+                               auto addresses_json = std::move(output["addresses"]);
+
+                               std::vector<std::string> addresses;
+
+                               //get all the addresses of an output
+                               std::transform(std::cbegin(addresses_json),
+                                              std::cend(addresses_json),
+                                              std::back_inserter(addresses),
+                                              [](auto&& addr) {
+                                                  return addr.asString();
+                                              });
+
+                               return TxOut{value,
+                                            std::move(txid_out),
+                                            std::move(addresses)};
+                           });
+
+            return Transaction{std::move(inputs),
+                               std::move(outputs),
+                               std::move(txid)};
+        });
 }
+
+
+auto getOpReturnTxFromTxid(const std::string& txid) const
+    -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> override;
