@@ -188,7 +188,7 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
                            std::cend(vin),
                            std::back_inserter(inputs),
                            [](auto&& input) {
-                               auto txid_in = std::move(input["txid"]).asString();
+                               auto txid_in = std::move(input["txid"].asString());
                                auto vout_index = input["vout"].asUInt();
 
                                return TxIn{std::move(txid_in),
@@ -200,9 +200,9 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
                            std::cend(vout),
                            std::back_inserter(outputs),
                            [](auto&& output) {
-                               auto txid_out = std::move(output["txid"].asString());
+                               auto hex = std::move(output["txid"]["scriptPubKey"].asString());
                                auto value = output["value"].asUInt();
-                               auto addresses_json = std::move(output["addresses"]);
+                               auto addresses_json = std::move(output["scriptPubKey"]["addresses"]);
 
                                std::vector<std::string> addresses;
 
@@ -215,7 +215,7 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
                                               });
 
                                return TxOut{value,
-                                            std::move(txid_out),
+                                            std::move(hex),
                                             std::move(addresses)};
                            });
 
