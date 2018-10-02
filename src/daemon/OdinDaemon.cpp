@@ -224,9 +224,3 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
                                std::move(txid)};
         });
 }
-
-
-auto OdinDaemon::getOpReturnTxFromTxid(std::string&& txid) const
-    -> Result<Opt<OpReturnTx>, DaemonError>
-{
-}

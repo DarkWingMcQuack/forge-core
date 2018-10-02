@@ -125,4 +125,19 @@ private:
     std::string txid_;
 };
 
+class BUDDYCandidateAddress
+{
+public:
+    BUDDYCandidateAddress(std::vector<std::string>&& input_addresses,
+                          std::vector<std::string>&& output_addresses,
+                          std::size_t op_return_value,
+                          std::string&& metadata);
+
+private:
+    std::vector<std::string> input_addresses_;
+    std::vector<std::string> output_addresses_;
+    std::size_t op_return_value_;
+    std::string metadata_;
+};
+
 } // namespace buddy::core

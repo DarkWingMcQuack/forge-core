@@ -24,8 +24,11 @@ public:
     auto getNewestBlock() const
         -> util::Result<core::Block, DaemonError> override;
 
-    auto getOpReturnTxFromTxid(std::string&& txid) const
-        -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> override;
+    auto getTransaction(std::string&& txid) const
+        -> util::Result<core::Transaction, DaemonError> override;
+
+    auto resolveTxIn(core::TxIn&& vin) const
+        -> util::Result<core::TxOut, DaemonError> override;
 
 private:
     auto getBlockCount() const
@@ -37,11 +40,7 @@ private:
     auto getBlock(std::string&& hash) const
         -> util::Result<core::Block, DaemonError>;
 
-    auto resolveTxIn(core::TxIn&& vin) const
-        -> util::Result<core::TxOut, DaemonError>;
 
-    auto getTransaction(std::string&& txid) const
-        -> util::Result<core::Transaction, DaemonError>;
 
     auto sendcommand(const std::string& command,
                      const Json::Value& params) const

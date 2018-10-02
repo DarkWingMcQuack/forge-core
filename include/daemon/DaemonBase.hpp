@@ -1,11 +1,12 @@
 #pragma once
 
-#include <core/OpReturnTx.hpp>
 #include <core/Block.hpp>
+#include <core/OpReturnTx.hpp>
+#include <core/Transaction.hpp>
 #include <daemon/Coin.hpp>
+#include <memory>
 #include <util/Opt.hpp>
 #include <util/Result.hpp>
-#include <memory>
 
 namespace buddy::daemon {
 
@@ -24,8 +25,11 @@ public:
     virtual auto getNewestBlock() const
         -> util::Result<core::Block, DaemonError> = 0;
 
-    virtual auto getOpReturnTxFromTxid(std::string&& txid) const
-        -> util::Result<util::Opt<core::OpReturnTx>, DaemonError> = 0;
+    virtual auto getTransaction(std::string&& txid) const
+        -> util::Result<core::Transaction, DaemonError> = 0;
+
+    virtual auto resolveTxIn(core::TxIn&& vin) const
+        -> util::Result<core::TxOut, DaemonError> = 0;
 
     auto getCoin() const
         -> Coin;
