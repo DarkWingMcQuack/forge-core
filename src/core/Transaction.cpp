@@ -157,19 +157,28 @@ auto Transaction::hasExactlyOneOpReturnOutput() const
     return found_op_ret;
 }
 
-auto Transaction::getOpReturnOutputs() const
-    -> std::vector<TxOut>
+auto Transaction::getFirstOpReturnOutput() const
+    -> util::Opt<std::reference_wrapper<const TxOut>>
 {
-    std::vector<TxOut> op_returns;
+    for(auto&& output : outputs_) {
+        if(output.isOpReturnOutput()) {
+            return std::cref(output);
+        }
+    }
 
-    std::copy_if(std::cbegin(outputs_),
-                 std::cend(outputs_),
-                 std::back_inserter(op_returns),
-                 [](auto&& out) {
-                     return out.isOpReturnOutput();
-                 });
+    return std::nullopt;
+}
 
-    return op_returns;
+auto Transaction::getFirstOpReturnOutput()
+    -> util::Opt<std::reference_wrapper<TxOut>>
+{
+    for(auto&& output : outputs_) {
+        if(output.isOpReturnOutput()) {
+            return std::ref(output);
+        }
+    }
+
+    return std::nullopt;
 }
 
 auto Transaction::hasExactlyOneInput() const
