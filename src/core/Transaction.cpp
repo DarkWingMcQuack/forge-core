@@ -1,4 +1,5 @@
 #include <array>
+#include <boost/algorithm/hex.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <util/Opt.hpp>
@@ -7,6 +8,7 @@
 using buddy::core::TxIn;
 using buddy::core::TxOut;
 using buddy::core::Transaction;
+using buddy::core::BUDDY_IDENTIFIER_MASK;
 using namespace std::string_literals;
 
 
@@ -181,6 +183,30 @@ auto Transaction::getFirstOpReturnOutput()
     return std::nullopt;
 }
 
+auto Transaction::getFirstNonOpReturnOutput() const
+    -> util::Opt<std::reference_wrapper<const TxOut>>
+{
+    for(auto&& output : outputs_) {
+        if(!output.isOpReturnOutput()) {
+            return std::cref(output);
+        }
+    }
+
+    return std::nullopt;
+}
+
+auto Transaction::getFirstNonOpReturnOutput()
+    -> util::Opt<std::reference_wrapper<TxOut>>
+{
+    for(auto&& output : outputs_) {
+        if(!output.isOpReturnOutput()) {
+            return std::ref(output);
+        }
+    }
+
+    return std::nullopt;
+}
+
 auto Transaction::hasExactlyOneInput() const
     -> bool
 {
@@ -191,4 +217,53 @@ auto Transaction::getNumberOfOutputs() const
     -> std::size_t
 {
     return outputs_.size();
+}
+
+auto buddy::core::extractMetadata(std::string&& hex)
+    -> util::Opt<std::vector<std::byte>>
+{
+    if(hex.size() < 13) {
+        return std::nullopt;
+    }
+
+    //remove the op return Opcode
+    //and the next byte
+    if(hex[0] != '6' || hex[1] != 'a') {
+        return std::nullopt;
+    }
+    hex.erase(0, 4);
+
+    return stringToByteVec(std::move(hex));
+}
+
+auto buddy::core::stringToByteVec(std::string&& str)
+    -> util::Opt<std::vector<std::byte>>
+{
+    std::vector<unsigned char> raw_data;
+    try {
+        boost::algorithm::hex(std::cbegin(str),
+                              std::cend(str),
+                              std::back_inserter(raw_data));
+    } catch(...) {
+        return std::nullopt;
+    }
+
+    std::vector<std::byte> data;
+    std::transform(std::cbegin(raw_data),
+                   std::cend(raw_data),
+                   std::back_inserter(data),
+                   [](auto&& ch) {
+                       return static_cast<std::byte>(ch);
+                   });
+
+    return data;
+}
+
+
+auto buddy::core::metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
+    -> bool
+{
+    return std::equal(std::cbegin(BUDDY_IDENTIFIER_MASK),
+                      std::cend(BUDDY_IDENTIFIER_MASK),
+                      std::cbegin(metadata));
 }

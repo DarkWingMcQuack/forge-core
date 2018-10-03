@@ -9,7 +9,8 @@ class EntryCreationOp
 public:
     EntryCreationOp(Entry&& entry,
                     std::string&& owner,
-                    std::size_t block);
+                    std::size_t block,
+                    std::size_t value);
 
     auto getKey() const
         -> const EntryKey&;
@@ -26,13 +27,14 @@ public:
 
     auto getOwner() const
         -> const std::string&;
-    auto getOwner() 
+    auto getOwner()
         -> std::string&;
 
 private:
     Entry entry_;
     std::string owner_;
     std::size_t block_;
+    std::size_t value_;
 };
 
 } // namespace buddy::core

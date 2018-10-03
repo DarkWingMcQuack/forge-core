@@ -55,11 +55,18 @@ auto main(int argc, char* argv[]) -> int
 {
     auto daemon = daemon_from_args(argc, argv);
 
-    auto block_res = daemon->getNewestBlock();
+    auto block_res =
+        daemon->getNewestBlock()
+            .flatMap([d = std::move(daemon)](auto&& block) {
+                fmt::print("numbers of txids {}\n", block.getTxids().size());
+                auto txid = std::move(block.getTxids()[1]);
+                return d->getTransaction(std::move(txid));
+            });
 
     if(block_res) {
-        fmt::print("block hash: {}\n",
-                   block_res.getValue().getHash());
+        fmt::print("outputs: {}\n", block_res.getValue().getOutputs().size());
+        fmt::print("addresses: {}\n", block_res.getValue().getOutputs().at(1).getAddresses().size());
+        fmt::print("first address: {}\n", block_res.getValue().getOutputs().at(1).getAddresses().at(0));
     } else {
         fmt::print("{}\n",
                    block_res.getError().what());

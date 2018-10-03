@@ -147,7 +147,7 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
         .map([](auto&& json) {
             std::vector<std::string> address_vec;
 
-            const auto& json_vec = json["scriptPubKey"]["addresses"];
+            auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
             auto hex = std::move(json["scriptPubKey"]["hex"].asString());
             auto value = json["value"].asUInt();
 

@@ -7,6 +7,10 @@
 
 namespace buddy::core {
 
+constexpr static std::array<std::byte, 3> BUDDY_IDENTIFIER_MASK{static_cast<std::byte>(0xC6),
+                                                                static_cast<std::byte>(0xDC),
+                                                                static_cast<std::byte>(0x75)};
+
 class TxIn
 {
 public:
@@ -116,6 +120,13 @@ public:
     auto getFirstOpReturnOutput()
         -> util::Opt<std::reference_wrapper<TxOut>>;
 
+    auto getFirstNonOpReturnOutput() const
+        -> util::Opt<std::reference_wrapper<const TxOut>>;
+
+    auto getFirstNonOpReturnOutput()
+        -> util::Opt<std::reference_wrapper<TxOut>>;
+
+
     auto hasExactlyOneInput() const
         -> bool;
 
@@ -127,5 +138,14 @@ private:
     std::vector<TxOut> outputs_;
     std::string txid_;
 };
+
+auto extractMetadata(std::string&& hex)
+    -> util::Opt<std::vector<std::byte>>;
+
+auto stringToByteVec(std::string&& str)
+    -> util::Opt<std::vector<std::byte>>;
+
+auto metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
+    -> bool;
 
 } // namespace buddy::core

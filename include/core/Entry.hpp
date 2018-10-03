@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <array>
@@ -22,4 +21,13 @@ using EntryValue = std::variant<IPv4Value,
 
 using Entry = std::pair<EntryKey,
                         EntryValue>;
+
+auto parseValue(const std::vector<std::byte>& data)
+    -> util::Opt<EntryValue>;
+
+auto parseKey(const std::vector<std::byte>& data)
+    -> util::Opt<EntryKey>;
+
+auto parseEntry(const std::vector<std::byte>& data)
+    -> util::Opt<Entry>;
 } // namespace buddy::core

@@ -5,8 +5,8 @@ using buddy::core::Entry;
 using buddy::core::EntryUpdateOp;
 
 EntryUpdateOp::EntryUpdateOp(Entry&& entry,
-                                 std::string&& owner,
-                                 std::size_t block)
+                             std::string&& owner,
+                             std::size_t block)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block) {}

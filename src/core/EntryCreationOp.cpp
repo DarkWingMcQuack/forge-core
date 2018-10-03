@@ -6,10 +6,12 @@ using buddy::core::EntryCreationOp;
 
 EntryCreationOp::EntryCreationOp(Entry&& entry,
                                  std::string&& owner,
-                                 std::size_t block)
+                                 std::size_t block,
+                                 std::size_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
-      block_(block) {}
+      block_(block),
+      value_(value){}
 
 
 auto EntryCreationOp::getKey() const

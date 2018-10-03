@@ -7,9 +7,6 @@
 
 namespace buddy::core {
 
-constexpr static std::array<std::byte, 3> BUDDY_IDENTIFIER_MASK{static_cast<std::byte>(0xC6),
-                                                                static_cast<std::byte>(0xDC),
-                                                                static_cast<std::byte>(0x75)};
 
 
 class OpReturnTx
