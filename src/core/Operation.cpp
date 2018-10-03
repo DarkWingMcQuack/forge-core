@@ -119,6 +119,10 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
     //get metadata from the op return output
     auto metadata = std::move(metadata_opt.getValue());
 
+    if(!metadataStartsWithBuddyId(metadata)) {
+        return ResultType{std::nullopt};
+    }
+
     return daemon
         ->resolveTxIn(std::move(vin))
         .flatMap([&](auto&& resolvedVin) {
