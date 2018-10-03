@@ -106,58 +106,88 @@ public:
     template<class Func>
     constexpr auto flatMap(Func&& f) &
     {
-        using result = std::invoke_result_t<Func, T&>;
-        static_assert(is_opt<result>::value,
+        using Result = std::invoke_result_t<Func, T&>;
+        static_assert(is_opt<Result>::value,
                       "F must return an optional");
         return hasValue()
             ? std::invoke(std::forward<Func>(f), getValue())
-            : Opt{std::nullopt};
+            : Result{std::nullopt};
     }
 
     template<class Func>
     constexpr auto flatMap(Func&& f) const&
     {
-        using result = std::invoke_result_t<Func, const T&>;
-        static_assert(is_opt<result>::value,
+        using Result = std::invoke_result_t<Func, const T&>;
+        static_assert(is_opt<Result>::value,
                       "F must return an optional");
         return hasValue()
             ? std::invoke(std::forward<Func>(f), getValue())
-            : Opt{std::nullopt};
+            : Result{std::nullopt};
     }
 
     template<class Func>
     constexpr auto flatMap(Func&& f) &&
     {
-        using result = std::invoke_result_t<Func, T&&>;
-        static_assert(is_opt<result>::value,
+        using Result = std::invoke_result_t<Func, T&&>;
+        static_assert(is_opt<Result>::value,
                       "F must return an optional");
         return hasValue()
             ? std::invoke(std::forward<Func>(f), getValue())
-            : Opt{std::nullopt};
+            : Result{std::nullopt};
     }
 
     template<class Func>
     constexpr auto map(Func&& f) &
     {
+        using Result = std::invoke_result_t<Func, T&>;
         return hasValue()
-            ? Opt{std::invoke(std::forward<Func>(f), getValue())}
-            : Opt{std::nullopt};
+            ? Opt<Result>{std::invoke(std::forward<Func>(f), getValue())}
+            : Opt<Result>{std::nullopt};
     }
 
     template<class Func>
     constexpr auto map(Func&& f) const&
     {
+        using Result = std::invoke_result_t<Func, const T&>;
         return hasValue()
-            ? Opt{std::invoke(std::forward<Func>(f), getValue())}
-            : Opt{std::nullopt};
+            ? Opt<Result>{std::invoke(std::forward<Func>(f), getValue())}
+            : Opt<Result>{std::nullopt};
     }
 
     template<class Func>
     constexpr auto map(Func&& f) &&
     {
+        using Result = std::invoke_result_t<Func, T&&>;
         return hasValue()
-            ? Opt{std::invoke(std::forward<Func>(f), getValue())}
-            : Opt{std::nullopt};
+            ? Opt<Result>{std::invoke(std::forward<Func>(f), getValue())}
+            : Opt<Result>{std::nullopt};
+    }
+
+    constexpr auto flatten() &&
+    {
+        if constexpr(is_opt<T>::value) {
+            return getValue();
+        } else {
+            return *this;
+        }
+    }
+
+    constexpr auto flatten() &
+    {
+        if constexpr(is_opt<T>::value) {
+            return getValue();
+        } else {
+            return *this;
+        }
+    }
+
+    constexpr auto flatten() const&
+    {
+        if constexpr(is_opt<T>::value) {
+            return getValue();
+        } else {
+            return *this;
+        }
     }
 
 private:
@@ -186,7 +216,7 @@ constexpr auto traverse(std::vector<T>&& vec, F&& f)
 {
     using invoke_res = typename std::invoke_result_t<F, T&&>;
 
-    static_assert(is_opt<invoke_res>::value,
+    static_assert(!is_opt<invoke_res>::value,
                   "function musst return an opt to be useable with traverse");
 
     std::vector<invoke_res> ret_vec;
