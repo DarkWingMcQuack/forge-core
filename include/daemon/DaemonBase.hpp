@@ -34,6 +34,8 @@ public:
     auto getCoin() const
         -> Coin;
 
+    virtual ~DaemonBase() = default;
+
 protected:
     Coin coin_;
 };
