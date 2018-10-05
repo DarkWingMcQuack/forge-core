@@ -1,5 +1,6 @@
 #pragma once
 
+#include <json/value.h>
 #include <string>
 #include <vector>
 
@@ -7,16 +8,19 @@ namespace buddy::core {
 
 class Block
 {
-public: 
+public:
     Block(std::vector<std::string>&& txids,
           std::size_t height,
           std::size_t time,
           std::string&& hash);
 
+    Block(Json::Value&& json,
+          std::string&& hash);
+
     Block(Block&&) = default;
     Block(const Block&) = delete;
 
-    auto operator=(Block&&)
+    auto operator=(Block &&)
         -> Block& = default;
     auto operator=(const Block&)
         -> Block& = default;

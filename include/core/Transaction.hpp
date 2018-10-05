@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <json/value.h>
 #include <util/Opt.hpp>
 #include <vector>
 
@@ -16,6 +17,8 @@ class TxIn
 public:
     TxIn(std::string&& txid,
          std::size_t vout_index);
+
+    TxIn(Json::Value&& json);
 
     TxIn(TxIn&&) = default;
     TxIn(const TxIn&) = delete;
@@ -44,6 +47,8 @@ public:
     TxOut(std::size_t value,
           std::string&& hex,
           std::vector<std::string>&& addresses);
+
+    TxOut(Json::Value&& json);
 
     TxOut(TxOut&&) = default;
     TxOut(const TxOut&) = default;
@@ -84,6 +89,8 @@ public:
     Transaction(std::vector<TxIn>&& inputs,
                 std::vector<TxOut>&& outputs,
                 std::string&& txid);
+
+    Transaction(Json::Value&& json);
 
     Transaction(Transaction&&) = default;
     Transaction(const Transaction&) = delete;

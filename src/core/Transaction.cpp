@@ -2,6 +2,7 @@
 #include <boost/algorithm/hex.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
+#include <json/value.h>
 #include <util/Opt.hpp>
 #include <vector>
 
@@ -16,6 +17,13 @@ TxIn::TxIn(std::string&& txid,
            std::size_t vout_index)
     : txid_(std::move(txid)),
       vout_index_(vout_index) {}
+
+
+TxIn::TxIn(Json::Value&& json)
+{
+    txid_ = std::move(json["txid"].asString());
+    vout_index_ = json["vout"].asUInt();
+}
 
 
 auto TxIn::getTxid() const
@@ -43,6 +51,20 @@ TxOut::TxOut(std::size_t value,
     : value_(value),
       hex_(std::move(hex)),
       addresses_(std::move(addresses)) {}
+
+TxOut::TxOut(Json::Value&& json)
+{
+    auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
+    hex_ = std::move(json["scriptPubKey"]["hex"].asString());
+    value_ = json["value"].asUInt();
+
+    std::transform(std::cbegin(json_vec),
+                   std::cend(json_vec),
+                   std::back_inserter(addresses_),
+                   [](auto&& value) {
+                       return std::move(value.asString());
+                   });
+}
 
 
 auto TxOut::getValue() const
@@ -97,6 +119,30 @@ Transaction::Transaction(std::vector<TxIn>&& inputs,
     : inputs_(std::move(inputs)),
       outputs_(std::move(outputs)),
       txid_(std::move(txid)) {}
+
+
+Transaction::Transaction(Json::Value&& json)
+{
+    txid_ = std::move(json["txid"].asString());
+    auto vin = std::move(json["vin"]);
+    auto vout = std::move(json["vout"]);
+
+    //get inputs
+    std::transform(std::begin(vin),
+                   std::end(vin),
+                   std::back_inserter(inputs_),
+                   [](auto&& input) {
+                       return TxIn{std::move(input)};
+                   });
+
+    //get outputs
+    std::transform(std::begin(vout),
+                   std::end(vout),
+                   std::back_inserter(outputs_),
+                   [](auto&& output) {
+                       return TxOut{std::move(output)};
+                   });
+}
 
 auto Transaction::getInputs() const
     -> const std::vector<TxIn>&

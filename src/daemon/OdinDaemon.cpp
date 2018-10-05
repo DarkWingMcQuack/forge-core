@@ -99,25 +99,7 @@ auto OdinDaemon::getBlock(std::string&& hash) const
     return sendcommand(command, param)
         .flatMap([&hash](auto&& json)
                      -> util::Result<core::Block, DaemonError> {
-            //extract txids from block
-            std::vector<std::string> txids;
-            std::transform(std::cbegin(json["tx"]),
-                           std::cend(json["tx"]),
-                           std::back_inserter(txids),
-                           [](auto&& json) {
-                               return std::move(json.asString());
-                           });
-
-
-            //extract blocktime
-            auto time = json["time"].asUInt();
-            //extract block height
-            auto height = json["height"].asUInt();
-
-            //construct block
-            return Block{std::move(txids),
-                         height,
-                         time,
+            return Block{std::move(json),
                          std::move(hash)};
         });
 }
@@ -145,22 +127,7 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
 
     return sendcommand(command, params)
         .map([](auto&& json) {
-            std::vector<std::string> address_vec;
-
-            auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
-            auto hex = std::move(json["scriptPubKey"]["hex"].asString());
-            auto value = json["value"].asUInt();
-
-            std::transform(std::cbegin(json_vec),
-                           std::cend(json_vec),
-                           std::back_inserter(address_vec),
-                           [](auto&& value) {
-                               return std::move(value.asString());
-                           });
-
-            return TxOut{value,
-                         std::move(hex),
-                         std::move(address_vec)};
+            return TxOut{std::move(json)};
         });
 }
 
@@ -175,52 +142,6 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
 
     return sendcommand(command, params)
         .map([](auto&& json) {
-            //move txid out of json
-            auto txid = std::move(json["txid"].asString());
-            auto vin = std::move(json["vin"]);
-            auto vout = std::move(json["vout"]);
-
-            std::vector<TxIn> inputs;
-            std::vector<TxOut> outputs;
-
-            //get inputs
-            std::transform(std::cbegin(vin),
-                           std::cend(vin),
-                           std::back_inserter(inputs),
-                           [](auto&& input) {
-                               auto txid_in = std::move(input["txid"].asString());
-                               auto vout_index = input["vout"].asUInt();
-
-                               return TxIn{std::move(txid_in),
-                                           vout_index};
-                           });
-
-            //get outputs
-            std::transform(std::cbegin(vout),
-                           std::cend(vout),
-                           std::back_inserter(outputs),
-                           [](auto&& output) {
-                               auto hex = std::move(output["txid"]["scriptPubKey"].asString());
-                               auto value = output["value"].asUInt();
-                               auto addresses_json = std::move(output["scriptPubKey"]["addresses"]);
-
-                               std::vector<std::string> addresses;
-
-                               //get all the addresses of an output
-                               std::transform(std::cbegin(addresses_json),
-                                              std::cend(addresses_json),
-                                              std::back_inserter(addresses),
-                                              [](auto&& addr) {
-                                                  return addr.asString();
-                                              });
-
-                               return TxOut{value,
-                                            std::move(hex),
-                                            std::move(addresses)};
-                           });
-
-            return Transaction{std::move(inputs),
-                               std::move(outputs),
-                               std::move(txid)};
+            return Transaction{std::move(json)};
         });
 }
