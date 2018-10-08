@@ -78,6 +78,9 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
 {
     using ResultType = Result<Opt<Operation>, DaemonError>;
 
+    //check if the transaction has exactly one op return
+    //output and exactly one input
+    //if this is not the case the tx does not repressent a buddy op
     if(!tx.hasExactlyOneOpReturnOutput()
        || !tx.hasExactlyOneInput()) {
         return ResultType{std::nullopt};
@@ -106,6 +109,8 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
     //save, because we have checked that the tx has exactly
     //one input
     auto vin = std::move(tx.getInputs()[0]);
+
+    //value of the op return output
     auto value = op_return_output.getValue();
 
     //extract the metadata from the output script
@@ -119,6 +124,8 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
     //get metadata from the op return output
     auto metadata = std::move(metadata_opt.getValue());
 
+    //check if the metadata starts with a buddy id
+    //if not the tx is not a valid buddy tx and can be ignored
     if(!metadataStartsWithBuddyId(metadata)) {
         return ResultType{std::nullopt};
     }
