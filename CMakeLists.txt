@@ -24,6 +24,11 @@ if(USE_CLANG)
   SET(CMAKE_RANLIB        "llvm-ranlib")
 endif(USE_CLANG)
 
+option(GENERATE_COMPILE_DATABASE "generate a compile_commands.json" OFF)
+if(GENERATE_COMPILE_DATABASE)
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif(GENERATE_COMPILE_DATABASE)
+
 
 
 #debug flags
