@@ -196,18 +196,20 @@ auto Transaction::hasOpReturnOutput() const
 auto Transaction::hasExactlyOneOpReturnOutput() const
     -> bool
 {
-    bool found_op_ret{false};
-    for(auto&& out : outputs_) {
-        if(out.isOpReturnOutput()) {
-            if(found_op_ret) {
-                return false;
-            }
+    auto forward_iter = std::find_if(std::cbegin(outputs_),
+                                     std::cend(outputs_),
+                                     [](auto&& out) {
+                                         return out.isOpReturnOutput();
+                                     });
 
-            found_op_ret = true;
-        }
-    }
+    auto backward_iter = std::find_if(std::crbegin(outputs_),
+                                      std::crend(outputs_),
+                                      [](auto&& out) {
+                                          return out.isOpReturnOutput();
+                                      });
 
-    return found_op_ret;
+    return forward_iter == backward_iter.base() - 1
+        && forward_iter != std::cend(outputs_);
 }
 
 auto Transaction::getFirstOpReturnOutput() const
