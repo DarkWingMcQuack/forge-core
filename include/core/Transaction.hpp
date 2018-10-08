@@ -2,7 +2,9 @@
 
 #include <array>
 #include <cstddef>
+// #include <daemon/DaemonBase.hpp>
 #include <json/value.h>
+#include <memory>
 #include <util/Opt.hpp>
 #include <vector>
 
@@ -132,7 +134,6 @@ public:
 
     auto getFirstNonOpReturnOutput()
         -> util::Opt<std::reference_wrapper<TxOut>>;
-
 
     auto hasExactlyOneInput() const
         -> bool;

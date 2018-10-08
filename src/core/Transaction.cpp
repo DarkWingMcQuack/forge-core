@@ -2,6 +2,7 @@
 #include <boost/algorithm/hex.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
+#include <daemon/DaemonBase.hpp>
 #include <json/value.h>
 #include <util/Opt.hpp>
 #include <vector>
@@ -9,6 +10,10 @@
 using buddy::core::TxIn;
 using buddy::core::TxOut;
 using buddy::core::Transaction;
+using buddy::daemon::DaemonBase;
+using buddy::daemon::DaemonError;
+using buddy::util::Result;
+using buddy::util::Opt;
 using buddy::core::BUDDY_IDENTIFIER_MASK;
 using namespace std::string_literals;
 
@@ -208,49 +213,65 @@ auto Transaction::hasExactlyOneOpReturnOutput() const
 auto Transaction::getFirstOpReturnOutput() const
     -> util::Opt<std::reference_wrapper<const TxOut>>
 {
-    for(auto&& output : outputs_) {
-        if(output.isOpReturnOutput()) {
-            return std::cref(output);
-        }
-    }
+    using Ret = util::Opt<std::reference_wrapper<const TxOut>>;
 
-    return std::nullopt;
+    auto iter = std::find_if(std::cbegin(outputs_),
+                             std::cend(outputs_),
+                             [](auto&& out) {
+                                 return out.isOpReturnOutput();
+                             });
+
+    return iter == std::cend(outputs_)
+        ? Ret{}
+        : Ret{std::cref(*iter)};
 }
 
 auto Transaction::getFirstOpReturnOutput()
     -> util::Opt<std::reference_wrapper<TxOut>>
 {
-    for(auto&& output : outputs_) {
-        if(output.isOpReturnOutput()) {
-            return std::ref(output);
-        }
-    }
+    using Ret = util::Opt<std::reference_wrapper<TxOut>>;
 
-    return std::nullopt;
+    auto iter = std::find_if(std::begin(outputs_),
+                             std::end(outputs_),
+                             [](auto&& out) {
+                                 return out.isOpReturnOutput();
+                             });
+
+    return iter == std::cend(outputs_)
+        ? Ret{}
+        : Ret{std::ref(*iter)};
 }
 
 auto Transaction::getFirstNonOpReturnOutput() const
     -> util::Opt<std::reference_wrapper<const TxOut>>
 {
-    for(auto&& output : outputs_) {
-        if(!output.isOpReturnOutput()) {
-            return std::cref(output);
-        }
-    }
+    using Ret = util::Opt<std::reference_wrapper<const TxOut>>;
 
-    return std::nullopt;
+    auto iter = std::find_if(std::cbegin(outputs_),
+                             std::cend(outputs_),
+                             [](auto&& out) {
+                                 return !out.isOpReturnOutput();
+                             });
+
+    return iter == std::cend(outputs_)
+        ? Ret{}
+        : Ret{std::cref(*iter)};
 }
 
 auto Transaction::getFirstNonOpReturnOutput()
     -> util::Opt<std::reference_wrapper<TxOut>>
 {
-    for(auto&& output : outputs_) {
-        if(!output.isOpReturnOutput()) {
-            return std::ref(output);
-        }
-    }
+    using Ret = util::Opt<std::reference_wrapper<TxOut>>;
 
-    return std::nullopt;
+    auto iter = std::find_if(std::begin(outputs_),
+                             std::end(outputs_),
+                             [](auto&& out) {
+                                 return !out.isOpReturnOutput();
+                             });
+
+    return iter == std::cend(outputs_)
+        ? Ret{}
+        : Ret{std::ref(*iter)};
 }
 
 auto Transaction::hasExactlyOneInput() const
