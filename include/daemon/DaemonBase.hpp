@@ -45,7 +45,7 @@ public:
 
     virtual ~DaemonBase() = default;
 
-protected:
+private:
     Coin coin_;
 };
 
