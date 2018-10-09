@@ -40,8 +40,8 @@ public:
     virtual auto getBlock(std::string&& hash) const
         -> util::Result<core::Block, DaemonError> = 0;
 
-    auto getCoin() const
-        -> Coin;
+    virtual auto getCoin() const
+        -> Coin final;
 
     virtual ~DaemonBase() = default;
 
