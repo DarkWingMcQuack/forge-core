@@ -10,7 +10,7 @@
 
 namespace buddy::daemon {
 
-class DaemonError : public std::runtime_error
+class DaemonError final : public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;
@@ -30,6 +30,15 @@ public:
 
     virtual auto resolveTxIn(core::TxIn&& vin) const
         -> util::Result<core::TxOut, DaemonError> = 0;
+
+    virtual auto getBlockCount() const
+        -> util::Result<std::size_t, DaemonError> = 0;
+
+    virtual auto getBlockHash(std::size_t index) const
+        -> util::Result<std::string, DaemonError> = 0;
+
+    virtual auto getBlock(std::string&& hash) const
+        -> util::Result<core::Block, DaemonError> = 0;
 
     auto getCoin() const
         -> Coin;

@@ -30,17 +30,16 @@ public:
     auto resolveTxIn(core::TxIn&& vin) const
         -> util::Result<core::TxOut, DaemonError> override;
 
-private:
     auto getBlockCount() const
-        -> util::Result<std::size_t, DaemonError>;
+        -> util::Result<std::size_t, DaemonError> override;
 
     auto getBlockHash(std::size_t index) const
-        -> util::Result<std::string, DaemonError>;
+        -> util::Result<std::string, DaemonError> override;
 
     auto getBlock(std::string&& hash) const
-        -> util::Result<core::Block, DaemonError>;
+        -> util::Result<core::Block, DaemonError> override;
 
-
+private:
 
     auto sendcommand(const std::string& command,
                      const Json::Value& params) const
