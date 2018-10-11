@@ -64,9 +64,12 @@ auto main(int argc, char* argv[]) -> int
             });
 
     if(block_res) {
-        fmt::print("outputs: {}\n", block_res.getValue().getOutputs().size());
-        fmt::print("addresses: {}\n", block_res.getValue().getOutputs().at(1).getAddresses().size());
-        fmt::print("first address: {}\n", block_res.getValue().getOutputs().at(1).getAddresses().at(0));
+        fmt::print("outputs: {}\n",
+                   block_res.getValue().getOutputs().size());
+        fmt::print("addresses: {}\n",
+                   block_res.getValue().getOutputs().at(1).getAddresses().size());
+        fmt::print("first address: {}\n",
+                   block_res.getValue().getOutputs().at(1).getAddresses().at(0));
     } else {
         fmt::print("{}\n",
                    block_res.getError().what());

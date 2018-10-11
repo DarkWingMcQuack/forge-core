@@ -328,7 +328,6 @@ auto buddy::core::stringToByteVec(std::string&& str)
     return data;
 }
 
-
 auto buddy::core::metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
     -> bool
 {
