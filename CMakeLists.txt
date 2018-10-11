@@ -15,6 +15,7 @@ include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
 include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
+include(cmake/gtest.cmake)
 
 #get options
 include(cmake/options.cmake)
@@ -53,6 +54,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/OdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/EntryLookup.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
 
   PRIVATE
   src/core/Operation.cpp
@@ -67,6 +69,8 @@ target_sources(buddy-src
   src/daemon/DaemonBase.cpp
   src/daemon/OdinDaemon.cpp
   src/core/Transaction.cpp
+  src/lookup/EntryLookup.cpp
+  src/lookup/LookupManager.cpp
   )
 
 # make headers available
