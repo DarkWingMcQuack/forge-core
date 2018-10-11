@@ -747,16 +747,14 @@ template<class T, class V, class E>
 auto combine(Result<T, E>&& first, Result<V, E>&& second)
     -> Result<std::pair<T, V>, E>
 {
-    if(first.hasValue()) {
-        if(second.hasValue()) {
-            return std::pair{std::move(first.getValue()),
-                             std::move(second.getValue())};
-        }
-
-        return second.getError();
-    }
-
-    return first.getError();
+    return first
+        .flatMap([&](auto&& first_value) {
+            return second
+                .flatMap([&](auto&& second_value) {
+                    return std::pair{std::move(first_value),
+                                     std::move(second_value)};
+                });
+        });
 }
 
 } // namespace buddy::util
