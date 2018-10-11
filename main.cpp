@@ -61,17 +61,17 @@ auto main(int argc, char* argv[]) -> int
                 fmt::print("numbers of txids {}\n", block.getTxids().size());
                 auto txid = std::move(block.getTxids()[1]);
                 return d->getTransaction(std::move(txid));
+            })
+            .changeValue([](auto&& tx) {
+                fmt::print("outputs: {}\n",
+                           tx.getOutputs().size());
+                fmt::print("addresses: {}\n",
+                           tx.getOutputs().at(1).getAddresses().size());
+                fmt::print("first address: {}\n",
+                           tx.getOutputs().at(1).getAddresses().at(0));
+            })
+            .changeError([](auto&& error) {
+                fmt::print("{}\n",
+                           error.what());
             });
-
-    if(block_res) {
-        fmt::print("outputs: {}\n",
-                   block_res.getValue().getOutputs().size());
-        fmt::print("addresses: {}\n",
-                   block_res.getValue().getOutputs().at(1).getAddresses().size());
-        fmt::print("first address: {}\n",
-                   block_res.getValue().getOutputs().at(1).getAddresses().at(0));
-    } else {
-        fmt::print("{}\n",
-                   block_res.getError().what());
-    }
 }

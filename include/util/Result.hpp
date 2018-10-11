@@ -311,7 +311,7 @@ public:
             func(getValue());
         }
 
-        return *this;
+        return std::move(*this);
     }
 
     template<class Func>
@@ -341,7 +341,7 @@ public:
             func(getError());
         }
 
-        return *this;
+        return std::move(*this);
     }
 
     //this serves as finally block
