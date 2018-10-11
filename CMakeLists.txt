@@ -2,19 +2,23 @@ cmake_minimum_required(VERSION 3.9)
 
 project(cppBUDDY)
 
+#set C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 ############################
 ###get external projects
 ############################
-include(GNUInstallDirs)
-include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
-
 include(cmake/jsoncpp.cmake)
 include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
 include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
 
-option(USE_CLANG "build application with clang" OFF) # OFF is the default
+#get options
+include(cmake/options.cmake)
+
 if(USE_CLANG)
   SET(CMAKE_C_COMPILER    "clang")
   SET(CMAKE_CXX_COMPILER  "clang++")
@@ -24,86 +28,89 @@ if(USE_CLANG)
   SET(CMAKE_RANLIB        "llvm-ranlib")
 endif(USE_CLANG)
 
-option(GENERATE_COMPILE_DATABASE "generate a compile_commands.json" OFF)
-if(GENERATE_COMPILE_DATABASE)
-  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-endif(GENERATE_COMPILE_DATABASE)
+#setup flags and ccache
+include(cmake/flags.cmake)
+include(cmake/ccache.cmake)
 
-
-
-#debug flags
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O0 -g3 -ggdb")
-
-#release flags
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3 -march=native -fstack-protector-strong")
-
-############################
-###CCache
-############################
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-endif(CCACHE_FOUND)
-
-#build compilation database, needed for autocompletion in emacs
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # needed for multithreading
 find_package(Threads)
 
-#sources
-add_executable(cppBUDDY
-  main.cpp
-  include/core/Operation.hpp
+add_library(buddy-src "")
+target_sources(buddy-src
+  PUBLIC
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/Operation.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/Entry.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryCreationOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryRenewalOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryDeletionOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryUpdateOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/OwnershipTransferOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/OpReturnTx.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/Coin.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/DaemonBase.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/OdinDaemon.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/lookup/EntryLookup.hpp
+
+  PRIVATE
   src/core/Operation.cpp
   src/core/Entry.cpp
-  include/core/Entry.hpp
   src/core/EntryCreationOp.cpp
-  include/core/EntryCreationOp.hpp
   src/core/EntryRenewalOp.cpp
-  include/core/EntryRenewalOp.hpp
   src/core/EntryDeletionOp.cpp
-  include/core/EntryDeletionOp.hpp
   src/core/EntryUpdateOp.cpp
-  include/core/EntryUpdateOp.hpp
   src/core/OwnershipTransferOp.cpp
-  include/core/OwnershipTransferOp.hpp
   src/core/OpReturnTx.cpp
-  include/core/OpReturnTx.hpp
   src/core/Block.cpp
-  include/core/Block.hpp
-  include/daemon/Coin.hpp
   src/daemon/DaemonBase.cpp
-  include/daemon/DaemonBase.hpp
   src/daemon/OdinDaemon.cpp
-  include/daemon/OdinDaemon.hpp
-  include/core/Transaction.hpp
-  src/core/Transaction.cpp)
-
-#use c++17 as standard
-set_target_properties(cppBUDDY PROPERTIES
-  CXX_STANDARD 17
-  CXX_EXTENSIONS OFF)
-
-
-add_dependencies(cppBUDDY fmt-project)
-add_dependencies(cppBUDDY jsonrpc-project)
-add_dependencies(cppBUDDY boost-project)
-add_dependencies(cppBUDDY cxxopts-project)
-
+  src/core/Transaction.cpp
+  )
 
 # make headers available
-target_include_directories(cppBUDDY PUBLIC
+target_include_directories(buddy-src PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   fmt
   jsonrpc::client
-  jsoncpp
-  ${CXXOPTS_INCLUDE_DIR})
+  jsoncpp)
 
-#link against boost and thread libs
-target_link_libraries(cppBUDDY LINK_PUBLIC
+#link against libarys
+target_link_libraries(buddy-src LINK_PUBLIC
   fmt
   jsonrpc::client
   jsoncpp
   ${CMAKE_THREAD_LIBS_INIT})
+
+#executable
+add_executable(cppBUDDY
+  main.cpp)
+
+
+#make sure everything is build in the right order
+add_dependencies(buddy-src fmt-project)
+add_dependencies(buddy-src jsonrpc-project)
+add_dependencies(buddy-src boost-project)
+add_dependencies(buddy-src cxxopts-project)
+add_dependencies(cppBUDDY buddy-src)
+
+
+# make headers available in main.cpp
+target_include_directories(cppBUDDY PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  fmt
+  ${CXXOPTS_INCLUDE_DIR})
+
+#link main.cpp against fmt and thread lib
+target_link_libraries(cppBUDDY LINK_PUBLIC
+  buddy-src
+  fmt
+  ${CMAKE_THREAD_LIBS_INIT})
+
+
+
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(test)
+endif(BUILD_TESTS)
