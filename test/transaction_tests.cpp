@@ -63,6 +63,17 @@ TEST(TransactionTest, TxInParsingInValid)
 
 TEST(TransactionTest, TxOutParsing)
 {
+    auto json_str = readFile("txout_valid.json");
+    auto json = parseString(json_str);
+
+    auto txout = buddy::core::buildTxOut(std::move(json));
+
+    ASSERT_TRUE(txout);
+
+    EXPECT_EQ(txout.getValue().numberOfAddresses(), 1);
+    EXPECT_EQ(txout.getValue().getAddresses()[0], "oMRtieu2VEDBFYKu9XNtXPxHEKWbmssD5a");
+    EXPECT_EQ(txout.getValue().getHex(), "210306bb5eac4f028255c91fa78da9c6d0df5425e75d27b688b3e944a540f5dbe2d2ac");
+    EXPECT_FALSE(txout.getValue().isOpReturnOutput());
 }
 
 TEST(TransactionTest, TransactionParsing)

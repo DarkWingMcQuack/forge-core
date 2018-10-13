@@ -1,0 +1,13 @@
+{
+    "value": 16741.20000000,
+    "n": 1,
+    "scriptPubKey": {
+        "asm": "0306bb5eac4f028255c91fa78da9c6d0df5425e75d27b688b3e944a540f5dbe2d2 OP_CHECKSIG",
+        "hex": "210306bb5eac4f028255c91fa78da9c6d0df5425e75d27b688b3e944a540f5dbe2d2ac",
+        "reqSigs": 1,
+        "type": "pubkey",
+        "addresses": [
+            "oMRtieu2VEDBFYKu9XNtXPxHEKWbmssD5a"
+        ]
+    }
+}
