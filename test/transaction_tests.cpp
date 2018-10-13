@@ -213,10 +213,10 @@ TEST(TransactionTest, ExtractMetadataInalid)
 
 TEST(TransactionTest, StringToByteVecValid)
 {
-    auto first_valid = buddy::core::stringToByteVec("a109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
-    auto second_valid = buddy::core::stringToByteVec("5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456d");
-    auto third_valid = buddy::core::stringToByteVec("44d82949d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
-    auto fourth_valid = buddy::core::stringToByteVec("44d82949d528fbbf");
+    auto first_valid = buddy::core::stringToByteVec("a109A924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6B79707ad");
+    auto second_valid = buddy::core::stringToByteVec("5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cfF81cd314cB9797b456d");
+    auto third_valid = buddy::core::stringToByteVec("44d82949d528fbb3126d8bf5fd0985836b447f26bd5b2F8251745c2064cb938f");
+    auto fourth_valid = buddy::core::stringToByteVec("44d82949d528fbBf");
 
     std::vector<std::byte> first_expected{
         (std::byte)0xA1,

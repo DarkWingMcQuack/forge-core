@@ -248,7 +248,6 @@ auto Transaction::getNumberOfOutputs() const
 auto buddy::core::buildTxIn(Json::Value&& json)
     -> util::Opt<TxIn>
 {
-
     try {
         if(!json.isMember("txid")
            || !json.isMember("vout")) {
@@ -355,38 +354,6 @@ auto buddy::core::extractMetadata(std::string&& hex)
     return stringToByteVec(std::move(hex));
 }
 
-namespace {
-auto isHexChar(char c)
-    -> bool
-{
-    switch(c) {
-    case '0': return true;
-    case '1': return true;
-    case '2': return true;
-    case '3': return true;
-    case '4': return true;
-    case '5': return true;
-    case '6': return true;
-    case '7': return true;
-    case '8': return true;
-    case '9': return true;
-    case 'a': return true;
-    case 'b': return true;
-    case 'c': return true;
-    case 'd': return true;
-    case 'e': return true;
-    case 'f': return true;
-    case 'A': return true;
-    case 'B': return true;
-    case 'C': return true;
-    case 'D': return true;
-    case 'E': return true;
-    case 'F': return true;
-    default: return false;
-    }
-}
-} // namespace
-
 auto buddy::core::stringToByteVec(std::string&& str)
     -> util::Opt<std::vector<std::byte>>
 {
@@ -399,7 +366,7 @@ auto buddy::core::stringToByteVec(std::string&& str)
     auto is_hex = std::all_of(std::begin(str),
                               std::end(str),
                               [](auto c) {
-                                  return isHexChar(c);
+                                  return std::isxdigit(c);
                               });
 
     if(!is_hex) {
