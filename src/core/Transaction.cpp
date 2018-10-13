@@ -248,7 +248,12 @@ auto Transaction::getNumberOfOutputs() const
 auto buddy::core::buildTxIn(Json::Value&& json)
     -> util::Opt<TxIn>
 {
+
     try {
+        if(!json.isMember("txid") || !json.isMember("vout")) {
+            return std::nullopt;
+        }
+
         auto txid = std::move(json["txid"].asString());
         auto vout_index = json["vout"].asUInt();
 
