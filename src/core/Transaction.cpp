@@ -338,25 +338,64 @@ auto buddy::core::extractMetadata(std::string&& hex)
     return stringToByteVec(std::move(hex));
 }
 
+namespace {
+auto isHexChar(char c)
+    -> bool
+{
+    switch(c) {
+    case '0': return true;
+    case '1': return true;
+    case '2': return true;
+    case '3': return true;
+    case '4': return true;
+    case '5': return true;
+    case '6': return true;
+    case '7': return true;
+    case '8': return true;
+    case '9': return true;
+    case 'a': return true;
+    case 'b': return true;
+    case 'c': return true;
+    case 'd': return true;
+    case 'e': return true;
+    case 'f': return true;
+    case 'A': return true;
+    case 'B': return true;
+    case 'C': return true;
+    case 'D': return true;
+    case 'E': return true;
+    case 'F': return true;
+    default: return false;
+    }
+}
+} // namespace
+
 auto buddy::core::stringToByteVec(std::string&& str)
     -> util::Opt<std::vector<std::byte>>
 {
-    std::vector<unsigned char> raw_data;
-    try {
-        boost::algorithm::hex(std::cbegin(str),
-                              std::cend(str),
-                              std::back_inserter(raw_data));
-    } catch(...) {
+    //check if the string has even characters
+    if(str.length() % 2 != 0) {
+        return std::nullopt;
+    }
+
+    //check if all characters are [0-1a-fA-F]
+    auto is_hex = std::all_of(std::begin(str),
+                              std::end(str),
+                              [](auto c) {
+                                  return isHexChar(c);
+                              });
+
+    if(!is_hex) {
         return std::nullopt;
     }
 
     std::vector<std::byte> data;
-    std::transform(std::cbegin(raw_data),
-                   std::cend(raw_data),
-                   std::back_inserter(data),
-                   [](auto&& ch) {
-                       return static_cast<std::byte>(ch);
-                   });
+
+    for(int i = 0; i < str.length(); i += 2) {
+        auto byteString = str.substr(i, 2);
+        auto byte = (std::byte)std::strtol(byteString.c_str(), NULL, 16);
+        data.push_back(byte);
+    }
 
     return data;
 }
