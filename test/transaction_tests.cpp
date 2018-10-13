@@ -61,23 +61,76 @@ TEST(TransactionTest, TxInParsingInValid)
     EXPECT_FALSE(static_cast<bool>(txin));
 }
 
-TEST(TransactionTest, TxOutParsing)
+TEST(TransactionTest, TxOutParsingValid)
 {
-    auto json_str = readFile("txout_valid.json");
-    auto json = parseString(json_str);
+    auto json1_str = readFile("txout_valid1.json");
+    auto json1 = parseString(json1_str);
 
-    auto txout = buddy::core::buildTxOut(std::move(json));
+    auto txout1 = buddy::core::buildTxOut(std::move(json1));
 
-    ASSERT_TRUE(txout);
+    ASSERT_TRUE(txout1);
 
-    EXPECT_EQ(txout.getValue().numberOfAddresses(), 1);
-    EXPECT_EQ(txout.getValue().getAddresses()[0], "oMRtieu2VEDBFYKu9XNtXPxHEKWbmssD5a");
-    EXPECT_EQ(txout.getValue().getHex(), "210306bb5eac4f028255c91fa78da9c6d0df5425e75d27b688b3e944a540f5dbe2d2ac");
-    EXPECT_FALSE(txout.getValue().isOpReturnOutput());
+    EXPECT_EQ(txout1.getValue().numberOfAddresses(), 1);
+    EXPECT_EQ(txout1.getValue().getAddresses()[0], "oMRtieu2VEDBFYKu9XNtXPxHEKWbmssD5a");
+    EXPECT_EQ(txout1.getValue().getHex(), "210306bb5eac4f028255c91fa78da9c6d0df5425e75d27b688b3e944a540f5dbe2d2ac");
+    EXPECT_FALSE(txout1.getValue().isOpReturnOutput());
+
+    auto json2_str = readFile("txout_valid2.json");
+    auto json2 = parseString(json2_str);
+
+    auto txout2 = buddy::core::buildTxOut(std::move(json2));
+
+    ASSERT_TRUE(txout2);
+
+    ASSERT_EQ(txout2.getValue().numberOfAddresses(), 2);
+    EXPECT_EQ(txout2.getValue().getAddresses()[0], "ogA4iDjm5H2HjWUmeZykhX4HhtgMAEixGb");
+    EXPECT_EQ(txout2.getValue().getAddresses()[1], "oMRtieu2VEDBFYKu9XNtXPxHEKWbmssD5a");
+    EXPECT_EQ(txout2.getValue().getHex(), "76a914ff73567e44b989b5513ed0ac196d29691c43e08488ac");
+    EXPECT_FALSE(txout2.getValue().isOpReturnOutput());
+
+    auto json3_str = readFile("txout_valid3.json");
+    auto json3 = parseString(json3_str);
+
+    auto txout3 = buddy::core::buildTxOut(std::move(json3));
+
+    ASSERT_TRUE(txout3);
+
+    ASSERT_EQ(txout3.getValue().numberOfAddresses(), 0);
+    EXPECT_EQ(txout3.getValue().getHex(), "");
+    EXPECT_FALSE(txout3.getValue().isOpReturnOutput());
 }
 
-TEST(TransactionTest, TransactionParsing)
+TEST(TransactionTest, TxOutParsingInvalid)
 {
+    auto json_str1 = readFile("txout_invalid1.json");
+    auto json1 = parseString(json_str1);
+
+    auto txout1 = buddy::core::buildTxOut(std::move(json1));
+
+    ASSERT_FALSE(txout1);
+
+    auto json_str2 = readFile("txout_invalid2.json");
+    auto json2 = parseString(json_str2);
+
+    auto txout2 = buddy::core::buildTxOut(std::move(json2));
+
+    ASSERT_FALSE(txout2);
+}
+
+TEST(TransactionTest, TransactionParsingValid)
+{
+    auto json1_str = readFile("tx_valid1.json");
+    auto json1 = parseString(json1_str);
+
+    auto tx1 = buddy::core::buildTransaction(std::move(json1));
+
+    ASSERT_TRUE(tx1);
+
+    EXPECT_EQ(tx1.getValue().getTxid(), "b75fbce207c339e9413387db74ec156271ffa08b9cda01b7a0943819e7559d43");
+    EXPECT_FALSE(tx1.getValue().hasOpReturnOutput());
+    EXPECT_TRUE(tx1.getValue().hasExactlyOneInput());
+    EXPECT_EQ(tx1.getValue().getInputs().size(), 1);
+    EXPECT_EQ(tx1.getValue().getOutputs().size(), 4);
 }
 
 TEST(TransactionTest, ExtractMetadataValid)

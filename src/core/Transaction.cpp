@@ -1,11 +1,12 @@
 #include <array>
-#include <boost/algorithm/hex.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <daemon/DaemonBase.hpp>
+#include <iostream>
 #include <json/value.h>
 #include <util/Opt.hpp>
 #include <vector>
+
 
 using buddy::core::TxIn;
 using buddy::core::TxOut;
@@ -268,8 +269,9 @@ auto buddy::core::buildTxOut(Json::Value&& json)
     -> util::Opt<TxOut>
 {
     try {
+        //dont check for addresses, since we allow 0 addresses
+        //this happens sometimes in nonstandart tx
         if(!json.isMember("scriptPubKey")
-           || !json["scriptPubKey"].isMember("addresses")
            || !json["scriptPubKey"].isMember("hex")
            || !json.isMember("value")) {
             return std::nullopt;
@@ -301,8 +303,8 @@ auto buddy::core::buildTransaction(Json::Value&& json)
 {
     try {
         if(!json.isMember("txid")
-           || json.isMember("vin")
-           || json.isMember("vout")) {
+           || !json.isMember("vin")
+           || !json.isMember("vout")) {
             return std::nullopt;
         }
 
@@ -316,12 +318,20 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                      [](auto&& input) {
                          return buildTxIn(std::move(input));
                      });
+
+        if(!inputs) {
+            std::cout << "REEEEEEEEE11\n";
+        }
         auto outputs =
             traverse(std::vector<Json::Value>(vout.begin(),
                                               vout.end()),
                      [](auto&& output) {
                          return buildTxOut(std::move(output));
                      });
+
+        if(!outputs) {
+            std::cout << "REEEEEEEEE\n";
+        }
 
         return combine(std::move(inputs),
                        std::move(outputs))
@@ -331,6 +341,7 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                                    std::move(txid)};
             });
     } catch(...) {
+        std::cout << "REEEEEEEEE\n";
         return std::nullopt;
     }
 }

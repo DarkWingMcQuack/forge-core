@@ -1,0 +1,14 @@
+{
+    "value": 94.20000000,
+    "n": 3,
+    "scriptPubKey": {
+        "asm": "OP_DUP OP_HASH160 ff73567e44b989b5513ed0ac196d29691c43e084 OP_EQUALVERIFY OP_CHECKSIG",
+        "hex": "76a914ff73567e44b989b5513ed0ac196d29691c43e08488ac",
+        "reqSigs": 1,
+        "type": "pubkeyhash",
+        "addresses": [
+            "ogA4iDjm5H2HjWUmeZykhX4HhtgMAEixGb",
+            "oMRtieu2VEDBFYKu9XNtXPxHEKWbmssD5a"
+        ]
+    }
+}
