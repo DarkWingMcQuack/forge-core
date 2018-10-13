@@ -2,7 +2,6 @@
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <daemon/DaemonBase.hpp>
-#include <iostream>
 #include <json/value.h>
 #include <util/Opt.hpp>
 #include <vector>
@@ -319,9 +318,6 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                          return buildTxIn(std::move(input));
                      });
 
-        if(!inputs) {
-            std::cout << "REEEEEEEEE11\n";
-        }
         auto outputs =
             traverse(std::vector<Json::Value>(vout.begin(),
                                               vout.end()),
@@ -329,9 +325,6 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                          return buildTxOut(std::move(output));
                      });
 
-        if(!outputs) {
-            std::cout << "REEEEEEEEE\n";
-        }
 
         return combine(std::move(inputs),
                        std::move(outputs))
@@ -341,7 +334,6 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                                    std::move(txid)};
             });
     } catch(...) {
-        std::cout << "REEEEEEEEE\n";
         return std::nullopt;
     }
 }
