@@ -37,7 +37,7 @@ auto parseString(const std::string& str)
     return json;
 }
 
-TEST(TransactionTest, TxInParsing)
+TEST(TransactionTest, TxInParsingValid)
 {
     auto json_str = readFile("txin_valid.json");
     auto json = parseString(json_str);
@@ -49,6 +49,16 @@ TEST(TransactionTest, TxInParsing)
     EXPECT_STREQ(txin.getValue().getTxid().c_str(),
                  "a109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
     EXPECT_EQ(txin.getValue().getVoutIndex(), 2);
+}
+
+TEST(TransactionTest, TxInParsingInValid)
+{
+    auto json_str = readFile("txin_invalid1.json");
+    auto json = parseString(json_str);
+
+    auto txin = buddy::core::buildTxIn(std::move(json));
+
+    EXPECT_FALSE(static_cast<bool>(txin));
 }
 
 TEST(TransactionTest, TxOutParsing)
