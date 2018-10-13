@@ -13,7 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(cmake/jsoncpp.cmake)
 include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
-include(cmake/boost.cmake)
+# include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
 include(cmake/gtest.cmake)
 
@@ -95,7 +95,7 @@ add_executable(cppBUDDY
 #make sure everything is build in the right order
 add_dependencies(buddy-src fmt-project)
 add_dependencies(buddy-src jsonrpc-project)
-add_dependencies(buddy-src boost-project)
+# add_dependencies(buddy-src boost-project)
 add_dependencies(buddy-src cxxopts-project)
 add_dependencies(cppBUDDY buddy-src)
 
