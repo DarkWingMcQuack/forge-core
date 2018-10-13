@@ -250,7 +250,8 @@ auto buddy::core::buildTxIn(Json::Value&& json)
 {
 
     try {
-        if(!json.isMember("txid") || !json.isMember("vout")) {
+        if(!json.isMember("txid")
+           || !json.isMember("vout")) {
             return std::nullopt;
         }
 
@@ -268,6 +269,14 @@ auto buddy::core::buildTxOut(Json::Value&& json)
     -> util::Opt<TxOut>
 {
     try {
+        if(!json.isMember("scriptPubKey")
+           || !json["scriptPubKey"].isMember("addresses")
+           || !json["scriptPubKey"].isMember("hex")
+           || !json.isMember("value")) {
+            return std::nullopt;
+        }
+
+
         auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
         auto hex = std::move(json["scriptPubKey"]["hex"].asString());
         auto value = json["value"].asUInt();
@@ -292,6 +301,12 @@ auto buddy::core::buildTransaction(Json::Value&& json)
     -> util::Opt<Transaction>
 {
     try {
+        if(!json.isMember("txid")
+           || json.isMember("vin")
+           || json.isMember("vout")) {
+            return std::nullopt;
+        }
+
         auto txid = std::move(json["txid"].asString());
         auto vin = std::move(json["vin"]);
         auto vout = std::move(json["vout"]);
