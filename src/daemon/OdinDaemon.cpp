@@ -3,6 +3,7 @@
 #include <daemon/Coin.hpp>
 #include <daemon/DaemonBase.hpp>
 #include <daemon/OdinDaemon.hpp>
+#include <fmt/core.h>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <util/Opt.hpp>
@@ -16,8 +17,11 @@ using buddy::util::Try;
 using buddy::core::Block;
 using buddy::core::OpReturnTx;
 using buddy::core::TxIn;
+using buddy::core::buildTxIn;
 using buddy::core::TxOut;
+using buddy::core::buildTxOut;
 using buddy::core::Transaction;
+using buddy::core::buildTransaction;
 
 using jsonrpc::Client;
 using jsonrpc::JSONRPC_CLIENT_V1;
@@ -127,7 +131,20 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
 
     return sendcommand(command, params)
         .map([](auto&& json) {
-            return TxOut{std::move(json)};
+            return buildTxOut(std::move(json));
+        })
+        .flatMap([&params](auto&& opt)
+                     -> util::Result<core::TxOut, DaemonError> {
+            if(opt) {
+                return opt.getValue();
+            }
+
+            auto error_str =
+                fmt::format("unable to build transaction from result when calling {}, with parameters {}",
+                            command,
+                            params.asString());
+
+            return DaemonError{std::move(error_str)};
         });
 }
 
@@ -142,6 +159,19 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
 
     return sendcommand(command, params)
         .map([](auto&& json) {
-            return Transaction{std::move(json)};
+            return buildTransaction(std::move(json));
+        })
+        .flatMap([&params](auto&& opt)
+                     -> util::Result<core::Transaction, DaemonError> {
+            if(opt) {
+                return std::move(opt.getValue());
+            }
+
+            auto error_str =
+                fmt::format("unable to build transaction from result when calling {}, with parameters {}",
+                            command,
+                            params.asString());
+
+            return DaemonError{std::move(error_str)};
         });
 }

@@ -14,6 +14,7 @@ using buddy::daemon::DaemonBase;
 using buddy::daemon::DaemonError;
 using buddy::util::Result;
 using buddy::util::Opt;
+using buddy::util::traverse;
 using buddy::core::BUDDY_IDENTIFIER_MASK;
 using namespace std::string_literals;
 
@@ -22,13 +23,6 @@ TxIn::TxIn(std::string&& txid,
            std::size_t vout_index)
     : txid_(std::move(txid)),
       vout_index_(vout_index) {}
-
-
-TxIn::TxIn(Json::Value&& json)
-{
-    txid_ = std::move(json["txid"].asString());
-    vout_index_ = json["vout"].asUInt();
-}
 
 
 auto TxIn::getTxid() const
@@ -56,20 +50,6 @@ TxOut::TxOut(std::size_t value,
     : value_(value),
       hex_(std::move(hex)),
       addresses_(std::move(addresses)) {}
-
-TxOut::TxOut(Json::Value&& json)
-{
-    auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
-    hex_ = std::move(json["scriptPubKey"]["hex"].asString());
-    value_ = json["value"].asUInt();
-
-    std::transform(std::cbegin(json_vec),
-                   std::cend(json_vec),
-                   std::back_inserter(addresses_),
-                   [](auto&& value) {
-                       return std::move(value.asString());
-                   });
-}
 
 
 auto TxOut::getValue() const
@@ -125,29 +105,6 @@ Transaction::Transaction(std::vector<TxIn>&& inputs,
       outputs_(std::move(outputs)),
       txid_(std::move(txid)) {}
 
-
-Transaction::Transaction(Json::Value&& json)
-{
-    txid_ = std::move(json["txid"].asString());
-    auto vin = std::move(json["vin"]);
-    auto vout = std::move(json["vout"]);
-
-    //get inputs
-    std::transform(std::begin(vin),
-                   std::end(vin),
-                   std::back_inserter(inputs_),
-                   [](auto&& input) {
-                       return TxIn{std::move(input)};
-                   });
-
-    //get outputs
-    std::transform(std::begin(vout),
-                   std::end(vout),
-                   std::back_inserter(outputs_),
-                   [](auto&& output) {
-                       return TxOut{std::move(output)};
-                   });
-}
 
 auto Transaction::getInputs() const
     -> const std::vector<TxIn>&
@@ -286,6 +243,77 @@ auto Transaction::getNumberOfOutputs() const
     -> std::size_t
 {
     return outputs_.size();
+}
+
+auto buddy::core::buildTxIn(Json::Value&& json)
+    -> util::Opt<TxIn>
+{
+    try {
+        auto txid = std::move(json["txid"].asString());
+        auto vout_index = json["vout"].asUInt();
+
+        return TxIn{std::move(txid),
+                    vout_index};
+    } catch(...) {
+        return std::nullopt;
+    }
+}
+
+auto buddy::core::buildTxOut(Json::Value&& json)
+    -> util::Opt<TxOut>
+{
+    try {
+        auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
+        auto hex = std::move(json["scriptPubKey"]["hex"].asString());
+        auto value = json["value"].asUInt();
+
+        std::vector<std::string> addresses;
+        std::transform(std::cbegin(json_vec),
+                       std::cend(json_vec),
+                       std::back_inserter(addresses),
+                       [](auto&& value) {
+                           return std::move(value.asString());
+                       });
+
+        return TxOut{value,
+                     std::move(hex),
+                     std::move(addresses)};
+    } catch(...) {
+        return std::nullopt;
+    }
+}
+
+auto buddy::core::buildTransaction(Json::Value&& json)
+    -> util::Opt<Transaction>
+{
+    try {
+        auto txid = std::move(json["txid"].asString());
+        auto vin = std::move(json["vin"]);
+        auto vout = std::move(json["vout"]);
+
+        auto inputs =
+            traverse(std::vector<Json::Value>(vin.begin(),
+                                              vin.end()),
+                     [](auto&& input) {
+                         return buildTxIn(std::move(input));
+                     });
+        auto outputs =
+            traverse(std::vector<Json::Value>(vout.begin(),
+                                              vout.end()),
+                     [](auto&& output) {
+                         return buildTxOut(std::move(output));
+                     });
+
+        return combine(std::move(inputs),
+                       std::move(outputs))
+            .map([&txid](auto&& pair) {
+                return Transaction{std::move(pair.first),
+                                   std::move(pair.second),
+                                   std::move(txid)};
+            });
+    } catch(...) {
+        return std::nullopt;
+    }
 }
 
 auto buddy::core::extractMetadata(std::string&& hex)
