@@ -212,14 +212,14 @@ constexpr auto collect(std::vector<Opt<T>>&& vec)
 
 template<class T, class F>
 constexpr auto traverse(std::vector<T>&& vec, F&& f)
-    -> Opt<std::vector<typename std::invoke_result_t<F, T&&>>>
+    -> Opt<std::vector<typename std::invoke_result_t<F, T&&>::value_type>>
 {
     using invoke_res = typename std::invoke_result_t<F, T&&>;
 
-    static_assert(!is_opt<invoke_res>::value,
+    static_assert(is_opt<invoke_res>::value,
                   "function musst return an opt to be useable with traverse");
 
-    std::vector<invoke_res> ret_vec;
+    std::vector<typename invoke_res::value_type> ret_vec;
     for(auto&& elem : vec) {
         auto result = std::invoke(std::forward<F>(f),
                                   std::move(elem));
