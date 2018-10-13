@@ -113,6 +113,81 @@ TEST(TransactionTest, StringToByteVec)
         (std::byte)0x97,
         (std::byte)0x07,
         (std::byte)0xad};
+    std::vector<std::byte> second_expected{
+        (std::byte)0x5b,
+        (std::byte)0x00,
+        (std::byte)0xa1,
+        (std::byte)0x04,
+        (std::byte)0xaa,
+        (std::byte)0xd3,
+        (std::byte)0x4c,
+        (std::byte)0xac,
+        (std::byte)0xc4,
+        (std::byte)0x77,
+        (std::byte)0x84,
+        (std::byte)0xa5,
+        (std::byte)0xee,
+        (std::byte)0x9f,
+        (std::byte)0x9b,
+        (std::byte)0x8f,
+        (std::byte)0x76,
+        (std::byte)0xb9,
+        (std::byte)0x4a,
+        (std::byte)0x72,
+        (std::byte)0xfa,
+        (std::byte)0x5c,
+        (std::byte)0xff,
+        (std::byte)0x81,
+        (std::byte)0xcd,
+        (std::byte)0x31,
+        (std::byte)0x4c,
+        (std::byte)0xb9,
+        (std::byte)0x79,
+        (std::byte)0x7b,
+        (std::byte)0x45,
+        (std::byte)0x6d};
+    std::vector<std::byte> third_expected{
+        (std::byte)0x44,
+        (std::byte)0xd8,
+        (std::byte)0x29,
+        (std::byte)0x49,
+        (std::byte)0xd5,
+        (std::byte)0x28,
+        (std::byte)0xfb,
+        (std::byte)0xb3,
+        (std::byte)0x12,
+        (std::byte)0x6d,
+        (std::byte)0x8b,
+        (std::byte)0xf5,
+        (std::byte)0xfd,
+        (std::byte)0x09,
+        (std::byte)0x85,
+        (std::byte)0x83,
+        (std::byte)0x6b,
+        (std::byte)0x44,
+        (std::byte)0x7f,
+        (std::byte)0x26,
+        (std::byte)0xbd,
+        (std::byte)0x5b,
+        (std::byte)0x2f,
+        (std::byte)0x82,
+        (std::byte)0x51,
+        (std::byte)0x74,
+        (std::byte)0x5c,
+        (std::byte)0x20,
+        (std::byte)0x64,
+        (std::byte)0xcb,
+        (std::byte)0x93,
+        (std::byte)0x8f};
+    std::vector<std::byte> fourth_expected{
+        (std::byte)0x44,
+        (std::byte)0xd8,
+        (std::byte)0x29,
+        (std::byte)0x49,
+        (std::byte)0xd5,
+        (std::byte)0x28,
+        (std::byte)0xfb,
+        (std::byte)0xbf};
 
     ASSERT_TRUE(first_valid);
     ASSERT_TRUE(second_valid);
@@ -120,4 +195,7 @@ TEST(TransactionTest, StringToByteVec)
     ASSERT_TRUE(fourth_valid);
 
     EXPECT_EQ(first_valid.getValue(), first_expected);
+    EXPECT_EQ(second_valid.getValue(), second_expected);
+    EXPECT_EQ(third_valid.getValue(), third_expected);
+    EXPECT_EQ(fourth_valid.getValue(), fourth_expected);
 }
