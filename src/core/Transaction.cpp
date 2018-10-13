@@ -324,15 +324,17 @@ auto buddy::core::buildTransaction(Json::Value&& json)
 auto buddy::core::extractMetadata(std::string&& hex)
     -> util::Opt<std::vector<std::byte>>
 {
-    if(hex.size() < 13) {
+    if(hex.size() < 4) {
+        return std::nullopt;
+    }
+
+    //opcode for op return
+    if(hex[0] != '6' || hex[1] != 'a') {
         return std::nullopt;
     }
 
     //remove the op return Opcode
     //and the next byte
-    if(hex[0] != '6' || hex[1] != 'a') {
-        return std::nullopt;
-    }
     hex.erase(0, 4);
 
     return stringToByteVec(std::move(hex));
