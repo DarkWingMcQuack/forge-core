@@ -5,7 +5,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(unit_tests
   main.cpp
   transaction_tests.cpp
-  block_tests.cpp)
+  block_tests.cpp
+  entry_tests.cpp)
 
 target_link_libraries(unit_tests LINK_PUBLIC
   gtest
