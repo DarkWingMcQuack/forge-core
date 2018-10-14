@@ -11,7 +11,7 @@ TEST(TransactionTest, TxInParsingValid)
 
     auto txin = buddy::core::buildTxIn(std::move(json));
 
-    ASSERT_TRUE(static_cast<bool>(txin));
+    ASSERT_TRUE(txin);
 
     EXPECT_STREQ(txin.getValue().getTxid().c_str(),
                  "a109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
