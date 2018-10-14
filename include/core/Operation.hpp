@@ -17,11 +17,11 @@
 namespace buddy::core {
 
 // clang-format off
-constexpr auto ENTRY_CREATION_FLAG     = static_cast<std::byte>(0b00000001);
-constexpr auto ENTRY_RENEWAL_FLAG      = static_cast<std::byte>(0b00000010);
-constexpr auto OWNERSHIP_TRANSFER_FLAG = static_cast<std::byte>(0b00000100);
-constexpr auto ENTRY_UPDATE_FLAG       = static_cast<std::byte>(0b00001000);
-constexpr auto ENTRY_DELETION_FLAG     = static_cast<std::byte>(0b00010000);
+constexpr inline auto ENTRY_CREATION_FLAG     = static_cast<std::byte>(0b00000001);
+constexpr inline auto ENTRY_RENEWAL_FLAG      = static_cast<std::byte>(0b00000010);
+constexpr inline auto OWNERSHIP_TRANSFER_FLAG = static_cast<std::byte>(0b00000100);
+constexpr inline auto ENTRY_UPDATE_FLAG       = static_cast<std::byte>(0b00001000);
+constexpr inline auto ENTRY_DELETION_FLAG     = static_cast<std::byte>(0b00010000);
 // clang-format on
 
 using Operation = std::variant<EntryCreationOp,
