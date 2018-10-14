@@ -9,7 +9,7 @@
 #include <json/writer.h>
 
 
-auto readFile(const std::string& path)
+inline auto readFile(const std::string& path)
     -> std::string
 {
     std::ifstream t{resource_path + "/" + path};
@@ -19,7 +19,7 @@ auto readFile(const std::string& path)
     return str;
 }
 
-auto parseString(const std::string& str)
+inline auto parseString(const std::string& str)
     -> Json::Value
 {
     Json::CharReaderBuilder builder;
