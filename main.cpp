@@ -62,7 +62,7 @@ auto main(int argc, char* argv[]) -> int
                 auto txid = std::move(block.getTxids()[1]);
                 return d->getTransaction(std::move(txid));
             })
-            .changeValue([](auto&& tx) {
+            .onValue([](auto&& tx) {
                 fmt::print("outputs: {}\n",
                            tx.getOutputs().size());
                 fmt::print("addresses: {}\n",
@@ -70,7 +70,7 @@ auto main(int argc, char* argv[]) -> int
                 fmt::print("first address: {}\n",
                            tx.getOutputs().at(1).getAddresses().at(0));
             })
-            .changeError([](auto&& error) {
+            .onError([](auto&& error) {
                 fmt::print("{}\n",
                            error.what());
             });

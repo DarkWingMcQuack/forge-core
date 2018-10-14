@@ -285,12 +285,12 @@ public:
     }
 
     template<class Func>
-    constexpr auto changeValue(Func&& func) & -> Result<T, Err>&
+    constexpr auto onValue(Func&& func) & -> Result<T, Err>&
     {
         using FuncRet = std::invoke_result_t<Func, T&>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
 
         if(*this) {
             func(getValue());
@@ -300,12 +300,12 @@ public:
     }
 
     template<class Func>
-    constexpr auto changeValue(Func&& func) && -> Result<T, Err>&&
+    constexpr auto onValue(Func&& func) && -> Result<T, Err>&&
     {
         using FuncRet = std::invoke_result_t<Func, T&&>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
 
         if(*this) {
             func(getValue());
@@ -315,12 +315,12 @@ public:
     }
 
     template<class Func>
-    constexpr auto changeError(Func&& func) & -> Result<T, Err>&
+    constexpr auto onError(Func&& func) & -> Result<T, Err>&
     {
         using FuncRet = std::invoke_result_t<Func, Err&&>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
 
         if(!*this) {
             func(getError());
@@ -330,12 +330,12 @@ public:
     }
 
     template<class Func>
-    constexpr auto changeError(Func&& func) && -> Result<T, Err>&&
+    constexpr auto onError(Func&& func) && -> Result<T, Err>&&
     {
         using FuncRet = std::invoke_result_t<Func, Err&&>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
 
         if(!*this) {
             func(getError());
@@ -353,7 +353,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
         func();
         return *this;
     }
@@ -364,7 +364,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
         func();
         return *this;
     }
@@ -376,7 +376,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
         func();
         return *this;
     }
@@ -587,7 +587,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
         func();
         return *this;
     }
@@ -598,7 +598,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
         func();
         return *this;
     }
@@ -610,7 +610,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of changeValue function must be void");
+                      "return of onValue function must be void");
         func();
         return *this;
     }
