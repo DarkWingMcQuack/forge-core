@@ -12,25 +12,25 @@ EntryDeletionOp::EntryDeletionOp(Entry&& entry,
       block_(block) {}
 
 
-auto EntryDeletionOp::getKey() const
+auto EntryDeletionOp::getEntryKey() const
     -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto EntryDeletionOp::getKey()
+auto EntryDeletionOp::getEntryKey()
     -> EntryKey&
 {
     return entry_.first;
 }
 
-auto EntryDeletionOp::getValue() const
+auto EntryDeletionOp::getEntryValue() const
     -> const EntryValue&
 {
     return entry_.second;
 }
 
-auto EntryDeletionOp::getValue()
+auto EntryDeletionOp::getEntryValue()
     -> EntryValue&
 {
     return entry_.second;

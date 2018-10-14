@@ -11,14 +11,14 @@ public:
                     std::string&& owner,
                     std::size_t block);
 
-    auto getKey() const
+    auto getEntryKey() const
         -> const EntryKey&;
-    auto getKey()
+    auto getEntryKey()
         -> EntryKey&;
 
-    auto getValue() const
+    auto getEntryValue() const
         -> const EntryValue&;
-    auto getValue()
+    auto getEntryValue()
         -> EntryValue&;
 
     auto getBlock() const
@@ -26,7 +26,7 @@ public:
 
     auto getOwner() const
         -> const std::string&;
-    auto getOwner() 
+    auto getOwner()
         -> std::string&;
 
 private:
