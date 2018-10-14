@@ -11,31 +11,37 @@ EntryCreationOp::EntryCreationOp(Entry&& entry,
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
-      value_(value){}
+      value_(value) {}
 
 
-auto EntryCreationOp::getKey() const
+auto EntryCreationOp::getEntryKey() const
     -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto EntryCreationOp::getKey()
+auto EntryCreationOp::getEntryKey()
     -> EntryKey&
 {
     return entry_.first;
 }
 
-auto EntryCreationOp::getValue() const
+auto EntryCreationOp::getEntryValue() const
     -> const EntryValue&
 {
     return entry_.second;
 }
 
-auto EntryCreationOp::getValue()
+auto EntryCreationOp::getEntryValue()
     -> EntryValue&
 {
     return entry_.second;
+}
+
+auto EntryCreationOp::getValue() const
+    -> std::size_t
+{
+    return value_;
 }
 
 auto EntryCreationOp::getBlock() const

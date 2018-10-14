@@ -9,16 +9,18 @@ class EntryUpdateOp
 public:
     EntryUpdateOp(Entry&& entry,
                   std::string&& owner,
-                  std::size_t block);
+                  std::size_t block,
+                  std::size_t value);
 
-    auto getKey() const
+    auto getEntryKey() const
         -> const EntryKey&;
-    auto getKey()
+    auto getEntryKey()
         -> EntryKey&;
 
-    auto getNewValue() const
+    auto getNewEntryValue() const
         -> const EntryValue&;
-    auto getNewValue()
+
+    auto getNewEntryValue()
         -> EntryValue&;
 
     auto getBlock() const
@@ -33,6 +35,7 @@ private:
     Entry entry_;
     std::string owner_;
     std::size_t block_;
+    std::size_t value_;
 };
 
 } // namespace buddy::core

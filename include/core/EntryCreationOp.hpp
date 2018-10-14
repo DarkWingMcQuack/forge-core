@@ -12,15 +12,18 @@ public:
                     std::size_t block,
                     std::size_t value);
 
-    auto getKey() const
+    auto getEntryKey() const
         -> const EntryKey&;
-    auto getKey()
+    auto getEntryKey()
         -> EntryKey&;
 
-    auto getValue() const
+    auto getEntryValue() const
         -> const EntryValue&;
-    auto getValue()
+    auto getEntryValue()
         -> EntryValue&;
+
+    auto getValue() const
+        -> std::size_t;
 
     auto getBlock() const
         -> std::size_t;

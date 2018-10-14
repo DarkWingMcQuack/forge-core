@@ -3,6 +3,7 @@
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <daemon/DaemonBase.hpp>
+#include <fmt/core.h>
 #include <vector>
 
 using buddy::core::Entry;
@@ -57,7 +58,8 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
                 return Operation{
                     EntryUpdateOp{std::move(entry),
                                   std::move(owner),
-                                  block}};
+                                  block,
+                                  value}};
 
             case ENTRY_DELETION_FLAG:
                 return Operation{
