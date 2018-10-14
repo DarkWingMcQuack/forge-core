@@ -28,4 +28,30 @@ TEST(OperationTest, EntryCreationOpParsingValid)
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
     EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getValue(), 10);
+    EXPECT_EQ(creation.getBlock(), 1000);
+}
+
+TEST(OperationTest, EntryRenewalOpParsingValid)
+{
+    auto metadata = extractMetadata("6a00c6dc750201aabbccdddeadbeef").getValue();
+    std::size_t block = 1000;
+    auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
+    std::size_t value = 10;
+
+    auto op_opt = parseMetadata(std::move(metadata),
+                                block,
+                                std::move(owner),
+                                value);
+
+    ASSERT_TRUE(op_opt);
+
+    const auto& op = op_opt.getValue();
+
+    ASSERT_TRUE(std::holds_alternative<EntryRenewalOp>(op));
+
+    auto creation = std::get<EntryRenewalOp>(op);
+
+    EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getBlock(), 1000);
 }
