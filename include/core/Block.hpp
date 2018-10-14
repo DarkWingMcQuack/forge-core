@@ -15,9 +15,6 @@ public:
           std::size_t time,
           std::string&& hash);
 
-    Block(Json::Value&& json,
-          std::string&& hash);
-
     Block(Block&&) = default;
     Block(const Block&) = delete;
 

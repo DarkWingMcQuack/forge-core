@@ -15,6 +15,7 @@ using buddy::util::Opt;
 using buddy::util::Result;
 using buddy::util::Try;
 using buddy::core::Block;
+using buddy::core::buildBlock;
 using buddy::core::OpReturnTx;
 using buddy::core::TxIn;
 using buddy::core::buildTxIn;
@@ -101,10 +102,21 @@ auto OdinDaemon::getBlock(std::string&& hash) const
 
     //send command
     return sendcommand(command, param)
-        .flatMap([&hash](auto&& json)
+        .map([](auto&& json) {
+            return buildBlock(std::move(json));
+        })
+        .flatMap([&param](auto&& opt)
                      -> util::Result<core::Block, DaemonError> {
-            return Block{std::move(json),
-                         std::move(hash)};
+            if(opt) {
+                return std::move(opt.getValue());
+            }
+
+            auto error_str =
+                fmt::format("unable to build transaction from result when calling {}, with parameters {}",
+                            command,
+                            param.asString());
+
+            return DaemonError{std::move(error_str)};
         });
 }
 

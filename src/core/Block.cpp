@@ -19,24 +19,6 @@ Block::Block(std::vector<std::string>&& txids,
       time_(time),
       hash_(std::move(hash)) {}
 
-Block::Block(Json::Value&& json,
-             std::string&& hash)
-    : hash_(std::move(hash))
-{
-    std::transform(std::cbegin(json["tx"]),
-                   std::cend(json["tx"]),
-                   std::back_inserter(txids_),
-                   [](auto&& json) {
-                       return std::move(json.asString());
-                   });
-
-
-    //extract blocktime
-    time_ = json["time"].asUInt();
-    //extract block height
-    height_ = json["height"].asUInt();
-}
-
 auto Block::getTxids() const
     -> const std::vector<std::string>&
 {
