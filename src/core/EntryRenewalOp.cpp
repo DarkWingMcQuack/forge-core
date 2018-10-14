@@ -12,25 +12,25 @@ EntryRenewalOp::EntryRenewalOp(Entry&& entry,
       block_(block) {}
 
 
-auto EntryRenewalOp::getKey() const
+auto EntryRenewalOp::getEntryKey() const
     -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto EntryRenewalOp::getKey()
+auto EntryRenewalOp::getEntryKey()
     -> EntryKey&
 {
     return entry_.first;
 }
 
-auto EntryRenewalOp::getValue() const
+auto EntryRenewalOp::getEntryValue() const
     -> const EntryValue&
 {
     return entry_.second;
 }
 
-auto EntryRenewalOp::getValue()
+auto EntryRenewalOp::getEntryValue()
     -> EntryValue&
 {
     return entry_.second;
