@@ -1,0 +1,35 @@
+
+{
+    "hash": ["8fc724cddcd8a5d6f88bfcf2242eafc96a36d22707183f21d229fac18191adb7"],
+    "confirmations": 3268,
+    "strippedsize": 473,
+    "size": 473,
+    "cost": 1892,
+    "height": 20000,
+    "version": 3,
+    "merkleroot": "3ac604cfea88e3e7be4fdf6c2aa6e756933c9884b1078aaafffd2484d005d1a5",
+    "acc_checkpoint": "0000000000000000000000000000000000000000000000000000000000000000",
+    "tx": [
+        "d0febcb8eee13b5305c3ee205717fa8daa2667379283524fb8fbdae11f66d9d3",
+        "b75fbce207c339e9413387db74ec156271ffa08b9cda01b7a0943819e7559d43"
+    ],
+    "time": 1539323011,
+    "nonce": 0,
+    "bits": "1a21fbe4",
+    "difficulty": 493673.0753439788,
+    "chainwork": "00000000000000000000000000000000000000000000000406d103b2b1bbd874",
+    "previousblockhash": "f2ad4028422c18f6207291d269a153cd9354d0dfac7af93ac6f4ad946ea4d738",
+    "nextblockhash": "d7c13860b951a18772a2ea231a4cc5d085f1fd65c8101446d210b77c1f82c3b0",
+    "moneysupply": 100417188.50060348,
+    "zODINsupply": {
+        "1": 0.00000000,
+        "5": 0.00000000,
+        "10": 0.00000000,
+        "50": 0.00000000,
+        "100": 0.00000000,
+        "500": 0.00000000,
+        "1000": 0.00000000,
+        "5000": 0.00000000,
+        "total": 0.00000000
+    }
+}
