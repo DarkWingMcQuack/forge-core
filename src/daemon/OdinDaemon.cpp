@@ -1,5 +1,4 @@
 #include <core/Block.hpp>
-#include <core/OpReturnTx.hpp>
 #include <daemon/Coin.hpp>
 #include <daemon/DaemonBase.hpp>
 #include <daemon/OdinDaemon.hpp>
@@ -16,7 +15,6 @@ using buddy::util::Result;
 using buddy::util::Try;
 using buddy::core::Block;
 using buddy::core::buildBlock;
-using buddy::core::OpReturnTx;
 using buddy::core::TxIn;
 using buddy::core::buildTxIn;
 using buddy::core::TxOut;

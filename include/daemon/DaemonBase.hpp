@@ -1,7 +1,6 @@
 #pragma once
 
 #include <core/Block.hpp>
-#include <core/OpReturnTx.hpp>
 #include <core/Transaction.hpp>
 #include <daemon/Coin.hpp>
 #include <memory>
