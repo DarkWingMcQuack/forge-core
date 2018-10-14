@@ -163,10 +163,55 @@ public:
             : Opt<Result>{std::nullopt};
     }
 
+    template<class Func>
+    constexpr auto onValue(Func&& func) & -> const Opt<T>&
+    {
+        using FuncRet = std::invoke_result_t<Func, const T&>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onValue function must be void");
+
+        if(*this) {
+            func(getValue());
+        }
+
+        return *this;
+    }
+
+    template<class Func>
+    constexpr auto onValue(Func&& func) & -> Opt<T>&
+    {
+        using FuncRet = std::invoke_result_t<Func, T&>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onValue function must be void");
+
+        if(*this) {
+            func(getValue());
+        }
+
+        return *this;
+    }
+
+    template<class Func>
+    constexpr auto onValue(Func&& func) && -> Opt<T>&&
+    {
+        using FuncRet = std::invoke_result_t<Func, T&&>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onValue function must be void");
+
+        if(*this) {
+            func(std::move(getValue()));
+        }
+
+        return std::move(*this);
+    }
+
     constexpr auto flatten() &&
     {
         if constexpr(is_opt<T>::value) {
-            return getValue();
+            return getValue().flatten();
         } else {
             return *this;
         }
@@ -175,7 +220,7 @@ public:
     constexpr auto flatten() &
     {
         if constexpr(is_opt<T>::value) {
-            return getValue();
+            return getValue().flatten();
         } else {
             return *this;
         }
@@ -184,10 +229,21 @@ public:
     constexpr auto flatten() const&
     {
         if constexpr(is_opt<T>::value) {
-            return getValue();
+            return getValue().flatten();
         } else {
             return *this;
         }
+    }
+
+    template<class U>
+    constexpr auto combine(Opt<U>&& other) &&
+    {
+        return flatMap([&other](auto&& first) {
+            return other.flatMap([&first](auto&& second) {
+                return std::pair{std::move(first),
+                                 std::move(second)};
+            });
+        });
     }
 
 private:
@@ -232,17 +288,6 @@ constexpr auto traverse(std::vector<T>&& vec, F&& f)
     }
 
     return ret_vec;
-}
-
-template<class T>
-constexpr auto flatten(Opt<Opt<T>>&& opt)
-    -> Opt<T>
-{
-    if(opt) {
-        return opt.getValue();
-    }
-
-    return std::nullopt;
 }
 
 template<class T, class U>
