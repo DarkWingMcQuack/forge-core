@@ -51,7 +51,8 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
                             OwnershipTransferOp{std::move(entry),
                                                 std::move(owner),
                                                 std::move(new_owner),
-                                                block}};
+                                                block,
+                                                value}};
                     });
 
             case ENTRY_UPDATE_FLAG:

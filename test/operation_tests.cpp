@@ -55,3 +55,31 @@ TEST(OperationTest, EntryRenewalOpParsingValid)
     EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 }
+
+TEST(OperationTest, OwnershipTransferOpParsingValid)
+{
+    auto metadata = extractMetadata("6a00c6dc750401aabbccdddeadbeef").getValue();
+    std::size_t block = 1000;
+    auto old_owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
+    auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
+    std::size_t value = 10;
+
+    auto op_opt = parseMetadata(std::move(metadata),
+                                block,
+                                std::move(old_owner),
+                                value,
+                                std::move(new_owner));
+
+    ASSERT_TRUE(op_opt);
+
+    const auto& op = op_opt.getValue();
+
+    ASSERT_TRUE(std::holds_alternative<OwnershipTransferOp>(op));
+
+    auto creation = std::get<OwnershipTransferOp>(op);
+
+    EXPECT_EQ(creation.getOldOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
+    EXPECT_EQ(creation.getNewOwner(), "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W");
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getBlock(), 1000);
+}
