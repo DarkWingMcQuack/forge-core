@@ -53,12 +53,7 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
         return std::nullopt;
     }
 
-    if(data[4] == IPv6_VALUE_FLAG) {
-
-        IPv4Value ipv4{data[5],
-                       data[6],
-                       data[7],
-                       data[8]};
+    if(data[4] == IPv4_VALUE_FLAG) {
 
         return EntryKey{std::begin(data) + 9,
                         std::end(data)};
@@ -66,11 +61,13 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
 
 
     if(data[4] == IPv6_VALUE_FLAG
-       && data.size() > 20) {
+       && data.size() > 21) {
 
         return EntryKey{std::begin(data) + 21,
                         std::end(data)};
     }
+
+    return std::nullopt;
 }
 
 auto buddy::core::parseEntry(const std::vector<std::byte>& data)
