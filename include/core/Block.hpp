@@ -2,6 +2,7 @@
 
 #include <json/value.h>
 #include <string>
+#include <util/Opt.hpp>
 #include <vector>
 
 namespace buddy::core {
@@ -47,5 +48,8 @@ private:
     std::size_t time_;
     std::string hash_;
 };
+
+auto buildBlock(Json::Value&& json)
+    -> util::Opt<Block>;
 
 } // namespace buddy::core
