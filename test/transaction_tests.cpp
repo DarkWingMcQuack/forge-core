@@ -3,13 +3,19 @@
 #include <gtest/gtest.h>
 #include <json/value.h>
 
+using buddy::core::buildTxIn;
+using buddy::core::buildTxOut;
+using buddy::core::buildTransaction;
+using buddy::core::stringToByteVec;
+using buddy::core::extractMetadata;
+
 
 TEST(TransactionTest, TxInParsingValid)
 {
     auto json_str = readFile("txin_valid.json");
     auto json = parseString(json_str);
 
-    auto txin = buddy::core::buildTxIn(std::move(json));
+    auto txin = buildTxIn(std::move(json));
 
     ASSERT_TRUE(txin);
 
@@ -23,7 +29,7 @@ TEST(TransactionTest, TxInParsingInValid)
     auto json_str = readFile("txin_invalid1.json");
     auto json = parseString(json_str);
 
-    auto txin = buddy::core::buildTxIn(std::move(json));
+    auto txin = buildTxIn(std::move(json));
 
     EXPECT_FALSE(static_cast<bool>(txin));
 }
@@ -33,7 +39,7 @@ TEST(TransactionTest, TxOutParsingValid)
     auto json1_str = readFile("txout_valid1.json");
     auto json1 = parseString(json1_str);
 
-    auto txout1 = buddy::core::buildTxOut(std::move(json1));
+    auto txout1 = buildTxOut(std::move(json1));
 
     ASSERT_TRUE(txout1);
 
@@ -45,7 +51,7 @@ TEST(TransactionTest, TxOutParsingValid)
     auto json2_str = readFile("txout_valid2.json");
     auto json2 = parseString(json2_str);
 
-    auto txout2 = buddy::core::buildTxOut(std::move(json2));
+    auto txout2 = buildTxOut(std::move(json2));
 
     ASSERT_TRUE(txout2);
 
@@ -58,7 +64,7 @@ TEST(TransactionTest, TxOutParsingValid)
     auto json3_str = readFile("txout_valid3.json");
     auto json3 = parseString(json3_str);
 
-    auto txout3 = buddy::core::buildTxOut(std::move(json3));
+    auto txout3 = buildTxOut(std::move(json3));
 
     ASSERT_TRUE(txout3);
 
@@ -72,14 +78,14 @@ TEST(TransactionTest, TxOutParsingInvalid)
     auto json_str1 = readFile("txout_invalid1.json");
     auto json1 = parseString(json_str1);
 
-    auto txout1 = buddy::core::buildTxOut(std::move(json1));
+    auto txout1 = buildTxOut(std::move(json1));
 
     ASSERT_FALSE(txout1);
 
     auto json_str2 = readFile("txout_invalid2.json");
     auto json2 = parseString(json_str2);
 
-    auto txout2 = buddy::core::buildTxOut(std::move(json2));
+    auto txout2 = buildTxOut(std::move(json2));
 
     ASSERT_FALSE(txout2);
 }
@@ -89,7 +95,7 @@ TEST(TransactionTest, TransactionParsingValid)
     auto json1_str = readFile("tx_valid1.json");
     auto json1 = parseString(json1_str);
 
-    auto tx1 = buddy::core::buildTransaction(std::move(json1));
+    auto tx1 = buildTransaction(std::move(json1));
 
     ASSERT_TRUE(tx1);
 
@@ -102,10 +108,10 @@ TEST(TransactionTest, TransactionParsingValid)
 
 TEST(TransactionTest, ExtractMetadataValid)
 {
-    auto first_valid = buddy::core::extractMetadata("6aa109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
-    auto second_valid = buddy::core::extractMetadata("6a5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456d");
-    auto third_valid = buddy::core::extractMetadata("6a44d82949d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
-    auto fourth_valid = buddy::core::extractMetadata("6a44d82949d528fbbf");
+    auto first_valid = extractMetadata("6aa109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
+    auto second_valid = extractMetadata("6a5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456d");
+    auto third_valid = extractMetadata("6a44d82949d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
+    auto fourth_valid = extractMetadata("6a44d82949d528fbbf");
 
     std::vector<std::byte> first_expected{
         (std::byte)0x09,
@@ -226,14 +232,14 @@ TEST(TransactionTest, ExtractMetadataValid)
 TEST(TransactionTest, ExtractMetadataInalid)
 {
     //doesnt start with 6a
-    auto first_invalid = buddy::core::extractMetadata("a109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
+    auto first_invalid = extractMetadata("a109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
     //not eeven character count
-    auto second_invalid = buddy::core::extractMetadata("6a5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456");
+    auto second_invalid = extractMetadata("6a5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456");
     //bad characters
-    auto third_invalid = buddy::core::extractMetadata("6a44d82ü49d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
-    auto fourth_invalid = buddy::core::extractMetadata("6a44d8p949d528fbbf");
+    auto third_invalid = extractMetadata("6a44d82ü49d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
+    auto fourth_invalid = extractMetadata("6a44d8p949d528fbbf");
     //not enought chars
-    auto fifth_invalid = buddy::core::extractMetadata("6a4");
+    auto fifth_invalid = extractMetadata("6a4");
 
     ASSERT_FALSE(first_invalid);
     ASSERT_FALSE(second_invalid);
@@ -244,10 +250,10 @@ TEST(TransactionTest, ExtractMetadataInalid)
 
 TEST(TransactionTest, StringToByteVecValid)
 {
-    auto first_valid = buddy::core::stringToByteVec("a109A924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6B79707ad");
-    auto second_valid = buddy::core::stringToByteVec("5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cfF81cd314cB9797b456d");
-    auto third_valid = buddy::core::stringToByteVec("44d82949d528fbb3126d8bf5fd0985836b447f26bd5b2F8251745c2064cb938f");
-    auto fourth_valid = buddy::core::stringToByteVec("44d82949d528fbBf");
+    auto first_valid = stringToByteVec("a109A924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6B79707ad");
+    auto second_valid = stringToByteVec("5b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cfF81cd314cB9797b456d");
+    auto third_valid = stringToByteVec("44d82949d528fbb3126d8bf5fd0985836b447f26bd5b2F8251745c2064cb938f");
+    auto fourth_valid = stringToByteVec("44d82949d528fbBf");
 
     std::vector<std::byte> first_expected{
         (std::byte)0xA1,
@@ -372,11 +378,11 @@ TEST(TransactionTest, StringToByteVecValid)
 TEST(TransactionTest, StringToByteVecInvalid)
 {
     //not even characters
-    auto first_invalid = buddy::core::stringToByteVec("109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
+    auto first_invalid = stringToByteVec("109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
     //wrong chracters
-    auto second_invalid = buddy::core::stringToByteVec("gb00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456d");
-    auto third_invalid = buddy::core::stringToByteVec("4üd82949d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
-    auto fourth_invalid = buddy::core::stringToByteVec("j4d82949d528fbbf");
+    auto second_invalid = stringToByteVec("gb00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cff81cd314cb9797b456d");
+    auto third_invalid = stringToByteVec("4üd82949d528fbb3126d8bf5fd0985836b447f26bd5b2f8251745c2064cb938f");
+    auto fourth_invalid = stringToByteVec("j4d82949d528fbbf");
 
     EXPECT_FALSE(first_invalid);
     EXPECT_FALSE(second_invalid);
