@@ -8,6 +8,7 @@ using buddy::core::buildTxOut;
 using buddy::core::buildTransaction;
 using buddy::core::stringToByteVec;
 using buddy::core::extractMetadata;
+using buddy::core::metadataStartsWithBuddyId;
 
 
 TEST(TransactionTest, TxInParsingValid)
@@ -388,4 +389,40 @@ TEST(TransactionTest, StringToByteVecInvalid)
     EXPECT_FALSE(second_invalid);
     EXPECT_FALSE(third_invalid);
     EXPECT_FALSE(fourth_invalid);
+}
+
+TEST(TransactionTest, StartsWithIdCheckValid)
+{
+    auto first_valid = stringToByteVec("C6DC75a109A924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6B79707ad");
+    auto second_valid = stringToByteVec("C6DC755b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cfF81cd314cB9797b456d");
+    auto third_valid = stringToByteVec("C6DC7544d82949d528fbb3126d8bf5fd0985836b447f26bd5b2F8251745c2064cb938f");
+    auto fourth_valid = stringToByteVec("C6DC7544d82949d528fbBf");
+
+    ASSERT_TRUE(first_valid);
+    ASSERT_TRUE(second_valid);
+    ASSERT_TRUE(third_valid);
+    ASSERT_TRUE(fourth_valid);
+
+    EXPECT_TRUE(metadataStartsWithBuddyId(first_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithBuddyId(second_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithBuddyId(third_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithBuddyId(fourth_valid.getValue()));
+}
+
+TEST(TransactionTest, StartsWithIdCheckInvalid)
+{
+    auto first_valid = stringToByteVec("6DC75a109A924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6B79707add");
+    auto second_valid = stringToByteVec("CC6DD755b00a104aad34cacc47784a5ee9f9b8f76b94a72fa5cfF81cd314cB9797b4576d");
+    auto third_valid = stringToByteVec("FFC6DC7544d82949d528fbb3126d8bf5fd0985836b447f26bd5b2F8251745c2064cb938f");
+    auto fourth_valid = stringToByteVec("0C6DC7544d82949d528fbBf0");
+
+    ASSERT_TRUE(first_valid);
+    ASSERT_TRUE(second_valid);
+    ASSERT_TRUE(third_valid);
+    ASSERT_TRUE(fourth_valid);
+
+    EXPECT_FALSE(metadataStartsWithBuddyId(first_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithBuddyId(second_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithBuddyId(third_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithBuddyId(fourth_valid.getValue()));
 }

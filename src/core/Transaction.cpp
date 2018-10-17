@@ -390,6 +390,9 @@ auto buddy::core::stringToByteVec(std::string&& str)
 auto buddy::core::metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
     -> bool
 {
+    if(metadata.size() < 3){
+        return false;
+    }
     return std::equal(std::cbegin(BUDDY_IDENTIFIER_MASK),
                       std::cend(BUDDY_IDENTIFIER_MASK),
                       std::cbegin(metadata));
