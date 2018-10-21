@@ -78,7 +78,7 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
 
     auto creation = std::get<OwnershipTransferOp>(op);
 
-    EXPECT_EQ(creation.getOldOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
+    EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
     EXPECT_EQ(creation.getNewOwner(), "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W");
     EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
