@@ -52,13 +52,13 @@ auto OwnershipTransferOp::getNewOwner()
     return new_owner_;
 }
 
-auto OwnershipTransferOp::getOldOwner() const
+auto OwnershipTransferOp::getOwner() const
     -> const std::string&
 {
     return old_owner_;
 }
 
-auto OwnershipTransferOp::getOldOwner()
+auto OwnershipTransferOp::getOwner()
     -> std::string&
 {
     return old_owner_;

@@ -17,7 +17,9 @@ struct is_opt : std::false_type{};
 
 template<class T>
 struct is_opt<Opt<T>> : std::true_type{};
-// clang-format on
+
+template<class T>
+constexpr static auto is_opt_v = is_opt<T>::value;
 
 template<class T>
 class Opt
@@ -268,7 +270,8 @@ constexpr auto collect(std::vector<Opt<T>>&& vec)
 
 template<class T, class F>
 constexpr auto traverse(std::vector<T>&& vec, F&& f)
-    -> Opt<std::vector<typename std::invoke_result_t<F, T&&>::value_type>>
+    -> std::enable_if_t<is_opt_v<std::invoke_result_t<F, T&&>>,
+                        Opt<std::vector<typename std::invoke_result_t<F, T&&>::value_type>>>
 {
     using invoke_res = typename std::invoke_result_t<F, T&&>;
 

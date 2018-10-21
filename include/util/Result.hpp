@@ -406,17 +406,17 @@ public:
 
     constexpr auto getError() const& -> const Err&
     {
-        return std::get<Err>(var_);
+        return var_.value();
     }
 
     constexpr auto getError() & -> Err&
     {
-        return std::get<Err>(var_);
+        return var_.value();
     }
 
     constexpr auto getError() && -> Err&&
     {
-        return std::get<Err>(std::move(var_));
+        return std::move(var_.value());
     }
 
     constexpr auto hasValue() const
@@ -691,7 +691,7 @@ auto collect(std::vector<Result<void, E>>&& vec)
 template<class T, class F>
 auto traverse(const std::vector<T>& vec, F&& func)
     //enable if the result of F(T) is not a Result<void,...>
-    -> std::enable_if_t<!std::is_void<typename std::invoke_result_t<F, T>::result_type>::value,
+    -> std::enable_if_t<!std::is_void<typename std::invoke_result_t<F, T>::result_type>::value && is_result<std::invoke_result_t<F, T>>::value,
                         Result<std::vector<typename std::invoke_result_t<F, T>::result_type>,
                                typename std::invoke_result_t<F, T>::error_type>>
 {
@@ -705,6 +705,35 @@ auto traverse(const std::vector<T>& vec, F&& func)
 
     for(const auto& elem : vec) {
         auto res = std::invoke(std::forward<F>(func), elem);
+
+        if(!res) {
+            return res.getError();
+        }
+
+        ret_vec.push_back(std::move(res.getValue()));
+    }
+
+    return ret_vec;
+}
+
+template<class T, class F>
+auto traverse(std::vector<T>&& vec, F&& func)
+    //enable if the result of F(T) is not a Result<void,...>
+    -> std::enable_if_t<!std::is_void<typename std::invoke_result_t<F, T>::result_type>::value && is_result<std::invoke_result_t<F, T>>::value,
+                        Result<std::vector<typename std::invoke_result_t<F, T>::result_type>,
+                               typename std::invoke_result_t<F, T>::error_type>>
+{
+    using FuncRet = std::invoke_result_t<F, T>;
+
+    static_assert(is_result<FuncRet>::value,
+                  "return of the traversing function must be a result");
+
+
+    std::vector<typename FuncRet::result_type> ret_vec;
+
+    for(const auto& elem : vec) {
+        auto res = std::invoke(std::forward<F>(func),
+                               std::move(elem));
 
         if(!res) {
             return res.getError();

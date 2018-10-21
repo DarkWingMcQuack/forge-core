@@ -28,9 +28,9 @@ public:
     auto getNewOwner()
         -> std::string&;
 
-    auto getOldOwner() const
+    auto getOwner() const
         -> const std::string&;
-    auto getOldOwner()
+    auto getOwner()
         -> std::string&;
 
     auto getBlock() const
