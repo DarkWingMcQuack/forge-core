@@ -6,10 +6,12 @@ using buddy::core::EntryRenewalOp;
 
 EntryRenewalOp::EntryRenewalOp(Entry&& entry,
                                std::string&& owner,
-                               std::size_t block)
+                               std::size_t block,
+                               std::size_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
-      block_(block) {}
+      block_(block),
+      value_(value) {}
 
 
 auto EntryRenewalOp::getEntryKey() const
@@ -30,16 +32,22 @@ auto EntryRenewalOp::getEntryValue() const
     return entry_.second;
 }
 
-auto EntryRenewalOp::getEntryValue()
-    -> EntryValue&
+auto EntryRenewalOp::getValue() const
+    -> std::size_t
 {
-    return entry_.second;
+    return value_;
 }
 
 auto EntryRenewalOp::getBlock() const
     -> std::size_t
 {
     return block_;
+}
+
+auto EntryRenewalOp::getEntryValue()
+    -> EntryValue&
+{
+    return entry_.second;
 }
 
 auto EntryRenewalOp::getOwner() const

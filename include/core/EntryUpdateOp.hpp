@@ -26,6 +26,9 @@ public:
     auto getBlock() const
         -> std::size_t;
 
+    auto getValue() const
+        -> std::size_t;
+
     auto getOwner() const
         -> const std::string&;
     auto getOwner()

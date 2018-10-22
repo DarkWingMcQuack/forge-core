@@ -44,6 +44,12 @@ auto EntryUpdateOp::getBlock() const
     return block_;
 }
 
+auto EntryUpdateOp::getValue() const
+    -> std::size_t
+{
+    return value_;
+}
+
 auto EntryUpdateOp::getOwner() const
     -> const std::string&
 {

@@ -14,6 +14,58 @@ using buddy::daemon::DaemonBase;
 using buddy::daemon::DaemonError;
 using buddy::core::parseEntry;
 
+auto buddy::core::getEntryKey(const Operation& operation)
+    -> const EntryKey&
+{
+    return std::visit(
+        [](const auto& op)
+            -> const EntryKey& {
+            return op.getEntryKey();
+        },
+        operation);
+}
+
+auto buddy::core::getEntryKey(Operation&& operation)
+    -> EntryKey
+{
+    return std::visit(
+        [](auto&& op) {
+            return std::move(op.getEntryKey());
+        },
+        operation);
+}
+
+auto buddy::core::getOwner(const Operation& operation)
+    -> const std::string&
+{
+    return std::visit(
+        [](const auto& op)
+            -> const std::string& {
+            return op.getOwner();
+        },
+        operation);
+}
+
+auto buddy::core::getOwner(Operation&& operation)
+    -> std::string
+{
+    return std::visit(
+        [](auto&& op) {
+            return std::move(op.getOwner());
+        },
+        operation);
+}
+
+auto buddy::core::getValue(const Operation& operation)
+    -> const std::size_t
+{
+    return std::visit(
+        [](auto&& op) {
+            return op.getValue();
+        },
+        operation);
+}
+
 
 auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
                                 std::size_t block,
@@ -42,7 +94,8 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
                 return Operation{
                     EntryRenewalOp{std::move(entry),
                                    std::move(owner),
-                                   block}};
+                                   block,
+                                   value}};
 
             case OWNERSHIP_TRANSFER_FLAG:
                 return new_owner_opt
@@ -66,7 +119,8 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
                 return Operation{
                     EntryDeletionOp{std::move(entry),
                                     std::move(owner),
-                                    block}};
+                                    block,
+                                    value}};
 
             default:
                 return std::nullopt;

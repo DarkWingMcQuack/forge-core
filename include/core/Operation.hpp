@@ -30,6 +30,19 @@ using Operation = std::variant<EntryCreationOp,
                                EntryUpdateOp,
                                EntryDeletionOp>;
 
+auto getEntryKey(const Operation&)
+    -> const EntryKey&;
+auto getEntryKey(Operation &&)
+    -> EntryKey;
+
+auto getOwner(const Operation&)
+    -> const std::string&;
+auto getOwner(Operation &&)
+    -> std::string;
+
+auto getValue(const Operation&)
+    -> const std::size_t;
+
 auto parseTransactionToEntry(core::Transaction&& tx,
                              std::size_t block,
                              const std::unique_ptr<daemon::DaemonBase>& daemon)

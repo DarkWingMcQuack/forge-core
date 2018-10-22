@@ -9,7 +9,8 @@ class EntryDeletionOp
 public:
     EntryDeletionOp(Entry&& entry,
                     std::string&& owner,
-                    std::size_t block);
+                    std::size_t block,
+                    std::size_t value);
 
     auto getEntryKey() const
         -> const EntryKey&;
@@ -24,6 +25,9 @@ public:
     auto getBlock() const
         -> std::size_t;
 
+    auto getValue() const
+        -> std::size_t;
+
     auto getOwner() const
         -> const std::string&;
     auto getOwner()
@@ -33,6 +37,7 @@ private:
     Entry entry_;
     std::string owner_;
     std::size_t block_;
+    std::size_t value_;
 };
 
 } // namespace buddy::core
