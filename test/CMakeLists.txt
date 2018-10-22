@@ -7,6 +7,7 @@ add_executable(unit_tests
   transaction_tests.cpp
   block_tests.cpp
   entry_tests.cpp
+  entry_lookup_tests.cpp
   operation_tests.cpp)
 
 target_link_libraries(unit_tests LINK_PUBLIC
