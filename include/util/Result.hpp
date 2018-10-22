@@ -719,9 +719,12 @@ auto traverse(const std::vector<T>& vec, F&& func)
 template<class T, class F>
 auto traverse(std::vector<T>&& vec, F&& func)
     //enable if the result of F(T) is not a Result<void,...>
-    -> std::enable_if_t<!std::is_void<typename std::invoke_result_t<F, T>::result_type>::value && is_result<std::invoke_result_t<F, T>>::value,
+    // clang-format off
+    -> std::enable_if_t<!std::is_void<typename std::invoke_result_t<F, T>::result_type>::value &&
+                       is_result<std::invoke_result_t<F, T>>::value,
                         Result<std::vector<typename std::invoke_result_t<F, T>::result_type>,
                                typename std::invoke_result_t<F, T>::error_type>>
+// clang-format on 
 {
     using FuncRet = std::invoke_result_t<F, T>;
 
@@ -751,7 +754,8 @@ auto traverse(std::vector<T>&& vec, F&& func)
 template<class T, class F>
 auto traverse(const std::vector<T>& vec, F&& func)
     //enable if the result of F(T) is a Result<void,...>
-    -> std::enable_if_t<std::is_void<typename std::invoke_result_t<F, T>::result_type>::value,
+    -> std::enable_if_t<std::is_void<typename std::invoke_result_t<F, T>::result_type>::value &&
+                       is_result<std::invoke_result_t<F, T>>::value,
                         Result<void,
                                typename std::invoke_result_t<F, T>::error_type>>
 {
