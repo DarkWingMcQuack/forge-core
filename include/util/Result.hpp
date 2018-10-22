@@ -775,6 +775,31 @@ auto traverse(const std::vector<T>& vec, F&& func)
     return {};
 }
 
+template<class T, class F>
+auto traverse(std::vector<T>&& vec, F&& func)
+    //enable if the result of F(T) is a Result<void,...>
+    -> std::enable_if_t<std::is_void<typename std::invoke_result_t<F, T>::result_type>::value &&
+                       is_result<std::invoke_result_t<F, T>>::value,
+                        Result<void,
+                               typename std::invoke_result_t<F, T>::error_type>>
+{
+    using FuncRet = std::invoke_result_t<F, T>;
+
+    static_assert(is_result<FuncRet>::value,
+                  "return of the traversing function must be a result");
+
+    for(auto&& elem : vec) {
+        auto res = std::invoke(std::forward<F>(func),
+                               std::move(elem));
+
+        if(!res) {
+            return res.getError();
+        }
+    }
+
+    return {};
+}
+
 
 template<class T, class V, class E>
 auto combine(Result<T, E>&& first, Result<V, E>&& second)
