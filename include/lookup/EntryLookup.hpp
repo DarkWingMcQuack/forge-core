@@ -52,6 +52,9 @@ public:
     auto setBlockHeight(std::size_t height)
         -> void;
 
+    auto removeEntrysOlderThan(std::size_t blocks)
+        -> void;
+
     auto isCurrentlyValid(const core::Operation& op) const
         -> bool;
 

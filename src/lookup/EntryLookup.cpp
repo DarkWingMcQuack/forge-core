@@ -116,6 +116,27 @@ auto EntryLookup::setBlockHeight(std::size_t height)
     block_height_ = height;
 }
 
+
+auto EntryLookup::removeEntrysOlderThan(std::size_t diff)
+    -> void
+{
+    auto iter = lookup_map_.begin();
+    auto endIter = lookup_map_.end();
+
+    auto predicate = [this, &diff](auto&& map_iter) {
+        auto activation_block = std::get<2>(map_iter->second);
+        return activation_block + diff < block_height_;
+    };
+
+    for(; iter != endIter;) {
+        if(predicate(iter)) {
+            lookup_map_.erase(iter++);
+        } else {
+            ++iter;
+        }
+    }
+}
+
 auto EntryLookup::isCurrentlyValid(const Operation& op) const
     -> bool
 {
