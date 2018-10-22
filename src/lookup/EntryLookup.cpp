@@ -128,6 +128,7 @@ auto EntryLookup::removeEntrysOlderThan(std::size_t diff)
         return activation_block + diff < block_height_;
     };
 
+    //uhhhggg
     for(; iter != endIter;) {
         if(predicate(iter)) {
             lookup_map_.erase(iter++);
