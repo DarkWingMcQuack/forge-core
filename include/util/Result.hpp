@@ -734,7 +734,7 @@ auto traverse(std::vector<T>&& vec, F&& func)
 
     std::vector<typename FuncRet::result_type> ret_vec;
 
-    for(const auto& elem : vec) {
+    for(auto&& elem : vec) {
         auto res = std::invoke(std::forward<F>(func),
                                std::move(elem));
 
