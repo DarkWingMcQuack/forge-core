@@ -179,7 +179,7 @@ auto EntryLookup::filterNonRelevantOperations(std::vector<Operation>&& ops) cons
         std::remove_if(std::begin(ops),
                        std::end(ops),
                        [this](auto&& op) {
-                           return isCurrentlyValid(op);
+                           return !isCurrentlyValid(op);
                        }),
         ops.end());
 
