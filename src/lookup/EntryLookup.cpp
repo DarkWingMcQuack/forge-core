@@ -141,8 +141,9 @@ auto EntryLookup::removeEntrysOlderThan(std::size_t diff)
 auto EntryLookup::isCurrentlyValid(const Operation& op) const
     -> bool
 {
-    const auto op_key = std::visit(
-        [](auto&& op) {
+    const auto& op_key = std::visit(
+        [](const auto& op)
+            -> const core::EntryKey& {
             return op.getEntryKey();
         },
         op);
@@ -161,8 +162,9 @@ auto EntryLookup::isCurrentlyValid(const Operation& op) const
     //of the entry currently in the lookup map
     return lookupOwner(op_key)
         .map([&op](auto&& looked_up_owner) {
-            const auto op_owner = std::visit(
-                [](auto&& op) {
+            const auto& op_owner = std::visit(
+                [](const auto& op)
+                    -> const std::string& {
                     return op.getOwner();
                 },
                 op);
