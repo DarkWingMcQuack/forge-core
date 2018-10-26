@@ -345,3 +345,10 @@ auto EntryLookup::operator()(EntryDeletionOp&& op)
 
     return {};
 }
+
+
+auto EntryLookup::getBlockHeight() const
+    -> std::size_t
+{
+    return block_height_;
+}

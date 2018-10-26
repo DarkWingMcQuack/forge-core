@@ -52,6 +52,9 @@ public:
     auto setBlockHeight(std::size_t height)
         -> void;
 
+    auto getBlockHeight() const
+        -> std::size_t;
+
     auto removeEntrysOlderThan(std::size_t blocks)
         -> void;
 
