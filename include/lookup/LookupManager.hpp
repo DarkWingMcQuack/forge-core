@@ -5,7 +5,6 @@
 #include <daemon/DaemonBase.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
-#include <unordered_map>
 #include <util/Opt.hpp>
 #include <util/Result.hpp>
 
@@ -17,6 +16,8 @@ using ManagerError = std::variant<LookupError,
 class LookupManager final
 {
 public:
+    LookupManager(std::unique_ptr<daemon::DaemonBase> daemon);
+
     auto updateLookup()
         -> util::Result<void, ManagerError>;
 
@@ -31,6 +32,13 @@ public:
 
     auto lookupIsValid() const
         -> util::Result<bool, daemon::DaemonError>;
+
+private:
+    auto processBlock(core::Block&& block)
+        -> util::Result<void, ManagerError>;
+
+    auto processTransaction(core::Transaction&& block)
+        -> util::Result<void, ManagerError>;
 
 private:
     std::unique_ptr<daemon::DaemonBase> daemon_;
