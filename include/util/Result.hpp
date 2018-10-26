@@ -157,8 +157,8 @@ public:
         using ReturnType = Result<FuncRet, Err>;
 
         return hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), getValue())}
-            : ReturnType{getError()};
+            ? ReturnType{std::invoke(std::forward<Func>(f), std::move(getValue()))}
+            : ReturnType{std::move(getError())};
     }
 
     template<class Func>
@@ -202,8 +202,8 @@ public:
                       "error type of flatmat return musst be same as the original error type");
 
         return hasValue()
-            ? std::invoke(std::forward<Func>(f), getValue())
-            : ReturnType{getError()};
+            ? std::invoke(std::forward<Func>(f), std::move(getValue()))
+            : ReturnType{std::move(getError())};
     }
 
     template<class Func>
@@ -235,8 +235,8 @@ public:
         using ReturnType = Result<T, FuncRet>;
 
         return !hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
-            : ReturnType{getValue()};
+            ? ReturnType{std::invoke(std::forward<Func>(f), std::move(getError()))}
+            : ReturnType{std::move(getValue())};
     }
 
     template<class Func>
@@ -280,8 +280,8 @@ public:
                       "value type of flatmat return musst be same as the original value type");
 
         return !hasValue()
-            ? std::invoke(std::forward<Func>(f), getError())
-            : Result{getValue()};
+            ? std::invoke(std::forward<Func>(f), std::move(getError()))
+            : Result{std::move(getValue())};
     }
 
     template<class Func>
@@ -308,7 +308,7 @@ public:
                       "return of onValue function must be void");
 
         if(*this) {
-            func(getValue());
+            func(std::move(getValue()));
         }
 
         return std::move(*this);
@@ -338,7 +338,7 @@ public:
                       "return of onValue function must be void");
 
         if(!*this) {
-            func(getError());
+            func(std::move(getError()));
         }
 
         return std::move(*this);
@@ -531,6 +531,39 @@ public:
         return hasValue()
             ? std::invoke(std::forward<Func>(f))
             : Result{getError()};
+    }
+
+    template<class Func>
+    constexpr auto mapError(Func&& f) const&
+    {
+        using FuncRet = std::invoke_result_t<Func, Err>;
+        using ReturnType = Result<void, FuncRet>;
+
+        return !hasValue()
+            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            : ReturnType{};
+    }
+
+    template<class Func>
+    constexpr auto mapError(Func&& f) &
+    {
+        using FuncRet = std::invoke_result_t<Func, Err>;
+        using ReturnType = Result<void, FuncRet>;
+
+        return !hasValue()
+            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            : ReturnType{};
+    }
+
+    template<class Func>
+    constexpr auto mapError(Func&& f) &&
+    {
+        using FuncRet = std::invoke_result_t<Func, Err>;
+        using ReturnType = Result<void, FuncRet>;
+
+        return !hasValue()
+            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            : ReturnType{};
     }
 
     template<class Func>
