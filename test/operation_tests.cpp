@@ -83,3 +83,35 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
     EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 }
+
+TEST(OperationTest, EntryUpdateOpParsingValid)
+{
+    auto metadata = extractMetadata("6a00c6dc750801ffffffffdeadbeef").getValue();
+    std::size_t block = 1000;
+    auto old_owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
+    auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
+    std::size_t value = 10;
+
+    auto op_opt = parseMetadata(std::move(metadata),
+                                block,
+                                std::move(old_owner),
+                                value);
+
+    ASSERT_TRUE(op_opt);
+
+    const auto& op = op_opt.getValue();
+
+    ASSERT_TRUE(std::holds_alternative<EntryUpdateOp>(op));
+
+    auto creation = std::get<EntryUpdateOp>(op);
+
+    std::array expected{(std::byte)0xff,
+                        (std::byte)0xff,
+                        (std::byte)0xff,
+                        (std::byte)0xff};
+
+    EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getNewEntryValue(), EntryValue{expected});
+    EXPECT_EQ(creation.getBlock(), 1000);
+}
