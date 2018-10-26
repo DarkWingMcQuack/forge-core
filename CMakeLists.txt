@@ -64,6 +64,7 @@ target_sources(buddy-src
   src/core/EntryUpdateOp.cpp
   src/core/OwnershipTransferOp.cpp
   src/core/Block.cpp
+  src/daemon/Coin.cpp
   src/daemon/DaemonBase.cpp
   src/daemon/OdinDaemon.cpp
   src/core/Transaction.cpp
