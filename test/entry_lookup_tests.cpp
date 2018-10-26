@@ -41,7 +41,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
     lookup.executeOperations(std::move(ops));
 
     auto first_key = stringToByteVec("deadbeef").getValue();
-    std::array<std::byte, 4> expected1{
+    std::array expected1{
         (std::byte)0xaa,
         (std::byte)0xbb,
         (std::byte)0xcc,
@@ -54,6 +54,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
     EXPECT_EQ(EntryValue{expected1},
               lookup.lookup(first_key).getValue().get());
 
+    //entry update
     ops.clear();
     ops = {createOp("6a00c6dc750801ffffffffdeadbeef",
                     "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
@@ -62,7 +63,6 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
     lookup.executeOperations(std::move(ops));
 
-    first_key = stringToByteVec("deadbeef").getValue();
     expected1 = {(std::byte)0xff,
                  (std::byte)0xff,
                  (std::byte)0xff,
@@ -74,4 +74,15 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
               lookup.lookupOwner(first_key).getValue().get());
     EXPECT_EQ(EntryValue{expected1},
               lookup.lookup(first_key).getValue().get());
+
+    //entry deletion
+    ops.clear();
+    ops = {createOp("6a00c6dc751001ffffffffdeadbeef",
+                    "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                    12,
+                    12)};
+
+    lookup.executeOperations(std::move(ops));
+
+    ASSERT_FALSE(lookup.lookupOwner(first_key));
 }
