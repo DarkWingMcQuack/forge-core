@@ -147,11 +147,6 @@ auto EntryLookup::isCurrentlyValid(const Operation& op) const
         },
         op);
 
-    const auto op_owner = std::visit(
-        [](auto&& op) {
-            return op.getOwner();
-        },
-        op);
 
     const auto iter = lookup_map_.find(op_key);
 
@@ -165,7 +160,13 @@ auto EntryLookup::isCurrentlyValid(const Operation& op) const
     //we return true if the owner of op is the actual owner
     //of the entry currently in the lookup map
     return lookupOwner(op_key)
-        .map([&op_owner](auto&& looked_up_owner) {
+        .map([&op](auto&& looked_up_owner) {
+            const auto op_owner = std::visit(
+                [](auto&& op) {
+                    return op.getOwner();
+                },
+                op);
+
             return op_owner == looked_up_owner.get();
         })
         .valueOr(false);
