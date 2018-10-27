@@ -76,3 +76,15 @@ auto LookupManager::rebuildLookup()
     lookup_.clear();
     updateLookup();
 }
+
+auto LookupManager::lookupValue(const core::EntryKey& key) const
+    -> util::Opt<std::reference_wrapper<const core::EntryValue>>
+{
+    return lookup_.lookup(key);
+}
+
+auto LookupManager::lookupOwner(const core::EntryKey& key) const
+    -> util::Opt<std::reference_wrapper<const std::string>>
+{
+    return lookup_.lookupOwner(key);
+}
