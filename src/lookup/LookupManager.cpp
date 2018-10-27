@@ -95,11 +95,13 @@ auto LookupManager::processBlock(core::Block&& block)
     -> util::Result<void, ManagerError>
 {
     auto block_height = block.getHeight();
+    auto block_hash = std::move(block.getHash());
 
     //traverse all txids to transactions
     return traverse(std::move(block.getTxids()),
                     [this](auto&& txid) {
-                        return daemon_->getTransaction(std::move(txid))
+                        return daemon_
+                            ->getTransaction(std::move(txid))
                             .mapError([](auto&& error) {
                                 return ManagerError{std::move(error)};
                             });
@@ -132,5 +134,9 @@ auto LookupManager::processBlock(core::Block&& block)
                 .mapError([](auto&& error) {
                     return ManagerError{std::move(error)};
                 });
+        })
+        .onValue([&block_hash,
+                  this] {
+            block_hashes_.push_back(std::move(block_hash));
         });
 }

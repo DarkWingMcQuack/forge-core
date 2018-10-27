@@ -37,13 +37,10 @@ private:
     auto processBlock(core::Block&& block)
         -> util::Result<void, ManagerError>;
 
-    auto processTransaction(core::Transaction&& block)
-        -> util::Result<void, ManagerError>;
-
 private:
     std::unique_ptr<daemon::DaemonBase> daemon_;
     EntryLookup lookup_;
-    std::vector<std::vector<std::byte>> block_hashes_;
+    std::vector<std::string> block_hashes_;
 };
 
 } // namespace buddy::lookup
