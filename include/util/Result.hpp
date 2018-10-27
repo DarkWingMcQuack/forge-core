@@ -97,7 +97,7 @@ public:
         // clang-format on
 
         return hasValue()
-            ? getValue()
+            ? std::move(getValue())
             : static_cast<T>(std::forward<U>(value));
     }
 
@@ -125,7 +125,7 @@ public:
 
     constexpr auto getError() && -> Err&&
     {
-        return std::get<Err>(std::move(var_));
+        return std::move(std::get<Err>(var_));
     }
 
     template<class Func>
@@ -137,8 +137,9 @@ public:
         if constexpr(std::is_void_v<FuncRet>) {
 
             return hasValue()
-                ? ReturnType{}
-                : ReturnType{getError()};
+                   ? std::invoke(std::forward<Func>(f)),
+                   ReturnType{}
+                   : ReturnType{getError()};
         } else {
             return hasValue()
                 ? ReturnType{std::invoke(std::forward<Func>(f),
@@ -156,8 +157,9 @@ public:
         if constexpr(std::is_void_v<FuncRet>) {
 
             return hasValue()
-                ? ReturnType{}
-                : ReturnType{getError()};
+                   ? std::invoke(std::forward<Func>(f)),
+                   ReturnType{}
+                   : ReturnType{getError()};
         } else {
             return hasValue()
                 ? ReturnType{std::invoke(std::forward<Func>(f),
@@ -175,8 +177,9 @@ public:
         if constexpr(std::is_void_v<FuncRet>) {
 
             return hasValue()
-                ? ReturnType{}
-                : ReturnType{std::move(getError())};
+                   ? std::invoke(std::forward<Func>(f)),
+                   ReturnType{}
+                   : ReturnType{std::move(getError())};
         } else {
             return hasValue()
                 ? ReturnType{std::invoke(std::forward<Func>(f),
@@ -226,7 +229,8 @@ public:
                       "error type of flatmat return musst be same as the original error type");
 
         return hasValue()
-            ? std::invoke(std::forward<Func>(f), std::move(getValue()))
+            ? std::invoke(std::forward<Func>(f),
+                          std::move(getValue()))
             : ReturnType{std::move(getError())};
     }
 
@@ -259,7 +263,8 @@ public:
         using ReturnType = Result<T, FuncRet>;
 
         return !hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), std::move(getError()))}
+            ? ReturnType{std::invoke(std::forward<Func>(f),
+                                     std::move(getError()))}
             : ReturnType{std::move(getValue())};
     }
 
@@ -271,7 +276,7 @@ public:
                       "F must return a result");
 
         static_assert(std::is_same_v<typename Result::value_type, Err>,
-                      "value type of flatmat return musst be same as the original value type");
+                      "value type of flatMapError return musst be same as the original value type");
 
         return !hasValue()
             ? std::invoke(std::forward<Func>(f), getError())
@@ -286,7 +291,7 @@ public:
                       "F must return a result");
 
         static_assert(std::is_same_v<typename Result::value_type, Err>,
-                      "value type of flatmat return musst be same as the original value type");
+                      "value type of flatMapError return musst be same as the original value type");
 
         return !hasValue()
             ? std::invoke(std::forward<Func>(f), getError())
@@ -301,10 +306,11 @@ public:
                       "F must return a result");
 
         static_assert(std::is_same_v<typename Result::value_type, Err>,
-                      "value type of flatmat return musst be same as the original value type");
+                      "value type of flatMapError return musst be same as the original value type");
 
         return !hasValue()
-            ? std::invoke(std::forward<Func>(f), std::move(getError()))
+            ? std::invoke(std::forward<Func>(f),
+                          std::move(getError()))
             : Result{std::move(getValue())};
     }
 
@@ -341,10 +347,10 @@ public:
     template<class Func>
     constexpr auto onError(Func&& func) & -> Result<T, Err>&
     {
-        using FuncRet = std::invoke_result_t<Func, Err&&>;
+        using FuncRet = std::invoke_result_t<Func, Err&>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of onValue function must be void");
+                      "return of onError function must be void");
 
         if(!*this) {
             func(getError());
@@ -359,7 +365,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, Err&&>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of onValue function must be void");
+                      "return of onError function must be void");
 
         if(!*this) {
             func(std::move(getError()));
@@ -402,7 +408,7 @@ public:
         static_assert(std::is_void_v<FuncRet>,
                       "return of onValue function must be void");
         func();
-        return *this;
+        return std::move(*this);
     }
 
 private:
@@ -458,7 +464,7 @@ public:
     template<class Func>
     constexpr auto map(Func&& f) &
     {
-        using FuncRet = std::invoke_result_t<Func, void>;
+        using FuncRet = std::invoke_result_t<Func>;
         using ReturnType = Result<FuncRet, Err>;
 
         if constexpr(std::is_void_v<FuncRet>) {
@@ -477,7 +483,7 @@ public:
     template<class Func>
     constexpr auto map(Func&& f) const&
     {
-        using FuncRet = std::invoke_result_t<Func, void>;
+        using FuncRet = std::invoke_result_t<Func>;
         using ReturnType = Result<FuncRet, Err>;
 
         if constexpr(std::is_void_v<FuncRet>) {
@@ -496,7 +502,7 @@ public:
     template<class Func>
     constexpr auto map(Func&& f) &&
     {
-        using FuncRet = std::invoke_result_t<Func, void>;
+        using FuncRet = std::invoke_result_t<Func>;
         using ReturnType = Result<FuncRet, Err>;
 
         if constexpr(std::is_void_v<FuncRet>) {
@@ -504,18 +510,18 @@ public:
             return hasValue()
                    ? f(),
                    ReturnType{}
-                   : ReturnType{getError()};
+                   : ReturnType{std::move(getError())};
         }
 
         return hasValue()
             ? ReturnType{std::invoke(std::forward<Func>(f))}
-            : ReturnType{getError()};
+            : ReturnType{std::move(getError())};
     }
 
     template<class Func>
     constexpr auto flatMap(Func&& f) &
     {
-        using result = std::invoke_result_t<Func, void>;
+        using result = std::invoke_result_t<Func>;
         static_assert(is_result<result>::value,
                       "F must return a result");
 
@@ -530,7 +536,7 @@ public:
     template<class Func>
     constexpr auto flatMap(Func&& f) const&
     {
-        using result = std::invoke_result_t<Func, void>;
+        using result = std::invoke_result_t<Func>;
         static_assert(is_result<result>::value,
                       "F must return a result");
 
@@ -545,7 +551,7 @@ public:
     template<class Func>
     constexpr auto flatMap(Func&& f) &&
     {
-        using result = std::invoke_result_t<Func, void>;
+        using result = std::invoke_result_t<Func>;
         static_assert(is_result<result>::value,
                       "F must return a result");
 
@@ -554,7 +560,7 @@ public:
 
         return hasValue()
             ? std::invoke(std::forward<Func>(f))
-            : Result{getError()};
+            : Result{std::move(getError())};
     }
 
     template<class Func>
@@ -586,7 +592,8 @@ public:
         using ReturnType = Result<void, FuncRet>;
 
         return !hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), getError())}
+            ? ReturnType{std::invoke(std::forward<Func>(f),
+                                     std::move(getError()))}
             : ReturnType{};
     }
 
@@ -635,6 +642,66 @@ public:
             : Result{};
     }
 
+    template<class Func>
+    constexpr auto onValue(Func&& func) & -> Result<void, Err>&
+    {
+        using FuncRet = std::invoke_result_t<Func>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onValue function must be void");
+
+        if(*this) {
+            func();
+        }
+
+        return *this;
+    }
+
+    template<class Func>
+    constexpr auto onValue(Func&& func) && -> Result<void, Err>&&
+    {
+        using FuncRet = std::invoke_result_t<Func>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onValue function must be void");
+
+        if(*this) {
+            func();
+        }
+
+        return std::move(*this);
+    }
+
+    template<class Func>
+    constexpr auto onError(Func&& func) & -> Result<void, Err>&
+    {
+        using FuncRet = std::invoke_result_t<Func, Err&>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onError function must be void");
+
+        if(!*this) {
+            func(getError());
+        }
+
+        return *this;
+    }
+
+    template<class Func>
+    constexpr auto onError(Func&& func) && -> Result<void, Err>&&
+    {
+        using FuncRet = std::invoke_result_t<Func, Err&&>;
+
+        static_assert(std::is_void_v<FuncRet>,
+                      "return of onError function must be void");
+
+        if(!*this) {
+            func(std::move(getError()));
+        }
+
+        return std::move(*this);
+    }
+
     //this serves as finally block
     //to execute functions which in a maner of
     //java finally blocks
@@ -644,7 +711,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of onValue function must be void");
+                      "return of finally function must be void");
         func();
         return *this;
     }
@@ -655,7 +722,7 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of onValue function must be void");
+                      "return of finally function must be void");
         func();
         return *this;
     }
@@ -667,9 +734,9 @@ public:
         using FuncRet = std::invoke_result_t<Func, void>;
 
         static_assert(std::is_void_v<FuncRet>,
-                      "return of onValue function must be void");
+                      "return of finally function must be void");
         func();
-        return *this;
+        return std::move(*this);
     }
 
 private:
