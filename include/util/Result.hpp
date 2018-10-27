@@ -134,9 +134,17 @@ public:
         using FuncRet = std::invoke_result_t<Func, T>;
         using ReturnType = Result<FuncRet, Err>;
 
-        return hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), getValue())}
-            : ReturnType{getError()};
+        if constexpr(std::is_void_v<FuncRet>) {
+
+            return hasValue()
+                ? ReturnType{}
+                : ReturnType{getError()};
+        } else {
+            return hasValue()
+                ? ReturnType{std::invoke(std::forward<Func>(f),
+                                         getValue())}
+                : ReturnType{getError()};
+        }
     }
 
     template<class Func>
@@ -145,9 +153,17 @@ public:
         using FuncRet = std::invoke_result_t<Func, T>;
         using ReturnType = Result<FuncRet, Err>;
 
-        return hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), getValue())}
-            : ReturnType{getError()};
+        if constexpr(std::is_void_v<FuncRet>) {
+
+            return hasValue()
+                ? ReturnType{}
+                : ReturnType{getError()};
+        } else {
+            return hasValue()
+                ? ReturnType{std::invoke(std::forward<Func>(f),
+                                         getValue())}
+                : ReturnType{getError()};
+        }
     }
 
     template<class Func>
@@ -156,9 +172,17 @@ public:
         using FuncRet = std::invoke_result_t<Func, T>;
         using ReturnType = Result<FuncRet, Err>;
 
-        return hasValue()
-            ? ReturnType{std::invoke(std::forward<Func>(f), std::move(getValue()))}
-            : ReturnType{std::move(getError())};
+        if constexpr(std::is_void_v<FuncRet>) {
+
+            return hasValue()
+                ? ReturnType{}
+                : ReturnType{std::move(getError())};
+        } else {
+            return hasValue()
+                ? ReturnType{std::invoke(std::forward<Func>(f),
+                                         std::move(getValue()))}
+                : ReturnType{std::move(getError())};
+        }
     }
 
     template<class Func>
