@@ -14,6 +14,7 @@ using buddy::core::EntryKey;
 using buddy::core::EntryValue;
 using buddy::util::Opt;
 using buddy::util::Result;
+using buddy::util::traverse;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::getMaturity;
 
@@ -87,4 +88,19 @@ auto LookupManager::lookupOwner(const core::EntryKey& key) const
     -> util::Opt<std::reference_wrapper<const std::string>>
 {
     return lookup_.lookupOwner(key);
+}
+
+auto LookupManager::processBlock(core::Block&& block)
+    -> util::Result<void, ManagerError>
+{
+    return traverse(std::move(block.getTxids()),
+                    [this](auto&& txid) {
+                        return daemon_->getTransaction(std::move(txid))
+                            .mapError([](auto&& error) {
+                                return ManagerError{std::move(error)};
+                            })
+                            .flatMap([this](auto&& tx) {
+                                return processTransaction(std::move(tx));
+                            });
+                    });
 }
