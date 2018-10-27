@@ -64,6 +64,9 @@ public:
     auto filterNonRelevantOperations(std::vector<core::Operation>&& ops) const
         -> std::vector<core::Operation>;
 
+    auto clear()
+        -> void;
+
     auto operator()(core::EntryCreationOp&& op)
         -> util::Result<void, LookupError>;
 

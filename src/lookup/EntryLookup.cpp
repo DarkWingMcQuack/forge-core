@@ -352,3 +352,11 @@ auto EntryLookup::getBlockHeight() const
 {
     return block_height_;
 }
+
+
+auto EntryLookup::clear()
+    -> void
+{
+    lookup_map_.clear();
+    block_height_ = 0;
+}
