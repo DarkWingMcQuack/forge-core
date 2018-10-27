@@ -32,8 +32,8 @@ auto LookupManager::updateLookup()
         .mapError([](auto&& error) {
             return ManagerError{std::move(error)};
         })
-        .flatMap([&](auto actual_height) mutable
-                 -> Result<void, ManagerError> {
+        .flatMap([&](auto actual_height)
+                     -> Result<void, ManagerError> {
             //if we have less blocks than maturity
             //then nothing happens
             if(actual_height < maturity) {
