@@ -69,3 +69,10 @@ auto LookupManager::updateLookup()
             return {};
         });
 }
+
+auto LookupManager::rebuildLookup()
+    -> util::Result<void, ManagerError>
+{
+    lookup_.clear();
+    updateLookup();
+}
