@@ -20,11 +20,8 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
 
     -> util::Opt<EntryValue>
 {
-    if(data.size() < 5) {
-        return std::nullopt;
-    }
-
-    if(data[4] == NONE_VALUE_FLAG) {
+    if(data[4] == NONE_VALUE_FLAG
+       && data.size() > 4) {
         return EntryValue{NoneValue{}};
     }
 
@@ -56,11 +53,8 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
     -> util::Opt<EntryKey>
 
 {
-    if(data.size() < 5) {
-        return std::nullopt;
-    }
-
-    if(data[4] == NONE_VALUE_FLAG) {
+    if(data[4] == NONE_VALUE_FLAG
+       && data.size() > 4) {
 
         return EntryKey{std::begin(data) + 5,
                         std::end(data)};
