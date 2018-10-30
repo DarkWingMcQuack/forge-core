@@ -10,19 +10,26 @@ using buddy::util::Opt;
 using buddy::core::Entry;
 using buddy::core::IPv4Value;
 using buddy::core::IPv6Value;
+using buddy::core::NoneValue;
 using buddy::core::IPv4_VALUE_FLAG;
 using buddy::core::IPv6_VALUE_FLAG;
+using buddy::core::NONE_VALUE_FLAG;
 
 
 auto buddy::core::parseValue(const std::vector<std::byte>& data)
 
     -> util::Opt<EntryValue>
 {
-    if(data.size() < 10) {
+    if(data.size() < 5) {
         return std::nullopt;
     }
 
-    if(data[4] == static_cast<std::byte>(0b00000001)) {
+    if(data[4] == NONE_VALUE_FLAG) {
+        return EntryValue{NoneValue{}};
+    }
+
+    if(data[4] == IPv4_VALUE_FLAG
+       && data.size() > 9) {
         IPv4Value ipv4;
         std::copy(std::begin(data) + 5,
                   std::begin(data) + 9,
@@ -31,7 +38,7 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
     }
 
 
-    if(data[4] == static_cast<std::byte>(0b00000010)
+    if(data[4] == IPv6_VALUE_FLAG
        && data.size() > 20) {
 
         IPv6Value ipv6;
@@ -49,15 +56,23 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
     -> util::Opt<EntryKey>
 
 {
-    if(data.size() < 10) {
+    if(data.size() < 5) {
         return std::nullopt;
     }
 
-    if(data[4] == IPv4_VALUE_FLAG) {
+    if(data[4] == NONE_VALUE_FLAG) {
+
+        return EntryKey{std::begin(data) + 5,
+                        std::end(data)};
+    }
+
+    if(data[4] == IPv4_VALUE_FLAG
+       && data.size() > 9) {
 
         return EntryKey{std::begin(data) + 9,
                         std::end(data)};
     }
+
 
 
     if(data[4] == IPv6_VALUE_FLAG
