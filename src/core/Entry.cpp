@@ -82,7 +82,7 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
         auto value_length = static_cast<std::size_t>(data[VALUE_FLAG_INDEX + 1]);
 
         //check the bounds
-        if(6 + value_length > data.size()) {
+        if(VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
             return std::nullopt;
         }
 
