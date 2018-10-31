@@ -22,7 +22,7 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
     -> util::Opt<EntryValue>
 {
     if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX) {
+       && data.size() > VALUE_FLAG_INDEX + 1) {
         return EntryValue{NoneValue{}};
     }
 
@@ -71,7 +71,7 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
     -> util::Opt<EntryKey>
 {
     if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX) {
+       && data.size() > VALUE_FLAG_INDEX + 1) {
 
         return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 1,
                         std::end(data)};
