@@ -11,6 +11,7 @@ using buddy::core::IPv4Value;
 using buddy::core::IPv6Value;
 using buddy::core::ByteArray;
 using buddy::core::NoneValue;
+using buddy::core::VALUE_FLAG_INDEX;
 using buddy::core::IPv4_VALUE_FLAG;
 using buddy::core::IPv6_VALUE_FLAG;
 using buddy::core::NONE_VALUE_FLAG;
@@ -20,44 +21,44 @@ using buddy::core::BYTE_ARRAY_VALUE_FLAG;
 auto buddy::core::parseValue(const std::vector<std::byte>& data)
     -> util::Opt<EntryValue>
 {
-    if(data[4] == NONE_VALUE_FLAG
-       && data.size() > 4) {
+    if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX) {
         return EntryValue{NoneValue{}};
     }
 
-    if(data[4] == BYTE_ARRAY_VALUE_FLAG
-       && data.size() > 6) {
+    if(data[VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX + 2) {
         auto value_length = static_cast<std::size_t>(data[5]);
 
         //check the bounds
-        if(6 + value_length > data.size()) {
+        if(VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
             return std::nullopt;
         }
 
         ByteArray byte_array;
-        std::copy(std::begin(data) + 6,
-                  std::begin(data) + 6 + value_length,
+        std::copy(std::begin(data) + VALUE_FLAG_INDEX + 2,
+                  std::begin(data) + VALUE_FLAG_INDEX + 2 + value_length,
                   std::begin(byte_array));
 
         return EntryValue{std::move(byte_array)};
     }
 
-    if(data[4] == IPv4_VALUE_FLAG
-       && data.size() > 9) {
+    if(data[VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX + 5) {
         IPv4Value ipv4;
-        std::copy(std::begin(data) + 5,
-                  std::begin(data) + 9,
+        std::copy(std::begin(data) + VALUE_FLAG_INDEX + 1,
+                  std::begin(data) + VALUE_FLAG_INDEX + 5,
                   std::begin(ipv4));
         return EntryValue{std::move(ipv4)};
     }
 
 
-    if(data[4] == IPv6_VALUE_FLAG
-       && data.size() > 20) {
+    if(data[VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX + 17) {
 
         IPv6Value ipv6;
-        std::copy(std::begin(data) + 5,
-                  std::begin(data) + 21,
+        std::copy(std::begin(data) + VALUE_FLAG_INDEX + 1,
+                  std::begin(data) + VALUE_FLAG_INDEX + 17,
                   std::begin(ipv6));
 
         return EntryValue{std::move(ipv6)};
@@ -69,39 +70,39 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
 auto buddy::core::parseKey(const std::vector<std::byte>& data)
     -> util::Opt<EntryKey>
 {
-    if(data[4] == NONE_VALUE_FLAG
-       && data.size() > 4) {
+    if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX) {
 
-        return EntryKey{std::begin(data) + 5,
+        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 1,
                         std::end(data)};
     }
 
-    if(data[4] == BYTE_ARRAY_VALUE_FLAG
-       && data.size() > 6) {
-        auto value_length = static_cast<std::size_t>(data[5]);
+    if(data[VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX + 2) {
+        auto value_length = static_cast<std::size_t>(data[VALUE_FLAG_INDEX + 1]);
 
         //check the bounds
         if(6 + value_length > data.size()) {
             return std::nullopt;
         }
 
-        return EntryKey{std::begin(data) + 6 + value_length,
+        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 2 + value_length,
                         std::end(data)};
     }
 
-    if(data[4] == IPv4_VALUE_FLAG
-       && data.size() > 9) {
+    if(data[VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX + 5) {
 
-        return EntryKey{std::begin(data) + 9,
+        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 5,
                         std::end(data)};
     }
 
 
 
-    if(data[4] == IPv6_VALUE_FLAG
-       && data.size() > 21) {
+    if(data[VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
+       && data.size() > VALUE_FLAG_INDEX + 17) {
 
-        return EntryKey{std::begin(data) + 21,
+        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 17,
                         std::end(data)};
     }
 

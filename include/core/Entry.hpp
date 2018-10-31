@@ -23,6 +23,8 @@ public:
 };
 // clang-format on
 
+constexpr std::size_t VALUE_FLAG_INDEX = 4;
+
 constexpr auto IPv4_VALUE_FLAG = static_cast<std::byte>(0b00000001);
 constexpr auto IPv6_VALUE_FLAG = static_cast<std::byte>(0b00000010);
 constexpr auto NONE_VALUE_FLAG = static_cast<std::byte>(0b00000100);
