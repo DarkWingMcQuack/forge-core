@@ -18,7 +18,6 @@ using buddy::core::BYTE_ARRAY_VALUE_FLAG;
 
 
 auto buddy::core::parseValue(const std::vector<std::byte>& data)
-
     -> util::Opt<EntryValue>
 {
     if(data[4] == NONE_VALUE_FLAG
@@ -69,7 +68,6 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
 
 auto buddy::core::parseKey(const std::vector<std::byte>& data)
     -> util::Opt<EntryKey>
-
 {
     if(data[4] == NONE_VALUE_FLAG
        && data.size() > 4) {
@@ -112,7 +110,6 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
 
 auto buddy::core::parseEntry(const std::vector<std::byte>& data)
     -> Opt<Entry>
-
 {
     //3 bytes mask
     //1 op flag
