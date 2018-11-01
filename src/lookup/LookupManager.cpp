@@ -55,7 +55,7 @@ auto LookupManager::updateLookup()
                     daemon_->getBlockHash(++current_height)
                         .flatMap([&](auto&& block_hash) {
                             //get block
-                            LOG(DEBUG) << "get block " << block_hash << " from node";
+                            LOG(DEBUG) << "get block " << block_hash;
                             return daemon_->getBlock(std::move(block_hash));
                         })
                         .mapError([](auto&& error) {
@@ -63,7 +63,7 @@ auto LookupManager::updateLookup()
                         })
                         //process the block
                         .flatMap([&](auto&& block) {
-                            LOG(DEBUG) << "Processing Block: " << current_height;
+                            LOG(DEBUG) << "processing Block: " << current_height;
                             return processBlock(std::move(block));
                         });
 
@@ -122,8 +122,7 @@ auto LookupManager::processBlock(core::Block&& block)
             std::vector<Operation> ops;
             //exract all buddy ops from the txs
             for(auto&& tx : txs) {
-                LOG(DEBUG) << "try parsing transaction"
-                           << tx.getTxid() << " to buddy operation";
+                std::string_view txid = tx.getTxid();
 
                 auto op_res = parseTransactionToEntry(std::move(tx),
                                                       block_height,
@@ -133,11 +132,13 @@ auto LookupManager::processBlock(core::Block&& block)
                     return ManagerError{std::move(op_res.getError())};
                 }
 
+                LOG_IF(DEBUG, !op_res.getValue().hasValue()) << "throw away " << txid;
+                LOG_IF(DEBUG, op_res.getValue().hasValue()) << "found operation " << txid;
+
                 //check if the operation was parsed, and if
                 //we add it to the std::vector<Operation> vec
                 if(auto op_opt = std::move(op_res.getValue());
                    op_opt) {
-                    LOG(DEBUG) << "found transaction which is a buddy op";
                     ops.push_back(std::move(op_opt.getValue()));
                 }
             }
@@ -154,7 +155,7 @@ auto LookupManager::processBlock(core::Block&& block)
         })
         .onValue([&block_hash,
                   this] {
-            LOG(DEBUG) << "add blockhash " << block_hash << " to the manager";
+            LOG(DEBUG) << "add blockhash " << block_hash;
             block_hashes_.push_back(std::move(block_hash));
         });
 }
