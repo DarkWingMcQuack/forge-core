@@ -122,7 +122,7 @@ auto LookupManager::processBlock(core::Block&& block)
             //exract all buddy ops from the txs
             for(auto&& tx : txs) {
                 LOG(DEBUG) << "try parsing transaction"
-                           << tx.getTxid() << "to buddy operation";
+                           << tx.getTxid() << " to buddy operation";
 
                 auto op_res = parseTransactionToEntry(std::move(tx),
                                                       block_height,
@@ -144,7 +144,7 @@ auto LookupManager::processBlock(core::Block&& block)
             //execture the operations by the lookup
 
             LOG(DEBUG) << "execute " << ops.size()
-                       << "operations from block " << block_height;
+                       << " operations from block " << block_height;
             return lookup_
                 .executeOperations(std::move(ops))
                 .mapError([](auto&& error) {
@@ -153,7 +153,7 @@ auto LookupManager::processBlock(core::Block&& block)
         })
         .onValue([&block_hash,
                   this] {
-            LOG(DEBUG) << "add blockhash " << block_hash << "to the manager";
+            LOG(DEBUG) << "add blockhash " << block_hash << " to the manager";
             block_hashes_.push_back(std::move(block_hash));
         });
 }
