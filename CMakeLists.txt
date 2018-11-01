@@ -16,6 +16,7 @@ include(cmake/fmt.cmake)
 # include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
 include(cmake/gtest.cmake)
+include(cmake/g3log.cmake)
 
 #get options
 include(cmake/options.cmake)
@@ -76,6 +77,7 @@ target_sources(buddy-src
 target_include_directories(buddy-src PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   fmt
+  g3logger
   jsonrpc::client
   jsoncpp)
 
@@ -84,6 +86,7 @@ target_link_libraries(buddy-src LINK_PUBLIC
   fmt
   jsonrpc::client
   jsoncpp
+  g3logger
   ${CMAKE_THREAD_LIBS_INIT})
 
 #executable
@@ -96,6 +99,7 @@ add_dependencies(buddy-src fmt-project)
 add_dependencies(buddy-src jsonrpc-project)
 # add_dependencies(buddy-src boost-project)
 add_dependencies(buddy-src cxxopts-project)
+add_dependencies(buddy-src g3logger-project)
 add_dependencies(cppBUDDY buddy-src)
 
 
