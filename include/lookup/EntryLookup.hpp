@@ -92,6 +92,7 @@ private:
                                         std::size_t>>; //block
     MapType lookup_map_;
     std::size_t block_height_;
+    std::size_t start_block_;
 };
 
 } // namespace buddy::lookup

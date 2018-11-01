@@ -23,7 +23,8 @@ using buddy::lookup::EntryLookup;
 
 
 EntryLookup::EntryLookup(std::size_t start_block)
-    : block_height_(start_block){};
+    : block_height_(start_block),
+      start_block_(start_block){};
 
 EntryLookup::EntryLookup()
     : block_height_(0){};
@@ -364,5 +365,5 @@ auto EntryLookup::clear()
     -> void
 {
     lookup_map_.clear();
-    block_height_ = 0;
+    block_height_ = start_block_;
 }
