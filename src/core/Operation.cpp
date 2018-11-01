@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <daemon/DaemonBase.hpp>
 #include <fmt/core.h>
+#include <g3log/g3log.hpp>
 #include <vector>
 
 using buddy::core::Entry;
@@ -187,6 +188,7 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
         return ResultType{std::nullopt};
     }
 
+    LOG(DEBUG) << "resoving vin from " << vin.getTxid();
     return daemon
         ->resolveTxIn(std::move(vin))
         .flatMap([&](auto&& resolvedVin) {

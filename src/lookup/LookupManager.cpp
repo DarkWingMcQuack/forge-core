@@ -3,6 +3,7 @@
 #include <daemon/DaemonBase.hpp>
 #include <fmt/core.h>
 #include <functional>
+#include <g3log/g3log.hpp>
 #include <lookup/EntryLookup.hpp>
 #include <lookup/LookupManager.hpp>
 #include <util/Opt.hpp>
@@ -40,17 +41,20 @@ auto LookupManager::updateLookup()
             //if we have less blocks than maturity
             //then nothing happens
             if(actual_height < maturity) {
+                LOG(DEBUG) << "not enough blocks to have any mature blocks";
                 return {};
             }
 
             //process missing blocks
             while(actual_height - maturity > current_height) {
-
+                LOG(DEBUG) << "node hight: " << actual_height
+                           << " buddy height: " << current_height;
                 auto res =
                     //get block hash
                     daemon_->getBlockHash(++current_height)
                         .flatMap([&](auto&& block_hash) {
                             //get block
+                            LOG(DEBUG) << "get block " << block_hash << " from node";
                             return daemon_->getBlock(std::move(block_hash));
                         })
                         .mapError([](auto&& error) {
@@ -58,6 +62,7 @@ auto LookupManager::updateLookup()
                         })
                         //process the block
                         .flatMap([&](auto&& block) {
+                            LOG(DEBUG) << "Processing Block: " << current_height;
                             return processBlock(std::move(block));
                         });
 
@@ -68,8 +73,6 @@ auto LookupManager::updateLookup()
 
                 //update blockheight of lookup
                 lookup_.setBlockHeight(current_height);
-                fmt::print("processed block {}\n",
-                           current_height - 1);
             }
 
             return {};
@@ -104,6 +107,8 @@ auto LookupManager::processBlock(core::Block&& block)
     //traverse all txids to transactions
     return traverse(std::move(block.getTxids()),
                     [this](auto&& txid) {
+                        LOG(DEBUG) << "get transaction: " << txid;
+
                         return daemon_
                             ->getTransaction(std::move(txid))
                             .mapError([](auto&& error) {
@@ -116,6 +121,9 @@ auto LookupManager::processBlock(core::Block&& block)
             std::vector<Operation> ops;
             //exract all buddy ops from the txs
             for(auto&& tx : txs) {
+                LOG(DEBUG) << "try parsing transaction"
+                           << tx.getTxid() << "to buddy operation";
+
                 auto op_res = parseTransactionToEntry(std::move(tx),
                                                       block_height,
                                                       daemon_);
@@ -128,11 +136,15 @@ auto LookupManager::processBlock(core::Block&& block)
                 //we add it to the std::vector<Operation> vec
                 if(auto op_opt = std::move(op_res.getValue());
                    op_opt) {
+                    LOG(DEBUG) << "found transaction which is a buddy op";
                     ops.push_back(std::move(op_opt.getValue()));
                 }
             }
 
             //execture the operations by the lookup
+
+            LOG(DEBUG) << "execute " << ops.size()
+                       << "operations from block " << block_height;
             return lookup_
                 .executeOperations(std::move(ops))
                 .mapError([](auto&& error) {
@@ -141,6 +153,7 @@ auto LookupManager::processBlock(core::Block&& block)
         })
         .onValue([&block_hash,
                   this] {
+            LOG(DEBUG) << "add blockhash " << block_hash << "to the manager";
             block_hashes_.push_back(std::move(block_hash));
         });
 }
