@@ -48,7 +48,8 @@ auto LookupManager::updateLookup()
             //process missing blocks
             while(actual_height - maturity > current_height) {
                 LOG(DEBUG) << "node hight: " << actual_height
-                           << " buddy height: " << current_height;
+                           << " buddy height: " << current_height
+                           << " coin maturity: " << maturity;
                 auto res =
                     //get block hash
                     daemon_->getBlockHash(++current_height)
