@@ -67,7 +67,7 @@ auto LookupManager::updateLookup()
                 }
 
                 //update blockheight of lookup
-                lookup_.setBlockHeight(current_height - 1);
+                lookup_.setBlockHeight(current_height);
                 fmt::print("processed block {}\n",
                            current_height - 1);
             }
