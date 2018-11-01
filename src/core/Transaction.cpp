@@ -2,6 +2,7 @@
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <daemon/DaemonBase.hpp>
+#include <fmt/core.h>
 #include <json/value.h>
 #include <util/Opt.hpp>
 #include <vector>
@@ -316,9 +317,10 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                                               vin.end()),
                      [](auto&& input) {
                          return buildTxIn(std::move(input));
-                     });
+                     })
+                .valueOr(std::vector<TxIn>{});
 
-        auto outputs =
+        auto outputs_opt =
             traverse(std::vector<Json::Value>(vout.begin(),
                                               vout.end()),
                      [](auto&& output) {
@@ -326,11 +328,11 @@ auto buddy::core::buildTransaction(Json::Value&& json)
                      });
 
 
-        return combine(std::move(inputs),
-                       std::move(outputs))
-            .map([&txid](auto&& pair) {
-                return Transaction{std::move(pair.first),
-                                   std::move(pair.second),
+        return outputs_opt
+            .map([&txid,
+                  &inputs](auto&& outputs) {
+                return Transaction{std::move(inputs),
+                                   std::move(outputs),
                                    std::move(txid)};
             });
     } catch(...) {
@@ -390,7 +392,7 @@ auto buddy::core::stringToByteVec(std::string&& str)
 auto buddy::core::metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
     -> bool
 {
-    if(metadata.size() < 3){
+    if(metadata.size() < 3) {
         return false;
     }
     return std::equal(std::cbegin(BUDDY_IDENTIFIER_MASK),

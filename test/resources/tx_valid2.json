@@ -1,0 +1,34 @@
+{
+  "txid": "3f3e472ee4671f5bcf424cf8b8b0552d51e72172e235f8d6eb7f4aca23c6d0b4",
+  "hash": "3f3e472ee4671f5bcf424cf8b8b0552d51e72172e235f8d6eb7f4aca23c6d0b4",
+  "size": 98,
+  "vsize": 98,
+  "version": 1,
+  "locktime": 0,
+  "vin": [
+    {
+      "coinbase": "510101",
+      "sequence": 4294967295
+    }
+  ],
+  "vout": [
+    {
+      "value": 495000.00000000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "03aa0e03877477dc25bac11a383874fda2ae40a941bd6d8777de4f8bde711bd494 OP_CHECKSIG",
+        "hex": "2103aa0e03877477dc25bac11a383874fda2ae40a941bd6d8777de4f8bde711bd494ac",
+        "reqSigs": 1,
+        "type": "pubkey",
+        "addresses": [
+          "oNhuHT1NKVCbgquygcxBDhQnK2SNT5wQkF"
+        ]
+      }
+    }
+  ],
+  "blockhash": "4d84c285eeaf95bdd11c9967d4e68f70e40cb8ce2bd9f39550542e0f5eb59fef",
+  "confirmations": 49283,
+  "time": 1538139040,
+  "blocktime": 1538139040,
+  "hex": "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff03510101ffffffff010098ea1d052d0000232103aa0e03877477dc25bac11a383874fda2ae40a941bd6d8777de4f8bde711bd494ac00000000"
+}
