@@ -14,4 +14,7 @@ auto getMaturity(Coin c)
 auto getStartingBlock(Coin c)
     -> std::size_t;
 
+auto getBlockTimeInSeconds(Coin c)
+    -> std::size_t;
+
 } // namespace buddy::daemon
