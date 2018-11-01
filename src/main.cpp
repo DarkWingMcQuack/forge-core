@@ -1,3 +1,4 @@
+#include "LoggingSetup.hpp"
 #include <chrono>
 #include <core/Operation.hpp>
 #include <cxxopts.hpp>
@@ -15,6 +16,8 @@ using buddy::lookup::LookupManager;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
+using buddy::env::setupConsoleLogger;
+using buddy::env::setupFileLogger;
 
 auto parse_args(int argc, char* argv[])
     -> std::tuple<std::string,
@@ -65,22 +68,26 @@ auto main(int argc, char* argv[]) -> int
 {
     using namespace std::chrono_literals;
 
-    auto args = parse_args(argc, argv);
+    auto [log_folder,
+          user,
+          password,
+          host,
+          port] = parse_args(argc, argv);
 
     //setup logger
-    auto logfile = std::get<0>(args);
-    auto worker = g3::LogWorker::createLogWorker();
-    worker->addDefaultLogger(argv[0],
-                             logfile);
-    // logger is initialized
-    g3::initializeLogging(worker.get());
+    auto log_worker = [&] {
+        if(log_folder.empty()) {
+            return setupConsoleLogger();
+        }
+        return setupFileLogger(argv[0],
+                               log_folder);
+    }();
 
 
-
-    auto daemon = make_daemon(std::get<1>(args),
-                              std::get<2>(args),
-                              std::get<3>(args),
-                              std::get<4>(args),
+    auto daemon = make_daemon(host,
+                              user,
+                              password,
+                              port,
                               Coin::Odin);
     LookupManager manager{std::move(daemon)};
 
@@ -89,12 +96,12 @@ auto main(int argc, char* argv[]) -> int
         auto res = manager.updateLookup();
 
         res.onError([](auto&& error) {
-            fmt::print("{}\n",
-                       std::visit(
-                           [](auto&& er) {
-                               return er.what();
-                           },
-                           error));
+            auto error_msg = std::visit(
+                [](auto&& er) {
+                    return er.what();
+                },
+                error);
+            LOG(WARNING) << error_msg;
         });
 
         std::this_thread::sleep_for(2s);
