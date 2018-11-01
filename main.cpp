@@ -1,11 +1,15 @@
+#include <chrono>
 #include <core/Operation.hpp>
 #include <cxxopts.hpp>
 #include <daemon/OdinDaemon.hpp>
 #include <fmt/core.h>
+#include <lookup/LookupManager.hpp>
+#include <thread>
 #include <util/Opt.hpp>
 #include <util/Result.hpp>
 
 using buddy::daemon::OdinDaemon;
+using buddy::lookup::LookupManager;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
@@ -53,25 +57,25 @@ auto daemon_from_args(int argc, char* argv[])
 
 auto main(int argc, char* argv[]) -> int
 {
+    using namespace std::chrono_literals;
+
     auto daemon = daemon_from_args(argc, argv);
 
-    auto block_res =
-        daemon->getNewestBlock()
-            .flatMap([d = std::move(daemon)](auto&& block) {
-                fmt::print("numbers of txids {}\n", block.getTxids().size());
-                auto txid = std::move(block.getTxids()[1]);
-                return d->getTransaction(std::move(txid));
-            })
-            .onValue([](auto&& tx) {
-                fmt::print("outputs: {}\n",
-                           tx.getOutputs().size());
-                fmt::print("addresses: {}\n",
-                           tx.getOutputs().at(1).getAddresses().size());
-                fmt::print("first address: {}\n",
-                           tx.getOutputs().at(1).getAddresses().at(0));
-            })
-            .onError([](auto&& error) {
-                fmt::print("{}\n",
-                           error.what());
-            });
+    LookupManager manager{std::move(daemon)};
+
+    while(true) {
+
+        auto res = manager.updateLookup();
+
+        res.onError([](auto&& error) {
+            fmt::print("{}\n",
+                       std::visit(
+                           [](auto&& er) {
+                               return er.what();
+                           },
+                           error));
+        });
+
+        std::this_thread::sleep_for(2s);
+    }
 }
