@@ -3,6 +3,8 @@
 #include <cxxopts.hpp>
 #include <daemon/OdinDaemon.hpp>
 #include <fmt/core.h>
+#include <g3log/g3log.hpp>
+#include <g3log/logworker.hpp>
 #include <lookup/LookupManager.hpp>
 #include <thread>
 #include <util/Opt.hpp>
@@ -14,14 +16,19 @@ using buddy::daemon::DaemonBase;
 using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
 
-auto daemon_from_args(int argc, char* argv[])
-    -> std::unique_ptr<DaemonBase>
+auto parse_args(int argc, char* argv[])
+    -> std::tuple<std::string,
+                  std::string,
+                  std::string,
+                  std::string,
+                  std::size_t>
 {
     cxxopts::Options options("cppBUDDY", "Implementation of the BUDDY protocol");
 
     // clang-format off
     options.add_options()
         ("help", "Print help and exit.")
+        ("l,logpath", "logpath",cxxopts::value<std::string>()->default_value(""))
         ("u,user", "daemon RPC user",cxxopts::value<std::string>())
         ("x,password", "daemon RPC password",cxxopts::value<std::string>())
         ("h,host", "hostname of the daemon",cxxopts::value<std::string>())
@@ -29,7 +36,6 @@ auto daemon_from_args(int argc, char* argv[])
     // clang-format on
 
     try {
-
         auto result = options.parse(argc, argv);
 
         if(result.count("help")) {
@@ -37,17 +43,17 @@ auto daemon_from_args(int argc, char* argv[])
             exit(0);
         }
 
+        auto logfile = result["logpath"].as<std::string>();
         auto user = result["user"].as<std::string>();
         auto password = result["password"].as<std::string>();
         auto host = result["host"].as<std::string>();
         auto port = result["port"].as<std::size_t>();
 
-        auto daemon = make_daemon(std::move(host),
-                                  std::move(user),
-                                  std::move(password),
-                                  port,
-                                  Coin::Odin);
-        return daemon;
+        return {std::move(logfile),
+                std::move(user),
+                std::move(password),
+                std::move(host),
+                port};
 
     } catch(const std::exception& e) {
         fmt::print("{}\n", e.what());
@@ -59,8 +65,23 @@ auto main(int argc, char* argv[]) -> int
 {
     using namespace std::chrono_literals;
 
-    auto daemon = daemon_from_args(argc, argv);
+    auto args = parse_args(argc, argv);
 
+    //setup logger
+    auto logfile = std::get<0>(args);
+    auto worker = g3::LogWorker::createLogWorker();
+    worker->addDefaultLogger(argv[0],
+                             logfile);
+    // logger is initialized
+    g3::initializeLogging(worker.get());
+
+
+
+    auto daemon = make_daemon(std::get<1>(args),
+                              std::get<2>(args),
+                              std::get<3>(args),
+                              std::get<4>(args),
+                              Coin::Odin);
     LookupManager manager{std::move(daemon)};
 
     while(true) {
