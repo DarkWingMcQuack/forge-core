@@ -95,7 +95,7 @@ public:
         // clang-format on
 
         return hasValue()
-            ? getValue()
+            ? std::move(getValue())
             : static_cast<T>(std::forward<U>(value));
     }
 
