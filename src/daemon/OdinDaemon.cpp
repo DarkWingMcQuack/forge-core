@@ -178,9 +178,9 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
             }
 
             auto error_str =
-                fmt::format("unable to build transaction from result when calling {}, with parameters {}",
+                fmt::format("unable to build transaction from result when calling {}, with parameters {}\n",
                             command,
-                            params.asString());
+                            params.toStyledString());
 
             return DaemonError{std::move(error_str)};
         });

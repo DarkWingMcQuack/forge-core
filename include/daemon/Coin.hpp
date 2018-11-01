@@ -11,4 +11,7 @@ enum class Coin {
 auto getMaturity(Coin c)
     -> std::size_t;
 
+auto getStartingBlock(Coin c)
+    -> std::size_t;
+
 } // namespace buddy::daemon

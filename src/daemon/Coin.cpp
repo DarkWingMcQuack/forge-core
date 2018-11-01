@@ -9,3 +9,12 @@ auto buddy::daemon::getMaturity(Coin c)
         return 50;
     }
 }
+
+auto buddy::daemon::getStartingBlock(Coin c)
+    -> std::size_t
+{
+    switch(c) {
+    default:
+        return 0;
+    }
+}

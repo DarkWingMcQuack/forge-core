@@ -19,6 +19,9 @@ public:
 class EntryLookup final
 {
 public:
+    EntryLookup(std::size_t start_block);
+    EntryLookup();
+
     auto executeOperations(std::vector<core::Operation>&& ops)
         -> util::Result<void, LookupError>;
 

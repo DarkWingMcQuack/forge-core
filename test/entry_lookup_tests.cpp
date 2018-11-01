@@ -36,7 +36,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              9)};
-    EntryLookup lookup;
+    EntryLookup lookup{0};
 
     lookup.executeOperations(std::move(ops));
 

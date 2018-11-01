@@ -22,6 +22,12 @@ using buddy::lookup::LookupError;
 using buddy::lookup::EntryLookup;
 
 
+EntryLookup::EntryLookup(std::size_t start_block)
+    : block_height_(start_block){};
+
+EntryLookup::EntryLookup()
+    : block_height_(0){};
+
 auto EntryLookup::executeOperations(std::vector<Operation>&& ops)
     -> Result<void, LookupError>
 {

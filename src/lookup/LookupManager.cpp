@@ -21,7 +21,7 @@ using buddy::daemon::getMaturity;
 
 LookupManager::LookupManager(std::unique_ptr<daemon::DaemonBase> daemon)
     : daemon_(std::move(daemon)),
-      lookup_(),
+      lookup_(getStartingBlock(daemon->getCoin())),
       block_hashes_() {}
 
 auto LookupManager::updateLookup()
