@@ -91,7 +91,7 @@ target_link_libraries(buddy-src LINK_PUBLIC
 
 #executable
 add_executable(cppBUDDY
-  main.cpp)
+  src/main.cpp)
 
 
 #make sure everything is build in the right order
