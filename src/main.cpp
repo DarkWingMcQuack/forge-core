@@ -110,6 +110,16 @@ auto main(int argc, char* argv[]) -> int
         });
 
         //do this every 2 seconds
-        std::this_thread::sleep_for(2s);
+        std::this_thread::sleep_for(30s);
+
+        auto valid_res = manager.lookupIsValid();
+
+        valid_res.onError([](auto&& error) {
+                     LOG(WARNING) << error.what();
+                 })
+            .onValue([](auto&& value) {
+                LOG_IF(DEBUG, value) << "lookup is valid";
+                LOG_IF(WARNING, !value) << "lookup is invalid";
+            });
     }
 }

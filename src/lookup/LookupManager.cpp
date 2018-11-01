@@ -166,9 +166,10 @@ auto LookupManager::lookupIsValid() const
     auto starting_block = getStartingBlock(daemon_->getCoin());
 
     for(auto&& hash : block_hashes_) {
-        if(auto res = daemon_->getBlockHash(starting_block++);
+        if(auto res = daemon_->getBlockHash(++starting_block);
            res) {
             if(res.getValue() != hash) {
+                LOG(WARNING) << "lookup seems invalid";
                 return false;
             }
         } else {
