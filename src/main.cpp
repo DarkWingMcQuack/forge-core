@@ -68,6 +68,7 @@ auto main(int argc, char* argv[]) -> int
 {
     using namespace std::chrono_literals;
 
+    //parse comandline ards
     auto [log_folder,
           user,
           password,
@@ -76,6 +77,7 @@ auto main(int argc, char* argv[]) -> int
 
     //setup logger
     auto log_worker = [&] {
+        //if no path was given, use the console
         if(log_folder.empty()) {
             return setupConsoleLogger();
         }
@@ -84,6 +86,7 @@ auto main(int argc, char* argv[]) -> int
     }();
 
 
+    //get a daemon
     auto daemon = make_daemon(host,
                               user,
                               password,
@@ -93,7 +96,9 @@ auto main(int argc, char* argv[]) -> int
 
     while(true) {
 
+        //update to newest block
         auto res = manager.updateLookup();
+        //report errors
 
         res.onError([](auto&& error) {
             auto error_msg = std::visit(
@@ -104,6 +109,7 @@ auto main(int argc, char* argv[]) -> int
             LOG(WARNING) << error_msg;
         });
 
+        //do this every 2 seconds
         std::this_thread::sleep_for(2s);
     }
 }
