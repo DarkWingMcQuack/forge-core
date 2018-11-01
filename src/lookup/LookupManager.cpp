@@ -1,6 +1,7 @@
 #include <core/Operation.hpp>
 #include <daemon/Coin.hpp>
 #include <daemon/DaemonBase.hpp>
+#include <fmt/core.h>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
 #include <lookup/LookupManager.hpp>
@@ -64,8 +65,11 @@ auto LookupManager::updateLookup()
                 if(!res) {
                     return res;
                 }
+
                 //update blockheight of lookup
-                lookup_.setBlockHeight(current_height);
+                lookup_.setBlockHeight(current_height - 1);
+                fmt::print("processed block {}\n",
+                           current_height - 1);
             }
 
             return {};

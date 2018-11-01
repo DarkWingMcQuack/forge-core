@@ -14,6 +14,8 @@ auto buddy::daemon::getStartingBlock(Coin c)
     -> std::size_t
 {
     switch(c) {
+    case Coin::Odin:
+        return 48000;
     default:
         return 0;
     }
