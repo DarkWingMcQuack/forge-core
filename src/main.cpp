@@ -109,8 +109,9 @@ auto main(int argc, char* argv[]) -> int
                LOG(WARNING) << error_msg;
            })
             .onValue([&](auto&& added) {
-                if(!added)
+                if(!added) {
                     return;
+                }
 
                 auto valid_res = manager.lookupIsValid();
 
