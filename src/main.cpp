@@ -101,25 +101,29 @@ auto main(int argc, char* argv[]) -> int
         //report errors
 
         res.onError([](auto&& error) {
-            auto error_msg = std::visit(
-                [](auto&& er) {
-                    return er.what();
-                },
-                error);
-            LOG(WARNING) << error_msg;
-        });
+               auto error_msg = std::visit(
+                   [](auto&& er) {
+                       return er.what();
+                   },
+                   error);
+               LOG(WARNING) << error_msg;
+           })
+            .onValue([&](auto&& added) {
+                if(!added)
+                    return;
 
-        //do this every 2 seconds
-        std::this_thread::sleep_for(30s);
+                auto valid_res = manager.lookupIsValid();
 
-        auto valid_res = manager.lookupIsValid();
-
-        valid_res.onError([](auto&& error) {
-                     LOG(WARNING) << error.what();
-                 })
-            .onValue([](auto&& value) {
-                LOG_IF(DEBUG, value) << "lookup is valid";
-                LOG_IF(WARNING, !value) << "lookup is invalid";
+                valid_res.onError([](auto&& error) {
+                             LOG(WARNING) << error.what();
+                         })
+                    .onValue([](auto&& value) {
+                        LOG_IF(DEBUG, value) << "lookup is valid";
+                        LOG_IF(WARNING, !value) << "lookup is invalid";
+                    });
             });
+
+        //do this every 30 seconds
+        std::this_thread::sleep_for(30s);
     }
 }

@@ -19,7 +19,7 @@ public:
     LookupManager(std::unique_ptr<daemon::DaemonBase> daemon);
 
     auto updateLookup()
-        -> util::Result<void, ManagerError>;
+        -> util::Result<bool, ManagerError>;
 
     auto rebuildLookup()
         -> util::Result<void, ManagerError>;

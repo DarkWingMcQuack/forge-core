@@ -27,7 +27,7 @@ LookupManager::LookupManager(std::unique_ptr<daemon::DaemonBase> daemon)
       block_hashes_() {}
 
 auto LookupManager::updateLookup()
-    -> util::Result<void, ManagerError>
+    -> util::Result<bool, ManagerError>
 {
     const auto maturity = getMaturity(daemon_->getCoin());
     auto current_height = lookup_.getBlockHeight();
@@ -37,13 +37,15 @@ auto LookupManager::updateLookup()
             return ManagerError{std::move(error)};
         })
         .flatMap([&](auto actual_height)
-                     -> Result<void, ManagerError> {
+                     -> Result<bool, ManagerError> {
             //if we have less blocks than maturity
             //then nothing happens
             if(actual_height < maturity) {
                 LOG(DEBUG) << "not enough blocks to have any mature blocks";
-                return {};
+                return false;
             }
+
+            auto new_block_added{false};
 
             //process missing blocks
             while(actual_height - maturity > current_height) {
@@ -69,14 +71,16 @@ auto LookupManager::updateLookup()
 
                 //if an error occured return the error
                 if(!res) {
-                    return res;
+                    return res.getError();
                 }
+
+                new_block_added = true;
 
                 //update blockheight of lookup
                 lookup_.setBlockHeight(current_height);
             }
 
-            return {};
+            return new_block_added;
         });
 }
 
