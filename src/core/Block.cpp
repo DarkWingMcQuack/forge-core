@@ -2,11 +2,11 @@
 #include <array>
 #include <core/Block.hpp>
 #include <cstddef>
-#include <util/Opt.hpp>
+#include <utilxx/Opt.hpp>
 #include <vector>
 
 using buddy::core::Block;
-using buddy::util::Opt;
+using utilxx::Opt;
 
 
 
@@ -59,7 +59,7 @@ auto Block::getHash()
 
 
 auto buddy::core::buildBlock(Json::Value&& json)
-    -> util::Opt<Block>
+    -> utilxx::Opt<Block>
 {
     //use try-catch such if all the json.asFoo()
     //are failing we get a nullopt

@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.9)
 
+#get options
+include(cmake/options.cmake)
+
+if(USE_CLANG)
+  SET(CMAKE_C_COMPILER    "clang")
+  SET(CMAKE_CXX_COMPILER  "clang++")
+  SET(CMAKE_AR            "llvm-ar")
+  SET(CMAKE_NM            "llvm-nm")
+  SET(CMAKE_OBJDUMP       "llvm-objdump")
+  SET(CMAKE_RANLIB        "llvm-ranlib")
+endif(USE_CLANG)
+
 project(cppBUDDY)
 
 #set C++ standard to C++17
@@ -13,22 +25,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(cmake/jsoncpp.cmake)
 include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
+include(cmake/utilxx.cmake)
 # include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
 include(cmake/gtest.cmake)
 include(cmake/g3log.cmake)
-
-#get options
-include(cmake/options.cmake)
-
-if(USE_CLANG)
-  SET(CMAKE_C_COMPILER    "clang")
-  SET(CMAKE_CXX_COMPILER  "clang++")
-  SET(CMAKE_AR            "llvm-ar")
-  SET(CMAKE_NM            "llvm-nm")
-  SET(CMAKE_OBJDUMP       "llvm-objdump")
-  SET(CMAKE_RANLIB        "llvm-ranlib")
-endif(USE_CLANG)
 
 #setup flags and ccache
 include(cmake/flags.cmake)
@@ -76,6 +77,7 @@ target_sources(buddy-src
 # make headers available
 target_include_directories(buddy-src PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${UTILXX_INCLUDE_DIR}
   fmt
   g3logger
   jsonrpc::client
@@ -100,6 +102,7 @@ add_dependencies(buddy-src jsonrpc-project)
 # add_dependencies(buddy-src boost-project)
 add_dependencies(buddy-src cxxopts-project)
 add_dependencies(buddy-src g3logger-project)
+add_dependencies(buddy-src utilxx-project)
 add_dependencies(cppBUDDY buddy-src)
 
 

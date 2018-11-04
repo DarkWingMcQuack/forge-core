@@ -5,11 +5,13 @@
 #include <daemon/DaemonBase.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 #include <vector>
 
 using buddy::core::Entry;
-using buddy::util::Result;
-using buddy::util::Opt;
+using utilxx::Result;
+using utilxx::Opt;
 using buddy::core::Transaction;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::DaemonError;
@@ -72,7 +74,7 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
                                 std::size_t block,
                                 std::string&& owner,
                                 std::size_t value,
-                                util::Opt<std::string>&& new_owner_opt)
+                                utilxx::Opt<std::string>&& new_owner_opt)
     -> Opt<Operation>
 {
     if(metadata.size() < 10) {
@@ -81,7 +83,7 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
 
     return parseEntry(metadata)
         .flatMap([&](auto&& entry)
-                     -> util::Opt<Operation> {
+                     -> utilxx::Opt<Operation> {
             switch(static_cast<std::byte>(metadata[3])) {
 
             case ENTRY_CREATION_FLAG:

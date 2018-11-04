@@ -8,8 +8,8 @@
 #include <g3log/logworker.hpp>
 #include <lookup/LookupManager.hpp>
 #include <thread>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
 using buddy::daemon::OdinDaemon;
 using buddy::lookup::LookupManager;

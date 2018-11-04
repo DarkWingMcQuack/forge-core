@@ -4,8 +4,8 @@
 #include <core/Transaction.hpp>
 #include <daemon/Coin.hpp>
 #include <memory>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
 namespace buddy::daemon {
 
@@ -22,22 +22,22 @@ public:
         : coin_(coin) {}
 
     virtual auto getNewestBlock() const
-        -> util::Result<core::Block, DaemonError> = 0;
+        -> utilxx::Result<core::Block, DaemonError> = 0;
 
     virtual auto getTransaction(std::string&& txid) const
-        -> util::Result<core::Transaction, DaemonError> = 0;
+        -> utilxx::Result<core::Transaction, DaemonError> = 0;
 
     virtual auto resolveTxIn(core::TxIn&& vin) const
-        -> util::Result<core::TxOut, DaemonError> = 0;
+        -> utilxx::Result<core::TxOut, DaemonError> = 0;
 
     virtual auto getBlockCount() const
-        -> util::Result<std::size_t, DaemonError> = 0;
+        -> utilxx::Result<std::size_t, DaemonError> = 0;
 
     virtual auto getBlockHash(std::size_t index) const
-        -> util::Result<std::string, DaemonError> = 0;
+        -> utilxx::Result<std::string, DaemonError> = 0;
 
     virtual auto getBlock(std::string&& hash) const
-        -> util::Result<core::Block, DaemonError> = 0;
+        -> utilxx::Result<core::Block, DaemonError> = 0;
 
     virtual auto getCoin() const
         -> Coin final;

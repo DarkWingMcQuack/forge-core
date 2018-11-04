@@ -4,8 +4,8 @@
 #include <daemon/Coin.hpp>
 #include <functional>
 #include <map>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
 namespace buddy::lookup {
 
@@ -23,31 +23,31 @@ public:
     EntryLookup();
 
     auto executeOperations(std::vector<core::Operation>&& ops)
-        -> util::Result<void, LookupError>;
+        -> utilxx::Result<void, LookupError>;
 
     auto lookup(const core::EntryKey& key) const
-        -> util::Opt<std::reference_wrapper<const core::EntryValue>>;
+        -> utilxx::Opt<std::reference_wrapper<const core::EntryValue>>;
 
     auto lookup(const core::EntryKey& key)
-        -> util::Opt<std::reference_wrapper<core::EntryValue>>;
+        -> utilxx::Opt<std::reference_wrapper<core::EntryValue>>;
 
     auto lookupOwner(const core::EntryKey& key) const
-        -> util::Opt<std::reference_wrapper<const std::string>>;
+        -> utilxx::Opt<std::reference_wrapper<const std::string>>;
 
     auto lookupOwner(const core::EntryKey& key)
-        -> util::Opt<std::reference_wrapper<std::string>>;
+        -> utilxx::Opt<std::reference_wrapper<std::string>>;
 
     auto lookupBlock(const core::EntryKey& key)
-        -> util::Opt<std::reference_wrapper<std::size_t>>;
+        -> utilxx::Opt<std::reference_wrapper<std::size_t>>;
 
     auto lookupEntry(const core::EntryKey& key)
-        -> util::Opt<
+        -> utilxx::Opt<
             std::tuple<std::reference_wrapper<core::EntryValue>,
                        std::reference_wrapper<std::string>,
                        std::reference_wrapper<std::size_t>>>;
 
     auto lookupEntry(const core::EntryKey& key) const
-        -> util::Opt<
+        -> utilxx::Opt<
             std::tuple<std::reference_wrapper<const core::EntryValue>,
                        std::reference_wrapper<const std::string>,
                        std::reference_wrapper<const std::size_t>>>;
@@ -71,19 +71,19 @@ public:
         -> void;
 
     auto operator()(core::EntryCreationOp&& op)
-        -> util::Result<void, LookupError>;
+        -> utilxx::Result<void, LookupError>;
 
     auto operator()(core::EntryRenewalOp&& op)
-        -> util::Result<void, LookupError>;
+        -> utilxx::Result<void, LookupError>;
 
     auto operator()(core::OwnershipTransferOp&& op)
-        -> util::Result<void, LookupError>;
+        -> utilxx::Result<void, LookupError>;
 
     auto operator()(core::EntryUpdateOp&& op)
-        -> util::Result<void, LookupError>;
+        -> utilxx::Result<void, LookupError>;
 
     auto operator()(core::EntryDeletionOp&& op)
-        -> util::Result<void, LookupError>;
+        -> utilxx::Result<void, LookupError>;
 
 private:
     using MapType = std::map<core::EntryKey, //key

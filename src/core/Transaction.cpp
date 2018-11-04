@@ -4,7 +4,7 @@
 #include <daemon/DaemonBase.hpp>
 #include <fmt/core.h>
 #include <json/value.h>
-#include <util/Opt.hpp>
+#include <utilxx/Opt.hpp>
 #include <vector>
 
 
@@ -13,9 +13,9 @@ using buddy::core::TxOut;
 using buddy::core::Transaction;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::DaemonError;
-using buddy::util::Result;
-using buddy::util::Opt;
-using buddy::util::traverse;
+using utilxx::Result;
+using utilxx::Opt;
+using utilxx::traverse;
 using buddy::core::BUDDY_IDENTIFIER_MASK;
 using namespace std::string_literals;
 
@@ -171,9 +171,9 @@ auto Transaction::hasExactlyOneOpReturnOutput() const
 }
 
 auto Transaction::getFirstOpReturnOutput() const
-    -> util::Opt<std::reference_wrapper<const TxOut>>
+    -> utilxx::Opt<std::reference_wrapper<const TxOut>>
 {
-    using Ret = util::Opt<std::reference_wrapper<const TxOut>>;
+    using Ret = utilxx::Opt<std::reference_wrapper<const TxOut>>;
 
     auto iter = std::find_if(std::cbegin(outputs_),
                              std::cend(outputs_),
@@ -187,9 +187,9 @@ auto Transaction::getFirstOpReturnOutput() const
 }
 
 auto Transaction::getFirstOpReturnOutput()
-    -> util::Opt<std::reference_wrapper<TxOut>>
+    -> utilxx::Opt<std::reference_wrapper<TxOut>>
 {
-    using Ret = util::Opt<std::reference_wrapper<TxOut>>;
+    using Ret = utilxx::Opt<std::reference_wrapper<TxOut>>;
 
     auto iter = std::find_if(std::begin(outputs_),
                              std::end(outputs_),
@@ -203,9 +203,9 @@ auto Transaction::getFirstOpReturnOutput()
 }
 
 auto Transaction::getFirstNonOpReturnOutput() const
-    -> util::Opt<std::reference_wrapper<const TxOut>>
+    -> utilxx::Opt<std::reference_wrapper<const TxOut>>
 {
-    using Ret = util::Opt<std::reference_wrapper<const TxOut>>;
+    using Ret = utilxx::Opt<std::reference_wrapper<const TxOut>>;
 
     auto iter = std::find_if(std::cbegin(outputs_),
                              std::cend(outputs_),
@@ -219,9 +219,9 @@ auto Transaction::getFirstNonOpReturnOutput() const
 }
 
 auto Transaction::getFirstNonOpReturnOutput()
-    -> util::Opt<std::reference_wrapper<TxOut>>
+    -> utilxx::Opt<std::reference_wrapper<TxOut>>
 {
-    using Ret = util::Opt<std::reference_wrapper<TxOut>>;
+    using Ret = utilxx::Opt<std::reference_wrapper<TxOut>>;
 
     auto iter = std::find_if(std::begin(outputs_),
                              std::end(outputs_),
@@ -247,7 +247,7 @@ auto Transaction::getNumberOfOutputs() const
 }
 
 auto buddy::core::buildTxIn(Json::Value&& json)
-    -> util::Opt<TxIn>
+    -> utilxx::Opt<TxIn>
 {
     try {
         if(!json.isMember("txid")
@@ -266,7 +266,7 @@ auto buddy::core::buildTxIn(Json::Value&& json)
 }
 
 auto buddy::core::buildTxOut(Json::Value&& json)
-    -> util::Opt<TxOut>
+    -> utilxx::Opt<TxOut>
 {
     try {
         //dont check for addresses, since we allow 0 addresses
@@ -299,7 +299,7 @@ auto buddy::core::buildTxOut(Json::Value&& json)
 }
 
 auto buddy::core::buildTransaction(Json::Value&& json)
-    -> util::Opt<Transaction>
+    -> utilxx::Opt<Transaction>
 {
     try {
         if(!json.isMember("txid")
@@ -341,7 +341,7 @@ auto buddy::core::buildTransaction(Json::Value&& json)
 }
 
 auto buddy::core::extractMetadata(std::string&& hex)
-    -> util::Opt<std::vector<std::byte>>
+    -> utilxx::Opt<std::vector<std::byte>>
 {
     if(hex.size() < 4) {
         return std::nullopt;
@@ -360,7 +360,7 @@ auto buddy::core::extractMetadata(std::string&& hex)
 }
 
 auto buddy::core::stringToByteVec(std::string&& str)
-    -> util::Opt<std::vector<std::byte>>
+    -> utilxx::Opt<std::vector<std::byte>>
 {
     //check if the string has even characters
     if(str.length() % 2 != 0) {

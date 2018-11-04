@@ -1,11 +1,11 @@
 #include <core/Entry.hpp>
 #include <core/Operation.hpp>
 #include <cstddef>
-#include <util/Opt.hpp>
+#include <utilxx/Opt.hpp>
 #include <vector>
 
 
-using buddy::util::Opt;
+using utilxx::Opt;
 using buddy::core::Entry;
 using buddy::core::IPv4Value;
 using buddy::core::IPv6Value;
@@ -19,7 +19,7 @@ using buddy::core::BYTE_ARRAY_VALUE_FLAG;
 
 
 auto buddy::core::parseValue(const std::vector<std::byte>& data)
-    -> util::Opt<EntryValue>
+    -> utilxx::Opt<EntryValue>
 {
     if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > VALUE_FLAG_INDEX + 1) {
@@ -68,7 +68,7 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
 }
 
 auto buddy::core::parseKey(const std::vector<std::byte>& data)
-    -> util::Opt<EntryKey>
+    -> utilxx::Opt<EntryKey>
 {
     if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > VALUE_FLAG_INDEX + 1) {

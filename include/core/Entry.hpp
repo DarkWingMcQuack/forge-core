@@ -2,7 +2,7 @@
 
 #include <array>
 #include <cstddef>
-#include <util/Opt.hpp>
+#include <utilxx/Opt.hpp>
 #include <vector>
 
 namespace buddy::core {
@@ -39,11 +39,11 @@ using Entry = std::pair<EntryKey,
                         EntryValue>;
 
 auto parseValue(const std::vector<std::byte>& data)
-    -> util::Opt<EntryValue>;
+    -> utilxx::Opt<EntryValue>;
 
 auto parseKey(const std::vector<std::byte>& data)
-    -> util::Opt<EntryKey>;
+    -> utilxx::Opt<EntryKey>;
 
 auto parseEntry(const std::vector<std::byte>& data)
-    -> util::Opt<Entry>;
+    -> utilxx::Opt<Entry>;
 } // namespace buddy::core

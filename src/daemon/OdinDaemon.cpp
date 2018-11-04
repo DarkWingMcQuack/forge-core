@@ -5,14 +5,14 @@
 #include <fmt/core.h>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
 using buddy::daemon::OdinDaemon;
 using buddy::daemon::DaemonError;
-using buddy::util::Opt;
-using buddy::util::Result;
-using buddy::util::Try;
+using utilxx::Opt;
+using utilxx::Result;
+using utilxx::Try;
 using buddy::core::Block;
 using buddy::core::buildBlock;
 using buddy::core::TxIn;
@@ -75,7 +75,7 @@ auto OdinDaemon::getBlockCount() const
 }
 
 auto OdinDaemon::getBlockHash(std::size_t index) const
-    -> util::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, DaemonError>
 {
     static const auto command = "getblockhash"s;
 
@@ -90,7 +90,7 @@ auto OdinDaemon::getBlockHash(std::size_t index) const
 }
 
 auto OdinDaemon::getBlock(std::string&& hash) const
-    -> util::Result<Block, DaemonError>
+    -> utilxx::Result<Block, DaemonError>
 {
     static const auto command = "getblock"s;
 
@@ -104,7 +104,7 @@ auto OdinDaemon::getBlock(std::string&& hash) const
             return buildBlock(std::move(json));
         })
         .flatMap([&param](auto&& opt)
-                     -> util::Result<core::Block, DaemonError> {
+                     -> utilxx::Result<core::Block, DaemonError> {
             if(opt) {
                 return std::move(opt.getValue());
             }
@@ -131,7 +131,7 @@ auto OdinDaemon::getNewestBlock() const
 }
 
 auto OdinDaemon::resolveTxIn(TxIn&& vin) const
-    -> util::Result<TxOut, DaemonError>
+    -> utilxx::Result<TxOut, DaemonError>
 {
     static const auto command = "gettxout"s;
 
@@ -144,7 +144,7 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
             return buildTxOut(std::move(json));
         })
         .flatMap([&params](auto&& opt)
-                     -> util::Result<core::TxOut, DaemonError> {
+                     -> utilxx::Result<core::TxOut, DaemonError> {
             if(opt) {
                 return opt.getValue();
             }
@@ -159,7 +159,7 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
 }
 
 auto OdinDaemon::getTransaction(std::string&& txid) const
-    -> util::Result<core::Transaction, DaemonError>
+    -> utilxx::Result<core::Transaction, DaemonError>
 {
     static const auto command = "getrawtransaction";
 
@@ -172,7 +172,7 @@ auto OdinDaemon::getTransaction(std::string&& txid) const
             return buildTransaction(std::move(json));
         })
         .flatMap([&params](auto&& opt)
-                     -> util::Result<core::Transaction, DaemonError> {
+                     -> utilxx::Result<core::Transaction, DaemonError> {
             if(opt) {
                 return std::move(opt.getValue());
             }

@@ -2,7 +2,7 @@
 
 #include <json/value.h>
 #include <string>
-#include <util/Opt.hpp>
+#include <utilxx/Opt.hpp>
 #include <vector>
 
 namespace buddy::core {
@@ -47,6 +47,6 @@ private:
 };
 
 auto buildBlock(Json::Value&& json)
-    -> util::Opt<Block>;
+    -> utilxx::Opt<Block>;
 
 } // namespace buddy::core

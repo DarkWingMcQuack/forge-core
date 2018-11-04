@@ -6,8 +6,8 @@
 #include <g3log/g3log.hpp>
 #include <lookup/EntryLookup.hpp>
 #include <lookup/LookupManager.hpp>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
 using buddy::lookup::LookupManager;
 using buddy::lookup::EntryLookup;
@@ -15,9 +15,9 @@ using buddy::lookup::LookupError;
 using buddy::core::EntryKey;
 using buddy::core::EntryValue;
 using buddy::core::Operation;
-using buddy::util::Opt;
-using buddy::util::Result;
-using buddy::util::traverse;
+using utilxx::Opt;
+using utilxx::Result;
+using utilxx::traverse;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::getMaturity;
 
@@ -27,7 +27,7 @@ LookupManager::LookupManager(std::unique_ptr<daemon::DaemonBase> daemon)
       block_hashes_() {}
 
 auto LookupManager::updateLookup()
-    -> util::Result<bool, ManagerError>
+    -> utilxx::Result<bool, ManagerError>
 {
     const auto maturity = getMaturity(daemon_->getCoin());
     auto current_height = lookup_.getBlockHeight();
@@ -85,26 +85,26 @@ auto LookupManager::updateLookup()
 }
 
 auto LookupManager::rebuildLookup()
-    -> util::Result<void, ManagerError>
+    -> utilxx::Result<void, ManagerError>
 {
     lookup_.clear();
     updateLookup();
 }
 
 auto LookupManager::lookupValue(const core::EntryKey& key) const
-    -> util::Opt<std::reference_wrapper<const core::EntryValue>>
+    -> utilxx::Opt<std::reference_wrapper<const core::EntryValue>>
 {
     return lookup_.lookup(key);
 }
 
 auto LookupManager::lookupOwner(const core::EntryKey& key) const
-    -> util::Opt<std::reference_wrapper<const std::string>>
+    -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
     return lookup_.lookupOwner(key);
 }
 
 auto LookupManager::processBlock(core::Block&& block)
-    -> util::Result<void, ManagerError>
+    -> utilxx::Result<void, ManagerError>
 {
     auto block_height = block.getHeight();
     auto block_hash = std::move(block.getHash());
@@ -165,7 +165,7 @@ auto LookupManager::processBlock(core::Block&& block)
 }
 
 auto LookupManager::lookupIsValid() const
-    -> util::Result<bool, daemon::DaemonError>
+    -> utilxx::Result<bool, daemon::DaemonError>
 {
     auto starting_block = getStartingBlock(daemon_->getCoin());
 

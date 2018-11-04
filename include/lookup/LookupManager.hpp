@@ -5,8 +5,8 @@
 #include <daemon/DaemonBase.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
 namespace buddy::lookup {
 
@@ -19,23 +19,23 @@ public:
     LookupManager(std::unique_ptr<daemon::DaemonBase> daemon);
 
     auto updateLookup()
-        -> util::Result<bool, ManagerError>;
+        -> utilxx::Result<bool, ManagerError>;
 
     auto rebuildLookup()
-        -> util::Result<void, ManagerError>;
+        -> utilxx::Result<void, ManagerError>;
 
     auto lookupValue(const core::EntryKey& key) const
-        -> util::Opt<std::reference_wrapper<const core::EntryValue>>;
+        -> utilxx::Opt<std::reference_wrapper<const core::EntryValue>>;
 
     auto lookupOwner(const core::EntryKey& key) const
-        -> util::Opt<std::reference_wrapper<const std::string>>;
+        -> utilxx::Opt<std::reference_wrapper<const std::string>>;
 
     auto lookupIsValid() const
-        -> util::Result<bool, daemon::DaemonError>;
+        -> utilxx::Result<bool, daemon::DaemonError>;
 
 private:
     auto processBlock(core::Block&& block)
-        -> util::Result<void, ManagerError>;
+        -> utilxx::Result<void, ManagerError>;
 
 private:
     std::unique_ptr<daemon::DaemonBase> daemon_;

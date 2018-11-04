@@ -46,13 +46,13 @@ auto getValue(const Operation&)
 auto parseTransactionToEntry(core::Transaction&& tx,
                              std::size_t block,
                              const std::unique_ptr<daemon::DaemonBase>& daemon)
-    -> util::Result<util::Opt<Operation>, daemon::DaemonError>;
+    -> utilxx::Result<utilxx::Opt<Operation>, daemon::DaemonError>;
 
 auto parseMetadata(const std::vector<std::byte>& metadata,
                    std::size_t block,
                    std::string&& owner,
                    std::size_t value,
-                   util::Opt<std::string>&& new_owner = std::nullopt)
-    -> util::Opt<Operation>;
+                   utilxx::Opt<std::string>&& new_owner = std::nullopt)
+    -> utilxx::Opt<Operation>;
 
 } // namespace buddy::core

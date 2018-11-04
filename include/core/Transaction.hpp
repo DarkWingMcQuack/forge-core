@@ -5,7 +5,7 @@
 // #include <daemon/DaemonBase.hpp>
 #include <json/value.h>
 #include <memory>
-#include <util/Opt.hpp>
+#include <utilxx/Opt.hpp>
 #include <vector>
 
 namespace buddy::core {
@@ -118,16 +118,16 @@ public:
         -> bool;
 
     auto getFirstOpReturnOutput() const
-        -> util::Opt<std::reference_wrapper<const TxOut>>;
+        -> utilxx::Opt<std::reference_wrapper<const TxOut>>;
 
     auto getFirstOpReturnOutput()
-        -> util::Opt<std::reference_wrapper<TxOut>>;
+        -> utilxx::Opt<std::reference_wrapper<TxOut>>;
 
     auto getFirstNonOpReturnOutput() const
-        -> util::Opt<std::reference_wrapper<const TxOut>>;
+        -> utilxx::Opt<std::reference_wrapper<const TxOut>>;
 
     auto getFirstNonOpReturnOutput()
-        -> util::Opt<std::reference_wrapper<TxOut>>;
+        -> utilxx::Opt<std::reference_wrapper<TxOut>>;
 
     auto hasExactlyOneInput() const
         -> bool;
@@ -142,17 +142,17 @@ private:
 };
 
 auto buildTxIn(Json::Value&& json)
-    -> util::Opt<TxIn>;
+    -> utilxx::Opt<TxIn>;
 auto buildTxOut(Json::Value&& json)
-    -> util::Opt<TxOut>;
+    -> utilxx::Opt<TxOut>;
 auto buildTransaction(Json::Value&& json)
-    -> util::Opt<Transaction>;
+    -> utilxx::Opt<Transaction>;
 
 auto extractMetadata(std::string&& hex)
-    -> util::Opt<std::vector<std::byte>>;
+    -> utilxx::Opt<std::vector<std::byte>>;
 
 auto stringToByteVec(std::string&& str)
-    -> util::Opt<std::vector<std::byte>>;
+    -> utilxx::Opt<std::vector<std::byte>>;
 
 auto metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
     -> bool;

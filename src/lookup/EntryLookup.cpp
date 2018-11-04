@@ -3,12 +3,12 @@
 #include <functional>
 #include <lookup/EntryLookup.hpp>
 #include <unordered_map>
-#include <util/Opt.hpp>
-#include <util/Result.hpp>
+#include <utilxx/Opt.hpp>
+#include <utilxx/Result.hpp>
 
-using buddy::util::Result;
-using buddy::util::traverse;
-using buddy::util::Opt;
+using utilxx::Result;
+using utilxx::traverse;
+using utilxx::Opt;
 using buddy::core::Operation;
 using buddy::core::getValue;
 using buddy::core::EntryValue;
@@ -86,7 +86,7 @@ auto EntryLookup::lookupOwner(const EntryKey& key)
 }
 
 auto EntryLookup::lookupEntry(const EntryKey& key) const
-    -> util::Opt<
+    -> utilxx::Opt<
         std::tuple<std::reference_wrapper<const core::EntryValue>,
                    std::reference_wrapper<const std::string>,
                    std::reference_wrapper<const std::size_t>>>
@@ -102,7 +102,7 @@ auto EntryLookup::lookupEntry(const EntryKey& key) const
 }
 
 auto EntryLookup::lookupEntry(const EntryKey& key)
-    -> util::Opt<
+    -> utilxx::Opt<
         std::tuple<std::reference_wrapper<core::EntryValue>,
                    std::reference_wrapper<std::string>,
                    std::reference_wrapper<std::size_t>>>
