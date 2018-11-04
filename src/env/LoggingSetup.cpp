@@ -1,8 +1,9 @@
+#include <env/LoggingSetup.hpp>
+#include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <g3log/logworker.hpp>
-#include <iostream>
 
-namespace buddy::env {
+namespace {
 
 struct ColorCoutSink
 {
@@ -34,31 +35,32 @@ struct ColorCoutSink
         auto level = logEntry.get()._level;
         auto color = GetColor(level);
 
-        std::cout << "\033[" << color << "m" << logEntry.get().toString() << "\033[m";
+        fmt::print("\033[{}m{}\033[m",
+                   color,
+                   logEntry.get().toString());
     }
 };
 
-auto setupFileLogger(std::string_view log_preview,
-                     std::string_view log_folder)
+} // namespace
+
+auto buddy::env::initFileLogger(std::string_view log_preview,
+                                std::string_view log_folder)
+    -> void
 {
-    auto worker = g3::LogWorker::createLogWorker();
+    static auto worker = g3::LogWorker::createLogWorker();
     worker->addDefaultLogger(log_preview.data(),
                              log_folder.data());
     // logger is initialized
     g3::initializeLogging(worker.get());
-
-    return worker;
 }
 
-auto setupConsoleLogger()
+auto buddy::env::initConsoleLogger()
+    -> void
 {
-    auto worker = g3::LogWorker::createLogWorker();
+    static auto worker = g3::LogWorker::createLogWorker();
 
     auto sinkHandle = worker->addSink(std::make_unique<ColorCoutSink>(),
                                       &ColorCoutSink::ReceiveLogMessage);
     // logger is initialized
     g3::initializeLogging(worker.get());
-    return worker;
 }
-
-} // namespace buddy::env

@@ -1,8 +1,8 @@
-#include "LoggingSetup.hpp"
 #include <chrono>
 #include <core/Operation.hpp>
 #include <cxxopts.hpp>
 #include <daemon/OdinDaemon.hpp>
+#include <env/LoggingSetup.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <g3log/logworker.hpp>
@@ -75,15 +75,13 @@ auto main(int argc, char* argv[]) -> int
           host,
           port] = parse_args(argc, argv);
 
-    //setup logger
-    auto log_worker = [&] {
-        //if no path was given, use the console
-        if(log_folder.empty()) {
-            return setupConsoleLogger();
-        }
-        return setupFileLogger(argv[0],
-                               log_folder);
-    }();
+    //if no path was given, use the console
+    if(log_folder.empty()) {
+        return initConsoleLogger();
+    } else {
+        return initFileLogger(argv[0],
+                              log_folder);
+    }
 
 
     //get a daemon

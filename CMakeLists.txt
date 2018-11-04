@@ -56,6 +56,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/EntryLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/env/LoggingSetup.hpp
 
   PRIVATE
   src/core/Operation.cpp
@@ -72,6 +73,7 @@ target_sources(buddy-src
   src/core/Transaction.cpp
   src/lookup/EntryLookup.cpp
   src/lookup/LookupManager.cpp
+  src/env/LoggingSetup.cpp
   )
 
 # make headers available
