@@ -16,8 +16,8 @@ using buddy::lookup::LookupManager;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
-using buddy::env::setupConsoleLogger;
-using buddy::env::setupFileLogger;
+using buddy::env::initConsoleLogger;
+using buddy::env::initFileLogger;
 
 auto parse_args(int argc, char* argv[])
     -> std::tuple<std::string,
@@ -77,10 +77,10 @@ auto main(int argc, char* argv[]) -> int
 
     //if no path was given, use the console
     if(log_folder.empty()) {
-        return initConsoleLogger();
+        initConsoleLogger();
     } else {
-        return initFileLogger(argv[0],
-                              log_folder);
+        initFileLogger(argv[0],
+                       log_folder);
     }
 
 
