@@ -90,6 +90,7 @@ auto main(int argc, char* argv[]) -> int
                               password,
                               port,
                               Coin::Odin);
+
     LookupManager manager{std::move(daemon)};
 
     while(true) {
