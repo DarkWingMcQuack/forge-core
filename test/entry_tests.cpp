@@ -145,7 +145,7 @@ TEST(EntryTest, EntryValueParsingValidIpv4)
 
     auto data2 = buddy::core::stringToByteVec("ffffffff01aabbccdddeadbeef").getValue();
     auto entry_opt2 = buddy::core::parseValue(data2);
-    std::array<std::byte, 4> expected2{
+    std::array expected2{
         (std::byte)0xaa,
         (std::byte)0xbb,
         (std::byte)0xcc,
