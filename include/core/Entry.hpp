@@ -46,4 +46,11 @@ auto parseKey(const std::vector<std::byte>& data)
 
 auto parseEntry(const std::vector<std::byte>& data)
     -> utilxx::Opt<Entry>;
+
+auto entryValueToRawData(const EntryValue& value)
+    -> std::vector<std::byte>;
+
+auto entryToRawData(const Entry& entry)
+    -> std::vector<std::byte>;
+
 } // namespace buddy::core

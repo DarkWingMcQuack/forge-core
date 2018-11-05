@@ -2,6 +2,7 @@
 #include <core/Operation.hpp>
 #include <cstddef>
 #include <utilxx/Opt.hpp>
+#include <utilxx/Overload.hpp>
 #include <vector>
 
 
@@ -127,4 +128,53 @@ auto buddy::core::parseEntry(const std::vector<std::byte>& data)
 
     return combine(std::move(key_opt),
                    std::move(value_opt));
+}
+
+
+auto buddy::core::entryValueToRawData(const EntryValue& value)
+    -> std::vector<std::byte>
+{
+    static const auto value_flag_visitor =
+        utilxx::overload{
+            [](const IPv4Value&) { return static_cast<std::byte>(0b00000001); },
+            [](const IPv6Value&) { return static_cast<std::byte>(0b00000010); },
+            [](const NoneValue&) { return static_cast<std::byte>(0b00000100); },
+            [](const ByteArray&) { return static_cast<std::byte>(0b00001000); }};
+
+    static const auto data_extract_visitor =
+        utilxx::overload{
+            [](const IPv4Value& value) {
+                return std::vector<std::byte>(std::begin(value),
+                                              std::end(value));
+            },
+            [](const IPv6Value& value) {
+                return std::vector<std::byte>(std::begin(value),
+                                              std::end(value));
+            },
+            [](const NoneValue& value) {
+                return std::vector<std::byte>{};
+            },
+            [](const ByteArray& value) {
+                return value;
+            }};
+
+    auto flag = std::visit(value_flag_visitor, value);
+    auto data = std::visit(data_extract_visitor, value);
+
+    data.insert(std::begin(data), flag);
+
+    return data;
+}
+
+
+auto buddy::core::entryToRawData(const Entry& entry)
+    -> std::vector<std::byte>
+{
+    auto value_data = entryValueToRawData(entry.second);
+
+    value_data.insert(std::end(value_data),
+                      std::begin(entry.first),
+                      std::end(entry.first));
+
+    return value_data;
 }
