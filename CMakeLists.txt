@@ -84,6 +84,7 @@ target_include_directories(buddy-src PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${UTILXX_INCLUDE_DIR}
   ${CPPTOML_INCLUDE_DIR}
+  ${CXXOPTS_INCLUDE_DIR}
   fmt
   g3logger
   jsonrpc::client

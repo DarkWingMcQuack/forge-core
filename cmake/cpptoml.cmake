@@ -20,8 +20,8 @@ ExternalProject_Add(cpptoml-project
   )
 
 
-ExternalProject_Get_Property(utilxx-project INSTALL_DIR)
-set(UTILXX_INCLUDE_DIR ${INSTALL_DIR}/include)
+ExternalProject_Get_Property(cpptoml-project INSTALL_DIR)
+set(CPPTOML_INCLUDE_DIR ${INSTALL_DIR}/include)
 
 unset(INSTALL_DIR)
 unset(CMAKE_ARGS)

@@ -3,6 +3,7 @@
 #include <cxxopts.hpp>
 #include <daemon/OdinDaemon.hpp>
 #include <env/LoggingSetup.hpp>
+#include <env/ProgramOptions.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <g3log/logworker.hpp>
@@ -18,6 +19,7 @@ using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
 using buddy::env::initConsoleLogger;
 using buddy::env::initFileLogger;
+using buddy::env::parseOptions;
 
 auto parse_args(int argc, char* argv[])
     -> std::tuple<std::string,
@@ -68,27 +70,21 @@ auto main(int argc, char* argv[]) -> int
 {
     using namespace std::chrono_literals;
 
-    //parse comandline ards
-    auto [log_folder,
-          user,
-          password,
-          host,
-          port] = parse_args(argc, argv);
+    auto params = parseOptions(argc, argv);
 
-    //if no path was given, use the console
-    if(log_folder.empty()) {
-        initConsoleLogger();
-    } else {
+    if(params.getLogFolder()) {
         initFileLogger(argv[0],
-                       log_folder);
+                       params.getLogFolder().getValue());
+    } else {
+        initConsoleLogger();
     }
 
 
     //get a daemon
-    auto daemon = make_daemon(host,
-                              user,
-                              password,
-                              port,
+    auto daemon = make_daemon(params.getCoinHost(),
+                              params.getCoinUser(),
+                              params.getCoinPassword(),
+                              params.getCoinPort(),
                               Coin::Odin);
 
     LookupManager manager{std::move(daemon)};
