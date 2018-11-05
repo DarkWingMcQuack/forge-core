@@ -24,6 +24,63 @@ TEST(EntryTest, EntryKeyParsingValidIpv4)
     EXPECT_EQ(entry_opt2.getValue(), expected2);
 }
 
+TEST(EntryTest, EntryKeyParsingValidNoneValue)
+{
+    auto data1 = buddy::core::stringToByteVec("ffffffff04deadbeef").getValue();
+    auto entry_opt1 = buddy::core::parseKey(data1);
+    std::vector expected1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    ASSERT_TRUE(entry_opt1);
+    EXPECT_EQ(entry_opt1.getValue(), expected1);
+
+    auto data2 = buddy::core::stringToByteVec("ffffffff04AA").getValue();
+    auto entry_opt2 = buddy::core::parseKey(data2);
+    std::vector expected2{(std::byte)0xaa};
+
+    ASSERT_TRUE(entry_opt2);
+    EXPECT_EQ(entry_opt2.getValue(), expected2);
+}
+
+
+TEST(EntryTest, EntryKeyParsingValidByteArray)
+{
+    auto data1 = buddy::core::stringToByteVec("ffffffff0803000000deadbeef").getValue();
+    auto entry_opt1 = buddy::core::parseKey(data1);
+    std::vector expected1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    ASSERT_TRUE(entry_opt1);
+    EXPECT_EQ(entry_opt1.getValue(), expected1);
+
+    auto data2 = buddy::core::stringToByteVec("ffffffff0810ffffffffffffffffffffffffffffffffAA").getValue();
+    auto entry_opt2 = buddy::core::parseKey(data2);
+    std::vector expected2{(std::byte)0xaa};
+
+    ASSERT_TRUE(entry_opt2);
+    EXPECT_EQ(entry_opt2.getValue(), expected2);
+
+    auto data3 = buddy::core::stringToByteVec("ffffffff0800AA").getValue();
+    auto entry_opt3 = buddy::core::parseKey(data3);
+    std::vector expected3{(std::byte)0xaa};
+
+    ASSERT_TRUE(entry_opt3);
+    EXPECT_EQ(entry_opt3.getValue(), expected3);
+
+    auto data4 = buddy::core::stringToByteVec("ffffffff0801CCAA").getValue();
+    auto entry_opt4 = buddy::core::parseKey(data4);
+    std::vector expected4{(std::byte)0xaa};
+
+    ASSERT_TRUE(entry_opt4);
+    EXPECT_EQ(entry_opt4.getValue(), expected4);
+}
+
 TEST(EntryTest, EntryKeyParsingValidIpv6)
 {
     auto data1 = buddy::core::stringToByteVec("ffffffff0201010101010101010101010101010101deadbeef").getValue();
@@ -48,6 +105,20 @@ TEST(EntryTest, EntryKeyParsingValidIpv6)
 TEST(EntryTest, EntryKeyParsingInvalidIpv4)
 {
     auto data1 = buddy::core::stringToByteVec("ffffffff0100000000").getValue();
+    auto entry_opt1 = buddy::core::parseKey(data1);
+    EXPECT_FALSE(entry_opt1);
+}
+
+TEST(EntryTest, EntryKeyParsingInvalidNoneValue)
+{
+    auto data1 = buddy::core::stringToByteVec("ffffffff04").getValue();
+    auto entry_opt1 = buddy::core::parseKey(data1);
+    EXPECT_FALSE(entry_opt1);
+}
+
+TEST(EntryTest, EntryKeyParsingInvalidByteArray)
+{
+    auto data1 = buddy::core::stringToByteVec("ffffffff080500000000").getValue();
     auto entry_opt1 = buddy::core::parseKey(data1);
     EXPECT_FALSE(entry_opt1);
 }
