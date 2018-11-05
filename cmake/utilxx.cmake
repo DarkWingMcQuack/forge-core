@@ -2,15 +2,13 @@ include(ExternalProject)
 
 set(CMAKE_ARGS
   -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-  -DCMAKE_BUILD_TYPE=Release
-  -DBUILD_STATIC_LIBS=ON
-  -DUTILXX_BUILD_EXAMPLES=OFF
-  -DBUILD_SHARED_LIBS=OFF)
+  -DCMAKE_BUILD_TYPE=Release)
 
 ExternalProject_Add(utilxx-project
   PREFIX deps/utilxx
-  GIT_REPOSITORY "https://github.com/DarkWingMcQuack/Utilxx"
-  GIT_TAG master
+  DOWNLOAD_NAME utilxx-0.0.1.tar.gz
+  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+  URL https://github.com/DarkWingMcQuack/Utilxx/archive/0.0.1.tar.gz
   CMAKE_ARGS ${CMAKE_ARGS}
   # Overwtire build and install commands to force Release build on MSVC.
   BUILD_COMMAND cmake --build <BINARY_DIR> --config Release
