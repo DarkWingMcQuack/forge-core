@@ -2,6 +2,7 @@
 #include <cxxopts.hpp>
 #include <env/ProgramOptions.hpp>
 #include <fmt/core.h>
+#include <fstream>
 #include <g3log/g3log.hpp>
 #include <string>
 #include <utilxx/Opt.hpp>
@@ -81,13 +82,13 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 
     cxxopts::Options options("cppBUDDY", "Implementation of the BUDDY protocol");
 
-    auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
+    static auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
 
     // clang-format off
     options.add_options()
         ("help", "Print help and exit.")
-        ("c,config", "path to the config file",
-         cxxopts::value<std::string>()->default_value(default_buddy_dir + "buddy.conf"))
+        ("w,workdir", "path to the workingfolder of buddy",
+         cxxopts::value<std::string>()->default_value(default_buddy_dir))
         ("l,log", "if set, logging will be displayed on the terminal",
          cxxopts::value<bool>()->default_value("false"));
     // clang-format on
@@ -100,10 +101,10 @@ auto buddy::env::parseOptions(int argc, char* argv[])
             std::exit(0);
         }
 
-        auto config_path = result["config"].as<std::string>();
+        auto config_path = result["workdir"].as<std::string>();
         auto log_to_console = result["log"].as<bool>();
 
-        auto config = cpptoml::parse_file(config_path);
+        auto config = cpptoml::parse_file(config_path + "/buddy.conf");
         auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(default_buddy_dir + "/log/");
         auto coin_port = *config->get_qualified_as<std::size_t>("coin.port");
         auto coin_host = *config->get_qualified_as<std::string>("coin.host");
