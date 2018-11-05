@@ -26,6 +26,7 @@ include(cmake/jsoncpp.cmake)
 include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
 include(cmake/utilxx.cmake)
+include(cmake/cpptoml.cmake)
 # include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
 include(cmake/gtest.cmake)
@@ -57,6 +58,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/EntryLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/env/LoggingSetup.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/env/ProgramOptions.hpp
 
   PRIVATE
   src/core/Operation.cpp
@@ -74,12 +76,14 @@ target_sources(buddy-src
   src/lookup/EntryLookup.cpp
   src/lookup/LookupManager.cpp
   src/env/LoggingSetup.cpp
+  src/env/ProgramOptions.cpp
   )
 
 # make headers available
 target_include_directories(buddy-src PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${UTILXX_INCLUDE_DIR}
+  ${CPPTOML_INCLUDE_DIR}
   fmt
   g3logger
   jsonrpc::client
@@ -105,6 +109,7 @@ add_dependencies(buddy-src jsonrpc-project)
 add_dependencies(buddy-src cxxopts-project)
 add_dependencies(buddy-src g3logger-project)
 add_dependencies(buddy-src utilxx-project)
+add_dependencies(buddy-src cpptoml-project)
 add_dependencies(cppBUDDY buddy-src)
 
 
