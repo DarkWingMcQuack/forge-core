@@ -47,6 +47,9 @@ auto parseKey(const std::vector<std::byte>& data)
 auto parseEntry(const std::vector<std::byte>& data)
     -> utilxx::Opt<Entry>;
 
+auto extractValueFlag(const EntryValue& value)
+    -> std::byte;
+
 auto entryValueToRawData(const EntryValue& value)
     -> std::vector<std::byte>;
 

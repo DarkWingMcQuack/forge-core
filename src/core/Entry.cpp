@@ -130,9 +130,8 @@ auto buddy::core::parseEntry(const std::vector<std::byte>& data)
                    std::move(value_opt));
 }
 
-
-auto buddy::core::entryValueToRawData(const EntryValue& value)
-    -> std::vector<std::byte>
+auto buddy::core::extractValueFlag(const EntryValue& value)
+    -> std::byte
 {
     static const auto value_flag_visitor =
         utilxx::overload{
@@ -140,6 +139,14 @@ auto buddy::core::entryValueToRawData(const EntryValue& value)
             [](const IPv6Value&) { return static_cast<std::byte>(0b00000010); },
             [](const NoneValue&) { return static_cast<std::byte>(0b00000100); },
             [](const ByteArray&) { return static_cast<std::byte>(0b00001000); }};
+
+    return std::visit(value_flag_visitor, value);
+}
+
+
+auto buddy::core::entryValueToRawData(const EntryValue& value)
+    -> std::vector<std::byte>
+{
 
     static const auto data_extract_visitor =
         utilxx::overload{
@@ -158,23 +165,22 @@ auto buddy::core::entryValueToRawData(const EntryValue& value)
                 return value;
             }};
 
-    auto flag = std::visit(value_flag_visitor, value);
-    auto data = std::visit(data_extract_visitor, value);
-
-    data.insert(std::begin(data), flag);
-
-    return data;
+    return std::visit(data_extract_visitor, value);
 }
 
 
 auto buddy::core::entryToRawData(const Entry& entry)
     -> std::vector<std::byte>
 {
+    auto key_data = std::move(entry.first);
     auto value_data = entryValueToRawData(entry.second);
+    auto flag = extractValueFlag(entry.second);
+
+    value_data.insert(std::begin(value_data), flag);
 
     value_data.insert(std::end(value_data),
-                      std::begin(entry.first),
-                      std::end(entry.first));
+                      std::begin(key_data),
+                      std::end(key_data));
 
     return value_data;
 }
