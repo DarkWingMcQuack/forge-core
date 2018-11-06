@@ -23,6 +23,11 @@ public:
     auto getNewEntryValue()
         -> EntryValue&;
 
+    auto getEntry() const
+        -> const Entry&;
+    auto getEntry()
+        -> Entry&;
+
     auto getBlock() const
         -> std::size_t;
 

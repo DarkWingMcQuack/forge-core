@@ -38,6 +38,17 @@ auto EntryDeletionOp::getEntryValue()
     return entry_.second;
 }
 
+auto EntryDeletionOp::getEntry() const
+    -> const Entry&
+{
+    return entry_;
+}
+auto EntryDeletionOp::getEntry()
+    -> Entry&
+{
+    return entry_;
+}
+
 auto EntryDeletionOp::getBlock() const
     -> std::size_t
 {

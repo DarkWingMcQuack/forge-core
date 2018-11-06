@@ -38,6 +38,17 @@ auto EntryCreationOp::getEntryValue()
     return entry_.second;
 }
 
+auto EntryCreationOp::getEntry() const
+    -> const Entry&
+{
+    return entry_;
+}
+auto EntryCreationOp::getEntry()
+    -> Entry&
+{
+    return entry_;
+}
+
 auto EntryCreationOp::getValue() const
     -> std::size_t
 {

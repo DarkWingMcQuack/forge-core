@@ -40,6 +40,17 @@ auto OwnershipTransferOp::getEntryValue()
     return entry_.second;
 }
 
+auto OwnershipTransferOp::getEntry() const
+    -> const Entry&
+{
+    return entry_;
+}
+auto OwnershipTransferOp::getEntry()
+    -> Entry&
+{
+    return entry_;
+}
+
 auto OwnershipTransferOp::getNewOwner() const
     -> const std::string&
 {

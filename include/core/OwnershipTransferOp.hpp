@@ -28,6 +28,11 @@ public:
     auto getNewOwner()
         -> std::string&;
 
+    auto getEntry() const
+        -> const Entry&;
+    auto getEntry()
+        -> Entry&;
+
     auto getOwner() const
         -> const std::string&;
     auto getOwner()

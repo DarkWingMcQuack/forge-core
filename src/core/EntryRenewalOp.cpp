@@ -32,6 +32,17 @@ auto EntryRenewalOp::getEntryValue() const
     return entry_.second;
 }
 
+auto EntryRenewalOp::getEntry() const
+    -> const Entry&
+{
+    return entry_;
+}
+auto EntryRenewalOp::getEntry()
+    -> Entry&
+{
+    return entry_;
+}
+
 auto EntryRenewalOp::getValue() const
     -> std::size_t
 {

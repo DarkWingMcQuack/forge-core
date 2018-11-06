@@ -22,6 +22,11 @@ public:
     auto getEntryValue()
         -> EntryValue&;
 
+    auto getEntry() const
+        -> const Entry&;
+    auto getEntry()
+        -> Entry&;
+
     auto getValue() const
         -> std::size_t;
 

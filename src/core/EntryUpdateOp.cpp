@@ -38,6 +38,17 @@ auto EntryUpdateOp::getNewEntryValue()
     return entry_.second;
 }
 
+auto EntryUpdateOp::getEntry() const
+    -> const Entry&
+{
+    return entry_;
+}
+auto EntryUpdateOp::getEntry()
+    -> Entry&
+{
+    return entry_;
+}
+
 auto EntryUpdateOp::getBlock() const
     -> std::size_t
 {
