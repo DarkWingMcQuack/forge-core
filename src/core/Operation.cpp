@@ -6,16 +6,19 @@
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
+#include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
 #include <vector>
 
 using buddy::core::Entry;
 using utilxx::Result;
+using utilxx::overload;
 using utilxx::Opt;
 using buddy::core::Transaction;
 using buddy::daemon::DaemonBase;
 using buddy::daemon::DaemonError;
 using buddy::core::parseEntry;
+using buddy::core::BUDDY_IDENTIFIER_MASK;
 
 auto buddy::core::getEntryKey(const Operation& operation)
     -> const EntryKey&
@@ -67,6 +70,21 @@ auto buddy::core::getValue(const Operation& operation)
             return op.getValue();
         },
         operation);
+}
+
+auto buddy::core::extractFlag(const Operation& operation)
+    -> std::byte
+{
+    constexpr static auto flag_extractor =
+        overload{
+            [](const EntryCreationOp&) { return ENTRY_CREATION_FLAG; },
+            [](const EntryRenewalOp&) { return ENTRY_RENEWAL_FLAG; },
+            [](const OwnershipTransferOp&) { return OWNERSHIP_TRANSFER_FLAG; },
+            [](const EntryUpdateOp&) { return ENTRY_UPDATE_FLAG; },
+            [](const EntryDeletionOp&) { return ENTRY_DELETION_FLAG; }};
+
+    return std::visit(flag_extractor,
+                      operation);
 }
 
 
@@ -211,4 +229,28 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
                               value,
                               std::move(new_owner_opt))};
         });
+}
+
+
+auto buddy::core::operationToMetadata(const Operation& op)
+    -> std::vector<std::byte>
+{
+    const auto& entry = std::visit(
+        [](const auto& op)
+            -> const Entry& {
+            return op.getEntry();
+        },
+        op);
+
+    auto flag = extractFlag(op);
+
+    auto data = buddy::core::entryToRawData(entry);
+
+    data.insert(std::begin(data), flag);
+
+    data.insert(std::begin(data),
+                std::begin(BUDDY_IDENTIFIER_MASK),
+                std::end(BUDDY_IDENTIFIER_MASK));
+
+    return data;
 }

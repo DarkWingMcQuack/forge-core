@@ -43,6 +43,9 @@ auto getOwner(Operation &&)
 auto getValue(const Operation&)
     -> const std::size_t;
 
+auto extractFlag(const Operation&)
+    -> std::byte;
+
 auto parseTransactionToEntry(core::Transaction&& tx,
                              std::size_t block,
                              const std::unique_ptr<daemon::DaemonBase>& daemon)
@@ -54,5 +57,8 @@ auto parseMetadata(const std::vector<std::byte>& metadata,
                    std::size_t value,
                    utilxx::Opt<std::string>&& new_owner = std::nullopt)
     -> utilxx::Opt<Operation>;
+
+auto operationToMetadata(const Operation& op)
+    -> std::vector<std::byte>;
 
 } // namespace buddy::core
