@@ -53,6 +53,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadWriteDaemonBase.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/DaemonError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/OdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
