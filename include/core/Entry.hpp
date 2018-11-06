@@ -14,8 +14,7 @@ using EntryKey = std::vector<std::byte>;
 using IPv4Value = std::array<std::byte, 4>;
 using IPv6Value = std::array<std::byte, 16>;
 using ByteArray = std::vector<std::byte>;
-class NoneValue{
-public:
+struct NoneValue{
     auto operator==(const NoneValue&) const
     {
         return true;

@@ -133,7 +133,7 @@ auto buddy::core::parseEntry(const std::vector<std::byte>& data)
 auto buddy::core::extractValueFlag(const EntryValue& value)
     -> std::byte
 {
-    static const auto value_flag_visitor =
+    static constexpr auto value_flag_visitor =
         utilxx::overload{
             [](const IPv4Value&) { return static_cast<std::byte>(0b00000001); },
             [](const IPv6Value&) { return static_cast<std::byte>(0b00000010); },
@@ -148,7 +148,7 @@ auto buddy::core::entryValueToRawData(const EntryValue& value)
     -> std::vector<std::byte>
 {
 
-    static const auto data_extract_visitor =
+    static constexpr auto data_extract_visitor =
         utilxx::overload{
             [](const IPv4Value& value) {
                 return std::vector<std::byte>(std::begin(value),
