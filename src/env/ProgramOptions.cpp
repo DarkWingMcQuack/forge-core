@@ -105,7 +105,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         auto log_to_console = result["log"].as<bool>();
 
         auto config = cpptoml::parse_file(config_path + "/buddy.conf");
-        auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(default_buddy_dir + "/log/");
+        auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
         auto coin_port = *config->get_qualified_as<std::size_t>("coin.port");
         auto coin_host = *config->get_qualified_as<std::string>("coin.host");
         auto coin_user = *config->get_qualified_as<std::string>("coin.user");
