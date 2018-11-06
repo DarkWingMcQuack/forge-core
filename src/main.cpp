@@ -1,7 +1,7 @@
 #include <chrono>
 #include <core/Operation.hpp>
 #include <cxxopts.hpp>
-#include <daemon/OdinDaemon.hpp>
+#include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <env/LoggingSetup.hpp>
 #include <env/ProgramOptions.hpp>
 #include <fmt/core.h>
@@ -12,7 +12,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::daemon::OdinDaemon;
+using buddy::daemon::ReadOnlyOdinDaemon;
 using buddy::lookup::LookupManager;
 using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::make_readonly_daemon;

@@ -1,10 +1,10 @@
 #include <daemon/Coin.hpp>
-#include <daemon/OdinDaemon.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
+#include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <memory>
 
 using buddy::daemon::ReadOnlyDaemonBase;
-using buddy::daemon::OdinDaemon;
+using buddy::daemon::ReadOnlyOdinDaemon;
 using buddy::daemon::Coin;
 
 auto ReadOnlyDaemonBase::getCoin() const
@@ -22,10 +22,10 @@ auto buddy::daemon::make_readonly_daemon(const std::string& host,
 {
     switch(coin) {
     case Coin::Odin:
-        return std::make_unique<OdinDaemon>(host,
-                                            user,
-                                            password,
-                                            port,
-                                            coin);
+        return std::make_unique<ReadOnlyOdinDaemon>(host,
+                                                    user,
+                                                    password,
+                                                    port,
+                                                    coin);
     }
 }

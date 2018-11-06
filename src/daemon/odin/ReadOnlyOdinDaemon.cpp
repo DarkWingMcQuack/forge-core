@@ -1,14 +1,14 @@
 #include <core/Block.hpp>
 #include <daemon/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
-#include <daemon/OdinDaemon.hpp>
+#include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <fmt/core.h>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::daemon::OdinDaemon;
+using buddy::daemon::ReadOnlyOdinDaemon;
 using buddy::daemon::DaemonError;
 using utilxx::Opt;
 using utilxx::Result;
@@ -29,11 +29,11 @@ using jsonrpc::JsonRpcException;
 using namespace std::string_literals;
 
 
-OdinDaemon::OdinDaemon(const std::string& host,
-                       const std::string& user,
-                       const std::string& password,
-                       std::size_t port,
-                       Coin coin)
+ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
+                                       const std::string& user,
+                                       const std::string& password,
+                                       std::size_t port,
+                                       Coin coin)
     : ReadOnlyDaemonBase(coin),
       http_client_("http://"
                    + user
@@ -46,8 +46,8 @@ OdinDaemon::OdinDaemon(const std::string& host,
       client_(http_client_, JSONRPC_CLIENT_V1) {}
 
 
-auto OdinDaemon::sendcommand(const std::string& command,
-                             const Json::Value& params) const
+auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
+                                     const Json::Value& params) const
     -> Result<Json::Value, DaemonError>
 {
     return Try<jsonrpc::JsonRpcException>(
@@ -62,7 +62,7 @@ auto OdinDaemon::sendcommand(const std::string& command,
         });
 }
 
-auto OdinDaemon::getBlockCount() const
+auto ReadOnlyOdinDaemon::getBlockCount() const
     -> Result<std::size_t, DaemonError>
 {
     static const auto command = "getblockcount"s;
@@ -74,7 +74,7 @@ auto OdinDaemon::getBlockCount() const
         });
 }
 
-auto OdinDaemon::getBlockHash(std::size_t index) const
+auto ReadOnlyOdinDaemon::getBlockHash(std::size_t index) const
     -> utilxx::Result<std::string, DaemonError>
 {
     static const auto command = "getblockhash"s;
@@ -89,7 +89,7 @@ auto OdinDaemon::getBlockHash(std::size_t index) const
         });
 }
 
-auto OdinDaemon::getBlock(std::string&& hash) const
+auto ReadOnlyOdinDaemon::getBlock(std::string&& hash) const
     -> utilxx::Result<Block, DaemonError>
 {
     static const auto command = "getblock"s;
@@ -118,7 +118,7 @@ auto OdinDaemon::getBlock(std::string&& hash) const
         });
 }
 
-auto OdinDaemon::getNewestBlock() const
+auto ReadOnlyOdinDaemon::getNewestBlock() const
     -> Result<Block, DaemonError>
 {
     return getBlockCount()
@@ -130,7 +130,7 @@ auto OdinDaemon::getNewestBlock() const
         });
 }
 
-auto OdinDaemon::resolveTxIn(TxIn&& vin) const
+auto ReadOnlyOdinDaemon::resolveTxIn(TxIn&& vin) const
     -> utilxx::Result<TxOut, DaemonError>
 {
     static const auto command = "gettxout"s;
@@ -158,7 +158,7 @@ auto OdinDaemon::resolveTxIn(TxIn&& vin) const
         });
 }
 
-auto OdinDaemon::getTransaction(std::string&& txid) const
+auto ReadOnlyOdinDaemon::getTransaction(std::string&& txid) const
     -> utilxx::Result<core::Transaction, DaemonError>
 {
     static const auto command = "getrawtransaction";
