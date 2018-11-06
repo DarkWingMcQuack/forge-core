@@ -14,7 +14,7 @@
 
 using buddy::daemon::OdinDaemon;
 using buddy::lookup::LookupManager;
-using buddy::daemon::DaemonBase;
+using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::make_daemon;
 using buddy::daemon::Coin;
 using buddy::env::initConsoleLogger;

@@ -9,7 +9,7 @@
 #include <core/OwnershipTransferOp.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <memory>
 #include <vector>
 
@@ -53,7 +53,7 @@ auto extractFlag(const Operation&)
 
 auto parseTransactionToEntry(core::Transaction&& tx,
                              std::size_t block,
-                             const std::unique_ptr<daemon::DaemonBase>& daemon)
+                             const std::unique_ptr<daemon::ReadOnlyDaemonBase>& daemon)
     -> utilxx::Result<utilxx::Opt<Operation>, daemon::DaemonError>;
 
 auto parseMetadata(const std::vector<std::byte>& metadata,

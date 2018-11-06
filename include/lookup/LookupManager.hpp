@@ -2,7 +2,7 @@
 
 #include <core/Operation.hpp>
 #include <daemon/Coin.hpp>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
 #include <utilxx/Opt.hpp>
@@ -16,7 +16,7 @@ using ManagerError = std::variant<LookupError,
 class LookupManager final
 {
 public:
-    LookupManager(std::unique_ptr<daemon::DaemonBase> daemon);
+    LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon);
 
     auto updateLookup()
         -> utilxx::Result<bool, ManagerError>;
@@ -38,7 +38,7 @@ private:
         -> utilxx::Result<void, ManagerError>;
 
 private:
-    std::unique_ptr<daemon::DaemonBase> daemon_;
+    std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
     EntryLookup lookup_;
     std::vector<std::string> block_hashes_;
 };

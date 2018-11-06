@@ -1,6 +1,6 @@
 #include <core/Operation.hpp>
 #include <daemon/Coin.hpp>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
 #include <functional>
 #include <g3log/g3log.hpp>
@@ -18,10 +18,10 @@ using buddy::core::Operation;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::traverse;
-using buddy::daemon::DaemonBase;
+using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::getMaturity;
 
-LookupManager::LookupManager(std::unique_ptr<daemon::DaemonBase> daemon)
+LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon)
     : daemon_(std::move(daemon)),
       lookup_(getStartingBlock(daemon_->getCoin())),
       block_hashes_() {}

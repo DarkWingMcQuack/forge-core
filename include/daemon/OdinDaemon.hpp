@@ -3,7 +3,7 @@
 #include <core/Block.hpp>
 #include <core/Transaction.hpp>
 #include <daemon/Coin.hpp>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <utilxx/Opt.hpp>
@@ -11,7 +11,7 @@
 
 namespace buddy::daemon {
 
-class OdinDaemon final : public DaemonBase
+class OdinDaemon final : public ReadOnlyDaemonBase
 {
 public:
     OdinDaemon(const std::string& host,

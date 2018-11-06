@@ -1,7 +1,7 @@
 #include <array>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
 #include <json/value.h>
 #include <utilxx/Opt.hpp>
@@ -11,7 +11,7 @@
 using buddy::core::TxIn;
 using buddy::core::TxOut;
 using buddy::core::Transaction;
-using buddy::daemon::DaemonBase;
+using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::DaemonError;
 using utilxx::Result;
 using utilxx::Opt;

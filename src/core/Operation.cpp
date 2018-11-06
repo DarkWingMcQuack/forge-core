@@ -2,7 +2,7 @@
 #include <core/Operation.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
@@ -15,7 +15,7 @@ using utilxx::Result;
 using utilxx::overload;
 using utilxx::Opt;
 using buddy::core::Transaction;
-using buddy::daemon::DaemonBase;
+using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::DaemonError;
 using buddy::core::parseEntry;
 using buddy::core::BUDDY_IDENTIFIER_MASK;
@@ -172,7 +172,7 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
 
 auto buddy::core::parseTransactionToEntry(Transaction&& tx,
                                           std::size_t block,
-                                          const std::unique_ptr<DaemonBase>& daemon)
+                                          const std::unique_ptr<ReadOnlyDaemonBase>& daemon)
     -> Result<Opt<Operation>, DaemonError>
 {
     using ResultType = Result<Opt<Operation>, DaemonError>;

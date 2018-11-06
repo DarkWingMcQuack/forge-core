@@ -2,7 +2,7 @@
 
 #include <array>
 #include <cstddef>
-// #include <daemon/DaemonBase.hpp>
+// #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <json/value.h>
 #include <memory>
 #include <utilxx/Opt.hpp>

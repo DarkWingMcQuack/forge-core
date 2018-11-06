@@ -1,6 +1,6 @@
 #include <core/Block.hpp>
 #include <daemon/Coin.hpp>
-#include <daemon/DaemonBase.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/OdinDaemon.hpp>
 #include <fmt/core.h>
 #include <jsonrpccpp/client.h>
@@ -34,7 +34,7 @@ OdinDaemon::OdinDaemon(const std::string& host,
                        const std::string& password,
                        std::size_t port,
                        Coin coin)
-    : DaemonBase(coin),
+    : ReadOnlyDaemonBase(coin),
       http_client_("http://"
                    + user
                    + ":"
