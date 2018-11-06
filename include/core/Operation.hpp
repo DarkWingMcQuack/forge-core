@@ -35,6 +35,11 @@ auto getEntryKey(const Operation&)
 auto getEntryKey(Operation &&)
     -> EntryKey;
 
+auto getEntry(const Operation&)
+    -> const Entry&;
+auto getEntry(Operation &&)
+    -> Entry;
+
 auto getOwner(const Operation&)
     -> const std::string&;
 auto getOwner(Operation &&)

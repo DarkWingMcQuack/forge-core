@@ -41,6 +41,27 @@ auto buddy::core::getEntryKey(Operation&& operation)
         operation);
 }
 
+auto buddy::core::getEntry(const Operation& operation)
+    -> const Entry&
+{
+    return std::visit(
+        [](const auto& op)
+            -> const Entry& {
+            return op.getEntry();
+        },
+        operation);
+}
+
+auto buddy::core::getEntry(Operation&& operation)
+    -> Entry
+{
+    return std::visit(
+        [](auto&& op) {
+            return std::move(op.getEntry());
+        },
+        operation);
+}
+
 auto buddy::core::getOwner(const Operation& operation)
     -> const std::string&
 {
@@ -235,13 +256,7 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
 auto buddy::core::operationToMetadata(const Operation& op)
     -> std::vector<std::byte>
 {
-    const auto& entry = std::visit(
-        [](const auto& op)
-            -> const Entry& {
-            return op.getEntry();
-        },
-        op);
-
+    const auto& entry = getEntry(op);
     auto flag = extractFlag(op);
 
     auto data = buddy::core::entryToRawData(entry);
