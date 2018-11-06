@@ -1,6 +1,6 @@
 #include <daemon/Coin.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/OdinDaemon.hpp>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <memory>
 
 using buddy::daemon::ReadOnlyDaemonBase;
@@ -13,11 +13,11 @@ auto ReadOnlyDaemonBase::getCoin() const
     return coin_;
 }
 
-auto buddy::daemon::make_daemon(const std::string& host,
-                                const std::string& user,
-                                const std::string& password,
-                                std::size_t port,
-                                Coin coin)
+auto buddy::daemon::make_readonly_daemon(const std::string& host,
+                                         const std::string& user,
+                                         const std::string& password,
+                                         std::size_t port,
+                                         Coin coin)
     -> std::unique_ptr<ReadOnlyDaemonBase>
 {
     switch(coin) {

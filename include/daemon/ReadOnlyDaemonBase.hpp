@@ -3,17 +3,12 @@
 #include <core/Block.hpp>
 #include <core/Transaction.hpp>
 #include <daemon/Coin.hpp>
+#include <daemon/DaemonError.hpp>
 #include <memory>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
 namespace buddy::daemon {
-
-class DaemonError final : public std::runtime_error
-{
-public:
-    using std::runtime_error::runtime_error;
-};
 
 class ReadOnlyDaemonBase
 {
@@ -48,11 +43,11 @@ private:
     Coin coin_;
 };
 
-auto make_daemon(const std::string& host,
-                 const std::string& user,
-                 const std::string& password,
-                 std::size_t port,
-                 Coin coin)
+auto make_readonly_daemon(const std::string& host,
+                          const std::string& user,
+                          const std::string& password,
+                          std::size_t port,
+                          Coin coin)
     -> std::unique_ptr<ReadOnlyDaemonBase>;
 
 

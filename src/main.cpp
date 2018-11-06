@@ -15,7 +15,7 @@
 using buddy::daemon::OdinDaemon;
 using buddy::lookup::LookupManager;
 using buddy::daemon::ReadOnlyDaemonBase;
-using buddy::daemon::make_daemon;
+using buddy::daemon::make_readonly_daemon;
 using buddy::daemon::Coin;
 using buddy::env::initConsoleLogger;
 using buddy::env::initFileLogger;
@@ -36,11 +36,11 @@ auto main(int argc, char* argv[]) -> int
 
 
     //get a daemon
-    auto daemon = make_daemon(params.getCoinHost(),
-                              params.getCoinUser(),
-                              params.getCoinPassword(),
-                              params.getCoinPort(),
-                              Coin::Odin);
+    auto daemon = make_readonly_daemon(params.getCoinHost(),
+                                       params.getCoinUser(),
+                                       params.getCoinPassword(),
+                                       params.getCoinPort(),
+                                       Coin::Odin);
 
     LookupManager manager{std::move(daemon)};
 
