@@ -138,3 +138,51 @@ TEST(EntryLookupTest, BasicEntryDeletionTest)
     EXPECT_EQ(EntryValue{expected2},
               lookup.lookup(second_key).getValue().get());
 }
+
+TEST(EntryLookupTest, BasicEntryUpdateTest)
+{
+    std::vector ops{createOp("6a00c6dc750101aabbccdddeadbeef",
+                             "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                             10,
+                             10),
+                    createOp("6a00c6dc7501040011223344",
+                             "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
+                             10,
+                             10)};
+    EntryLookup lookup{0};
+
+    lookup.executeOperations(std::move(ops));
+
+    //entry deletion
+    ops.clear();
+    ops = {createOp("6a00c6dc750801ffffffffdeadbeef",
+                    "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                    12,
+                    12)};
+
+    lookup.executeOperations(std::move(ops));
+
+    auto first_key = stringToByteVec("deadbeef").getValue();
+    std::array expected1{
+        (std::byte)0xff,
+        (std::byte)0xff,
+        (std::byte)0xff,
+        (std::byte)0xff};
+
+    ASSERT_TRUE(lookup.lookupOwner(first_key));
+
+    EXPECT_EQ("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+              lookup.lookupOwner(first_key).getValue().get());
+    EXPECT_EQ(EntryValue{expected1},
+              lookup.lookup(first_key).getValue().get());
+
+    auto second_key = stringToByteVec("0011223344").getValue();
+    buddy::core::NoneValue expected2;
+
+    ASSERT_TRUE(lookup.lookupOwner(first_key));
+
+    EXPECT_EQ("oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
+              lookup.lookupOwner(second_key).getValue().get());
+    EXPECT_EQ(EntryValue{expected2},
+              lookup.lookup(second_key).getValue().get());
+}
