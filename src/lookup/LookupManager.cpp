@@ -1,5 +1,5 @@
 #include <core/Operation.hpp>
-#include <daemon/Coin.hpp>
+#include <core/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
 #include <functional>
@@ -15,11 +15,11 @@ using buddy::lookup::LookupError;
 using buddy::core::EntryKey;
 using buddy::core::EntryValue;
 using buddy::core::Operation;
+using buddy::core::getMaturity;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::traverse;
 using buddy::daemon::ReadOnlyDaemonBase;
-using buddy::daemon::getMaturity;
 
 LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon)
     : daemon_(std::move(daemon)),

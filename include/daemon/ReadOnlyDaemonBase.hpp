@@ -1,8 +1,8 @@
 #pragma once
 
 #include <core/Block.hpp>
+#include <core/Coin.hpp>
 #include <core/Transaction.hpp>
-#include <daemon/Coin.hpp>
 #include <daemon/DaemonError.hpp>
 #include <memory>
 #include <utilxx/Opt.hpp>
@@ -13,7 +13,7 @@ namespace buddy::daemon {
 class ReadOnlyDaemonBase
 {
 public:
-    ReadOnlyDaemonBase(Coin coin)
+    ReadOnlyDaemonBase(core::Coin coin)
         : coin_(coin) {}
 
     virtual auto getNewestBlock() const
@@ -35,19 +35,19 @@ public:
         -> utilxx::Result<core::Block, DaemonError> = 0;
 
     virtual auto getCoin() const
-        -> Coin final;
+        -> core::Coin final;
 
     virtual ~ReadOnlyDaemonBase() = default;
 
 private:
-    Coin coin_;
+    core::Coin coin_;
 };
 
 auto make_readonly_daemon(const std::string& host,
                           const std::string& user,
                           const std::string& password,
                           std::size_t port,
-                          Coin coin)
+                          core::Coin coin)
     -> std::unique_ptr<ReadOnlyDaemonBase>;
 
 

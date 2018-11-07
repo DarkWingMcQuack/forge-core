@@ -1,5 +1,5 @@
+#include <core/Coin.hpp>
 #include <core/Operation.hpp>
-#include <daemon/Coin.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
 #include <unordered_map>

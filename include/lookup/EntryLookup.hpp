@@ -1,7 +1,7 @@
 #pragma once
 
+#include <core/Coin.hpp>
 #include <core/Operation.hpp>
-#include <daemon/Coin.hpp>
 #include <functional>
 #include <map>
 #include <utilxx/Opt.hpp>

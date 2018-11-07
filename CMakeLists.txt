@@ -51,7 +51,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryUpdateOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/OwnershipTransferOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/Coin.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadWriteDaemonBase.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/DaemonError.hpp
@@ -71,7 +71,7 @@ target_sources(buddy-src
   src/core/EntryUpdateOp.cpp
   src/core/OwnershipTransferOp.cpp
   src/core/Block.cpp
-  src/daemon/Coin.cpp
+  src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
   src/daemon/odin/ReadOnlyOdinDaemon.cpp
   src/core/Transaction.cpp

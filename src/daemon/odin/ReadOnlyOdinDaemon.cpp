@@ -1,5 +1,5 @@
 #include <core/Block.hpp>
-#include <daemon/Coin.hpp>
+#include <core/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <fmt/core.h>
@@ -33,7 +33,7 @@ ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
                                        const std::string& user,
                                        const std::string& password,
                                        std::size_t port,
-                                       Coin coin)
+                                       core::Coin coin)
     : ReadOnlyDaemonBase(coin),
       http_client_("http://"
                    + user

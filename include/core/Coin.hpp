@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace buddy::daemon {
+namespace buddy::core {
 
 enum class Coin {
     Odin
@@ -17,4 +17,4 @@ auto getStartingBlock(Coin c)
 auto getBlockTimeInSeconds(Coin c)
     -> std::size_t;
 
-} // namespace buddy::daemon
+} // namespace buddy::core

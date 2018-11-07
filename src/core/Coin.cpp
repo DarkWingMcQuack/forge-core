@@ -1,7 +1,7 @@
-#include <daemon/Coin.hpp>
+#include <core/Coin.hpp>
 
 
-auto buddy::daemon::getMaturity(Coin c)
+auto buddy::core::getMaturity(Coin c)
     -> std::size_t
 {
     switch(c) {
@@ -10,7 +10,7 @@ auto buddy::daemon::getMaturity(Coin c)
     }
 }
 
-auto buddy::daemon::getStartingBlock(Coin c)
+auto buddy::core::getStartingBlock(Coin c)
     -> std::size_t
 {
     switch(c) {
@@ -21,7 +21,7 @@ auto buddy::daemon::getStartingBlock(Coin c)
     }
 }
 
-auto buddy::daemon::getBlockTimeInSeconds(Coin c)
+auto buddy::core::getBlockTimeInSeconds(Coin c)
     -> std::size_t
 {
     switch(c) {

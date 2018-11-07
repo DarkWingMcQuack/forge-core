@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/Operation.hpp>
-#include <daemon/Coin.hpp>
+#include <core/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>

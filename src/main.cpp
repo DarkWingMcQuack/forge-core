@@ -16,7 +16,7 @@ using buddy::daemon::ReadOnlyOdinDaemon;
 using buddy::lookup::LookupManager;
 using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::make_readonly_daemon;
-using buddy::daemon::Coin;
+using buddy::core::Coin;
 using buddy::env::initConsoleLogger;
 using buddy::env::initFileLogger;
 using buddy::env::parseOptions;
