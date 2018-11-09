@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
+#include <g3log/g3log.hpp>
 
 using utilxx::Result;
 using utilxx::traverse;
@@ -253,6 +254,8 @@ auto EntryLookup::operator()(EntryCreationOp&& op)
                             std::move(value_tuple)});
     }
 
+    LOG(INFO) << "executed entry creation op";
+
     return {};
 }
 
@@ -277,6 +280,8 @@ auto EntryLookup::operator()(EntryRenewalOp&& op)
                 looked_block_ref.get() = new_block;
             }
         });
+
+    LOG(INFO) << "executed entry renewal op";
 
     return {};
 }
@@ -303,6 +308,8 @@ auto EntryLookup::operator()(OwnershipTransferOp&& op)
             }
         });
 
+    LOG(INFO) << "executed ownership transfer op";
+
     return {};
 }
 
@@ -324,6 +331,8 @@ auto EntryLookup::operator()(EntryUpdateOp&& op)
                 looked_value_ref.get() = new_value;
             }
         });
+
+    LOG(INFO) << "executed entry update op";
 
     return {};
 }
@@ -349,6 +358,8 @@ auto EntryLookup::operator()(EntryDeletionOp&& op)
                 lookup_map_.erase(key);
             }
         });
+
+    LOG(INFO) << "executed entry deletion op";
 
     return {};
 }
