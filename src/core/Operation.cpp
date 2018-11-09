@@ -185,6 +185,7 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
         return ResultType{std::nullopt};
     }
 
+    LOG(DEBUG) << tx.getTxid() << " contains a OP_RETURN output";
 
     //save, because we checked that the tx has exactly one
     //op return output

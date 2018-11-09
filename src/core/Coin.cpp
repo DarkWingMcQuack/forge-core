@@ -15,7 +15,7 @@ auto buddy::core::getStartingBlock(Coin c)
 {
     switch(c) {
     case Coin::Odin:
-        return 49400;
+        return 58000;
     default:
         return 0;
     }
