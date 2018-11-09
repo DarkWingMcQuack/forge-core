@@ -1,5 +1,5 @@
-#include <core/Operation.hpp>
 #include <core/Coin.hpp>
+#include <core/Operation.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
 #include <functional>
@@ -133,7 +133,8 @@ auto LookupManager::processBlock(core::Block&& block)
                                                       daemon_);
                 //if we dont get an opt, but an error, we return it
                 if(!op_res) {
-                    return ManagerError{std::move(op_res.getError())};
+                    LOG(WARNING) << op_res.getError().what();
+                    continue;
                 }
 
                 LOG_IF(DEBUG, !op_res.getValue().hasValue()) << "throw away " << txid;
