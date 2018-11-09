@@ -118,6 +118,20 @@ TEST(TransactionTest, TransactionParsingValid)
     EXPECT_FALSE(tx2.getValue().hasExactlyOneInput());
     EXPECT_EQ(tx2.getValue().getInputs().size(), 0);
     EXPECT_EQ(tx2.getValue().getOutputs().size(), 1);
+
+    auto json3_str = readFile("tx_valid3.json");
+    auto json3 = parseString(json3_str);
+
+    auto tx3 = buildTransaction(std::move(json3));
+
+    ASSERT_TRUE(tx3);
+
+    EXPECT_EQ(tx3.getValue().getTxid(), "e3341a46d00b3b83628a8ec36d070ab76209641630c08a4c4604c1747c474a2b");
+    EXPECT_TRUE(tx3.getValue().hasOpReturnOutput());
+    EXPECT_TRUE(tx3.getValue().hasExactlyOneOpReturnOutput());
+    EXPECT_TRUE(tx3.getValue().hasExactlyOneInput());
+    EXPECT_EQ(tx3.getValue().getInputs().size(), 1);
+    EXPECT_EQ(tx3.getValue().getOutputs().size(), 1);
 }
 
 TEST(TransactionTest, ExtractMetadataValid)
