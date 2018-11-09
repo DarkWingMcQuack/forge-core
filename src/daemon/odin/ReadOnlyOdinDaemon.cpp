@@ -133,28 +133,20 @@ auto ReadOnlyOdinDaemon::getNewestBlock() const
 auto ReadOnlyOdinDaemon::resolveTxIn(TxIn&& vin) const
     -> utilxx::Result<TxOut, DaemonError>
 {
-    static const auto command = "gettxout"s;
+    auto index = vin.getVoutIndex();
+    auto txid = std::move(vin.getTxid());
 
-    Json::Value params;
-    params.append(std::move(vin.getTxid()));
-    params.append(vin.getVoutIndex());
-
-    return sendcommand(command, params)
-        .map([](auto&& json) {
-            return buildTxOut(std::move(json));
-        })
-        .flatMap([&params](auto&& opt)
-                     -> utilxx::Result<core::TxOut, DaemonError> {
-            if(opt) {
-                return opt.getValue();
+    return getTransaction(std::move(txid))
+        .flatMap([&](auto&& tx)
+                     -> utilxx::Result<TxOut, DaemonError> {
+            if(tx.getOutputs().size() <= vin.getVoutIndex()) {
+                auto what = fmt::format("unable to get output #{} of transaction {}",
+                                        index,
+                                        tx.getTxid());
+                return DaemonError{std::move(what)};
             }
 
-            auto error_str =
-                fmt::format("unable to build transaction from result when calling {}, with parameters {}",
-                            command,
-                            params.asString());
-
-            return DaemonError{std::move(error_str)};
+            return tx.getOutputs()[index];
         });
 }
 
