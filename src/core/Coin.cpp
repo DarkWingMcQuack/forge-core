@@ -6,7 +6,7 @@ auto buddy::core::getMaturity(Coin c)
 {
     switch(c) {
     case Coin::Odin:
-        return 50;
+        return 20;
     }
 }
 
