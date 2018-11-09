@@ -20,7 +20,7 @@ struct ColorCoutSink
         if(level.value == WARNING.value) {
             return YELLOW;
         }
-        if(level.value == DEBUG.value) {
+        if(level.value == INFO.value) {
             return GREEN;
         }
         if(g3::internal::wasFatal(level)) {
