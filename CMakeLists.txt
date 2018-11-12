@@ -56,6 +56,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadWriteDaemonBase.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/DaemonError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadOnlyOdinDaemon.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadWriteOdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/EntryLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
@@ -75,6 +76,7 @@ target_sources(buddy-src
   src/daemon/ReadOnlyDaemonBase.cpp
   src/daemon/ReadWriteDaemonBase.cpp
   src/daemon/odin/ReadOnlyOdinDaemon.cpp
+  src/daemon/odin/ReadWriteOdinDaemon.cpp
   src/core/Transaction.cpp
   src/lookup/EntryLookup.cpp
   src/lookup/LookupManager.cpp

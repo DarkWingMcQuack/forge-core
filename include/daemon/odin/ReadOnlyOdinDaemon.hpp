@@ -11,7 +11,7 @@
 
 namespace buddy::daemon {
 
-class ReadOnlyOdinDaemon final : public virtual ReadOnlyDaemonBase
+class ReadOnlyOdinDaemon : public virtual ReadOnlyDaemonBase
 {
 public:
     ReadOnlyOdinDaemon(const std::string& host,
@@ -38,7 +38,7 @@ public:
     auto getBlock(std::string&& hash) const
         -> utilxx::Result<core::Block, DaemonError> override;
 
-private:
+protected:
     auto sendcommand(const std::string& command,
                      const Json::Value& params) const
         -> utilxx::Result<Json::Value, DaemonError>;
