@@ -9,6 +9,7 @@ using buddy::daemon::ReadWriteDaemonBase;
 
 
 auto ReadWriteDaemonBase::writeTxToBlockchain(std::string&& txid_input,
+                                              std::size_t index,
                                               std::vector<std::byte>&& metadata,
                                               std::size_t burn_value,
                                               std::vector<
@@ -17,6 +18,7 @@ auto ReadWriteDaemonBase::writeTxToBlockchain(std::string&& txid_input,
     -> utilxx::Result<void, DaemonError>
 {
     return generateRawTx(std::move(txid_input),
+                         index,
                          std::move(metadata),
                          burn_value,
                          std::move(outputs))

@@ -14,6 +14,7 @@ public:
     using ReadOnlyDaemonBase::ReadOnlyDaemonBase;
 
     virtual auto writeTxToBlockchain(std::string&& txid_input,
+                                     std::size_t index,
                                      std::vector<std::byte>&& metadata,
                                      std::size_t burn_value,
                                      std::vector<
@@ -22,6 +23,7 @@ public:
         -> utilxx::Result<void, DaemonError>;
 
     virtual auto generateRawTx(std::string&& input_txid,
+                               std::size_t index,
                                std::vector<std::byte>&& metadata,
                                std::size_t burn_value,
                                std::vector<
