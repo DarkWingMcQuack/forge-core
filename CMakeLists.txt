@@ -73,6 +73,7 @@ target_sources(buddy-src
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
+  src/daemon/ReadWriteDaemonBase.cpp
   src/daemon/odin/ReadOnlyOdinDaemon.cpp
   src/core/Transaction.cpp
   src/lookup/EntryLookup.cpp

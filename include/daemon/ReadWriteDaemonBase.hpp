@@ -1,5 +1,6 @@
 #pragma once
 
+#include <core/Coin.hpp>
 #include <core/Operation.hpp>
 #include <daemon/DaemonError.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
@@ -41,7 +42,7 @@ auto make_daemon(const std::string& host,
                  const std::string& user,
                  const std::string& password,
                  std::size_t port,
-                 Coin coin)
+                 core::Coin coin)
     -> std::unique_ptr<ReadWriteDaemonBase>;
 
 } // namespace buddy::daemon
