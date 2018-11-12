@@ -3,7 +3,9 @@
 #include <cstddef>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
+#include <iomanip>
 #include <json/value.h>
+#include <sstream>
 #include <utilxx/Opt.hpp>
 #include <vector>
 
@@ -398,4 +400,15 @@ auto buddy::core::metadataStartsWithBuddyId(const std::vector<std::byte>& metada
     return std::equal(std::cbegin(BUDDY_IDENTIFIER_MASK),
                       std::cend(BUDDY_IDENTIFIER_MASK),
                       std::cbegin(metadata));
+}
+
+auto buddy::core::toHexString(const std::vector<std::byte>& bytes)
+    -> std::string
+{
+    std::stringstream ss;
+    ss << std::hex;
+    for(auto&& b : bytes) {
+        ss << std::setw(2) << std::setfill('0') << static_cast<int>(b);
+    }
+    return ss.str();
 }

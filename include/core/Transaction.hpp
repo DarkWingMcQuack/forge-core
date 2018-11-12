@@ -157,4 +157,7 @@ auto stringToByteVec(std::string&& str)
 auto metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
     -> bool;
 
+auto toHexString(const std::vector<std::byte>& bytes)
+    -> std::string;
+
 } // namespace buddy::core
