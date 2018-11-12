@@ -11,7 +11,7 @@
 
 namespace buddy::daemon {
 
-class ReadOnlyOdinDaemon final : public ReadOnlyDaemonBase
+class ReadOnlyOdinDaemon final : public virtual ReadOnlyDaemonBase
 {
 public:
     ReadOnlyOdinDaemon(const std::string& host,

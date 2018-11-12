@@ -8,7 +8,7 @@
 
 namespace buddy::daemon {
 
-class ReadWriteDaemonBase : public ReadOnlyDaemonBase
+class ReadWriteDaemonBase : public virtual ReadOnlyDaemonBase
 {
 public:
     using ReadOnlyDaemonBase::ReadOnlyDaemonBase;
