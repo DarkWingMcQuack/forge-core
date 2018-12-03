@@ -11,7 +11,7 @@
 
 namespace buddy::daemon {
 
-class ReadOnlyOdinDaemon : public virtual ReadOnlyDaemonBase
+class ReadOnlyOdinDaemon : public ReadOnlyDaemonBase
 {
 public:
     ReadOnlyOdinDaemon(const std::string& host,
@@ -19,6 +19,8 @@ public:
                        const std::string& password,
                        std::size_t port,
                        core::Coin coin);
+
+    virtual ~ReadOnlyOdinDaemon() = default;
 
     auto getNewestBlock() const
         -> utilxx::Result<core::Block, DaemonError> override;

@@ -151,7 +151,7 @@ auto buildTransaction(Json::Value&& json)
 auto extractMetadata(std::string&& hex)
     -> utilxx::Opt<std::vector<std::byte>>;
 
-auto stringToByteVec(std::string&& str)
+auto stringToByteVec(const std::string& str)
     -> utilxx::Opt<std::vector<std::byte>>;
 
 auto metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)

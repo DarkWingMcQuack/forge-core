@@ -358,10 +358,10 @@ auto buddy::core::extractMetadata(std::string&& hex)
     //and the next byte
     hex.erase(0, 4);
 
-    return stringToByteVec(std::move(hex));
+    return stringToByteVec(hex);
 }
 
-auto buddy::core::stringToByteVec(std::string&& str)
+auto buddy::core::stringToByteVec(const std::string& str)
     -> utilxx::Opt<std::vector<std::byte>>
 {
     //check if the string has even characters

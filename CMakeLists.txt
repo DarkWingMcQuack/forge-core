@@ -53,7 +53,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadWriteDaemonBase.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/WriteOnlyDaemonBase.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/DaemonError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadOnlyOdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadWriteOdinDaemon.hpp
@@ -74,7 +74,7 @@ target_sources(buddy-src
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
-  src/daemon/ReadWriteDaemonBase.cpp
+  src/daemon/WriteOnlyDaemonBase.cpp
   src/daemon/odin/ReadOnlyOdinDaemon.cpp
   src/daemon/odin/ReadWriteOdinDaemon.cpp
   src/core/Transaction.cpp

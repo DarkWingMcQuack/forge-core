@@ -1,14 +1,16 @@
 #include <core/Operation.hpp>
 #include <daemon/DaemonError.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
-#include <daemon/ReadWriteDaemonBase.hpp>
+#include <daemon/WriteOnlyDaemonBase.hpp>
+#include <daemon/odin/ReadWriteOdinDaemon.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::daemon::ReadWriteDaemonBase;
+using buddy::daemon::WriteOnlyDaemonBase;
+using buddy::daemon::ReadWriteOdinDaemon;
 
 
 
-auto ReadWriteDaemonBase::writeTxToBlockchain(std::string&& txid_input,
+auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
                                               std::size_t index,
                                               std::vector<std::byte>&& metadata,
                                               std::size_t burn_value,
@@ -28,4 +30,22 @@ auto ReadWriteDaemonBase::writeTxToBlockchain(std::string&& txid_input,
         .flatMap([this](auto&& signed_tx) {
             return sendRawTx(std::move(signed_tx));
         });
+}
+
+
+auto buddy::daemon::make_writing_daemon(const std::string& host,
+                                        const std::string& user,
+                                        const std::string& password,
+                                        std::size_t port,
+                                        core::Coin coin)
+    -> std::unique_ptr<WriteOnlyDaemonBase>
+{
+    switch(coin) {
+    case core::Coin::Odin:
+        return std::make_unique<ReadWriteOdinDaemon>(host,
+                                                     user,
+                                                     password,
+                                                     port,
+                                                     coin);
+    }
 }

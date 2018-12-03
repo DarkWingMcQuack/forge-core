@@ -8,10 +8,10 @@
 
 namespace buddy::daemon {
 
-class ReadWriteDaemonBase : public virtual ReadOnlyDaemonBase
+class WriteOnlyDaemonBase
 {
 public:
-    using ReadOnlyDaemonBase::ReadOnlyDaemonBase;
+    virtual ~WriteOnlyDaemonBase() = default;
 
     virtual auto writeTxToBlockchain(std::string&& txid_input,
                                      std::size_t index,
@@ -45,6 +45,6 @@ auto make_writing_daemon(const std::string& host,
                          const std::string& password,
                          std::size_t port,
                          core::Coin coin)
-    -> std::unique_ptr<ReadWriteDaemonBase>;
+    -> std::unique_ptr<WriteOnlyDaemonBase>;
 
 } // namespace buddy::daemon
