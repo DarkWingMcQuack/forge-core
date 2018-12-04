@@ -42,6 +42,9 @@ public:
     auto sendRawTx(std::vector<std::byte>&& tx) const
         -> utilxx::Result<void, DaemonError> override;
 
+    auto generateNewAddress() const
+        -> utilxx::Result<std::string, DaemonError> override;
+
 private:
     auto generateRpcParams(std::string&& input_txid,
                            std::size_t index,

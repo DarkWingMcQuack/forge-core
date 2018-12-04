@@ -38,6 +38,11 @@ public:
 
     virtual auto sendRawTx(std::vector<std::byte>&& tx) const
         -> utilxx::Result<void, DaemonError> = 0;
+
+    virtual auto generateNewAddress() const
+        -> utilxx::Result<std::string, DaemonError> = 0;
+
+    // virtual auto
 };
 
 auto make_writing_daemon(const std::string& host,

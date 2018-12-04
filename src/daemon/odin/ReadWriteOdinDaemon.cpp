@@ -193,3 +193,28 @@ auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
             return DaemonError{json.toStyledString()};
         });
 }
+
+
+auto ReadWriteOdinDaemon::generateNewAddress() const
+    -> utilxx::Result<std::string, DaemonError>
+{
+    static const auto command = "getnewaddress"s;
+
+    return sendcommand(command, {})
+        .flatMap([](auto&& json)
+                     -> Result<std::string, DaemonError> {
+            if(!json.isMember("result")
+               || !json["result"].isString()) {
+                if(json.isMember("error")
+                   || json["error"].isString()) {
+
+                    return DaemonError{std::move(json["error"].asString())};
+
+                } else {
+                    return DaemonError{"unknown error while getting new address"};
+                }
+            }
+
+            return json["result"].asString();
+        });
+}
