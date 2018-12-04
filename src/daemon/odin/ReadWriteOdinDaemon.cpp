@@ -137,10 +137,11 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
 auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
     -> Result<void, DaemonError>
 {
-    static const auto command = "validateaddress"s;
+    static const auto command = "sendrawtransaction"s;
 
     Json::Value params;
     params.append(toHexString(tx));
+    params.append(true);
 
     return sendcommand(command, params)
         .flatMap([](auto&& json)
