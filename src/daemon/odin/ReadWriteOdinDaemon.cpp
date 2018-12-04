@@ -132,6 +132,46 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
     -> Result<std::vector<std::byte>,
               DaemonError>
 {
+    static const auto command = "signrawtransaction"s;
+
+    Json::Value params;
+    params.append(toHexString(tx));
+
+    return sendcommand(command, params)
+        .flatMap([](auto&& json)
+                     -> Result<std::vector<std::byte>,
+                               DaemonError> {
+            if(!json.isMember("complete")
+               || !json["complete"].isBool()
+               || !json["complete"].asBool()) {
+                //TODO: check if this json field exists
+
+                if(!json.isMember("errors")
+                   || !json["errors"].isArray()
+                   || !json["errors"].isValidIndex(0)
+                   || !json["errors"][0].isMember("error")
+                   || !json["errors"][0]["error"].isString()) {
+                    return DaemonError{std::move(json["errors"][0]["error"].asString())};
+                } else {
+                    return DaemonError{"unknown error during transaction signing"};
+                }
+            }
+
+            if(!json.isMember("hex")
+               || !json["hex"].isString()) {
+                return DaemonError{"no hex value was returned from transaction signing"};
+            }
+
+            auto hex_str = std::move(json["hex"].asString());
+
+            auto hex_vec = stringToByteVec(hex_str);
+
+            if(!hex_vec) {
+                return DaemonError{"wasn't able to create byte vec from the result of a transaction signing"};
+            }
+
+            return hex_vec.getValue();
+        });
 }
 
 auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
