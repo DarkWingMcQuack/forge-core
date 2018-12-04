@@ -141,10 +141,10 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
         .flatMap([](auto&& json)
                      -> Result<std::vector<std::byte>,
                                DaemonError> {
+            //check if the request was complete
             if(!json.isMember("complete")
                || !json["complete"].isBool()
                || !json["complete"].asBool()) {
-                //TODO: check if this json field exists
 
                 if(!json.isMember("errors")
                    || !json["errors"].isArray()
@@ -181,6 +181,7 @@ auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
 
     Json::Value params;
     params.append(toHexString(tx));
+    //append to allow high fees
     params.append(true);
 
     return sendcommand(command, params)
@@ -203,18 +204,11 @@ auto ReadWriteOdinDaemon::generateNewAddress() const
     return sendcommand(command, {})
         .flatMap([](auto&& json)
                      -> Result<std::string, DaemonError> {
-            if(!json.isMember("result")
-               || !json["result"].isString()) {
-                if(json.isMember("error")
-                   || json["error"].isString()) {
-
-                    return DaemonError{std::move(json["error"].asString())};
-
-                } else {
-                    return DaemonError{"unknown error while getting new address"};
-                }
+            //check if result is not there
+            if(json.isNull() || !json.isString()) {
+                return DaemonError{"unknown error while getting new address"};
             }
 
-            return json["result"].asString();
+            return json.asString();
         });
 }
