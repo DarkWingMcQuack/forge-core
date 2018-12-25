@@ -141,9 +141,48 @@ private:
     std::string txid_;
 };
 
-class Unspent{
+class Unspent
+{
 public:
-    private:
+    Unspent() = delete;
+    Unspent(Unspent&&) = default;
+    Unspent(const Unspent&) = delete;
+    Unspent(std::int64_t value,
+            std::int64_t vout_idx,
+            std::int64_t confirmations,
+            std::string address,
+            std::string txid);
+
+    auto operator=(Unspent &&)
+        -> Unspent& = default;
+    auto operator=(const Unspent&)
+        -> Unspent& = delete;
+
+    auto getValue() const
+        -> std::int64_t;
+
+    auto getVoutIdx() const
+        -> std::int64_t;
+
+    auto getConfiramtions() const
+        -> std::int64_t;
+
+    auto getTxid() const
+        -> const std::string&;
+    auto getTxid()
+        -> std::string&;
+
+    auto getAddress() const
+        -> const std::string&;
+    auto getAddress()
+        -> std::string&;
+
+private:
+    std::int64_t value_;
+    std::int64_t vout_idx_;
+    std::int64_t confirmations_;
+    std::string address_;
+    std::string txid_;
 };
 
 auto buildTxIn(Json::Value&& json)

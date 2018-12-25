@@ -12,6 +12,7 @@
 
 using buddy::core::TxIn;
 using buddy::core::TxOut;
+using buddy::core::Unspent;
 using buddy::core::Transaction;
 using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::DaemonError;
@@ -246,6 +247,60 @@ auto Transaction::getNumberOfOutputs() const
     -> std::int64_t
 {
     return outputs_.size();
+}
+
+
+Unspent::Unspent(std::int64_t value,
+                 std::int64_t vout_idx,
+                 std::int64_t confirmations,
+                 std::string address,
+                 std::string txid)
+    : value_(value),
+      vout_idx_(vout_idx),
+      confirmations_(confirmations),
+      address_(address),
+      txid_(txid) {}
+
+auto Unspent::getValue() const
+    -> std::int64_t
+{
+    return value_;
+}
+
+auto Unspent::getVoutIdx() const
+    -> std::int64_t
+{
+    return vout_idx_;
+}
+
+auto Unspent::getConfiramtions() const
+    -> std::int64_t
+{
+    return confirmations_;
+}
+
+auto Unspent::getTxid() const
+    -> const std::string&
+{
+    return txid_;
+}
+
+auto Unspent::getTxid()
+    -> std::string&
+{
+    return txid_;
+}
+
+auto Unspent::getAddress() const
+    -> const std::string&
+{
+    return address_;
+}
+
+auto Unspent::getAddress()
+    -> std::string&
+{
+    return address_;
 }
 
 auto buddy::core::buildTxIn(Json::Value&& json)
