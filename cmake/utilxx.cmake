@@ -6,9 +6,9 @@ set(CMAKE_ARGS
 
 ExternalProject_Add(utilxx-project
   PREFIX deps/utilxx
-  DOWNLOAD_NAME utilxx-0.0.1.tar.gz
+  DOWNLOAD_NAME utilxx-0.0.3.tar.gz
   DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
-  URL https://github.com/DarkWingMcQuack/Utilxx/archive/0.0.1.tar.gz
+  URL https://github.com/DarkWingMcQuack/Utilxx/archive/0.0.3.tar.gz
   CMAKE_ARGS ${CMAKE_ARGS}
   # Overwtire build and install commands to force Release build on MSVC.
   BUILD_COMMAND cmake --build <BINARY_DIR> --config Release
