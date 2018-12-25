@@ -5,6 +5,7 @@
 #include <fmt/core.h>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
+#include <utilxx/Algorithm.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
@@ -13,11 +14,13 @@ using buddy::daemon::DaemonError;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::Try;
+using buddy::core::getMaturity;
 using buddy::core::Block;
 using buddy::core::buildBlock;
 using buddy::core::TxIn;
 using buddy::core::buildTxIn;
 using buddy::core::TxOut;
+using buddy::core::Unspent;
 using buddy::core::buildTxOut;
 using buddy::core::Transaction;
 using buddy::core::buildTransaction;
@@ -175,5 +178,57 @@ auto ReadOnlyOdinDaemon::getTransaction(std::string&& txid) const
                             params.toStyledString());
 
             return DaemonError{std::move(error_str)};
+        });
+}
+
+auto ReadOnlyOdinDaemon::getUnspent() const
+    -> Result<std::vector<Unspent>,
+              DaemonError>
+{
+    static const auto command = "listunspent";
+
+    Json::Value params;
+    params.append(getMaturity(getCoin()));
+    params.append(99999999);
+
+    return sendcommand(command, std::move(params))
+        .flatMap([](auto&& json)
+                     -> Result<std::vector<Unspent>,
+                               DaemonError> {
+            if(!json.isArray()) {
+                return DaemonError{"result of \"listunspent\" was not an json array"};
+            }
+
+            std::vector<Unspent> ret_vec;
+
+            utilxx::transform_if(std::make_move_iterator(std::begin(json)),
+                                 std::make_move_iterator(std::end(json)),
+                                 std::back_inserter(ret_vec),
+                                 [](auto&& unspent_json) {
+                                     auto value = unspent_json["amount"].asDouble()
+                                         * 100000000.;
+                                     return Unspent{static_cast<std::int64_t>(value),
+                                                    unspent_json["vout"].asInt64(),
+                                                    unspent_json["confirmations"].asInt64(),
+                                                    unspent_json["address"].asString(),
+                                                    unspent_json["txid"].asString()};
+                                 },
+                                 [](auto&& unspent_json) {
+                                     return !unspent_json.isMember("txid")
+                                         || !unspent_json.isMember("confirmations")
+                                         || !unspent_json.isMember("spendable")
+                                         || !unspent_json.isMember("amount")
+                                         || !unspent_json.isMember("address")
+                                         || !unspent_json.isMember("vout")
+                                         || !unspent_json["txid"].isString()
+                                         || !unspent_json["confirmations"].isNumeric()
+                                         || !unspent_json["spendable"].isBool()
+                                         || !unspent_json["amount"].isNumeric()
+                                         || !unspent_json["address"].isString()
+                                         || !unspent_json["vout"].isNumeric()
+                                         || !unspent_json["spendable"].asBool();
+                                 });
+
+            return ret_vec;
         });
 }

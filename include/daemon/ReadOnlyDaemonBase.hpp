@@ -34,8 +34,13 @@ public:
     virtual auto getBlock(std::string&& hash) const
         -> utilxx::Result<core::Block, DaemonError> = 0;
 
+    virtual auto getUnspent() const
+        -> utilxx::Result<std::vector<core::Unspent>,
+                          DaemonError> = 0;
+
     virtual auto getCoin() const
         -> core::Coin final;
+
 
     virtual ~ReadOnlyDaemonBase() = default;
 

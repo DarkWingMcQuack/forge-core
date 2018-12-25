@@ -40,8 +40,9 @@ public:
     auto getBlock(std::string&& hash) const
         -> utilxx::Result<core::Block, DaemonError> override;
 
-    // auto getUnspent() const
-    //     -> utilxx::Result<, DaemonError> override;
+    auto getUnspent() const
+        -> utilxx::Result<std::vector<core::Unspent>,
+                          DaemonError> override;
 
 protected:
     auto sendcommand(const std::string& command,
