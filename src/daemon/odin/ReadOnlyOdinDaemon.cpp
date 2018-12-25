@@ -50,16 +50,16 @@ ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
 
 
 auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
-                                     const Json::Value& params) const
+                                     Json::Value&& params) const
     -> Result<Json::Value, DaemonError>
 {
     return Try<jsonrpc::JsonRpcException>(
-               [this](auto&& command,
+               [this](const auto& command,
                       auto&& params) {
-                   return client_.CallMethod(command, params);
+                   return client_.CallMethod(command, std::move(params));
                },
                command,
-               params)
+               std::move(params))
         .mapError([](auto&& error) {
             return DaemonError{error.what()};
         });
@@ -85,7 +85,7 @@ auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
     Json::Value param;
     param.append(index);
 
-    return sendcommand(command, param)
+    return sendcommand(command, std::move(param))
         .map([](auto&& json) {
             //extract blockhash from json
             return json.asString();
@@ -102,7 +102,7 @@ auto ReadOnlyOdinDaemon::getBlock(std::string&& hash) const
     param.append(hash);
 
     //send command
-    return sendcommand(command, param)
+    return sendcommand(command, std::move(param))
         .map([](auto&& json) {
             return buildBlock(std::move(json));
         })
@@ -162,7 +162,7 @@ auto ReadOnlyOdinDaemon::getTransaction(std::string&& txid) const
     params.append(std::move(txid));
     params.append(1);
 
-    return sendcommand(command, params)
+    return sendcommand(command, std::move(params))
         .map([](auto&& json) {
             return buildTransaction(std::move(json));
         })

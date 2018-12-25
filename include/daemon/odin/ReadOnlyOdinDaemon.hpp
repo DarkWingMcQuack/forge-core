@@ -46,7 +46,7 @@ public:
 
 protected:
     auto sendcommand(const std::string& command,
-                     const Json::Value& params) const
+                     Json::Value&& params) const
         -> utilxx::Result<Json::Value, DaemonError>;
 
 

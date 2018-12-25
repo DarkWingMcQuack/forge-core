@@ -117,7 +117,7 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
     Json::Value params;
     params.append(toHexString(tx));
 
-    return sendcommand(command, params)
+    return sendcommand(command, std::move(params))
         .flatMap([](auto&& json)
                      -> Result<std::vector<std::byte>,
                                DaemonError> {
@@ -164,7 +164,7 @@ auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
     //append to allow high fees
     params.append(true);
 
-    return sendcommand(command, params)
+    return sendcommand(command, std::move(params))
         .flatMap([](auto&& json)
                      -> Result<void, DaemonError> {
             if(json.empty()) {
