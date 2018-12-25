@@ -32,7 +32,7 @@ using namespace std::string_literals;
 ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
                                        const std::string& user,
                                        const std::string& password,
-                                       std::size_t port,
+                                       std::int64_t port,
                                        core::Coin coin)
     : ReadOnlyDaemonBase(coin),
       http_client_("http://"
@@ -63,18 +63,18 @@ auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
 }
 
 auto ReadOnlyOdinDaemon::getBlockCount() const
-    -> Result<std::size_t, DaemonError>
+    -> Result<std::int64_t, DaemonError>
 {
     static const auto command = "getblockcount"s;
 
     return sendcommand(command, {})
         .flatMap([](auto&& json)
-                     -> Result<std::size_t, DaemonError> {
+                     -> Result<std::int64_t, DaemonError> {
             return json.asUInt();
         });
 }
 
-auto ReadOnlyOdinDaemon::getBlockHash(std::size_t index) const
+auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
     -> utilxx::Result<std::string, DaemonError>
 {
     static const auto command = "getblockhash"s;

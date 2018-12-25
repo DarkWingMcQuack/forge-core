@@ -6,8 +6,8 @@ using buddy::core::EntryDeletionOp;
 
 EntryDeletionOp::EntryDeletionOp(Entry&& entry,
                                  std::string&& owner,
-                                 std::size_t block,
-                                 std::size_t value)
+                                 std::int64_t block,
+                                 std::int64_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
@@ -50,13 +50,13 @@ auto EntryDeletionOp::getEntry()
 }
 
 auto EntryDeletionOp::getBlock() const
-    -> std::size_t
+    -> std::int64_t
 {
     return block_;
 }
 
 auto EntryDeletionOp::getValue() const
-    -> std::size_t
+    -> std::int64_t
 {
     return value_;
 }

@@ -10,11 +10,11 @@ class ProgramOptions
 {
 public:
     ProgramOptions(utilxx::Opt<std::string>&& logfolder,
-                   std::size_t coin_port,
+                   std::int64_t coin_port,
                    std::string&& coin_host,
                    std::string&& coin_user,
                    std::string&& coin_password,
-                   std::size_t rpc_port,
+                   std::int64_t rpc_port,
                    std::string&& rpc_user,
                    std::string&& rpc_password);
 
@@ -22,7 +22,7 @@ public:
         -> const utilxx::Opt<std::string>;
 
     auto getCoinPort() const
-        -> std::size_t;
+        -> std::int64_t;
     auto getCoinHost() const
         -> const std::string&;
     auto getCoinUser() const
@@ -31,7 +31,7 @@ public:
         -> const std::string&;
 
     auto getRpcPort() const
-        -> std::size_t;
+        -> std::int64_t;
     auto getRpcUser() const
         -> const std::string&;
     auto getRpcPassword() const
@@ -40,12 +40,12 @@ public:
 private:
     utilxx::Opt<std::string> logfolder_;
 
-    std::size_t coin_port_;
+    std::int64_t coin_port_;
     std::string coin_host_;
     std::string coin_user_;
     std::string coin_password_;
 
-    std::size_t rpc_port_;
+    std::int64_t rpc_port_;
     std::string rpc_user_;
     std::string rpc_password_;
 };

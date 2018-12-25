@@ -26,12 +26,12 @@ public:
         -> ReadWriteOdinDaemon& = delete;
 
     auto generateRawTx(std::string&& input_txid,
-                       std::size_t index,
+                       std::int64_t index,
                        std::vector<std::byte>&& metadata,
-                       std::size_t burn_value,
+                       std::int64_t burn_value,
                        std::vector<
                            std::pair<std::string,
-                                     std::size_t>>&& outputs) const
+                                     std::int64_t>>&& outputs) const
         -> utilxx::Result<std::vector<std::byte>,
                           DaemonError> override;
 
@@ -47,12 +47,12 @@ public:
 
 private:
     auto generateRpcParams(std::string&& input_txid,
-                           std::size_t index,
+                           std::int64_t index,
                            std::vector<std::byte>&& metadata,
-                           std::size_t burn_value,
+                           std::int64_t burn_value,
                            std::vector<
                                std::pair<std::string,
-                                         std::size_t>>&& outputs) const
+                                         std::int64_t>>&& outputs) const
         -> Json::Value;
 };
 

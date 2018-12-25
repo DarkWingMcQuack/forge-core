@@ -15,7 +15,7 @@ auto ReadOnlyDaemonBase::getCoin() const
 auto buddy::daemon::make_readonly_daemon(const std::string& host,
                                          const std::string& user,
                                          const std::string& password,
-                                         std::size_t port,
+                                         std::int64_t port,
                                          core::Coin coin)
     -> std::unique_ptr<ReadOnlyDaemonBase>
 {

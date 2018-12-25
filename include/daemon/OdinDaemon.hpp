@@ -17,7 +17,7 @@ public:
     ReadOnlyOdinDaemon(const std::string& host,
                const std::string& user,
                const std::string& password,
-               std::size_t port,
+               std::int64_t port,
                Coin coin);
 
     auto getNewestBlock() const
@@ -30,9 +30,9 @@ public:
         -> utilxx::Result<core::TxOut, DaemonError> override;
 
     auto getBlockCount() const
-        -> utilxx::Result<std::size_t, DaemonError> override;
+        -> utilxx::Result<std::int64_t, DaemonError> override;
 
-    auto getBlockHash(std::size_t index) const
+    auto getBlockHash(std::int64_t index) const
         -> utilxx::Result<std::string, DaemonError> override;
 
     auto getBlock(std::string&& hash) const

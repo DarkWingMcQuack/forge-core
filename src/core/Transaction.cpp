@@ -23,7 +23,7 @@ using namespace std::string_literals;
 
 
 TxIn::TxIn(std::string&& txid,
-           std::size_t vout_index)
+           std::int64_t vout_index)
     : txid_(std::move(txid)),
       vout_index_(vout_index) {}
 
@@ -41,13 +41,13 @@ auto TxIn::getTxid()
 }
 
 auto TxIn::getVoutIndex() const
-    -> std::size_t
+    -> std::int64_t
 {
     return vout_index_;
 }
 
 
-TxOut::TxOut(std::size_t value,
+TxOut::TxOut(std::int64_t value,
              std::string&& hex,
              std::vector<std::string>&& addresses)
     : value_(value),
@@ -56,7 +56,7 @@ TxOut::TxOut(std::size_t value,
 
 
 auto TxOut::getValue() const
-    -> std::size_t
+    -> std::int64_t
 {
     return value_;
 }
@@ -84,7 +84,7 @@ auto TxOut::getAddresses()
 }
 
 auto TxOut::numberOfAddresses() const
-    -> std::size_t
+    -> std::int64_t
 {
     return addresses_.size();
 }
@@ -243,7 +243,7 @@ auto Transaction::hasExactlyOneInput() const
 }
 
 auto Transaction::getNumberOfOutputs() const
-    -> std::size_t
+    -> std::int64_t
 {
     return outputs_.size();
 }

@@ -46,20 +46,20 @@ auto getOwner(Operation &&)
     -> std::string;
 
 auto getValue(const Operation&)
-    -> const std::size_t;
+    -> const std::int64_t;
 
 auto extractFlag(const Operation&)
     -> std::byte;
 
 auto parseTransactionToEntry(core::Transaction&& tx,
-                             std::size_t block,
+                             std::int64_t block,
                              const std::unique_ptr<daemon::ReadOnlyDaemonBase>& daemon)
     -> utilxx::Result<utilxx::Opt<Operation>, daemon::DaemonError>;
 
 auto parseMetadata(const std::vector<std::byte>& metadata,
-                   std::size_t block,
+                   std::int64_t block,
                    std::string&& owner,
-                   std::size_t value,
+                   std::int64_t value,
                    utilxx::Opt<std::string>&& new_owner = std::nullopt)
     -> utilxx::Opt<Operation>;
 

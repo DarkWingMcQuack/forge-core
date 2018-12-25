@@ -8,9 +8,9 @@ using namespace buddy::core;
 TEST(OperationTest, EntryCreationOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc750101aabbccdddeadbeef").getValue();
-    std::size_t block = 1000;
+    std::int64_t block = 1000;
     auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
-    std::size_t value = 10;
+    std::int64_t value = 10;
 
     auto op_opt = parseMetadata(std::move(metadata),
                                 block,
@@ -38,9 +38,9 @@ TEST(OperationTest, EntryCreationOpParsingValid)
 TEST(OperationTest, EntryRenewalOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc750201aabbccdddeadbeef").getValue();
-    std::size_t block = 1000;
+    std::int64_t block = 1000;
     auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
-    std::size_t value = 10;
+    std::int64_t value = 10;
 
     auto op_opt = parseMetadata(std::move(metadata),
                                 block,
@@ -67,10 +67,10 @@ TEST(OperationTest, EntryRenewalOpParsingValid)
 TEST(OperationTest, OwnershipTransferOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc750401aabbccdddeadbeef").getValue();
-    std::size_t block = 1000;
+    std::int64_t block = 1000;
     auto old_owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
-    std::size_t value = 10;
+    std::int64_t value = 10;
 
     auto op_opt = parseMetadata(std::move(metadata),
                                 block,
@@ -99,10 +99,10 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
 TEST(OperationTest, EntryUpdateOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc750801ffffffffdeadbeef").getValue();
-    std::size_t block = 1000;
+    std::int64_t block = 1000;
     auto old_owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
-    std::size_t value = 10;
+    std::int64_t value = 10;
 
     auto op_opt = parseMetadata(std::move(metadata),
                                 block,

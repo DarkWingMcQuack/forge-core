@@ -10,8 +10,8 @@ using namespace buddy::lookup;
 
 auto createOp(std::string&& data,
               std::string&& owner,
-              std::size_t block,
-              std::size_t value)
+              std::int64_t block,
+              std::int64_t value)
     -> Operation
 {
     auto metadata =

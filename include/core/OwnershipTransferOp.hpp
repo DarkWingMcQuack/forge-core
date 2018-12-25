@@ -10,8 +10,8 @@ public:
     OwnershipTransferOp(Entry&&,
                         std::string&& old_owner,
                         std::string&& new_owner,
-                        std::size_t block,
-                        std::size_t value);
+                        std::int64_t block,
+                        std::int64_t value);
 
     auto getEntryKey() const
         -> const EntryKey&;
@@ -39,17 +39,17 @@ public:
         -> std::string&;
 
     auto getBlock() const
-        -> std::size_t;
+        -> std::int64_t;
 
     auto getValue() const
-        -> std::size_t;
+        -> std::int64_t;
 
 private:
     Entry entry_;
     std::string old_owner_;
     std::string new_owner_;
-    std::size_t block_;
-    std::size_t value_;
+    std::int64_t block_;
+    std::int64_t value_;
 };
 
 } // namespace buddy::core

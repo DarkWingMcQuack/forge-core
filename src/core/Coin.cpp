@@ -1,8 +1,9 @@
 #include <core/Coin.hpp>
+#include <cstdint>
 
 
 auto buddy::core::getMaturity(Coin c)
-    -> std::size_t
+    -> std::int64_t
 {
     switch(c) {
     case Coin::Odin:
@@ -11,7 +12,7 @@ auto buddy::core::getMaturity(Coin c)
 }
 
 auto buddy::core::getStartingBlock(Coin c)
-    -> std::size_t
+    -> std::int64_t
 {
     switch(c) {
     case Coin::Odin:
@@ -22,7 +23,7 @@ auto buddy::core::getStartingBlock(Coin c)
 }
 
 auto buddy::core::getBlockTimeInSeconds(Coin c)
-    -> std::size_t
+    -> std::int64_t
 {
     switch(c) {
     case Coin::Odin:

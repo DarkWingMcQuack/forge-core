@@ -11,8 +11,8 @@ class Block
 {
 public:
     Block(std::vector<std::string>&& txids,
-          std::size_t height,
-          std::size_t time,
+          std::int64_t height,
+          std::int64_t time,
           std::string&& hash);
 
     Block(Block&&) = default;
@@ -29,10 +29,10 @@ public:
         -> std::vector<std::string>&;
 
     auto getHeight() const
-        -> std::size_t;
+        -> std::int64_t;
 
     auto getTime() const
-        -> std::size_t;
+        -> std::int64_t;
 
     auto getHash() const
         -> const std::string&;
@@ -41,8 +41,8 @@ public:
 
 private:
     std::vector<std::string> txids_;
-    std::size_t height_;
-    std::size_t time_;
+    std::int64_t height_;
+    std::int64_t time_;
     std::string hash_;
 };
 

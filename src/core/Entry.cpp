@@ -29,7 +29,7 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
 
     if(data[VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
        && data.size() > VALUE_FLAG_INDEX + 2) {
-        auto value_length = static_cast<std::size_t>(data[5]);
+        auto value_length = static_cast<std::int64_t>(data[5]);
 
         //check the bounds
         if(VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
@@ -80,7 +80,7 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
 
     if(data[VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
        && data.size() > VALUE_FLAG_INDEX + 2) {
-        auto value_length = static_cast<std::size_t>(data[VALUE_FLAG_INDEX + 1]);
+        auto value_length = static_cast<std::int64_t>(data[VALUE_FLAG_INDEX + 1]);
 
         //check the bounds
         if(VALUE_FLAG_INDEX + 2 + value_length > data.size()) {

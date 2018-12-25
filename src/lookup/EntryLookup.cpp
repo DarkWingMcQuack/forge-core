@@ -23,7 +23,7 @@ using buddy::lookup::LookupError;
 using buddy::lookup::EntryLookup;
 
 
-EntryLookup::EntryLookup(std::size_t start_block)
+EntryLookup::EntryLookup(std::int64_t start_block)
     : block_height_(start_block),
       start_block_(start_block){};
 
@@ -90,7 +90,7 @@ auto EntryLookup::lookupEntry(const EntryKey& key) const
     -> utilxx::Opt<
         std::tuple<std::reference_wrapper<const core::EntryValue>,
                    std::reference_wrapper<const std::string>,
-                   std::reference_wrapper<const std::size_t>>>
+                   std::reference_wrapper<const std::int64_t>>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -106,7 +106,7 @@ auto EntryLookup::lookupEntry(const EntryKey& key)
     -> utilxx::Opt<
         std::tuple<std::reference_wrapper<core::EntryValue>,
                    std::reference_wrapper<std::string>,
-                   std::reference_wrapper<std::size_t>>>
+                   std::reference_wrapper<std::int64_t>>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -118,14 +118,14 @@ auto EntryLookup::lookupEntry(const EntryKey& key)
     return std::nullopt;
 }
 
-auto EntryLookup::setBlockHeight(std::size_t height)
+auto EntryLookup::setBlockHeight(std::int64_t height)
     -> void
 {
     block_height_ = height;
 }
 
 
-auto EntryLookup::removeEntrysOlderThan(std::size_t diff)
+auto EntryLookup::removeEntrysOlderThan(std::int64_t diff)
     -> void
 {
     auto iter = lookup_map_.begin();
@@ -366,7 +366,7 @@ auto EntryLookup::operator()(EntryDeletionOp&& op)
 
 
 auto EntryLookup::getBlockHeight() const
-    -> std::size_t
+    -> std::int64_t
 {
     return block_height_;
 }

@@ -18,7 +18,7 @@ class TxIn
 {
 public:
     TxIn(std::string&& txid,
-         std::size_t vout_index);
+         std::int64_t vout_index);
 
     TxIn(TxIn&&) = default;
     TxIn(const TxIn&) = delete;
@@ -34,17 +34,17 @@ public:
         -> std::string&;
 
     auto getVoutIndex() const
-        -> std::size_t;
+        -> std::int64_t;
 
 private:
     std::string txid_;
-    std::size_t vout_index_;
+    std::int64_t vout_index_;
 };
 
 class TxOut
 {
 public:
-    TxOut(std::size_t value,
+    TxOut(std::int64_t value,
           std::string&& hex,
           std::vector<std::string>&& addresses);
 
@@ -57,7 +57,7 @@ public:
         -> TxOut& = delete;
 
     auto getValue() const
-        -> std::size_t;
+        -> std::int64_t;
 
     auto getHex() const
         -> const std::string&;
@@ -70,13 +70,13 @@ public:
         -> std::vector<std::string>&;
 
     auto numberOfAddresses() const
-        -> std::size_t;
+        -> std::int64_t;
 
     auto isOpReturnOutput() const
         -> bool;
 
 private:
-    std::size_t value_;
+    std::int64_t value_;
     std::string hex_;
     std::vector<std::string> addresses_;
 };
@@ -133,12 +133,17 @@ public:
         -> bool;
 
     auto getNumberOfOutputs() const
-        -> std::size_t;
+        -> std::int64_t;
 
 private:
     std::vector<TxIn> inputs_;
     std::vector<TxOut> outputs_;
     std::string txid_;
+};
+
+class Unspent{
+public:
+    private:
 };
 
 auto buildTxIn(Json::Value&& json)

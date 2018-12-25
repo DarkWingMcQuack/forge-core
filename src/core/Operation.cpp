@@ -84,7 +84,7 @@ auto buddy::core::getOwner(Operation&& operation)
 }
 
 auto buddy::core::getValue(const Operation& operation)
-    -> const std::size_t
+    -> const std::int64_t
 {
     return std::visit(
         [](auto&& op) {
@@ -110,9 +110,9 @@ auto buddy::core::extractFlag(const Operation& operation)
 
 
 auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
-                                std::size_t block,
+                                std::int64_t block,
                                 std::string&& owner,
-                                std::size_t value,
+                                std::int64_t value,
                                 utilxx::Opt<std::string>&& new_owner_opt)
     -> Opt<Operation>
 {
@@ -171,7 +171,7 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
 }
 
 auto buddy::core::parseTransactionToEntry(Transaction&& tx,
-                                          std::size_t block,
+                                          std::int64_t block,
                                           const std::unique_ptr<ReadOnlyDaemonBase>& daemon)
     -> Result<Opt<Operation>, DaemonError>
 {

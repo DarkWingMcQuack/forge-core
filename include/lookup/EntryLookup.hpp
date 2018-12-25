@@ -19,7 +19,7 @@ public:
 class EntryLookup final
 {
 public:
-    EntryLookup(std::size_t start_block);
+    EntryLookup(std::int64_t start_block);
     EntryLookup();
 
     auto executeOperations(std::vector<core::Operation>&& ops)
@@ -38,27 +38,27 @@ public:
         -> utilxx::Opt<std::reference_wrapper<std::string>>;
 
     auto lookupBlock(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<std::size_t>>;
+        -> utilxx::Opt<std::reference_wrapper<std::int64_t>>;
 
     auto lookupEntry(const core::EntryKey& key)
         -> utilxx::Opt<
             std::tuple<std::reference_wrapper<core::EntryValue>,
                        std::reference_wrapper<std::string>,
-                       std::reference_wrapper<std::size_t>>>;
+                       std::reference_wrapper<std::int64_t>>>;
 
     auto lookupEntry(const core::EntryKey& key) const
         -> utilxx::Opt<
             std::tuple<std::reference_wrapper<const core::EntryValue>,
                        std::reference_wrapper<const std::string>,
-                       std::reference_wrapper<const std::size_t>>>;
+                       std::reference_wrapper<const std::int64_t>>>;
 
-    auto setBlockHeight(std::size_t height)
+    auto setBlockHeight(std::int64_t height)
         -> void;
 
     auto getBlockHeight() const
-        -> std::size_t;
+        -> std::int64_t;
 
-    auto removeEntrysOlderThan(std::size_t blocks)
+    auto removeEntrysOlderThan(std::int64_t blocks)
         -> void;
 
     auto isCurrentlyValid(const core::Operation& op) const
@@ -89,10 +89,10 @@ private:
     using MapType = std::map<core::EntryKey, //key
                              std::tuple<core::EntryValue, //value
                                         std::string, //owner
-                                        std::size_t>>; //block
+                                        std::int64_t>>; //block
     MapType lookup_map_;
-    std::size_t block_height_;
-    std::size_t start_block_;
+    std::int64_t block_height_;
+    std::int64_t start_block_;
 };
 
 } // namespace buddy::lookup

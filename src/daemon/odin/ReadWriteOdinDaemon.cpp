@@ -21,12 +21,12 @@ using namespace std::string_literals;
 
 
 auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
-                                        std::size_t index,
+                                        std::int64_t index,
                                         std::vector<std::byte>&& metadata,
-                                        std::size_t burn_value,
+                                        std::int64_t burn_value,
                                         std::vector<
                                             std::pair<std::string,
-                                                      std::size_t>>&& outputs) const
+                                                      std::int64_t>>&& outputs) const
     -> Result<std::vector<std::byte>,
               DaemonError>
 {
@@ -63,36 +63,16 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
             } else {
                 return DaemonError{std::move(result)};
             }
-
-            // if(json.isMember("error")
-            //    && !json["error"].isNull()) {
-            //     return DaemonError{std::move(json["error"].asString())};
-            // }
-
-            // if(!json.isMember("result")
-            //    && !json["result"].isString()) {
-            //     return DaemonError{"unkown error while parsing result from tx creation"};
-            // }
-
-            // auto result = std::move(json["result"].asString());
-
-            // auto byte_vec_opt = stringToByteVec(result));
-
-            // if(!byte_vec_opt) {
-            //     return DaemonError{"wasn't able to create byte vec from the result of a tx creation"};
-            // }
-
-            // return byte_vec_opt.getValue();
         });
 }
 
 auto ReadWriteOdinDaemon::generateRpcParams(std::string&& input_txid,
-                                            std::size_t index,
+                                            std::int64_t index,
                                             std::vector<std::byte>&& metadata,
-                                            std::size_t burn_value,
+                                            std::int64_t burn_value,
                                             std::vector<
                                                 std::pair<std::string,
-                                                          std::size_t>>&& outputs) const
+                                                          std::int64_t>>&& outputs) const
     -> Json::Value
 {
     auto metadata_str = toHexString(metadata);

@@ -11,8 +11,8 @@ using utilxx::Opt;
 
 
 Block::Block(std::vector<std::string>&& txids,
-             std::size_t height,
-             std::size_t time,
+             std::int64_t height,
+             std::int64_t time,
              std::string&& hash)
     : txids_(std::move(txids)),
       height_(height),
@@ -33,13 +33,13 @@ auto Block::getTxids()
 
 
 auto Block::getHeight() const
-    -> std::size_t
+    -> std::int64_t
 {
     return height_;
 }
 
 auto Block::getTime() const
-    -> std::size_t
+    -> std::int64_t
 {
     return time_;
 }

@@ -11,12 +11,12 @@ using buddy::daemon::ReadWriteOdinDaemon;
 
 
 auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
-                                              std::size_t index,
+                                              std::int64_t index,
                                               std::vector<std::byte>&& metadata,
-                                              std::size_t burn_value,
+                                              std::int64_t burn_value,
                                               std::vector<
                                                   std::pair<std::string,
-                                                            std::size_t>>&& outputs) const
+                                                            std::int64_t>>&& outputs) const
     -> utilxx::Result<void, DaemonError>
 {
     return generateRawTx(std::move(txid_input),
@@ -36,7 +36,7 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
 auto buddy::daemon::make_writing_daemon(const std::string& host,
                                         const std::string& user,
                                         const std::string& password,
-                                        std::size_t port,
+                                        std::int64_t port,
                                         core::Coin coin)
     -> std::unique_ptr<WriteOnlyDaemonBase>
 {

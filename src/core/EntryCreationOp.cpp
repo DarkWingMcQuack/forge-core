@@ -6,8 +6,8 @@ using buddy::core::EntryCreationOp;
 
 EntryCreationOp::EntryCreationOp(Entry&& entry,
                                  std::string&& owner,
-                                 std::size_t block,
-                                 std::size_t value)
+                                 std::int64_t block,
+                                 std::int64_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
@@ -50,13 +50,13 @@ auto EntryCreationOp::getEntry()
 }
 
 auto EntryCreationOp::getValue() const
-    -> std::size_t
+    -> std::int64_t
 {
     return value_;
 }
 
 auto EntryCreationOp::getBlock() const
-    -> std::size_t
+    -> std::int64_t
 {
     return block_;
 }

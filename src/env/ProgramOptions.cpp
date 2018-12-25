@@ -10,11 +10,11 @@
 using buddy::env::ProgramOptions;
 
 ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
-                               std::size_t coin_port,
+                               std::int64_t coin_port,
                                std::string&& coin_host,
                                std::string&& coin_user,
                                std::string&& coin_password,
-                               std::size_t rpc_port,
+                               std::int64_t rpc_port,
                                std::string&& rpc_user,
                                std::string&& rpc_password)
     : logfolder_(std::move(logfolder)),
@@ -33,7 +33,7 @@ auto ProgramOptions::getLogFolder() const
 }
 
 auto ProgramOptions::getCoinPort() const
-    -> std::size_t
+    -> std::int64_t
 {
     return coin_port_;
 }
@@ -57,7 +57,7 @@ auto ProgramOptions::getCoinPassword() const
 }
 
 auto ProgramOptions::getRpcPort() const
-    -> std::size_t
+    -> std::int64_t
 {
     return rpc_port_;
 }
@@ -106,11 +106,11 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 
         auto config = cpptoml::parse_file(config_path + "/buddy.conf");
         auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
-        auto coin_port = *config->get_qualified_as<std::size_t>("coin.port");
+        auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
         auto coin_host = *config->get_qualified_as<std::string>("coin.host");
         auto coin_user = *config->get_qualified_as<std::string>("coin.user");
         auto coin_password = *config->get_qualified_as<std::string>("coin.password");
-        auto rpc_port = config->get_qualified_as<std::size_t>("rpc.port").value_or(25000);
+        auto rpc_port = config->get_qualified_as<std::int64_t>("rpc.port").value_or(25000);
         auto rpc_user = config->get_qualified_as<std::string>("rpc.user").value_or("user");
         auto rpc_password = config->get_qualified_as<std::string>("rpc.password").value_or("password");
 

@@ -26,9 +26,9 @@ public:
         -> utilxx::Result<core::TxOut, DaemonError> = 0;
 
     virtual auto getBlockCount() const
-        -> utilxx::Result<std::size_t, DaemonError> = 0;
+        -> utilxx::Result<std::int64_t, DaemonError> = 0;
 
-    virtual auto getBlockHash(std::size_t index) const
+    virtual auto getBlockHash(std::int64_t index) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
     virtual auto getBlock(std::string&& hash) const
@@ -46,7 +46,7 @@ private:
 auto make_readonly_daemon(const std::string& host,
                           const std::string& user,
                           const std::string& password,
-                          std::size_t port,
+                          std::int64_t port,
                           core::Coin coin)
     -> std::unique_ptr<ReadOnlyDaemonBase>;
 

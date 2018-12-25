@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstddef>
+#include <cstdint>
 
 namespace buddy::core {
 
@@ -9,12 +9,12 @@ enum class Coin {
 };
 
 auto getMaturity(Coin c)
-    -> std::size_t;
+    -> std::int64_t;
 
 auto getStartingBlock(Coin c)
-    -> std::size_t;
+    -> std::int64_t;
 
 auto getBlockTimeInSeconds(Coin c)
-    -> std::size_t;
+    -> std::int64_t;
 
 } // namespace buddy::core
