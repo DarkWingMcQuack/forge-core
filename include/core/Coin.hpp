@@ -17,4 +17,7 @@ auto getStartingBlock(Coin c)
 auto getBlockTimeInSeconds(Coin c)
     -> std::int64_t;
 
+auto getDefaultTxFee(Coin c)
+    -> std::int64_t;
+
 } // namespace buddy::core
