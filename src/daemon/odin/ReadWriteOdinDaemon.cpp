@@ -93,7 +93,7 @@ auto ReadWriteOdinDaemon::generateRpcParams(std::string&& input_txid,
     for(auto&& [address, value] : outputs) {
         Json::Value output;
         output["address"] = std::move(address);
-        output["value"] = value;
+        output["value"] = static_cast<double>(value) * 0.00000001;
 
         json_outputs.append(std::move(output));
     }
