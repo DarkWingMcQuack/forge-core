@@ -17,6 +17,7 @@ using utilxx::Opt;
 using utilxx::Result;
 using buddy::core::stringToByteVec;
 using buddy::core::toHexString;
+using buddy::core::getDefaultTxFee;
 using namespace std::string_literals;
 
 
@@ -190,5 +191,55 @@ auto ReadWriteOdinDaemon::generateNewAddress() const
             }
 
             return json.asString();
+        });
+}
+
+
+auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
+                                     std::vector<std::byte>&& metadata) const
+    -> utilxx::Result<std::string, DaemonError>
+{
+    auto fees = getDefaultTxFee(getCoin());
+    return getUnspent()
+        .flatMap([&](auto&& unspents)
+                     -> utilxx::Result<std::string, DaemonError> {
+            auto iter =
+                std::find_if(std::cbegin(unspents),
+                             std::cend(unspents),
+                             [amount, fees](auto&& elem) {
+                                 return elem.getValue() >= amount + fees;
+                             });
+            if(iter == std::cend(unspents)) {
+                return DaemonError{"no input available to burn a value of "
+                                   + std::to_string(amount)
+                                   + " coins + "
+                                   + std::to_string(fees)
+                                   + " in fees"};
+            }
+
+            auto vout = iter->getVoutIdx();
+            auto txid = std::move(iter->getTxid());
+            auto value = iter->getValue();
+            auto value_back = value - (fees + amount);
+
+            //if the fees + burn value eat the whole input,
+            //dont use a change address
+            if(value_back == 0) {
+                return writeTxToBlockchain(std::move(txid),
+                                           vout,
+                                           std::move(metadata),
+                                           amount,
+                                           {});
+            }
+
+            //if not, generate an new address and use it as output
+            return generateNewAddress()
+                .flatMap([&](auto&& exchange_adrs) {
+                    return writeTxToBlockchain(std::move(txid),
+                                               vout,
+                                               std::move(metadata),
+                                               amount,
+                                               {{std::move(exchange_adrs), value_back}});
+                });
         });
 }

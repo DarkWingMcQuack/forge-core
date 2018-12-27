@@ -45,6 +45,27 @@ public:
     auto generateNewAddress() const
         -> utilxx::Result<std::string, DaemonError> override;
 
+    auto burnAmount(std::int64_t amount,
+                    std::vector<std::byte>&& metadata) const
+        -> utilxx::Result<std::string, DaemonError> override;
+
+    auto burnOutput(std::string&& txid,
+                    std::vector<std::byte>&& metadata) const
+        -> utilxx::Result<std::string, DaemonError> override;
+
+    auto decodeTxidOfRawTx(const std::vector<std::byte>& tx) const
+        -> utilxx::Result<std::string, DaemonError> override;
+
+    auto sendToAddress(std::int64_t amount,
+                       std::string&& address) const
+        -> utilxx::Result<std::string, DaemonError> override;
+
+    auto burnAmount(std::string&& txid,
+                    std::int64_t amount,
+                    std::vector<std::byte>&& metadata,
+                    std::string&& change_address) const
+        -> utilxx::Result<std::string, DaemonError> override;
+
 private:
     auto generateRpcParams(std::string&& input_txid,
                            std::int64_t index,

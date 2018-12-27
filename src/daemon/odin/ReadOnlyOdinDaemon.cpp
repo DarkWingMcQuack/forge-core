@@ -229,6 +229,6 @@ auto ReadOnlyOdinDaemon::getUnspent() const
                                          || !unspent_json["spendable"].asBool();
                                  });
 
-            return ret_vec;
+            return std::move(ret_vec);
         });
 }

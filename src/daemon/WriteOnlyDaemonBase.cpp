@@ -17,7 +17,7 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
                                               std::vector<
                                                   std::pair<std::string,
                                                             std::int64_t>>&& outputs) const
-    -> utilxx::Result<void, DaemonError>
+    -> utilxx::Result<std::string, DaemonError>
 {
     return generateRawTx(std::move(txid_input),
                          index,
@@ -28,7 +28,13 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
             return signRawTx(std::move(raw_tx));
         })
         .flatMap([this](auto&& signed_tx) {
-            return sendRawTx(std::move(signed_tx));
+            return decodeTxidOfRawTx(signed_tx)
+                .flatMap([&](auto&& txid) {
+                    return sendRawTx(std::move(signed_tx))
+                        .map([&] {
+                            return txid;
+                        });
+                });
         });
 }
 
