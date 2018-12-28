@@ -11,6 +11,7 @@
 
 namespace buddy::daemon {
 
+
 class ReadOnlyOdinDaemon : public ReadOnlyDaemonBase
 {
 public:
@@ -46,7 +47,7 @@ public:
 
 protected:
     auto sendcommand(const std::string& command,
-                     Json::Value&& params) const
+                     Json::Value params) const
         -> utilxx::Result<Json::Value, DaemonError>;
 
 
@@ -54,5 +55,29 @@ private:
     jsonrpc::HttpClient http_client_;
     mutable jsonrpc::Client client_;
 };
+
+namespace odin {
+
+auto processGetTransactionResponse(Json::Value&& response,
+                                   const Json::Value& params)
+    -> utilxx::Result<core::Transaction, DaemonError>;
+
+auto processGetBlockCountResponse(Json::Value&& response,
+                                  const Json::Value& params)
+    -> utilxx::Result<std::int64_t, DaemonError>;
+
+auto processGetBlockHashResponse(Json::Value&& response,
+                                 const Json::Value& params)
+    -> utilxx::Result<std::string, DaemonError>;
+
+auto processGetBlockResponse(Json::Value&& response,
+                             const Json::Value& params)
+    -> utilxx::Result<core::Block, DaemonError>;
+
+auto processGetUnspentResponse(Json::Value&& response,
+                               const Json::Value& params)
+    -> utilxx::Result<std::vector<core::Unspent>,
+                      DaemonError>;
+} // namespace odin
 
 } // namespace buddy::daemon

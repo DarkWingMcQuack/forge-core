@@ -50,7 +50,7 @@ ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
 
 
 auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
-                                     Json::Value&& params) const
+                                     Json::Value params) const
     -> Result<Json::Value, DaemonError>
 {
     return Try<jsonrpc::JsonRpcException>(
@@ -71,9 +71,9 @@ auto ReadOnlyOdinDaemon::getBlockCount() const
     static const auto command = "getblockcount"s;
 
     return sendcommand(command, {})
-        .flatMap([](auto&& json)
-                     -> Result<std::int64_t, DaemonError> {
-            return json.asUInt();
+        .flatMap([](auto&& json) {
+            return odin::processGetBlockCountResponse(std::move(json),
+                                                      {});
         });
 }
 
@@ -86,9 +86,9 @@ auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
     param.append(index);
 
     return sendcommand(command, std::move(param))
-        .map([](auto&& json) {
-            //extract blockhash from json
-            return json.asString();
+        .flatMap([&](auto&& json) {
+            return odin::processGetBlockHashResponse(std::move(json),
+                                                     param);
         });
 }
 
@@ -103,21 +103,9 @@ auto ReadOnlyOdinDaemon::getBlock(std::string&& hash) const
 
     //send command
     return sendcommand(command, std::move(param))
-        .map([](auto&& json) {
-            return buildBlock(std::move(json));
-        })
-        .flatMap([&param](auto&& opt)
-                     -> utilxx::Result<core::Block, DaemonError> {
-            if(opt) {
-                return std::move(opt.getValue());
-            }
-
-            auto error_str =
-                fmt::format("unable to build transaction from result when calling {}, with parameters {}",
-                            command,
-                            param.asString());
-
-            return DaemonError{std::move(error_str)};
+        .flatMap([&](auto&& json) {
+            return odin::processGetBlockResponse(std::move(json),
+                                                 param);
         });
 }
 
@@ -126,10 +114,10 @@ auto ReadOnlyOdinDaemon::getNewestBlock() const
 {
     return getBlockCount()
         .flatMap([this](auto&& height) {
-            return getBlockHash(height)
-                .flatMap([this](auto&& hash) {
-                    return getBlock(std::move(hash));
-                });
+            return getBlockHash(height);
+        })
+        .flatMap([this](auto&& hash) {
+            return getBlock(std::move(hash));
         });
 }
 
@@ -162,22 +150,10 @@ auto ReadOnlyOdinDaemon::getTransaction(std::string&& txid) const
     params.append(std::move(txid));
     params.append(1);
 
-    return sendcommand(command, std::move(params))
-        .map([](auto&& json) {
-            return buildTransaction(std::move(json));
-        })
-        .flatMap([&params](auto&& opt)
-                     -> utilxx::Result<core::Transaction, DaemonError> {
-            if(opt) {
-                return std::move(opt.getValue());
-            }
-
-            auto error_str =
-                fmt::format("unable to build transaction from result when calling {}, with parameters {}\n",
-                            command,
-                            params.toStyledString());
-
-            return DaemonError{std::move(error_str)};
+    return sendcommand(command, params)
+        .flatMap([&](auto&& json) {
+            return odin::processGetTransactionResponse(std::move(json),
+                                                       params);
         });
 }
 
@@ -192,43 +168,107 @@ auto ReadOnlyOdinDaemon::getUnspent() const
     params.append(99999999);
 
     return sendcommand(command, std::move(params))
-        .flatMap([](auto&& json)
-                     -> Result<std::vector<Unspent>,
-                               DaemonError> {
-            if(!json.isArray()) {
-                return DaemonError{"result of \"listunspent\" was not an json array"};
-            }
-
-            std::vector<Unspent> ret_vec;
-
-            utilxx::transform_if(std::make_move_iterator(std::begin(json)),
-                                 std::make_move_iterator(std::end(json)),
-                                 std::back_inserter(ret_vec),
-                                 [](auto&& unspent_json) {
-                                     auto value = unspent_json["amount"].asDouble()
-                                         * 100000000.;
-                                     return Unspent{static_cast<std::int64_t>(value),
-                                                    unspent_json["vout"].asInt64(),
-                                                    unspent_json["confirmations"].asInt64(),
-                                                    unspent_json["address"].asString(),
-                                                    unspent_json["txid"].asString()};
-                                 },
-                                 [](auto&& unspent_json) {
-                                     return !unspent_json.isMember("txid")
-                                         || !unspent_json.isMember("confirmations")
-                                         || !unspent_json.isMember("spendable")
-                                         || !unspent_json.isMember("amount")
-                                         || !unspent_json.isMember("address")
-                                         || !unspent_json.isMember("vout")
-                                         || !unspent_json["txid"].isString()
-                                         || !unspent_json["confirmations"].isNumeric()
-                                         || !unspent_json["spendable"].isBool()
-                                         || !unspent_json["amount"].isNumeric()
-                                         || !unspent_json["address"].isString()
-                                         || !unspent_json["vout"].isNumeric()
-                                         || !unspent_json["spendable"].asBool();
-                                 });
-
-            return std::move(ret_vec);
+        .flatMap([&](auto&& json) {
+            return odin::processGetUnspentResponse(std::move(json),
+                                                   params);
         });
+}
+
+auto buddy::daemon::odin::processGetTransactionResponse(Json::Value&& json,
+                                                        const Json::Value& params)
+    -> utilxx::Result<Transaction, DaemonError>
+{
+    if(auto tx_opt = buildTransaction(std::move(json));
+       tx_opt) {
+    }
+
+    auto error_str =
+        fmt::format("unable to build transaction from result when calling {}, with parameters {}\n",
+                    "getrawtransaction",
+                    params.toStyledString());
+
+    return DaemonError{std::move(error_str)};
+}
+
+auto buddy::daemon::odin::processGetBlockCountResponse(Json::Value&& response,
+                                                       const Json::Value & /*params*/)
+    -> utilxx::Result<std::int64_t, DaemonError>
+{
+    if(!response.isInt64()) {
+        return DaemonError{"unable to get current block count"};
+    }
+
+    return response.asInt64();
+}
+
+auto buddy::daemon::odin::processGetBlockHashResponse(Json::Value&& response,
+                                                      const Json::Value& params)
+    -> utilxx::Result<std::string, DaemonError>
+{
+    if(!response.isString()) {
+        auto error = fmt::format("unable to get blockhash with parameters {}",
+                                 params.toStyledString());
+        return DaemonError{std::move(error)};
+    }
+
+    return response.asString();
+}
+
+auto buddy::daemon::odin::processGetBlockResponse(Json::Value&& response,
+                                                  const Json::Value& params)
+    -> utilxx::Result<Block, DaemonError>
+{
+    if(auto block_opt = buildBlock(std::move(response));
+       block_opt) {
+        return std::move(block_opt.getValue());
+    }
+
+    auto error_str =
+        fmt::format("unable to build transaction from result when calling {}, with parameters {}",
+                    "getblock",
+                    params.asString());
+
+    return DaemonError{std::move(error_str)};
+}
+
+auto buddy::daemon::odin::processGetUnspentResponse(Json::Value&& response,
+                                                    const Json::Value& params)
+    -> utilxx::Result<std::vector<Unspent>,
+                      DaemonError>
+{
+    if(!response.isArray()) {
+        return DaemonError{"result of \"listunspent\" was not an json array"};
+    }
+
+    std::vector<Unspent> ret_vec;
+
+    utilxx::transform_if(std::make_move_iterator(std::begin(response)),
+                         std::make_move_iterator(std::end(response)),
+                         std::back_inserter(ret_vec),
+                         [](auto&& unspent_json) {
+                             auto value = unspent_json["amount"].asDouble()
+                                 * 100000000.;
+                             return Unspent{static_cast<std::int64_t>(value),
+                                            unspent_json["vout"].asInt64(),
+                                            unspent_json["confirmations"].asInt64(),
+                                            unspent_json["address"].asString(),
+                                            unspent_json["txid"].asString()};
+                         },
+                         [](auto&& unspent_json) {
+                             return !unspent_json.isMember("txid")
+                                 || !unspent_json.isMember("confirmations")
+                                 || !unspent_json.isMember("spendable")
+                                 || !unspent_json.isMember("amount")
+                                 || !unspent_json.isMember("address")
+                                 || !unspent_json.isMember("vout")
+                                 || !unspent_json["txid"].isString()
+                                 || !unspent_json["confirmations"].isNumeric()
+                                 || !unspent_json["spendable"].isBool()
+                                 || !unspent_json["amount"].isNumeric()
+                                 || !unspent_json["address"].isString()
+                                 || !unspent_json["vout"].isNumeric()
+                                 || !unspent_json["spendable"].asBool();
+                         });
+
+    return std::move(ret_vec);
 }
