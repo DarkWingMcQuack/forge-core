@@ -50,6 +50,7 @@ public:
         -> utilxx::Result<std::string, DaemonError> override;
 
     auto burnOutput(std::string&& txid,
+                    std::int64_t index,
                     std::vector<std::byte>&& metadata) const
         -> utilxx::Result<std::string, DaemonError> override;
 
@@ -61,20 +62,42 @@ public:
         -> utilxx::Result<std::string, DaemonError> override;
 
     auto burnAmount(std::string&& txid,
+                    std::int64_t index,
                     std::int64_t amount,
                     std::vector<std::byte>&& metadata,
                     std::string&& change_address) const
         -> utilxx::Result<std::string, DaemonError> override;
 
 private:
-    auto generateRpcParams(std::string&& input_txid,
-                           std::int64_t index,
-                           std::vector<std::byte>&& metadata,
-                           std::int64_t burn_value,
-                           std::vector<
-                               std::pair<std::string,
-                                         std::int64_t>>&& outputs) const
+    auto generateRpcParamsForRawTx(std::string&& input_txid,
+                                   std::int64_t index,
+                                   std::vector<std::byte>&& metadata,
+                                   std::int64_t burn_value,
+                                   std::vector<
+                                       std::pair<std::string,
+                                                 std::int64_t>>&& outputs) const
         -> Json::Value;
 };
 
+namespace odin {
+
+auto processGenerateRawTxResponse(Json::Value&& response)
+    -> utilxx::Result<std::vector<std::byte>,
+                      DaemonError>;
+
+auto processSignRawTxResponse(Json::Value&& response)
+    -> utilxx::Result<std::vector<std::byte>,
+                      DaemonError>;
+
+auto processGenerateNewAddressResponse(Json::Value&& response)
+    -> utilxx::Result<std::string, DaemonError>;
+
+auto processDecodeTxidOfRawTxResponse(Json::Value&& response)
+    -> utilxx::Result<std::string, DaemonError>;
+
+auto processSendToAddressResponse(Json::Value&& response,
+                                  const std::string& address)
+    -> utilxx::Result<std::string, DaemonError>;
+
+} // namespace odin
 } // namespace buddy::daemon
