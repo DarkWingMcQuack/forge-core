@@ -1,6 +1,5 @@
 #include "parsing.hpp"
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
-#include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <json/value.h>
 
