@@ -174,6 +174,27 @@ auto ReadOnlyOdinDaemon::getUnspent() const
         });
 }
 
+auto ReadOnlyOdinDaemon::getOutputValue(std::string txid,
+                                        std::int64_t index) const
+    -> utilxx::Result<std::int64_t, DaemonError>
+{
+    auto txid_copy = txid;
+    return getTransaction(std::move(txid))
+        .flatMap([&](auto&& tx)
+                     -> utilxx::Result<std::int64_t, DaemonError> {
+            auto outputs = std::move(tx.getOutputs());
+            if(outputs.size() < index) {
+                auto error =
+                    fmt::format("unable to get the output value of output {} of transaction {}",
+                                index,
+                                txid_copy);
+                return DaemonError{std::move(error)};
+            }
+
+            return outputs[index].getValue();
+        });
+}
+
 auto buddy::daemon::odin::processGetTransactionResponse(Json::Value&& json,
                                                         const Json::Value& params)
     -> utilxx::Result<Transaction, DaemonError>

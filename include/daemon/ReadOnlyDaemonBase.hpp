@@ -38,6 +38,10 @@ public:
         -> utilxx::Result<std::vector<core::Unspent>,
                           DaemonError> = 0;
 
+    virtual auto getOutputValue(std::string txid,
+                                std::int64_t index) const
+        -> utilxx::Result<std::int64_t, DaemonError> = 0;
+
     virtual auto getCoin() const
         -> core::Coin final;
 
