@@ -100,3 +100,27 @@ TEST(ReadOnlyOdinDaemonTest, processGetUnspentValid)
     ASSERT_TRUE(res_3.hasValue());
     EXPECT_EQ(res_3.getValue().size(), 0);
 }
+
+TEST(ReadOnlyOdinDaemonTest, processGetUnspentInvalid)
+{
+    auto json_str1 = readFile("unspent_invalid1.json");
+    auto json1 = parseString(json_str1);
+
+    auto res_1 = buddy::daemon::odin::processGetUnspentResponse(std::move(json1), {});
+    ASSERT_TRUE(res_1.hasValue());
+    EXPECT_EQ(res_1.getValue().size(), 0);
+
+    auto json_str2 = readFile("unspent_invalid2.json");
+    auto json2 = parseString(json_str2);
+
+    auto res_2 = buddy::daemon::odin::processGetUnspentResponse(std::move(json2), {});
+    ASSERT_FALSE(res_2.hasValue());
+
+
+    auto json_str3 = readFile("unspent_invalid3.json");
+    auto json3 = parseString(json_str3);
+
+    auto res_3 = buddy::daemon::odin::processGetUnspentResponse(std::move(json3), {});
+    ASSERT_TRUE(res_3.hasValue());
+    EXPECT_EQ(res_3.getValue().size(), 0);
+}
