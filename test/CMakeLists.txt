@@ -8,7 +8,8 @@ add_executable(unit_tests
   block_tests.cpp
   entry_tests.cpp
   entry_lookup_tests.cpp
-  operation_tests.cpp)
+  operation_tests.cpp
+  read_only_odin_tests.cpp)
 
 target_link_libraries(unit_tests LINK_PUBLIC
   gtest
