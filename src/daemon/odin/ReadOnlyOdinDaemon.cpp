@@ -277,19 +277,19 @@ auto buddy::daemon::odin::processGetUnspentResponse(Json::Value&& response,
                                             unspent_json["txid"].asString()};
                          },
                          [](auto&& unspent_json) {
-                             return !unspent_json.isMember("txid")
-                                 || !unspent_json.isMember("confirmations")
-                                 || !unspent_json.isMember("spendable")
-                                 || !unspent_json.isMember("amount")
-                                 || !unspent_json.isMember("address")
-                                 || !unspent_json.isMember("vout")
-                                 || !unspent_json["txid"].isString()
-                                 || !unspent_json["confirmations"].isNumeric()
-                                 || !unspent_json["spendable"].isBool()
-                                 || !unspent_json["amount"].isNumeric()
-                                 || !unspent_json["address"].isString()
-                                 || !unspent_json["vout"].isNumeric()
-                                 || !unspent_json["spendable"].asBool();
+                             return unspent_json.isMember("txid")
+                                 && unspent_json.isMember("confirmations")
+                                 && unspent_json.isMember("spendable")
+                                 && unspent_json.isMember("amount")
+                                 && unspent_json.isMember("address")
+                                 && unspent_json.isMember("vout")
+                                 && unspent_json["txid"].isString()
+                                 && unspent_json["confirmations"].isNumeric()
+                                 && unspent_json["spendable"].isBool()
+                                 && unspent_json["amount"].isNumeric()
+                                 && unspent_json["address"].isString()
+                                 && unspent_json["vout"].isNumeric()
+                                 && unspent_json["spendable"].asBool();
                          });
 
     return std::move(ret_vec);
