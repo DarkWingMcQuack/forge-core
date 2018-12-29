@@ -249,6 +249,16 @@ auto Transaction::getNumberOfOutputs() const
     return outputs_.size();
 }
 
+auto Transaction::getValueOfOutput(std::int64_t index) const
+    -> utilxx::Opt<std::int64_t>
+{
+    if(outputs_.size() < index) {
+        return std::nullopt;
+    }
+
+    return outputs_[index].getValue();
+}
+
 
 Unspent::Unspent(std::int64_t value,
                  std::int64_t vout_idx,

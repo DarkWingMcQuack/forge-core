@@ -111,6 +111,9 @@ public:
     auto getTxid()
         -> std::string&;
 
+    auto getValueOfOutput(std::int64_t index) const
+        -> utilxx::Opt<std::int64_t>;
+
     auto hasOpReturnOutput() const
         -> bool;
 
