@@ -182,16 +182,17 @@ auto ReadOnlyOdinDaemon::getOutputValue(std::string txid,
     return getTransaction(std::move(txid))
         .flatMap([&](auto&& tx)
                      -> utilxx::Result<std::int64_t, DaemonError> {
-            auto outputs = std::move(tx.getOutputs());
-            if(outputs.size() < index) {
-                auto error =
-                    fmt::format("unable to get the output value of output {} of transaction {}",
-                                index,
-                                txid_copy);
-                return DaemonError{std::move(error)};
+            if(auto value_opt = tx.getValueOfOutput(index);
+               value_opt) {
+                return value_opt.getValue();
             }
 
-            return outputs[index].getValue();
+            auto error =
+                fmt::format("unable to get the output value of output {} of transaction {}",
+                            index,
+                            txid_copy);
+
+            return DaemonError{std::move(error)};
         });
 }
 
