@@ -73,6 +73,7 @@ public:
     //to the change_address
     //requires amount + fee < output value
     virtual auto burnAmount(std::string&& txid,
+                            std::int64_t index,
                             std::int64_t amount,
                             std::vector<std::byte>&& metadata,
                             std::string&& change_address) const
@@ -80,6 +81,7 @@ public:
 
     //burn a whole output and write the given metadata to the blockchain
     virtual auto burnOutput(std::string&& txid,
+                            std::int64_t index,
                             std::vector<std::byte>&& metadata) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 };
