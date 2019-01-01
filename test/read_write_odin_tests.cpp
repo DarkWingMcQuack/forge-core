@@ -1,7 +1,6 @@
 #include "parsing.hpp"
 #include <core/Transaction.hpp>
 #include <daemon/odin/ReadWriteOdinDaemon.hpp>
-#include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <json/value.h>
 
@@ -129,7 +128,7 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseValid)
     auto file1 = readFile("decode_txid_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+    auto res1 = buddy::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
     EXPECT_EQ(res1.getValue(), "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635");
@@ -140,7 +139,7 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
     auto file1 = readFile("decode_txid_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+    auto res1 = buddy::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -149,6 +148,42 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
     auto json2 = parseString(file2);
 
     auto res2 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
+
+    ASSERT_TRUE(res2.hasError());
+}
+
+
+TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseValid)
+{
+    using buddy::core::stringToByteVec;
+
+    auto file1 = readFile("send_to_address_valid1.json");
+    auto json1 = parseString(file1);
+
+    auto res1 = buddy::daemon::odin::processSendToAddressResponse(std::move(json1),
+                                                                  {});
+
+    ASSERT_TRUE(res1.hasValue());
+
+    EXPECT_EQ(res1.getValue(), "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635");
+}
+
+TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
+{
+    auto file1 = readFile("send_to_address_invalid1.json");
+    auto json1 = parseString(file1);
+
+    auto res1 = buddy::daemon::odin::processSendToAddressResponse(std::move(json1),
+                                                                  {});
+
+    ASSERT_TRUE(res1.hasError());
+
+
+    auto file2 = readFile("send_to_address_invalid2.json");
+    auto json2 = parseString(file2);
+
+    auto res2 = buddy::daemon::odin::processSendToAddressResponse(std::move(json1),
+                                                                  {});
 
     ASSERT_TRUE(res2.hasError());
 }
