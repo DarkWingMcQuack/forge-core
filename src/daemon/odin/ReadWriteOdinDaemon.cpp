@@ -303,11 +303,11 @@ auto buddy::daemon::odin::processSignRawTxResponse(Json::Value&& response)
        || !response["complete"].isBool()
        || !response["complete"].asBool()) {
 
-        if(!response.isMember("errors")
-           || !response["errors"].isArray()
-           || !response["errors"].isValidIndex(0)
-           || !response["errors"][0].isMember("error")
-           || !response["errors"][0]["error"].isString()) {
+        if(response.isMember("errors")
+           && response["errors"].isArray()
+           && response["errors"].isValidIndex(0)
+           && response["errors"][0].isMember("error")
+           && response["errors"][0]["error"].isString()) {
             return DaemonError{std::move(response["errors"][0]["error"].asString())};
         } else {
             return DaemonError{"unknown error during transaction signing"};
