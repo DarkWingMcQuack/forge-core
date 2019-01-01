@@ -94,3 +94,32 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
 
     ASSERT_TRUE(res4.hasError());
 }
+
+TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseValid)
+{
+    auto file1 = readFile("generate_new_address_valid1.json");
+    auto json1 = parseString(file1);
+
+    auto res1 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+
+    ASSERT_TRUE(res1.hasValue());
+    EXPECT_EQ(res1.getValue(), "oRDxB5XznfHGDMPcRyjD2cnq6hahtpWkTT");
+}
+
+TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseInvalid)
+{
+    auto file1 = readFile("generate_new_address_invalid1.json");
+    auto json1 = parseString(file1);
+
+    auto res1 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+
+    ASSERT_TRUE(res1.hasError());
+
+
+    auto file2 = readFile("generate_new_address_invalid2.json");
+    auto json2 = parseString(file2);
+
+    auto res2 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
+
+    ASSERT_TRUE(res2.hasError());
+}
