@@ -36,6 +36,12 @@ public:
     auto lookupIsValid() const
         -> utilxx::Result<bool, daemon::DaemonError>;
 
+    auto getEntryLookup() const
+        -> const EntryLookup&;
+
+    auto getEntryLookup()
+        -> EntryLookup&;
+
 private:
     auto processBlock(core::Block&& block)
         -> utilxx::Result<void, ManagerError>;

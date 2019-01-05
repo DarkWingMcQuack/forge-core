@@ -197,3 +197,15 @@ auto LookupManager::lookupIsValid() const
 
     return true;
 }
+
+auto LookupManager::getEntryLookup() const
+    -> const EntryLookup&
+{
+    return lookup_;
+}
+
+auto LookupManager::getEntryLookup()
+    -> EntryLookup&
+{
+    return lookup_;
+}
