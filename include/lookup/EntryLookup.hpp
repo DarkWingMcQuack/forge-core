@@ -37,8 +37,11 @@ public:
     auto lookupOwner(const core::EntryKey& key)
         -> utilxx::Opt<std::reference_wrapper<std::string>>;
 
-    auto lookupBlock(const core::EntryKey& key)
+    auto lookupActivationBlock(const core::EntryKey& key)
         -> utilxx::Opt<std::reference_wrapper<std::int64_t>>;
+
+    auto lookupActivationBlock(const core::EntryKey& key) const
+        -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupEntry(const core::EntryKey& key)
         -> utilxx::Opt<

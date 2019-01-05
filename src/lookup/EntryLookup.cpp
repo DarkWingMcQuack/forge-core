@@ -1,11 +1,11 @@
 #include <core/Coin.hpp>
 #include <core/Operation.hpp>
 #include <functional>
+#include <g3log/g3log.hpp>
 #include <lookup/EntryLookup.hpp>
 #include <unordered_map>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
-#include <g3log/g3log.hpp>
 
 using utilxx::Result;
 using utilxx::traverse;
@@ -113,6 +113,28 @@ auto EntryLookup::lookupEntry(const EntryKey& key)
         return std::tuple(std::ref(std::get<0>(iter->second)),
                           std::ref(std::get<1>(iter->second)),
                           std::ref(std::get<2>(iter->second)));
+    }
+
+    return std::nullopt;
+}
+
+auto EntryLookup::lookupActivationBlock(const core::EntryKey& key)
+    -> utilxx::Opt<std::reference_wrapper<std::int64_t>>
+{
+    if(auto iter = lookup_map_.find(key);
+       iter != lookup_map_.end()) {
+        return std::ref(std::get<2>(iter->second));
+    }
+
+    return std::nullopt;
+}
+
+auto EntryLookup::lookupActivationBlock(const core::EntryKey& key) const
+    -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
+{
+    if(auto iter = lookup_map_.find(key);
+       iter != lookup_map_.end()) {
+        return std::cref(std::get<2>(iter->second));
     }
 
     return std::nullopt;

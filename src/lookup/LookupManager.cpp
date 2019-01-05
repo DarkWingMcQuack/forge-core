@@ -103,6 +103,12 @@ auto LookupManager::lookupOwner(const core::EntryKey& key) const
     return lookup_.lookupOwner(key);
 }
 
+auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
+    -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
+{
+    return lookup_.lookupActivationBlock(key);
+}
+
 auto LookupManager::processBlock(core::Block&& block)
     -> utilxx::Result<void, ManagerError>
 {

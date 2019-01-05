@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/Operation.hpp>
 #include <core/Coin.hpp>
+#include <core/Operation.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
@@ -29,6 +29,9 @@ public:
 
     auto lookupOwner(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;
+
+    auto lookupActivationBlock(const core::EntryKey& key) const
+        -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupIsValid() const
         -> utilxx::Result<bool, daemon::DaemonError>;
