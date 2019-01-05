@@ -88,7 +88,13 @@ auto LookupManager::rebuildLookup()
     -> utilxx::Result<void, ManagerError>
 {
     lookup_.clear();
-    updateLookup();
+
+    if(auto res = updateLookup();
+       !res) {
+        return res.getError();
+    }
+
+    return {};
 }
 
 auto LookupManager::lookupValue(const core::EntryKey& key) const
