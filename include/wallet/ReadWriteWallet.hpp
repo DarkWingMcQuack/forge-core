@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <core/Entry.hpp>
@@ -112,6 +111,7 @@ private:
 
 private:
     std::unique_ptr<daemon::WriteOnlyDaemonBase> daemon_;
+    core::Coin coin_;
 };
 
 } // namespace buddy::wallet
