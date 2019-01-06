@@ -31,6 +31,12 @@ public:
     auto getAllWatchedEntrys() const
         -> std::vector<core::Entry>;
 
+    auto getWatchedAddresses() const
+        -> const std::vector<std::string>&;
+
+    auto getOwnedAddresses() const
+        -> const std::vector<std::string>&;
+
 private:
     std::vector<std::string> owned_addresses_;
     std::vector<std::string> watched_addresses_;

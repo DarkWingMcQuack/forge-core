@@ -73,3 +73,15 @@ auto ReadOnlyWallet::getAllWatchedEntrys() const
 
     return owned_entrys;
 }
+
+auto ReadOnlyWallet::getWatchedAddresses() const
+    -> const std::vector<std::string>&
+{
+    return watched_addresses_;
+}
+
+auto ReadOnlyWallet::getOwnedAddresses() const
+    -> const std::vector<std::string>&
+{
+    return owned_addresses_;
+}
