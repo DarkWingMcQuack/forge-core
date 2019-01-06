@@ -198,14 +198,8 @@ auto LookupManager::lookupIsValid() const
     return true;
 }
 
-auto LookupManager::getEntryLookup() const
-    -> const EntryLookup&
+auto LookupManager::getEntrysOfOwner(const std::string& owner) const
+    -> std::vector<core::Entry>
 {
-    return lookup_;
-}
-
-auto LookupManager::getEntryLookup()
-    -> EntryLookup&
-{
-    return lookup_;
+    return lookup_.getEntrysOfOwner(owner);
 }

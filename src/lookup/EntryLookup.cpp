@@ -4,6 +4,7 @@
 #include <g3log/g3log.hpp>
 #include <lookup/EntryLookup.hpp>
 #include <unordered_map>
+#include <utilxx/Algorithm.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
@@ -14,6 +15,7 @@ using buddy::core::Operation;
 using buddy::core::getValue;
 using buddy::core::EntryValue;
 using buddy::core::EntryKey;
+using buddy::core::Entry;
 using buddy::core::EntryCreationOp;
 using buddy::core::EntryUpdateOp;
 using buddy::core::OwnershipTransferOp;
@@ -257,6 +259,26 @@ auto EntryLookup::filterNonRelevantOperations(std::vector<Operation>&& ops) cons
     return relevant_ops;
 }
 
+auto EntryLookup::getEntrysOfOwner(const std::string& owner) const
+    -> std::vector<core::Entry>
+{
+    std::vector<core::Entry> ret_vec;
+    utilxx::transform_if(std::cbegin(lookup_map_),
+                         std::cend(lookup_map_),
+                         std::back_inserter(ret_vec),
+                         [](const auto& value) {
+                             return Entry{value.first,
+                                          std::get<0>(value.second)};
+                         },
+                         [&owner](const auto& value) {
+                             const auto& value_owner = std::get<1>(value.second);
+
+                             return value_owner == owner;
+                         });
+
+    return ret_vec;
+}
+
 auto EntryLookup::operator()(EntryCreationOp&& op)
     -> Result<void, LookupError>
 {
@@ -386,13 +408,11 @@ auto EntryLookup::operator()(EntryDeletionOp&& op)
     return {};
 }
 
-
 auto EntryLookup::getBlockHeight() const
     -> std::int64_t
 {
     return block_height_;
 }
-
 
 auto EntryLookup::clear()
     -> void

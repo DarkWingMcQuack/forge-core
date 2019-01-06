@@ -73,6 +73,9 @@ public:
     auto clear()
         -> void;
 
+    auto getEntrysOfOwner(const std::string& owner) const
+        -> std::vector<core::Entry>;
+
     auto operator()(core::EntryCreationOp&& op)
         -> utilxx::Result<void, LookupError>;
 

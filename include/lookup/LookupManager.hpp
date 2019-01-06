@@ -36,11 +36,8 @@ public:
     auto lookupIsValid() const
         -> utilxx::Result<bool, daemon::DaemonError>;
 
-    auto getEntryLookup() const
-        -> const EntryLookup&;
-
-    auto getEntryLookup()
-        -> EntryLookup&;
+    auto getEntrysOfOwner(const std::string& owner) const
+        -> std::vector<core::Entry>;
 
 private:
     auto processBlock(core::Block&& block)
