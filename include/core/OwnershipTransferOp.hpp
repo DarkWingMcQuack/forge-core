@@ -7,7 +7,7 @@ namespace buddy::core {
 class OwnershipTransferOp
 {
 public:
-    OwnershipTransferOp(Entry&&,
+    OwnershipTransferOp(Entry&& entry,
                         std::string&& old_owner,
                         std::string&& new_owner,
                         std::int64_t block,
@@ -51,5 +51,9 @@ private:
     std::int64_t block_;
     std::int64_t value_;
 };
+
+auto createOwnershipTransferOpMetadata(Entry&& entry)
+    -> std::vector<std::byte>;
+
 
 } // namespace buddy::core

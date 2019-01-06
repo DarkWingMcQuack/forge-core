@@ -46,4 +46,9 @@ private:
     std::int64_t value_;
 };
 
+auto createEntryUpdateOpMetadata(EntryKey&& key,
+                                 EntryValue new_value)
+    -> std::vector<std::byte>;
+
+
 } // namespace buddy::core

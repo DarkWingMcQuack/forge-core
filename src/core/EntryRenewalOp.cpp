@@ -1,8 +1,11 @@
 #include <core/Entry.hpp>
 #include <core/EntryRenewalOp.hpp>
+#include <core/Operation.hpp>
 
 using buddy::core::Entry;
 using buddy::core::EntryRenewalOp;
+using buddy::core::ENTRY_RENEWAL_FLAG;
+using buddy::core::BUDDY_IDENTIFIER_MASK;
 
 EntryRenewalOp::EntryRenewalOp(Entry&& entry,
                                std::string&& owner,
@@ -70,4 +73,19 @@ auto EntryRenewalOp::getOwner()
     -> std::string&
 {
     return owner_;
+}
+
+auto buddy::core::createEntryRenewalOpMetadata(Entry&& entry)
+    -> std::vector<std::byte>
+{
+    auto data = buddy::core::entryToRawData(entry);
+    auto flag = buddy::core::ENTRY_RENEWAL_FLAG;
+
+    data.insert(std::begin(data), flag);
+
+    data.insert(std::begin(data),
+                std::begin(BUDDY_IDENTIFIER_MASK),
+                std::end(BUDDY_IDENTIFIER_MASK));
+
+    return data;
 }

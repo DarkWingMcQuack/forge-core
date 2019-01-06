@@ -45,4 +45,8 @@ private:
     std::int64_t value_;
 };
 
+
+auto createEntryDeletionOpMetadata(Entry&& entry)
+    -> std::vector<std::byte>;
+
 } // namespace buddy::core

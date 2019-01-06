@@ -45,4 +45,7 @@ private:
     std::int64_t value_;
 };
 
+auto createEntryRenewalOpMetadata(Entry&& entry)
+    -> std::vector<std::byte>;
+
 } // namespace buddy::core

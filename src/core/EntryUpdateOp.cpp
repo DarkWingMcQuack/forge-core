@@ -1,8 +1,13 @@
 #include <core/Entry.hpp>
 #include <core/EntryUpdateOp.hpp>
+#include <core/Operation.hpp>
 
 using buddy::core::Entry;
+using buddy::core::EntryKey;
+using buddy::core::EntryValue;
 using buddy::core::EntryUpdateOp;
+using buddy::core::ENTRY_UPDATE_FLAG;
+using buddy::core::BUDDY_IDENTIFIER_MASK;
 
 EntryUpdateOp::EntryUpdateOp(Entry&& entry,
                              std::string&& owner,
@@ -70,4 +75,22 @@ auto EntryUpdateOp::getOwner()
     -> std::string&
 {
     return owner_;
+}
+
+auto buddy::core::createEntryUpdateOpMetadata(EntryKey&& key,
+                                              EntryValue new_value)
+    -> std::vector<std::byte>
+{
+    auto entry = Entry{std::move(key),
+                       std::move(new_value)};
+    auto data = buddy::core::entryToRawData(entry);
+    auto flag = buddy::core::ENTRY_UPDATE_FLAG;
+
+    data.insert(std::begin(data), flag);
+
+    data.insert(std::begin(data),
+                std::begin(BUDDY_IDENTIFIER_MASK),
+                std::end(BUDDY_IDENTIFIER_MASK));
+
+    return data;
 }
