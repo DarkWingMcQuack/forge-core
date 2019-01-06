@@ -37,7 +37,7 @@ public:
     auto getOwnedAddresses() const
         -> const std::vector<std::string>&;
 
-private:
+protected:
     std::vector<std::string> owned_addresses_;
     std::vector<std::string> watched_addresses_;
     std::unique_ptr<lookup::LookupManager> lookup_;
