@@ -10,9 +10,6 @@ namespace buddy::wallet {
 class ReadOnlyWallet
 {
 public:
-    auto update()
-        -> void;
-
     auto addWatchOnlyAddress(std::string&& adr)
         -> void;
 
