@@ -1,8 +1,11 @@
 #include <core/Entry.hpp>
 #include <core/EntryCreationOp.hpp>
+#include <core/Operation.hpp>
 
 using buddy::core::Entry;
 using buddy::core::EntryCreationOp;
+using buddy::core::ENTRY_CREATION_FLAG;
+using buddy::core::BUDDY_IDENTIFIER_MASK;
 
 EntryCreationOp::EntryCreationOp(Entry&& entry,
                                  std::string&& owner,
@@ -70,4 +73,20 @@ auto EntryCreationOp::getOwner()
     -> std::string&
 {
     return owner_;
+}
+
+
+auto buddy::core::createEntryCreationOpMetadata(Entry&& entry)
+    -> std::vector<std::byte>
+{
+    auto data = buddy::core::entryToRawData(entry);
+    auto flag = buddy::core::ENTRY_CREATION_FLAG;
+
+    data.insert(std::begin(data), flag);
+
+    data.insert(std::begin(data),
+                std::begin(BUDDY_IDENTIFIER_MASK),
+                std::end(BUDDY_IDENTIFIER_MASK));
+
+    return data;
 }
