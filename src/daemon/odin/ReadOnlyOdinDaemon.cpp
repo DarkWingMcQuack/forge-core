@@ -3,6 +3,7 @@
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <fmt/core.h>
+#include <g3log/g3log.hpp>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <utilxx/Algorithm.hpp>
@@ -60,7 +61,8 @@ auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
                },
                command,
                std::move(params))
-        .mapError([](auto&& error) {
+        .mapError([&](auto&& error) {
+            LOG(WARNING) << command << " failed";
             return DaemonError{error.what()};
         });
 }
@@ -200,8 +202,10 @@ auto buddy::daemon::odin::processGetTransactionResponse(Json::Value&& json,
                                                         const Json::Value& params)
     -> utilxx::Result<Transaction, DaemonError>
 {
+    // auto copy = json;
     if(auto tx_opt = buildTransaction(std::move(json));
        tx_opt) {
+        return std::move(tx_opt.getValue());
     }
 
     auto error_str =
@@ -246,9 +250,10 @@ auto buddy::daemon::odin::processGetBlockResponse(Json::Value&& response,
     }
 
     auto error_str =
-        fmt::format("unable to build transaction from result when calling {}, with parameters {}",
+        fmt::format("unable to build block from result when calling {}, with parameters {}",
                     "getblock",
                     params.asString());
+
 
     return DaemonError{std::move(error_str)};
 }

@@ -25,6 +25,13 @@ using buddy::core::createEntryUpdateOpMetadata;
 using buddy::core::createEntryDeletionOpMetadata;
 using utilxx::Result;
 
+ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
+                                 std::unique_ptr<daemon::WriteOnlyDaemonBase>&& daemon,
+                                 core::Coin coin)
+    : ReadOnlyWallet(std::move(lookup)),
+      daemon_(std::move(daemon)),
+      coin_(coin) {}
+
 
 auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
                                      core::EntryValue&& value,

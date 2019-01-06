@@ -16,7 +16,7 @@ auto buddy::core::getStartingBlock(Coin c)
 {
     switch(c) {
     case Coin::Odin:
-        return 58000;
+        return 145000;
     default:
         return 0;
     }
@@ -36,7 +36,7 @@ auto buddy::core::getDefaultTxFee(Coin c)
 {
     switch(c) {
     case Coin::Odin:
-        return 10000;
+        return 100000;
     }
 }
 

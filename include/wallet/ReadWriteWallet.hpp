@@ -14,6 +14,9 @@ namespace buddy::wallet {
 class ReadWriteWallet : public ReadOnlyWallet
 {
 public:
+    ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
+                    std::unique_ptr<daemon::WriteOnlyDaemonBase>&& daemon,
+                    core::Coin coin);
     //creates a new entry key value pair on the blockchain
     //using any output of the dameonwallet
     //coins will be send to a new address and this output

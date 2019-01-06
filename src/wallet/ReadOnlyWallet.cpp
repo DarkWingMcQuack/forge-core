@@ -10,6 +10,8 @@ using buddy::wallet::ReadOnlyWallet;
 using buddy::core::Entry;
 
 
+ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)
+    : lookup_(std::move(lookup)) {}
 
 auto ReadOnlyWallet::addWatchOnlyAddress(std::string&& adr)
     -> void

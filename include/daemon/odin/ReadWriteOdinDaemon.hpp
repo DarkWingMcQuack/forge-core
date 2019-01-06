@@ -40,7 +40,7 @@ public:
                           DaemonError> override;
 
     auto sendRawTx(std::vector<std::byte>&& tx) const
-        -> utilxx::Result<void, DaemonError> override;
+        -> utilxx::Result<std::string, DaemonError> override;
 
     auto generateNewAddress() const
         -> utilxx::Result<std::string, DaemonError> override;

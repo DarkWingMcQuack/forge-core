@@ -42,7 +42,7 @@ public:
 
     //broadcast a signed tx to the p2p network
     virtual auto sendRawTx(std::vector<std::byte>&& tx) const
-        -> utilxx::Result<void, DaemonError> = 0;
+        -> utilxx::Result<std::string, DaemonError> = 0;
 
     //extracts the txid of a raw transaction
     virtual auto decodeTxidOfRawTx(const std::vector<std::byte>& tx) const

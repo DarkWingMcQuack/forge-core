@@ -102,7 +102,7 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
 }
 
 auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
-    -> Result<void, DaemonError>
+    -> Result<std::string, DaemonError>
 {
     static const auto command = "sendrawtransaction"s;
 
@@ -113,9 +113,9 @@ auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
 
     return sendcommand(command, std::move(params))
         .flatMap([](auto&& json)
-                     -> Result<void, DaemonError> {
-            if(json.empty()) {
-                return {};
+                     -> Result<std::string, DaemonError> {
+            if(json.isString()) {
+                return json.asString();
             }
 
             return DaemonError{json.toStyledString()};
@@ -257,7 +257,7 @@ auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
 
     Json::Value params;
     params.append(address);
-    params.append(amount);
+    params.append(static_cast<double>(amount) / 100000000.);
 
     return sendcommand(command, std::move(params))
         .flatMap([&](auto&& json) {
