@@ -65,14 +65,14 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string&& input_txid,
 
     Json::Value op_return;
     op_return["data"] = std::move(metadata_str);
-    op_return["value"] = static_cast<double>(burn_value) * 0.00000001;
+    op_return["amount"] = static_cast<double>(burn_value) * 0.00000001;
 
     Json::Value json_outputs;
 
     for(auto&& [address, value] : outputs) {
         Json::Value output;
         output["address"] = std::move(address);
-        output["value"] = static_cast<double>(value) * 0.00000001;
+        output["amount"] = static_cast<double>(value) * 0.00000001;
 
         json_outputs.append(std::move(output));
     }
