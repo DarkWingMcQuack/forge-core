@@ -248,6 +248,18 @@ auto ReadWriteOdinDaemon::burnOutput(std::string&& txid,
         });
 }
 
+namespace {
+
+std::string roundDouble(double num)
+{
+    std::ostringstream ss;
+    ss.precision(8);
+
+    ss << std::fixed << num;
+    return ss.str();
+}
+
+} // namespace
 
 auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
                                         std::string&& address) const
@@ -257,7 +269,9 @@ auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
 
     Json::Value params;
     params.append(address);
-    params.append(static_cast<double>(amount) / 100000000.);
+    auto coins = static_cast<double>(amount) / 100000000.;
+    params.append(roundDouble(coins));
+
 
     return sendcommand(command, std::move(params))
         .flatMap([&](auto&& json) {
