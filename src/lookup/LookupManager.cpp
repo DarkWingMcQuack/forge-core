@@ -29,6 +29,8 @@ LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon)
 auto LookupManager::updateLookup()
     -> utilxx::Result<bool, ManagerError>
 {
+    //aquire writer lock
+    std::unique_lock lock{rw_mtx_};
     const auto maturity = getMaturity(daemon_->getCoin());
     auto current_height = lookup_.getBlockHeight();
 
@@ -47,20 +49,16 @@ auto LookupManager::updateLookup()
 
             auto new_block_added{false};
 
-            //aquire writer lock
-            std::unique_lock lock{rw_mtx_};
 
             //process missing blocks
             while(actual_height - maturity > current_height) {
                 LOG(DEBUG) << "node hight: " << actual_height
-                           << " buddy height: " << current_height
-                           << " coin maturity: " << maturity;
+                           << " buddy height: " << current_height;
                 auto res =
                     //get block hash
                     daemon_->getBlockHash(++current_height)
                         .flatMap([&](auto&& block_hash) {
                             //get block
-                            LOG(DEBUG) << "get block " << block_hash;
                             return daemon_->getBlock(std::move(block_hash));
                         })
                         .mapError([](auto&& error) {
