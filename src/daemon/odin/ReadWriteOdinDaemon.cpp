@@ -33,8 +33,6 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
 {
     static const auto command = "createrawtransaction"s;
 
-    fmt::print("raw tx burn: {}\n", burn_value);
-
     auto params = generateRpcParamsForRawTx(std::move(input_txid),
                                             index,
                                             std::move(metadata),
@@ -43,7 +41,6 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
 
     return sendcommand(command, std::move(params))
         .flatMap([](auto&& json) {
-            LOG(WARNING) << "response: " << json.toStyledString();
             return odin::processGenerateRawTxResponse(std::move(json));
         });
 }
@@ -85,8 +82,6 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string&& input_txid,
     Json::Value param;
     param.append(std::move(inputs));
     param.append(std::move(json_outputs));
-
-    fmt::print("\n{}\n", param.toStyledString());
 
     return param;
 }
@@ -245,9 +240,6 @@ auto ReadWriteOdinDaemon::burnOutput(std::string&& txid,
     return getOutputValue(txid, index)
         .flatMap([&](auto output_value) {
             auto fee = getDefaultTxFee(getCoin());
-            fmt::print("fee:{}\n", fee);
-            fmt::print("output_value:{}\n", output_value);
-            fmt::print("value:{}\n", output_value - fee);
             return writeTxToBlockchain(std::move(txid),
                                        index,
                                        std::move(metadata),
@@ -279,7 +271,6 @@ auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
     params.append(address);
     auto coins = static_cast<double>(amount) / 100000000.;
     params.append(roundDouble(coins));
-    fmt::print("sendtoaddress amount: {}", roundDouble(coins));
 
 
     return sendcommand(command, std::move(params))
