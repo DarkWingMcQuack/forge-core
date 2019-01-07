@@ -47,6 +47,9 @@ auto LookupManager::updateLookup()
 
             auto new_block_added{false};
 
+            //aquire writer lock
+            std::unique_lock lock{rw_mtx_};
+
             //process missing blocks
             while(actual_height - maturity > current_height) {
                 LOG(DEBUG) << "node hight: " << actual_height
@@ -87,7 +90,9 @@ auto LookupManager::updateLookup()
 auto LookupManager::rebuildLookup()
     -> utilxx::Result<void, ManagerError>
 {
+    std::unique_lock lock{rw_mtx_};
     lookup_.clear();
+    lock.unlock();
 
     if(auto res = updateLookup();
        !res) {
@@ -100,18 +105,21 @@ auto LookupManager::rebuildLookup()
 auto LookupManager::lookupValue(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const core::EntryValue>>
 {
+    std::shared_lock lock{rw_mtx_};
     return lookup_.lookup(key);
 }
 
 auto LookupManager::lookupOwner(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
+    std::shared_lock lock{rw_mtx_};
     return lookup_.lookupOwner(key);
 }
 
 auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
+    std::shared_lock lock{rw_mtx_};
     return lookup_.lookupActivationBlock(key);
 }
 
@@ -183,6 +191,7 @@ auto LookupManager::lookupIsValid() const
 {
     auto starting_block = getStartingBlock(daemon_->getCoin());
 
+    std::shared_lock lock{rw_mtx_};
     for(auto&& hash : block_hashes_) {
         if(auto res = daemon_->getBlockHash(++starting_block);
            res) {
@@ -201,5 +210,6 @@ auto LookupManager::lookupIsValid() const
 auto LookupManager::getEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::Entry>
 {
+    std::shared_lock lock{rw_mtx_};
     return lookup_.getEntrysOfOwner(owner);
 }

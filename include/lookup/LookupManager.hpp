@@ -5,6 +5,7 @@
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <functional>
 #include <lookup/EntryLookup.hpp>
+#include <shared_mutex>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
@@ -45,6 +46,8 @@ private:
 
 private:
     std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
+
+    std::shared_mutex rw_mtx_;
     EntryLookup lookup_;
     std::vector<std::string> block_hashes_;
 };
