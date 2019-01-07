@@ -84,6 +84,12 @@ public:
                             std::int64_t index,
                             std::vector<std::byte>&& metadata) const
         -> utilxx::Result<std::string, DaemonError> = 0;
+
+
+    virtual auto getVOutIdxByAmountAndAddress(std::string txid,
+                                              std::int64_t amount,
+                                              std::string address) const
+        -> utilxx::Result<std::int64_t, DaemonError> = 0;
 };
 
 auto make_writing_daemon(const std::string& host,

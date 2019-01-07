@@ -68,6 +68,11 @@ public:
                     std::string&& change_address) const
         -> utilxx::Result<std::string, DaemonError> override;
 
+    auto getVOutIdxByAmountAndAddress(std::string txid,
+                                      std::int64_t amount,
+                                      std::string address) const
+        -> utilxx::Result<std::int64_t, DaemonError> override;
+
 private:
     auto generateRpcParamsForRawTx(std::string&& input_txid,
                                    std::int64_t index,
@@ -98,6 +103,11 @@ auto processDecodeTxidOfRawTxResponse(Json::Value&& response)
 auto processSendToAddressResponse(Json::Value&& response,
                                   const std::string& address)
     -> utilxx::Result<std::string, DaemonError>;
+
+auto processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
+                                                 std::int64_t amount,
+                                                 const std::string& address)
+    -> utilxx::Result<std::int64_t, DaemonError>;
 
 } // namespace odin
 } // namespace buddy::daemon

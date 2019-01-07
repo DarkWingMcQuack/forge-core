@@ -33,6 +33,8 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
 {
     static const auto command = "createrawtransaction"s;
 
+    fmt::print("raw tx burn: {}\n", burn_value);
+
     auto params = generateRpcParamsForRawTx(std::move(input_txid),
                                             index,
                                             std::move(metadata),
@@ -41,6 +43,7 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
 
     return sendcommand(command, std::move(params))
         .flatMap([](auto&& json) {
+            LOG(WARNING) << "response: " << json.toStyledString();
             return odin::processGenerateRawTxResponse(std::move(json));
         });
 }
@@ -65,7 +68,7 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string&& input_txid,
 
     Json::Value op_return;
     op_return["data"] = std::move(metadata_str);
-    op_return["value"] = burn_value;
+    op_return["value"] = static_cast<double>(burn_value) * 0.00000001;
 
     Json::Value json_outputs;
 
@@ -82,6 +85,8 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string&& input_txid,
     Json::Value param;
     param.append(std::move(inputs));
     param.append(std::move(json_outputs));
+
+    fmt::print("\n{}\n", param.toStyledString());
 
     return param;
 }
@@ -240,6 +245,9 @@ auto ReadWriteOdinDaemon::burnOutput(std::string&& txid,
     return getOutputValue(txid, index)
         .flatMap([&](auto output_value) {
             auto fee = getDefaultTxFee(getCoin());
+            fmt::print("fee:{}\n", fee);
+            fmt::print("output_value:{}\n", output_value);
+            fmt::print("value:{}\n", output_value - fee);
             return writeTxToBlockchain(std::move(txid),
                                        index,
                                        std::move(metadata),
@@ -271,12 +279,34 @@ auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
     params.append(address);
     auto coins = static_cast<double>(amount) / 100000000.;
     params.append(roundDouble(coins));
+    fmt::print("sendtoaddress amount: {}", roundDouble(coins));
 
 
     return sendcommand(command, std::move(params))
         .flatMap([&](auto&& json) {
             return odin::processSendToAddressResponse(std::move(json),
                                                       address);
+        });
+}
+
+
+auto ReadWriteOdinDaemon::getVOutIdxByAmountAndAddress(std::string txid,
+                                                       std::int64_t amount,
+                                                       std::string address) const
+    -> utilxx::Result<std::int64_t, DaemonError>
+{
+    static const auto command = "getrawtransaction"s;
+
+    Json::Value params;
+    params.append(std::move(txid));
+    params.append(1);
+
+
+    return sendcommand(command, std::move(params))
+        .flatMap([&](auto&& json) {
+            return odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json),
+                                                                     amount,
+                                                                     std::move(address));
         });
 }
 
@@ -378,4 +408,55 @@ auto buddy::daemon::odin::processSendToAddressResponse(Json::Value&& response,
     }
 
     return response.asString();
+}
+
+
+auto buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
+                                                                      std::int64_t amount,
+                                                                      const std::string& address)
+    -> utilxx::Result<std::int64_t, DaemonError>
+{
+    if(!response.isMember("vout")
+       || !response["vout"].isArray()) {
+        auto error = fmt::format("unable to decode response of \"getrawtransaction\"");
+        return DaemonError{std::move(error)};
+    }
+
+    auto coins_raw = static_cast<double>(amount) / 100000000.;
+    auto coins_expected = roundDouble(coins_raw);
+
+    auto vouts = std::move(response["vout"]);
+
+    std::int64_t counter{0};
+    for(auto&& out : vouts) {
+        if(!out.isMember("value")
+           || !out["value"].isDouble()
+           || !out.isMember("scriptPubKey")
+           || !out["scriptPubKey"].isMember("addresses")
+           || !out["scriptPubKey"]["addresses"].isArray()) {
+
+            auto error = fmt::format("unable to decode vout:{} response of \"getrawtransaction\"",
+                                     counter);
+            return DaemonError{std::move(error)};
+        }
+
+        auto holds_address = std::find(std::cbegin(out["scriptPubKey"]["addresses"]),
+                                       std::cend(out["scriptPubKey"]["addresses"]),
+                                       address)
+            != std::cend(out["addresses"]);
+
+        if(coins_expected == roundDouble(out["value"].asDouble())
+           && holds_address) {
+            return counter;
+        }
+
+        counter++;
+    }
+
+    auto error =
+        fmt::format("unable to find matching vout index for address: {} with amount {}",
+                    address,
+                    amount);
+
+    return DaemonError{std::move(error)};
 }

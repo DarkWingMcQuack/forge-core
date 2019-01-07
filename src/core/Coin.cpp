@@ -36,7 +36,7 @@ auto buddy::core::getDefaultTxFee(Coin c)
 {
     switch(c) {
     case Coin::Odin:
-        return 100000;
+        return 50000;
     }
 }
 

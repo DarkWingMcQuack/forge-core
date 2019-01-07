@@ -1,6 +1,7 @@
 #include "parsing.hpp"
 #include <core/Transaction.hpp>
 #include <daemon/odin/ReadWriteOdinDaemon.hpp>
+#include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <json/value.h>
 
@@ -186,4 +187,34 @@ TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
                                                                   {});
 
     ASSERT_TRUE(res2.hasError());
+}
+
+TEST(ReadWriteOdinDaemonTest, processGetVOutIdxByAmountAndAddressResponseValid)
+{
+    using buddy::core::stringToByteVec;
+
+    auto file1 = readFile("vout_index_valid1.json");
+    auto json1 = parseString(file1);
+
+    auto res1 =
+        buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json1),
+                                                                         52000,
+                                                                         "oeotQimis9AwftfjrQMfj29bcwnmGUDnEr");
+
+    ASSERT_TRUE(res1.hasValue());
+
+    EXPECT_EQ(res1.getValue(), 0);
+
+    auto file2 = readFile("vout_index_valid1.json");
+    auto json2 = parseString(file2);
+
+
+    auto res2 =
+        buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json2),
+                                                                         999945162,
+                                                                         "oYHBhrLBc1JiLZqPqNBTXY8SLt71yCWxPP");
+
+    ASSERT_TRUE(res2.hasValue());
+
+    EXPECT_EQ(res2.getValue(), 1);
 }

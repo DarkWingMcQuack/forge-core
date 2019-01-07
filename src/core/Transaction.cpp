@@ -347,7 +347,7 @@ auto buddy::core::buildTxOut(Json::Value&& json)
 
         auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
         auto hex = std::move(json["scriptPubKey"]["hex"].asString());
-        auto value = json["value"].asUInt();
+        auto value = json["value"].asDouble();
 
         std::vector<std::string> addresses;
         std::transform(std::cbegin(json_vec),
@@ -357,7 +357,9 @@ auto buddy::core::buildTxOut(Json::Value&& json)
                            return std::move(value.asString());
                        });
 
-        return TxOut{value,
+        auto conv_value = static_cast<std::int64_t>(value * 100000000.);
+
+        return TxOut{conv_value,
                      std::move(hex),
                      std::move(addresses)};
     } catch(...) {
