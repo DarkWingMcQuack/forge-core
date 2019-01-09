@@ -65,6 +65,8 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
     auto metadata =
         createEntryCreationOpMetadata(std::move(entry));
 
+    auto address_copy = address;
+
     return daemon_
         //send the needed amount to the address
         ->sendToAddress(burn_amount + getDefaultTxFee(coin_),
@@ -81,6 +83,9 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
                                      vout_idx,
                                      std::move(metadata));
                 });
+        })
+        .onValue([&](auto&&) {
+            addNewOwnedAddress(std::move(address_copy));
         })
         .mapError([](auto&& error) {
             return WalletError{std::move(error.what())};
