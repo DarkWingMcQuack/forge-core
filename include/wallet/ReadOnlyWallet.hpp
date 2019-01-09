@@ -2,6 +2,7 @@
 
 #include <lookup/LookupManager.hpp>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -31,14 +32,14 @@ public:
         -> std::vector<core::Entry>;
 
     auto getWatchedAddresses() const
-        -> const std::vector<std::string>&;
+        -> const std::set<std::string>&;
 
     auto getOwnedAddresses() const
-        -> const std::vector<std::string>&;
+        -> const std::set<std::string>&;
 
 protected:
-    std::vector<std::string> owned_addresses_;
-    std::vector<std::string> watched_addresses_;
+    std::set<std::string> owned_addresses_;
+    std::set<std::string> watched_addresses_;
     std::unique_ptr<lookup::LookupManager> lookup_;
 };
 

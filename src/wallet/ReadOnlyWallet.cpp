@@ -1,5 +1,6 @@
 #include <lookup/LookupManager.hpp>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 #include <wallet/ReadOnlyWallet.hpp>
@@ -16,23 +17,19 @@ ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)
 auto ReadOnlyWallet::addWatchOnlyAddress(std::string&& adr)
     -> void
 {
-    watched_addresses_.push_back(std::move(adr));
+    watched_addresses_.emplace(std::move(adr));
 }
 
 auto ReadOnlyWallet::deleteWatchOnlyAddress(const std::string& adr)
     -> void
 {
-    watched_addresses_.erase(
-        std::remove(std::begin(watched_addresses_),
-                    std::end(watched_addresses_),
-                    adr),
-        std::end(watched_addresses_));
+    watched_addresses_.erase(adr);
 }
 
 auto ReadOnlyWallet::addNewOwnedAddress(std::string&& adr)
     -> void
 {
-    owned_addresses_.push_back(std::move(adr));
+    owned_addresses_.emplace(std::move(adr));
 }
 
 auto ReadOnlyWallet::getOwnedEntrys() const
@@ -77,13 +74,13 @@ auto ReadOnlyWallet::getAllWatchedEntrys() const
 }
 
 auto ReadOnlyWallet::getWatchedAddresses() const
-    -> const std::vector<std::string>&
+    -> const std::set<std::string>&
 {
     return watched_addresses_;
 }
 
 auto ReadOnlyWallet::getOwnedAddresses() const
-    -> const std::vector<std::string>&
+    -> const std::set<std::string>&
 {
     return owned_addresses_;
 }
