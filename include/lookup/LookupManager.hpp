@@ -24,11 +24,6 @@ public:
     auto operator=(LookupManager &&)
         -> LookupManager& = default;
 
-    LookupManager(const LookupManager&) = default;
-
-    auto operator=(const LookupManager&)
-        -> LookupManager& = default;
-
     auto updateLookup()
         -> utilxx::Result<bool, ManagerError>;
 
