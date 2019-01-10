@@ -19,6 +19,11 @@ class LookupManager final
 public:
     LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon);
 
+    LookupManager(LookupManager&&) = default;
+
+    auto operator=(LookupManager &&)
+        -> LookupManager& = default;
+
     auto updateLookup()
         -> utilxx::Result<bool, ManagerError>;
 
