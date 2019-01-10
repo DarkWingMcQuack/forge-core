@@ -10,6 +10,7 @@
 using buddy::env::ProgramOptions;
 
 ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
+                               Mode mode,
                                std::int64_t coin_port,
                                std::string&& coin_host,
                                std::string&& coin_user,
@@ -18,6 +19,7 @@ ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
                                std::string&& rpc_user,
                                std::string&& rpc_password)
     : logfolder_(std::move(logfolder)),
+      mode_(mode),
       coin_port_(coin_port),
       coin_host_(std::move(coin_host)),
       coin_user_(std::move(coin_user)),
@@ -30,6 +32,13 @@ auto ProgramOptions::getLogFolder() const
     -> const utilxx::Opt<std::string>
 {
     return logfolder_;
+}
+
+
+auto ProgramOptions::getMode() const
+    -> Mode
+{
+    return mode_;
 }
 
 auto ProgramOptions::getCoinPort() const
@@ -106,6 +115,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 
         auto config = cpptoml::parse_file(config_path + "/buddy.conf");
         auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
+        auto mode_str = *config->get_qualified_as<std::string>("mode");
         auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
         auto coin_host = *config->get_qualified_as<std::string>("coin.host");
         auto coin_user = *config->get_qualified_as<std::string>("coin.user");
@@ -114,8 +124,22 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         auto rpc_user = config->get_qualified_as<std::string>("rpc.user").value_or("user");
         auto rpc_password = config->get_qualified_as<std::string>("rpc.password").value_or("password");
 
+        auto mode = [&]() {
+            if(mode_str == "lookup")
+                return buddy::env::Mode::LookupOnly;
+            else if(mode_str == "readonly")
+                return buddy::env::Mode::ReadOnly;
+            else if(mode_str == "readwrite")
+                return buddy::env::Mode::ReadWrite;
+            else {
+                fmt::print("invalid value for \"mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
+                std::exit(0);
+            }
+        }();
+
         if(log_to_console) {
             return ProgramOptions{std::nullopt,
+                                  mode,
                                   coin_port,
                                   std::move(coin_host),
                                   std::move(coin_user),
@@ -126,6 +150,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         }
 
         return ProgramOptions{std::move(log_path),
+                              mode,
                               coin_port,
                               std::move(coin_host),
                               std::move(coin_user),
@@ -140,4 +165,42 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         fmt::print("Something went wrong with the parameters or the config file\n");
         std::exit(-1);
     }
+}
+
+
+auto buddy::env::operator>>(std::istream& in, Mode& mode)
+    -> std::istream&
+{
+    std::string token;
+    in >> token;
+    if(token == "lookup")
+        mode = buddy::env::Mode::LookupOnly;
+    else if(token == "readonly")
+        mode = buddy::env::Mode::ReadOnly;
+    else if(token == "readwrite")
+        mode = buddy::env::Mode::ReadWrite;
+    else
+        in.setstate(std::ios_base::failbit);
+    return in;
+}
+
+auto buddy::env::operator<<(std::ostream& os, const Mode& mode)
+    -> std::ostream&
+{
+    switch(mode) {
+    case buddy::env::Mode::LookupOnly:
+        os << "lookup";
+        break;
+    case buddy::env::Mode::ReadOnly:
+        os << "readonly";
+        break;
+    case buddy::env::Mode::ReadWrite:
+        os << "readonly";
+        break;
+    default:
+        os.setstate(std::ios_base::failbit);
+        break;
+    }
+
+    return os;
 }
