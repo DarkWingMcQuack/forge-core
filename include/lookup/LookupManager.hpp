@@ -20,7 +20,7 @@ auto generateMessage(ManagerError&& error)
 class LookupManager final
 {
 public:
-    LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon);
+    LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon);
 
     LookupManager(LookupManager&&) = default;
 

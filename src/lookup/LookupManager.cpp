@@ -22,7 +22,7 @@ using utilxx::Result;
 using utilxx::traverse;
 using buddy::daemon::ReadOnlyDaemonBase;
 
-LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon)
+LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
     : daemon_(std::move(daemon)),
       lookup_(getStartingBlock(daemon_->getCoin())),
       block_hashes_() {}
