@@ -14,6 +14,9 @@ namespace buddy::lookup {
 using ManagerError = std::variant<LookupError,
                                   daemon::DaemonError>;
 
+auto generateMessage(ManagerError&& error)
+    -> std::string;
+
 class LookupManager final
 {
 public:

@@ -7,6 +7,7 @@
 #include <lookup/EntryLookup.hpp>
 #include <lookup/LookupManager.hpp>
 #include <utilxx/Opt.hpp>
+#include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
 
 using buddy::lookup::LookupManager;
@@ -210,4 +211,22 @@ auto LookupManager::getEntrysOfOwner(const std::string& owner) const
 {
     std::shared_lock lock{rw_mtx_};
     return lookup_.getEntrysOfOwner(owner);
+}
+
+
+auto buddy::lookup::generateMessage(ManagerError&& error)
+    -> std::string
+{
+    static constexpr auto visitor = utilxx::overload{
+        [](LookupError&& error) {
+            return fmt::format("LookupError inside ManagerError: {}",
+                               std::move(error.what()));
+        },
+        [](daemon::DaemonError&& error) {
+            return fmt::format("DaemonError inside ManagerError: {}",
+                               std::move(error.what()));
+        }};
+
+    return std::visit(visitor,
+                      std::move(error));
 }
