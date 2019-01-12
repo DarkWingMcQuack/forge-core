@@ -46,6 +46,8 @@ auto main(int argc, char* argv[]) -> int
     std::string key;
     bool is_string;
     std::string owner;
+    app.set_help_all_flag("--help-all",
+                          "Show all help");
 
     app.add_subcommand("shutdown",
                        "stops the buddyd server")
@@ -128,9 +130,9 @@ auto main(int argc, char* argv[]) -> int
 
 
     try {
-        app.parse(argc, argv);
+        CLI11_PARSE(app, argc, argv);
         fmt::print("{}", response.toStyledString());
     } catch(JsonRpcException& e) {
-        fmt::print("{}", e.what());
+        fmt::print("{}\n", e.what());
     }
 }
