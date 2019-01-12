@@ -62,7 +62,7 @@ auto LookupOnlyServer::updatelookup()
 auto LookupOnlyServer::rebuildlookup()
     -> void
 {
-    if(!indexing_.load()) {
+    if(indexing_.load()) {
         throw JsonRpcException{"Server is already indexing"};
     }
 
@@ -143,7 +143,7 @@ auto entryToJson(Entry value)
 auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
     -> Json::Value
 {
-    if(!indexing_.load()) {
+    if(indexing_.load()) {
         throw JsonRpcException{"Server is indexing"};
     }
 
@@ -179,7 +179,7 @@ auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
 auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
     -> std::string
 {
-    if(!indexing_.load()) {
+    if(indexing_.load()) {
         throw JsonRpcException{"Server is indexing"};
     }
 
@@ -215,7 +215,7 @@ auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
 auto LookupOnlyServer::lookupactivationblock(bool isstring, const std::string& key)
     -> int
 {
-    if(!indexing_.load()) {
+    if(indexing_.load()) {
         throw JsonRpcException{"Server is indexing"};
     }
 
@@ -251,7 +251,7 @@ auto LookupOnlyServer::lookupactivationblock(bool isstring, const std::string& k
 auto LookupOnlyServer::checkvalidity()
     -> bool
 {
-    if(!indexing_.load()) {
+    if(indexing_.load()) {
         throw JsonRpcException{"Server is indexing"};
     }
 
@@ -268,7 +268,7 @@ auto LookupOnlyServer::checkvalidity()
 auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
     -> Json::Value
 {
-    if(!indexing_.load()) {
+    if(indexing_.load()) {
         throw JsonRpcException{"Server is indexing"};
     }
 
