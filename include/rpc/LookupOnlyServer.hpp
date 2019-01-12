@@ -4,6 +4,7 @@
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
 #include <rpc/abstractlookuponlystubsever.h>
+#include <thread>
 
 namespace buddy::rpc {
 
@@ -46,6 +47,7 @@ private:
     lookup::LookupManager lookup_;
     std::atomic_bool indexing_{false};
     std::atomic_bool should_shutdown_{false};
+    std::thread updater_;
 };
 
 auto waitForShutdown(const LookupOnlyServer& server)
