@@ -163,8 +163,10 @@ auto LookupManager::processBlock(core::Block&& block)
 
             //execture the operations by the lookup
 
-            LOG(DEBUG) << "execute " << ops.size()
-                       << " operation(s) from block " << block_hash;
+            LOG_IF(DEBUG, !ops.empty())
+                << "execute "
+                << ops.size()
+                << " operation(s) from block " << block_hash;
 
             return lookup_
                 .executeOperations(std::move(ops))
