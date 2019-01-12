@@ -53,8 +53,6 @@ auto LookupManager::updateLookup()
 
             //process missing blocks
             while(actual_height - maturity > current_height) {
-                LOG(DEBUG) << "node hight: " << actual_height
-                           << " buddy height: " << current_height;
                 auto res =
                     //get block hash
                     daemon_->getBlockHash(++current_height)
@@ -67,7 +65,6 @@ auto LookupManager::updateLookup()
                         })
                         //process the block
                         .flatMap([&](auto&& block) {
-                            LOG(DEBUG) << "processing Block: " << current_height;
                             return processBlock(std::move(block));
                         });
 
@@ -131,8 +128,6 @@ auto LookupManager::processBlock(core::Block&& block)
     //traverse all txids to transactions
     return traverse(std::move(block.getTxids()),
                     [this](auto&& txid) {
-                        LOG(DEBUG) << "get transaction: " << txid;
-
                         return daemon_
                             ->getTransaction(std::move(txid))
                             .mapError([](auto&& error) {
@@ -156,7 +151,6 @@ auto LookupManager::processBlock(core::Block&& block)
                     continue;
                 }
 
-                LOG_IF(DEBUG, !op_res.getValue().hasValue()) << "throw away " << txid;
                 LOG_IF(DEBUG, op_res.getValue().hasValue()) << "found operation " << txid;
 
                 //check if the operation was parsed, and if
@@ -170,7 +164,7 @@ auto LookupManager::processBlock(core::Block&& block)
             //execture the operations by the lookup
 
             LOG(DEBUG) << "execute " << ops.size()
-                       << " operation(s) from block " << block_height;
+                       << " operation(s) from block " << block_hash;
 
             return lookup_
                 .executeOperations(std::move(ops))
@@ -180,7 +174,6 @@ auto LookupManager::processBlock(core::Block&& block)
         })
         .onValue([&block_hash,
                   this] {
-            LOG(DEBUG) << "add blockhash " << block_hash;
             block_hashes_.push_back(std::move(block_hash));
         });
 }
@@ -195,7 +188,6 @@ auto LookupManager::lookupIsValid() const
         if(auto res = daemon_->getBlockHash(++starting_block);
            res) {
             if(res.getValue() != hash) {
-                LOG(WARNING) << "lookup seems invalid";
                 return false;
             }
         } else {
