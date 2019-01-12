@@ -87,6 +87,13 @@ auto main(int argc, char* argv[]) -> int
                 response = client.lookupowner(is_string, key);
             });
 
+    auto lookupactivationblock_opt =
+        app.add_subcommand("lookupactivationblock",
+                           "looks up the in which block the entry with the given key was last activated")
+            ->callback([&] {
+                response = client.lookupactivationblock(is_string, key);
+            });
+
     auto lookupallentrysof_opt =
         app.add_subcommand("lookupallentrysof",
                            "returns a vector of all entrys the given owner currently owns")
@@ -101,31 +108,36 @@ auto main(int argc, char* argv[]) -> int
         ->add_option("--key",
                      key,
                      "the key of which the value will be looked up");
-    // ->required();
 
     lookupvalue_opt
         ->add_flag("--isstring",
                    is_string,
                    "if set, the given key will be interpreted as string and not as byte vector");
-    // ->required();
 
     lookupowner_opt
         ->add_option("--key",
                      key,
                      "the key of which the owner will be looked up");
-    // ->required();
 
     lookupowner_opt
         ->add_flag("--isstring",
                    is_string,
                    "if set, the given key will be interpreted as string and not as byte vector");
-    // ->required();
+
+    lookupactivationblock_opt
+        ->add_option("--key",
+                     key,
+                     "the key of which the value will be looked up");
+
+    lookupactivationblock_opt
+        ->add_flag("--isstring",
+                   is_string,
+                   "if set, the given key will be interpreted as string and not as byte vector");
 
     lookupallentrysof_opt
         ->add_option("--owner",
                      owner,
                      "owner address of which all the entrys will be looked up");
-    // ->required();
 
 
 
