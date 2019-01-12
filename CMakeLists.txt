@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 #get options
 include(cmake/options.cmake)
 
@@ -27,7 +29,6 @@ include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
 include(cmake/utilxx.cmake)
 include(cmake/cpptoml.cmake)
-# include(cmake/boost.cmake)
 include(cmake/cxxopts.cmake)
 include(cmake/gtest.cmake)
 include(cmake/g3log.cmake)
@@ -65,6 +66,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/ReadOnlyWallet.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/ReadWriteWallet.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/WalletError.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/rpc/LookupOnlyServer.hpp
 
   PRIVATE
   src/core/Operation.cpp
@@ -87,6 +89,7 @@ target_sources(buddy-src
   src/env/ProgramOptions.cpp
   src/wallet/ReadOnlyWallet.cpp
   src/wallet/ReadWriteWallet.cpp
+  src/rpc/LookupOnlyServer.cpp
   )
 
 # make headers available
@@ -104,6 +107,7 @@ target_include_directories(buddy-src PUBLIC
 target_link_libraries(buddy-src LINK_PUBLIC
   fmt
   jsonrpc::client
+  jsonrpc::server
   jsoncpp
   g3logger
   ${CMAKE_THREAD_LIBS_INIT})
@@ -134,6 +138,7 @@ target_include_directories(cppBUDDY PUBLIC
 target_link_libraries(cppBUDDY LINK_PUBLIC
   buddy-src
   fmt
+  jsonrpc::server
   ${CMAKE_THREAD_LIBS_INIT})
 
 

@@ -11,6 +11,7 @@ using buddy::env::ProgramOptions;
 
 ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
                                Mode mode,
+                               bool daemonize,
                                std::int64_t coin_port,
                                std::string&& coin_host,
                                std::string&& coin_user,
@@ -20,6 +21,7 @@ ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
                                std::string&& rpc_password)
     : logfolder_(std::move(logfolder)),
       mode_(mode),
+      daemonize_(daemonize),
       coin_port_(coin_port),
       coin_host_(std::move(coin_host)),
       coin_user_(std::move(coin_user)),
@@ -39,6 +41,12 @@ auto ProgramOptions::getMode() const
     -> Mode
 {
     return mode_;
+}
+
+auto ProgramOptions::shouldDaemonize() const
+    -> bool
+{
+    return daemonize_;
 }
 
 auto ProgramOptions::getCoinPort() const
@@ -115,7 +123,8 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 
         auto config = cpptoml::parse_file(config_path + "/buddy.conf");
         auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
-        auto mode_str = *config->get_qualified_as<std::string>("mode");
+        auto mode_str = *config->get_qualified_as<std::string>("client.mode");
+        auto daemonize = *config->get_qualified_as<bool>("client.daemon");
         auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
         auto coin_host = *config->get_qualified_as<std::string>("coin.host");
         auto coin_user = *config->get_qualified_as<std::string>("coin.user");
@@ -132,7 +141,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
             else if(mode_str == "readwrite")
                 return buddy::env::Mode::ReadWrite;
             else {
-                fmt::print("invalid value for \"mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
+                fmt::print("invalid value for \"client.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
                 std::exit(0);
             }
         }();
@@ -140,6 +149,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         if(log_to_console) {
             return ProgramOptions{std::nullopt,
                                   mode,
+                                  daemonize,
                                   coin_port,
                                   std::move(coin_host),
                                   std::move(coin_user),
@@ -151,6 +161,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 
         return ProgramOptions{std::move(log_path),
                               mode,
+                              daemonize,
                               coin_port,
                               std::move(coin_host),
                               std::move(coin_user),

@@ -22,6 +22,7 @@ class ProgramOptions
 public:
     ProgramOptions(utilxx::Opt<std::string>&& logfolder,
                    Mode mode,
+                   bool daemonize,
                    std::int64_t coin_port,
                    std::string&& coin_host,
                    std::string&& coin_user,
@@ -35,6 +36,8 @@ public:
 
     auto getMode() const
         -> Mode;
+    auto shouldDaemonize() const
+        -> bool;
 
     auto getCoinPort() const
         -> std::int64_t;
@@ -56,6 +59,7 @@ private:
     utilxx::Opt<std::string> logfolder_;
 
     Mode mode_;
+    bool daemonize_;
 
     std::int64_t coin_port_;
     std::string coin_host_;
