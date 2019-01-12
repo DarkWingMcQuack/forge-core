@@ -4,6 +4,7 @@
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
+#include <numeric>
 #include <rpc/LookupOnlyServer.hpp>
 #include <thread>
 #include <utilxx/Algorithm.hpp>
@@ -281,10 +282,14 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
                                           return entryToJson(std::move(entry));
                                       });
 
-    Json::Value ret_json;
-    for(int i{0}; i < json_entrys.size() - 1; i++) {
-        ret_json[i] = json_entrys[i];
-    }
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
 
     return ret_json;
 }
