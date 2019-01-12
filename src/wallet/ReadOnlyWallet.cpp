@@ -17,7 +17,7 @@ ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)
 auto ReadOnlyWallet::addWatchOnlyAddress(std::string&& adr)
     -> void
 {
-    watched_addresses_.emplace(std::move(adr));
+    watched_addresses_.insert(std::move(adr));
 }
 
 auto ReadOnlyWallet::deleteWatchOnlyAddress(const std::string& adr)
@@ -29,7 +29,7 @@ auto ReadOnlyWallet::deleteWatchOnlyAddress(const std::string& adr)
 auto ReadOnlyWallet::addNewOwnedAddress(std::string&& adr)
     -> void
 {
-    owned_addresses_.emplace(std::move(adr));
+    owned_addresses_.insert(std::move(adr));
 }
 
 auto ReadOnlyWallet::getOwnedEntrys() const

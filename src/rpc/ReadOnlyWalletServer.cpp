@@ -1,6 +1,7 @@
 #include <chrono>
 #include <fmt/core.h>
 #include <fmt/format.h>
+#include <g3log/g3log.hpp>
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>

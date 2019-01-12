@@ -9,7 +9,7 @@
 #include <fmt/ranges.h>
 #include <g3log/g3log.hpp>
 #include <jsonrpccpp/client/connectors/httpclient.h>
-#include <rpc/lookuponlystubclient.h>
+#include <rpc/readonlywalletstubclient.h>
 #include <thread>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
@@ -22,7 +22,7 @@ using buddy::env::initConsoleLogger;
 using buddy::env::initFileLogger;
 using buddy::env::parseConfigFile;
 using buddy::env::ProgramOptions;
-using buddy::rpc::LookupOnlyStubClient;
+using buddy::rpc::ReadOnlyWalletStubClient;
 using jsonrpc::HttpClient;
 using jsonrpc::JSONRPC_CLIENT_V2;
 using jsonrpc::JsonRpcException;
@@ -37,7 +37,7 @@ auto main(int argc, char* argv[]) -> int
     auto params = parseConfigFile(default_buddy_dir);
     auto port = params.getRpcPort();
     HttpClient httpclient("http://localhost:" + std::to_string(port));
-    LookupOnlyStubClient client{httpclient, JSONRPC_CLIENT_V2};
+    ReadOnlyWalletStubClient client{httpclient, JSONRPC_CLIENT_V2};
 
     Json::Value response;
 
@@ -46,6 +46,7 @@ auto main(int argc, char* argv[]) -> int
     std::string key;
     bool is_string;
     std::string owner;
+
     app.set_help_all_flag("--help-all",
                           "Show all help");
 
@@ -71,6 +72,60 @@ auto main(int argc, char* argv[]) -> int
                        "checks if the lookup is valid in terms of blockhashes")
         ->callback([&] {
             response = client.checkvalidity();
+        });
+
+    app.add_subcommand("addwatchonlyaddress",
+                       "adds a new address to watch")
+        ->callback([&] {
+            client.addwatchonlyaddress(owner);
+        })
+        ->add_option("--address", owner)
+        ->required();
+
+    app.add_subcommand("deletewatchonlyaddress",
+                       "deletes an address from being watched")
+        ->callback([&] {
+            client.deletewatchonlyaddress(owner);
+        })
+        ->add_option("--address", owner)
+        ->required();
+
+    app.add_subcommand("addnewownedaddress",
+                       "adds a new address which the wallet ownes")
+        ->callback([&] {
+            client.addwatchonlyaddress(owner);
+        })
+        ->add_option("--address", owner)
+        ->required();
+
+    app.add_subcommand("getownedentrys",
+                       "returns a list of all entrys the wallet ownes")
+        ->callback([&] {
+            response = client.getownedentrys();
+        });
+
+    app.add_subcommand("getwatchedonlyentrys",
+                       "returns a list of all entrys the wallet observes but does not own")
+        ->callback([&] {
+            response = client.getwatchonlyentrys();
+        });
+
+    app.add_subcommand("getallwatchedentrys",
+                       "returns a list of all entrys the wallet observes")
+        ->callback([&] {
+            response = client.getallwatchedentrys();
+        });
+
+    app.add_subcommand("getwatchedaddresses",
+                       "returns a list of all addresses the wallet observes but does not own")
+        ->callback([&] {
+            response = client.getwatchedaddresses();
+        });
+
+    app.add_subcommand("getownedaddresses",
+                       "returns a list of all addresses the wallet owns")
+        ->callback([&] {
+            response = client.getownedaddresses();
         });
 
     auto lookupvalue_opt =
@@ -107,7 +162,8 @@ auto main(int argc, char* argv[]) -> int
     lookupvalue_opt
         ->add_option("--key",
                      key,
-                     "the key of which the value will be looked up");
+                     "the key of which the value will be looked up")
+        ->required();
 
     lookupvalue_opt
         ->add_flag("--isstring",
@@ -117,7 +173,8 @@ auto main(int argc, char* argv[]) -> int
     lookupowner_opt
         ->add_option("--key",
                      key,
-                     "the key of which the owner will be looked up");
+                     "the key of which the owner will be looked up")
+        ->required();
 
     lookupowner_opt
         ->add_flag("--isstring",
@@ -127,7 +184,8 @@ auto main(int argc, char* argv[]) -> int
     lookupactivationblock_opt
         ->add_option("--key",
                      key,
-                     "the key of which the value will be looked up");
+                     "the key of which the value will be looked up")
+        ->required();
 
     lookupactivationblock_opt
         ->add_flag("--isstring",
@@ -137,7 +195,8 @@ auto main(int argc, char* argv[]) -> int
     lookupallentrysof_opt
         ->add_option("--owner",
                      owner,
-                     "owner address of which all the entrys will be looked up");
+                     "owner address of which all the entrys will be looked up")
+        ->required();
 
 
 
