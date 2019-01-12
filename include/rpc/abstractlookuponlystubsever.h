@@ -15,6 +15,7 @@ namespace buddy {
                 AbstractLookupOnlyStubSever(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<AbstractLookupOnlyStubSever>(conn, type)
                 {
                     this->bindAndAddMethod(jsonrpc::Procedure("updatelookup", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN,  NULL), &buddy::rpc::AbstractLookupOnlyStubSever::updatelookupI);
+                    this->bindAndAddNotification(jsonrpc::Procedure("shutdown", jsonrpc::PARAMS_BY_NAME,  NULL), &buddy::rpc::AbstractLookupOnlyStubSever::shutdownI);
                     this->bindAndAddNotification(jsonrpc::Procedure("rebuildlookup", jsonrpc::PARAMS_BY_NAME,  NULL), &buddy::rpc::AbstractLookupOnlyStubSever::rebuildlookupI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupvalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractLookupOnlyStubSever::lookupvalueI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractLookupOnlyStubSever::lookupownerI);
@@ -26,6 +27,10 @@ namespace buddy {
                 inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
                 {
                     response = this->updatelookup();
+                }
+                inline virtual void shutdownI(const Json::Value &/*request*/)
+                {
+                    this->shutdown();
                 }
                 inline virtual void rebuildlookupI(const Json::Value &/*request*/)
                 {
@@ -52,6 +57,7 @@ namespace buddy {
                     response = this->lookupallentrysof(request["owner"].asString());
                 }
                 virtual bool updatelookup() = 0;
+                virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
                 virtual Json::Value lookupvalue(bool isstring, const std::string& key) = 0;
                 virtual std::string lookupowner(bool isstring, const std::string& key) = 0;

@@ -24,6 +24,12 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                void shutdown() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    this->CallNotification("shutdown",p);
+                }
                 void rebuildlookup() 
                 {
                     Json::Value p;

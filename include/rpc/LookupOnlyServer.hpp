@@ -21,6 +21,9 @@ public:
     virtual auto rebuildlookup()
         -> void override;
 
+    virtual auto shutdown()
+        -> void override;
+
     virtual auto lookupvalue(bool isstring, const std::string& key)
         -> Json::Value override;
 

@@ -4,6 +4,9 @@
         "returns" : true
     },
     {
+        "name" : "shutdown"
+    },
+    {
         "name" : "rebuildlookup"
     },
     {

@@ -31,6 +31,13 @@ LookupOnlyServer::LookupOnlyServer(jsonrpc::AbstractServerConnector& connector,
     updatelookup();
 }
 
+
+auto LookupOnlyServer::shutdown()
+    -> void
+{
+    should_shutdown_.store(true);
+}
+
 auto LookupOnlyServer::updatelookup()
     -> bool
 {
