@@ -113,8 +113,8 @@ target_link_libraries(buddy-src LINK_PUBLIC
   ${CMAKE_THREAD_LIBS_INIT})
 
 #executable
-add_executable(cppBUDDY
-  src/main.cpp)
+add_executable(buddyd
+  src/buddyd.cpp)
 
 
 #make sure everything is build in the right order
@@ -125,17 +125,17 @@ add_dependencies(buddy-src cxxopts-project)
 add_dependencies(buddy-src g3logger-project)
 add_dependencies(buddy-src utilxx-project)
 add_dependencies(buddy-src cpptoml-project)
-add_dependencies(cppBUDDY buddy-src)
+add_dependencies(buddyd buddy-src)
 
 
 # make headers available in main.cpp
-target_include_directories(cppBUDDY PUBLIC
+target_include_directories(buddyd PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   fmt
   ${CXXOPTS_INCLUDE_DIR})
 
 #link main.cpp against fmt and thread lib
-target_link_libraries(cppBUDDY LINK_PUBLIC
+target_link_libraries(buddyd LINK_PUBLIC
   buddy-src
   fmt
   jsonrpc::server
