@@ -30,6 +30,7 @@ include(cmake/fmt.cmake)
 include(cmake/utilxx.cmake)
 include(cmake/cpptoml.cmake)
 include(cmake/cxxopts.cmake)
+include(cmake/CLI11.cmake)
 include(cmake/gtest.cmake)
 include(cmake/g3log.cmake)
 
@@ -112,9 +113,13 @@ target_link_libraries(buddy-src LINK_PUBLIC
   g3logger
   ${CMAKE_THREAD_LIBS_INIT})
 
-#executable
+#executable buddyd
 add_executable(buddyd
   src/buddyd.cpp)
+
+#executable buddy-cli
+add_executable(buddy-cli
+  src/buddy-cli.cpp)
 
 
 #make sure everything is build in the right order
@@ -126,19 +131,33 @@ add_dependencies(buddy-src g3logger-project)
 add_dependencies(buddy-src utilxx-project)
 add_dependencies(buddy-src cpptoml-project)
 add_dependencies(buddyd buddy-src)
+add_dependencies(buddy-cli buddy-src)
 
 
-# make headers available in main.cpp
+# make headers available in buddyd.cpp
 target_include_directories(buddyd PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   fmt
   ${CXXOPTS_INCLUDE_DIR})
 
-#link main.cpp against fmt and thread lib
+#link buddyd.cpp against fmt and thread lib
 target_link_libraries(buddyd LINK_PUBLIC
   buddy-src
   fmt
   jsonrpc::server
+  ${CMAKE_THREAD_LIBS_INIT})
+
+# make headers available in buddy-cli.cpp
+target_include_directories(buddy-cli PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  CLI11
+  fmt
+  ${CXXOPTS_INCLUDE_DIR})
+
+#link buddy-cli.cpp against fmt and thread lib
+target_link_libraries(buddy-cli LINK_PUBLIC
+  buddy-src
+  fmt
   ${CMAKE_THREAD_LIBS_INIT})
 
 
