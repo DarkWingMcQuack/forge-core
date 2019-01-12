@@ -48,6 +48,9 @@ public:
     auto getEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::Entry>;
 
+    auto getCoin() const
+        -> core::Coin;
+
 private:
     auto processBlock(core::Block&& block)
         -> utilxx::Result<void, ManagerError>;

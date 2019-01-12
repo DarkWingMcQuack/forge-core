@@ -224,3 +224,10 @@ auto buddy::lookup::generateMessage(ManagerError&& error)
     return std::visit(visitor,
                       std::move(error));
 }
+
+
+auto LookupManager::getCoin() const
+    -> core::Coin
+{
+    return daemon_->getCoin();
+}
