@@ -82,7 +82,7 @@ auto main(int argc, char* argv[]) -> int
 
     auto lookupowner_opt =
         app.add_subcommand("lookupowner",
-                           "looks up the value of a given byte vector/string")
+                           "looks up the owner of an entry identified by a given byte vector/string key")
             ->callback([&] {
                 response = client.lookupowner(is_string, key);
             });
