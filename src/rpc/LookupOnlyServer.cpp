@@ -30,19 +30,21 @@ LookupOnlyServer::LookupOnlyServer(jsonrpc::AbstractServerConnector& connector,
     : AbstractLookupOnlyStubSever(connector, type),
       lookup_(std::move(daemon))
 {
-    updater_ = std::thread{[this]() {
-        auto blocktime = getBlockTimeInSeconds(lookup_.getCoin());
-        std::chrono::seconds sleeptime{blocktime / 2};
+    //start an updater thread which updates the lookup in the background
+    updater_ =
+        std::thread{[this]() {
+            auto blocktime = getBlockTimeInSeconds(lookup_.getCoin());
+            std::chrono::seconds sleeptime{blocktime / 2};
 
-        while(!should_shutdown_.load()) {
+            while(!should_shutdown_.load()) {
 
-            indexing_.store(true);
-            lookup_.updateLookup();
-            indexing_.store(false);
+                indexing_.store(true);
+                lookup_.updateLookup();
+                indexing_.store(false);
 
-            std::this_thread::sleep_for(sleeptime);
-        }
-    }};
+                std::this_thread::sleep_for(sleeptime);
+            }
+        }};
 }
 
 
