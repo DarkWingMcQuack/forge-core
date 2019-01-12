@@ -84,3 +84,15 @@ auto ReadOnlyWallet::getOwnedAddresses() const
 {
     return owned_addresses_;
 }
+
+auto ReadOnlyWallet::getLookup() const
+    -> const lookup::LookupManager&
+{
+    return *lookup_;
+}
+
+auto ReadOnlyWallet::getLookup()
+    -> lookup::LookupManager&
+{
+    return *lookup_;
+}

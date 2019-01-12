@@ -16,6 +16,7 @@
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
 #include <rpc/LookupOnlyServer.hpp>
+#include <rpc/ReadOnlyWalletServer.hpp>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +36,7 @@ using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::make_readonly_daemon;
 using buddy::daemon::make_writing_daemon;
 using buddy::wallet::ReadWriteWallet;
+using buddy::wallet::ReadOnlyWallet;
 using buddy::core::stringToByteVec;
 using buddy::core::toHexString;
 using buddy::core::Coin;
@@ -43,6 +45,7 @@ using buddy::env::initFileLogger;
 using buddy::env::parseOptions;
 using buddy::env::ProgramOptions;
 using buddy::rpc::LookupOnlyServer;
+using buddy::rpc::ReadOnlyWalletServer;
 using jsonrpc::HttpServer;
 using jsonrpc::JSONRPC_SERVER_V1V2;
 
@@ -105,7 +108,6 @@ static void daemonize()
 
 auto runLookupOnlyServer(const ProgramOptions& params)
 {
-
     auto daemon = make_readonly_daemon(params.getCoinHost(),
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
@@ -124,6 +126,36 @@ auto runLookupOnlyServer(const ProgramOptions& params)
     LookupOnlyServer rpcserver{httpserver,
                                JSONRPC_SERVER_V1V2,
                                std::move(daemon)};
+    rpcserver.StartListening();
+
+    buddy::rpc::waitForShutdown(rpcserver);
+
+    rpcserver.StopListening();
+}
+
+auto runReadOnlyWalletServer(const ProgramOptions& params)
+{
+    auto daemon = make_readonly_daemon(params.getCoinHost(),
+                                       params.getCoinUser(),
+                                       params.getCoinPassword(),
+                                       params.getCoinPort(),
+                                       Coin::Odin);
+
+    auto lookup = std::make_unique<LookupManager>(std::move(daemon));
+    ReadOnlyWallet wallet{std::move(lookup)};
+
+    auto port = params.getRpcPort();
+    auto threads = params.getNumberOfThreads();
+
+
+    HttpServer httpserver{static_cast<int>(port),
+                          "",
+                          "",
+                          static_cast<int>(threads)};
+
+    ReadOnlyWalletServer rpcserver{httpserver,
+                                   JSONRPC_SERVER_V1V2,
+                                   std::move(wallet)};
     rpcserver.StartListening();
 
     buddy::rpc::waitForShutdown(rpcserver);
@@ -157,7 +189,17 @@ auto main(int argc, char* argv[]) -> int
     //                                   params.getCoinPort(),
     //                                   Coin::Odin);
 
-    if(params.getMode() == buddy::env::Mode::LookupOnly) {
+    switch(params.getMode()) {
+
+    case buddy::env::Mode::LookupOnly:
         runLookupOnlyServer(params);
+        break;
+
+    case buddy::env::Mode::ReadOnly:
+        runReadOnlyWalletServer(params);
+        break;
+
+    default:
+        break;
     }
 }

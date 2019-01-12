@@ -5,12 +5,13 @@
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
 #include <numeric>
-#include <rpc/LookupOnlyServer.hpp>
+#include <rpc/ReadOnlyWalletServer.hpp>
 #include <thread>
 #include <utilxx/Algorithm.hpp>
 #include <utilxx/Overload.hpp>
+#include <wallet/ReadOnlyWallet.hpp>
 
-using buddy::rpc::LookupOnlyServer;
+using buddy::rpc::ReadOnlyWalletServer;
 using buddy::core::getBlockTimeInSeconds;
 using buddy::core::Entry;
 using buddy::core::EntryKey;
@@ -19,16 +20,17 @@ using buddy::core::IPv4Value;
 using buddy::core::IPv6Value;
 using buddy::core::ByteArray;
 using buddy::core::NoneValue;
+using buddy::wallet::ReadOnlyWallet;
 using jsonrpc::PARAMS_BY_NAME;
 using jsonrpc::Procedure;
 using jsonrpc::JsonRpcException;
 
-
-LookupOnlyServer::LookupOnlyServer(jsonrpc::AbstractServerConnector& connector,
-                                   jsonrpc::serverVersion_t type,
-                                   std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
-    : AbstractLookupOnlyStubSever(connector, type),
-      lookup_(std::move(daemon))
+ReadOnlyWalletServer::ReadOnlyWalletServer(jsonrpc::AbstractServerConnector& connector,
+                                           jsonrpc::serverVersion_t type,
+                                           wallet::ReadOnlyWallet&& wallet)
+    : AbstractReadOnlyWalletStubSever(connector, type),
+      wallet_(std::move(wallet)),
+      lookup_(wallet_.getLookup())
 {
     //start an updater thread which updates the lookup in the background
     updater_ =
@@ -48,13 +50,7 @@ LookupOnlyServer::LookupOnlyServer(jsonrpc::AbstractServerConnector& connector,
 }
 
 
-auto LookupOnlyServer::shutdown()
-    -> void
-{
-    should_shutdown_.store(true);
-}
-
-auto LookupOnlyServer::updatelookup()
+auto ReadOnlyWalletServer::updatelookup()
     -> bool
 {
     if(indexing_.load()) {
@@ -75,7 +71,7 @@ auto LookupOnlyServer::updatelookup()
     return res.getValue();
 }
 
-auto LookupOnlyServer::rebuildlookup()
+auto ReadOnlyWalletServer::rebuildlookup()
     -> void
 {
     if(indexing_.load()) {
@@ -90,6 +86,12 @@ auto LookupOnlyServer::rebuildlookup()
         auto error_msg = lookup::generateMessage(std::move(res.getError()));
         throw JsonRpcException{std::move(error_msg)};
     }
+}
+
+auto ReadOnlyWalletServer::shutdown()
+    -> void
+{
+    should_shutdown_.store(true);
 }
 
 namespace {
@@ -156,7 +158,7 @@ auto entryToJson(Entry value)
 
 } // namespace
 
-auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
+auto ReadOnlyWalletServer::lookupvalue(bool isstring, const std::string& key)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -192,7 +194,7 @@ auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
     return entryValueToJson(res.getValue().get());
 }
 
-auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
+auto ReadOnlyWalletServer::lookupowner(bool isstring, const std::string& key)
     -> std::string
 {
     if(indexing_.load()) {
@@ -228,7 +230,7 @@ auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
     return res.getValue();
 }
 
-auto LookupOnlyServer::lookupactivationblock(bool isstring, const std::string& key)
+auto ReadOnlyWalletServer::lookupactivationblock(bool isstring, const std::string& key)
     -> int
 {
     if(indexing_.load()) {
@@ -264,7 +266,7 @@ auto LookupOnlyServer::lookupactivationblock(bool isstring, const std::string& k
     return res.getValue();
 }
 
-auto LookupOnlyServer::checkvalidity()
+auto ReadOnlyWalletServer::checkvalidity()
     -> bool
 {
     if(indexing_.load()) {
@@ -281,7 +283,7 @@ auto LookupOnlyServer::checkvalidity()
     return res.getValue();
 }
 
-auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
+auto ReadOnlyWalletServer::lookupallentrysof(const std::string& owner)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -309,14 +311,148 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
     return ret_json;
 }
 
+auto ReadOnlyWalletServer::addwatchonlyaddress(const std::string& address)
+    -> void
+{
+    auto copy = address;
+    wallet_.addWatchOnlyAddress(std::move(copy));
+}
 
-auto LookupOnlyServer::hasShutdownRequest() const
+auto ReadOnlyWalletServer::deletewatchonlyaddress(const std::string& address)
+    -> void
+{
+    wallet_.deleteWatchOnlyAddress(address);
+}
+
+auto ReadOnlyWalletServer::addnewownedaddress(const std::string& address)
+    -> void
+{
+    auto copy = address;
+    wallet_.addNewOwnedAddress(std::move(copy));
+}
+
+auto ReadOnlyWalletServer::getownedentrys()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getOwnedEntrys();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return entryToJson(std::move(entry));
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getwatchonlyentrys()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getWatchOnlyEntrys();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return entryToJson(std::move(entry));
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getallwatchedentrys()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getAllWatchedEntrys();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return entryToJson(std::move(entry));
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getwatchedaddresses()
+    -> Json::Value
+{
+    const auto& addresses = wallet_.getWatchedAddresses();
+    auto ret_json =
+        std::accumulate(std::begin(addresses),
+                        std::end(addresses),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, const auto& entry) {
+                            init.append(entry);
+                            return init;
+                        });
+
+    return ret_json;
+}
+auto ReadOnlyWalletServer::getownedaddresses()
+    -> Json::Value
+{
+    const auto& addresses = wallet_.getOwnedAddresses();
+    auto ret_json =
+        std::accumulate(std::begin(addresses),
+                        std::end(addresses),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, const auto& entry) {
+                            init.append(entry);
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::hasShutdownRequest() const
     -> bool
 {
     return should_shutdown_.load();
 }
 
-auto buddy::rpc::waitForShutdown(const LookupOnlyServer& server)
+auto buddy::rpc::waitForShutdown(const ReadOnlyWalletServer& server)
     -> void
 {
     using namespace std::literals::chrono_literals;

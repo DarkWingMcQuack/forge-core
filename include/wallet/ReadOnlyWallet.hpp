@@ -37,6 +37,11 @@ public:
     auto getOwnedAddresses() const
         -> const std::set<std::string>&;
 
+    auto getLookup() const
+        -> const lookup::LookupManager&;
+    auto getLookup()
+        -> lookup::LookupManager&;
+
 protected:
     std::set<std::string> owned_addresses_;
     std::set<std::string> watched_addresses_;
