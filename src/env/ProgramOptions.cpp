@@ -10,6 +10,7 @@
 using buddy::env::ProgramOptions;
 
 ProgramOptions::ProgramOptions(std::string&& logfolder,
+                               std::int64_t number_of_threads,
                                Mode mode,
                                bool daemonize,
                                std::int64_t coin_port,
@@ -20,6 +21,7 @@ ProgramOptions::ProgramOptions(std::string&& logfolder,
                                std::string&& rpc_user,
                                std::string&& rpc_password)
     : logfolder_(std::move(logfolder)),
+      number_of_threads_(number_of_threads),
       mode_(mode),
       daemonize_(daemonize),
       coin_port_(coin_port),
@@ -104,6 +106,12 @@ auto ProgramOptions::getRpcPassword() const
     return rpc_password_;
 }
 
+auto ProgramOptions::getNumberOfThreads() const
+    -> std::int64_t
+{
+    return number_of_threads_;
+}
+
 
 auto buddy::env::parseOptions(int argc, char* argv[])
     -> ProgramOptions
@@ -152,8 +160,8 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
 {
     auto config = cpptoml::parse_file(config_path + "/buddy.conf");
     auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
-    auto mode_str = *config->get_qualified_as<std::string>("client.mode");
-    auto daemonize = *config->get_qualified_as<bool>("client.daemon");
+    auto mode_str = *config->get_qualified_as<std::string>("server.mode");
+    auto daemonize = *config->get_qualified_as<bool>("server.daemon");
     auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
     auto coin_host = *config->get_qualified_as<std::string>("coin.host");
     auto coin_user = *config->get_qualified_as<std::string>("coin.user");
@@ -161,6 +169,7 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
     auto rpc_port = config->get_qualified_as<std::int64_t>("rpc.port").value_or(25000);
     auto rpc_user = config->get_qualified_as<std::string>("rpc.user").value_or("user");
     auto rpc_password = config->get_qualified_as<std::string>("rpc.password").value_or("password");
+    auto threads = config->get_qualified_as<std::int64_t>("server.threads").value_or(5);
 
     auto mode = [&]() {
         if(mode_str == "lookup")
@@ -170,12 +179,13 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
         else if(mode_str == "readwrite")
             return buddy::env::Mode::ReadWrite;
         else {
-            fmt::print("invalid value for \"client.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
+            fmt::print("invalid value for \"server.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
             std::exit(0);
         }
     }();
 
     return ProgramOptions{std::move(log_path),
+                          threads,
                           mode,
                           daemonize,
                           coin_port,

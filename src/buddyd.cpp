@@ -113,9 +113,14 @@ auto runLookupOnlyServer(const ProgramOptions& params)
                                        Coin::Odin);
 
     auto port = params.getRpcPort();
+    auto threads = params.getNumberOfThreads();
 
 
-    HttpServer httpserver{static_cast<int>(port)};
+    HttpServer httpserver{static_cast<int>(port),
+                          "",
+                          "",
+                          static_cast<int>(threads)};
+
     LookupOnlyServer rpcserver{httpserver,
                                JSONRPC_SERVER_V1V2,
                                std::move(daemon)};

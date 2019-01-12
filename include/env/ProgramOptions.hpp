@@ -21,6 +21,7 @@ class ProgramOptions
 {
 public:
     ProgramOptions(std::string&& logfolder,
+                   std::int64_t number_of_threads,
                    Mode mode,
                    bool daemonize,
                    std::int64_t coin_port,
@@ -45,6 +46,9 @@ public:
     auto shouldDaemonize() const
         -> bool;
 
+    auto getNumberOfThreads() const
+        -> std::int64_t;
+
     auto getCoinPort() const
         -> std::int64_t;
     auto getCoinHost() const
@@ -64,6 +68,8 @@ public:
 private:
     std::string logfolder_;
     bool log_to_console_;
+
+    std::int64_t number_of_threads_;
 
     Mode mode_;
     bool daemonize_;
