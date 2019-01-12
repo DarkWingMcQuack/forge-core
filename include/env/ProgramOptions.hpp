@@ -20,7 +20,7 @@ auto operator<<(std::ostream& os, const Mode& mode)
 class ProgramOptions
 {
 public:
-    ProgramOptions(utilxx::Opt<std::string>&& logfolder,
+    ProgramOptions(std::string&& logfolder,
                    Mode mode,
                    bool daemonize,
                    std::int64_t coin_port,
@@ -32,7 +32,13 @@ public:
                    std::string&& rpc_password);
 
     auto getLogFolder() const
-        -> const utilxx::Opt<std::string>;
+        -> const std::string&;
+
+    auto shouldLogToConsole() const
+        -> bool;
+
+    auto setShouldLogToConsole(bool)
+        -> bool;
 
     auto getMode() const
         -> Mode;
@@ -56,7 +62,8 @@ public:
         -> const std::string&;
 
 private:
-    utilxx::Opt<std::string> logfolder_;
+    std::string logfolder_;
+    bool log_to_console_;
 
     Mode mode_;
     bool daemonize_;
@@ -72,6 +79,9 @@ private:
 };
 
 auto parseOptions(int argc, char* argv[])
+    -> ProgramOptions;
+
+auto parseConfigFile(const std::string& config_path)
     -> ProgramOptions;
 
 } // namespace buddy::env

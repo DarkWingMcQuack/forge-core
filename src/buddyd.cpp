@@ -135,13 +135,14 @@ auto main(int argc, char* argv[]) -> int
     //we need to first daemonize because of
     //https://github.com/KjellKod/g3log/issues/151
     if(params.shouldDaemonize()) {
+        fmt::print("port: {}", params.getRpcPort());
         fmt::print("Starting buddyd daemon\n");
         daemonize();
     }
 
-    if(params.getLogFolder()) {
+    if(!params.shouldLogToConsole()) {
         initFileLogger(argv[0],
-                       params.getLogFolder().getValue());
+                       params.getLogFolder());
     } else {
         initConsoleLogger();
     }

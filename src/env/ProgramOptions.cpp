@@ -9,7 +9,7 @@
 
 using buddy::env::ProgramOptions;
 
-ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
+ProgramOptions::ProgramOptions(std::string&& logfolder,
                                Mode mode,
                                bool daemonize,
                                std::int64_t coin_port,
@@ -31,9 +31,22 @@ ProgramOptions::ProgramOptions(utilxx::Opt<std::string>&& logfolder,
       rpc_password_(std::move(rpc_password)) {}
 
 auto ProgramOptions::getLogFolder() const
-    -> const utilxx::Opt<std::string>
+    -> const std::string&
 {
     return logfolder_;
+}
+
+
+auto ProgramOptions::shouldLogToConsole() const
+    -> bool
+{
+    return log_to_console_;
+}
+
+auto ProgramOptions::setShouldLogToConsole(bool value)
+    -> bool
+{
+    log_to_console_ = value;
 }
 
 
@@ -121,55 +134,11 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         auto config_path = result["workdir"].as<std::string>();
         auto log_to_console = result["log"].as<bool>();
 
-        auto config = cpptoml::parse_file(config_path + "/buddy.conf");
-        auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
-        auto mode_str = *config->get_qualified_as<std::string>("client.mode");
-        auto daemonize = *config->get_qualified_as<bool>("client.daemon");
-        auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
-        auto coin_host = *config->get_qualified_as<std::string>("coin.host");
-        auto coin_user = *config->get_qualified_as<std::string>("coin.user");
-        auto coin_password = *config->get_qualified_as<std::string>("coin.password");
-        auto rpc_port = config->get_qualified_as<std::int64_t>("rpc.port").value_or(25000);
-        auto rpc_user = config->get_qualified_as<std::string>("rpc.user").value_or("user");
-        auto rpc_password = config->get_qualified_as<std::string>("rpc.password").value_or("password");
+        auto params = parseConfigFile(config_path);
 
-        auto mode = [&]() {
-            if(mode_str == "lookup")
-                return buddy::env::Mode::LookupOnly;
-            else if(mode_str == "readonly")
-                return buddy::env::Mode::ReadOnly;
-            else if(mode_str == "readwrite")
-                return buddy::env::Mode::ReadWrite;
-            else {
-                fmt::print("invalid value for \"client.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
-                std::exit(0);
-            }
-        }();
+        params.setShouldLogToConsole(log_to_console);
 
-        if(log_to_console) {
-            return ProgramOptions{std::nullopt,
-                                  mode,
-                                  daemonize,
-                                  coin_port,
-                                  std::move(coin_host),
-                                  std::move(coin_user),
-                                  std::move(coin_password),
-                                  rpc_port,
-                                  std::move(rpc_user),
-                                  std::move(rpc_password)};
-        }
-
-        return ProgramOptions{std::move(log_path),
-                              mode,
-                              daemonize,
-                              coin_port,
-                              std::move(coin_host),
-                              std::move(coin_user),
-                              std::move(coin_password),
-                              rpc_port,
-                              std::move(rpc_user),
-                              std::move(rpc_password)};
-
+        return params;
 
     } catch(const std::exception& e) {
         fmt::print("{}\n", e.what());
@@ -178,40 +147,42 @@ auto buddy::env::parseOptions(int argc, char* argv[])
     }
 }
 
-
-auto buddy::env::operator>>(std::istream& in, Mode& mode)
-    -> std::istream&
+auto buddy::env::parseConfigFile(const std::string& config_path)
+    -> ProgramOptions
 {
-    std::string token;
-    in >> token;
-    if(token == "lookup")
-        mode = buddy::env::Mode::LookupOnly;
-    else if(token == "readonly")
-        mode = buddy::env::Mode::ReadOnly;
-    else if(token == "readwrite")
-        mode = buddy::env::Mode::ReadWrite;
-    else
-        in.setstate(std::ios_base::failbit);
-    return in;
-}
+    auto config = cpptoml::parse_file(config_path + "/buddy.conf");
+    auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
+    auto mode_str = *config->get_qualified_as<std::string>("client.mode");
+    auto daemonize = *config->get_qualified_as<bool>("client.daemon");
+    auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
+    auto coin_host = *config->get_qualified_as<std::string>("coin.host");
+    auto coin_user = *config->get_qualified_as<std::string>("coin.user");
+    auto coin_password = *config->get_qualified_as<std::string>("coin.password");
+    auto rpc_port = config->get_qualified_as<std::int64_t>("rpc.port").value_or(25000);
+    auto rpc_user = config->get_qualified_as<std::string>("rpc.user").value_or("user");
+    auto rpc_password = config->get_qualified_as<std::string>("rpc.password").value_or("password");
 
-auto buddy::env::operator<<(std::ostream& os, const Mode& mode)
-    -> std::ostream&
-{
-    switch(mode) {
-    case buddy::env::Mode::LookupOnly:
-        os << "lookup";
-        break;
-    case buddy::env::Mode::ReadOnly:
-        os << "readonly";
-        break;
-    case buddy::env::Mode::ReadWrite:
-        os << "readonly";
-        break;
-    default:
-        os.setstate(std::ios_base::failbit);
-        break;
-    }
+    auto mode = [&]() {
+        if(mode_str == "lookup")
+            return buddy::env::Mode::LookupOnly;
+        else if(mode_str == "readonly")
+            return buddy::env::Mode::ReadOnly;
+        else if(mode_str == "readwrite")
+            return buddy::env::Mode::ReadWrite;
+        else {
+            fmt::print("invalid value for \"client.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
+            std::exit(0);
+        }
+    }();
 
-    return os;
+    return ProgramOptions{std::move(log_path),
+                          mode,
+                          daemonize,
+                          coin_port,
+                          std::move(coin_host),
+                          std::move(coin_user),
+                          std::move(coin_password),
+                          rpc_port,
+                          std::move(rpc_user),
+                          std::move(rpc_password)};
 }
