@@ -150,9 +150,8 @@ target_link_libraries(buddyd LINK_PUBLIC
 # make headers available in buddy-cli.cpp
 target_include_directories(buddy-cli PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  CLI11
-  fmt
-  ${CXXOPTS_INCLUDE_DIR})
+  ${CLI11_INCLUDE_DIR}
+  fmt)
 
 #link buddy-cli.cpp against fmt and thread lib
 target_link_libraries(buddy-cli LINK_PUBLIC
