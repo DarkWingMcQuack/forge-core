@@ -184,3 +184,156 @@ auto buddy::core::entryToRawData(const Entry& entry)
 
     return value_data;
 }
+
+
+//TODO: test
+auto buddy::core::jsonToEntryValue(Json::Value&& value)
+    -> utilxx::Opt<EntryValue>
+{
+    if(!value.isMember("type")
+       || (value["type"] != "ipv6"
+           && value["type"] != "ipv4"
+           && value["type"] != "none"
+           && value["type"] != "bytearray")
+       || !value.isMember("value")
+       || !(value["type"] != "none"
+            && !value["value"].isString())) {
+        return std::nullopt;
+    }
+
+    auto type_str = std::move(value["type"]);
+    auto value_json = std::move(value["value"]);
+
+    if(type_str == "ipv6") {
+        if(!value_json.isString()) {
+            return std::nullopt;
+        }
+        auto value_str = std::move(value_json.asString());
+        auto byte_vec_opt = stringToByteVec(value_str);
+
+        if(!byte_vec_opt.hasValue()) {
+            return std::nullopt;
+        }
+
+        auto byte_vec = std::move(byte_vec_opt.getValue());
+
+        if(byte_vec.size() != 16) {
+            return std::nullopt;
+        }
+
+        std::array<std::byte, 16> ret_array;
+        std::copy_n(byte_vec.begin(),
+                    16,
+                    ret_array.begin());
+
+        return EntryValue{std::move(ret_array)};
+    }
+
+    if(type_str == "ipv4") {
+        if(!value_json.isString()) {
+            return std::nullopt;
+        }
+        auto value_str = std::move(value_json.asString());
+        auto byte_vec_opt = stringToByteVec(value_str);
+
+        if(!byte_vec_opt.hasValue()) {
+            return std::nullopt;
+        }
+
+        auto byte_vec = std::move(byte_vec_opt.getValue());
+
+        if(byte_vec.size() != 4) {
+            return std::nullopt;
+        }
+
+        std::array<std::byte, 4> ret_array;
+        std::copy_n(byte_vec.begin(),
+                    4,
+                    ret_array.begin());
+
+        return EntryValue{std::move(ret_array)};
+    }
+
+    if(type_str == "bytearray") {
+        if(!value_json.isString()) {
+            return std::nullopt;
+        }
+        auto value_str = std::move(value_json.asString());
+        auto byte_vec_opt = stringToByteVec(value_str);
+
+        if(!byte_vec_opt.hasValue()) {
+            return std::nullopt;
+        }
+
+        auto byte_vec = std::move(byte_vec_opt.getValue());
+
+        return EntryValue{std::move(byte_vec)};
+    }
+
+    if(type_str == "none") {
+        return EntryValue{NoneValue{}};
+    }
+
+    return std::nullopt;
+}
+
+//TODO: test
+auto buddy::core::entryValueToJson(EntryValue value)
+    -> Json::Value
+{
+    static const auto visitor =
+        utilxx::overload{
+            [](IPv4Value&& value) {
+                Json::Value json;
+                json["type"] = "ipv4";
+
+                std::vector<std::byte> helper(std::begin(value),
+                                              std::end(value));
+
+                json["value"] = buddy::core::toHexString(helper);
+
+                return json;
+            },
+            [](IPv6Value&& value) {
+                Json::Value json;
+                json["type"] = "ipv6";
+
+                std::vector<std::byte> helper(std::begin(value),
+                                              std::end(value));
+
+                json["value"] = buddy::core::toHexString(helper);
+
+                return json;
+            },
+            [](ByteArray&& value) {
+                Json::Value json;
+                json["type"] = "bytearray";
+                json["value"] = buddy::core::toHexString(value);
+
+                return json;
+            },
+            [](NoneValue&& value) {
+                Json::Value json;
+                json["type"] = "none";
+                json["value"] = nullptr;
+
+                return json;
+            }};
+
+    return std::visit(visitor,
+                      std::move(value));
+}
+
+auto buddy::core::entryToJson(Entry value)
+    -> Json::Value
+{
+    Json::Value ret_json;
+    ret_json["key"] = buddy::core::toHexString(value.first);
+
+    auto trash_json = buddy::core::entryValueToJson(value.second);
+
+    ret_json["type"] = std::move(trash_json["type"]);
+    ret_json["value"] = std::move(trash_json["value"]);
+
+    return ret_json;
+}

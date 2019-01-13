@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <json/value.h>
 #include <utilxx/Opt.hpp>
 #include <vector>
 
@@ -54,5 +55,14 @@ auto entryValueToRawData(const EntryValue& value)
 
 auto entryToRawData(const Entry& entry)
     -> std::vector<std::byte>;
+
+auto jsonToEntryValue(Json::Value&& value)
+    -> utilxx::Opt<EntryValue>;
+
+auto entryValueToJson(EntryValue value)
+    -> Json::Value;
+
+auto entryToJson(Entry value)
+    -> Json::Value;
 
 } // namespace buddy::core
