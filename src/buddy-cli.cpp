@@ -202,7 +202,9 @@ auto main(int argc, char* argv[]) -> int
 
     try {
         CLI11_PARSE(app, argc, argv);
-        fmt::print("{}", response.toStyledString());
+        if(!response.isNull()) {
+            fmt::print("{}", response.toStyledString());
+        }
     } catch(JsonRpcException& e) {
         fmt::print("{}\n", e.what());
     }
