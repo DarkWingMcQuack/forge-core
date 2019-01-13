@@ -26,11 +26,9 @@ using buddy::core::createEntryDeletionOpMetadata;
 using utilxx::Result;
 
 ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
-                                 std::unique_ptr<daemon::WriteOnlyDaemonBase>&& daemon,
-                                 core::Coin coin)
+                                 std::unique_ptr<daemon::WriteOnlyDaemonBase>&& daemon)
     : ReadOnlyWallet(std::move(lookup)),
-      daemon_(std::move(daemon)),
-      coin_(coin) {}
+      daemon_(std::move(daemon)) {}
 
 
 auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
@@ -69,13 +67,13 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
 
     return daemon_
         //send the needed amount to the address
-        ->sendToAddress(burn_amount + getDefaultTxFee(coin_),
+        ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
                         std::move(address))
         .flatMap([&](auto&& txid) {
             //write the metadata to the blockchain
             return daemon_
                 ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount + getDefaultTxFee(coin_),
+                                               burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                                address)
                 .flatMap([&](auto vout_idx) {
                     return daemon_
@@ -116,13 +114,13 @@ auto ReadWriteWallet::renewEntry(core::EntryKey&& key,
 
             //send burn amount + fee to the owner address
             return daemon_
-                ->sendToAddress(burn_amount + getDefaultTxFee(coin_),
+                ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                 std::move(owner_copy))
                 .flatMap([&](auto&& txid) {
                     //burn the output with the metadata
                     return daemon_
                         ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount + getDefaultTxFee(coin_),
+                                                       burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                                        owner)
                         .flatMap([&](auto vout_idx) {
                             return daemon_
@@ -159,12 +157,12 @@ auto ReadWriteWallet::updateEntry(core::EntryKey&& key,
 
     return daemon_
         //move enought funds to the owner address
-        ->sendToAddress(burn_amount + getDefaultTxFee(coin_),
+        ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
                         std::move(owner))
         .flatMap([&](auto&& txid) {
             return daemon_
                 ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount + getDefaultTxFee(coin_),
+                                               burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                                owner_opt.getValue().get())
                 .flatMap([&](auto vout_idx) {
                     //burn the output with the metadata
@@ -202,12 +200,12 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey&& key,
 
             //send burn amount + fee to the owner address
             return daemon_
-                ->sendToAddress(burn_amount + getDefaultTxFee(coin_),
+                ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                 std::move(owner_copy))
                 .flatMap([&](auto&& txid) {
                     return daemon_
                         ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount + getDefaultTxFee(coin_),
+                                                       burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                                        owner)
                         .flatMap([&](auto vout_idx) {
                             //burn the output with the metadata
@@ -247,12 +245,12 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey&& key,
             //send burn amount + fee to the owner address
             return daemon_
                 //send +1 because this will be send to the new owner address
-                ->sendToAddress(burn_amount + 1 + getDefaultTxFee(coin_),
+                ->sendToAddress(burn_amount + 1 + getDefaultTxFee(getLookup().getCoin()),
                                 std::move(owner_copy))
                 .flatMap([&](auto&& txid) {
                     return daemon_
                         ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount + getDefaultTxFee(coin_),
+                                                       burn_amount + getDefaultTxFee(getLookup().getCoin()),
                                                        owner)
                         .flatMap([&](auto vout_idx) {
                             return daemon_
