@@ -1,0 +1,196 @@
+[
+    {
+        "name" : "updatelookup",
+        "returns" : true
+    },
+    {
+        "name" : "shutdown"
+    },
+    {
+        "name" : "rebuildlookup"
+    },
+    {
+        "name" : "lookupvalue",
+        "params" : {
+            "key" : "somestring", //string
+            "isstring" : true //if string is interpreted as string or as bytevec
+        },
+        "returns" : {
+            "type" : "ipv6",
+            "value" : "somebytevec"
+        }
+    },
+    {
+        "name" : "lookupowner",
+        "params" : {
+            "key" : "somestring", //string
+            "isstring" : true //if string is interpreted as string or as bytevec
+        },
+        "returns" : "someowner"
+    },
+    {
+        "name" : "lookupactivationblock",
+        "params" : {
+            "key" : "somestring", //string
+            "isstring" : true //if string is interpreted as string or as bytevec
+        },
+        "returns" : 10
+    },
+    {
+        "name" : "checkvalidity",
+        "returns" : true
+    },
+    {
+        "name" : "lookupallentrysof",
+        "params" : {
+            "owner" : "someowner"
+        },
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "addwatchonlyaddress",
+        "params" : {
+            "address" : "someaddress"
+        }
+    },
+    {
+        "name" : "deletewatchonlyaddress",
+        "params" : {
+            "address" : "someaddress"
+        }
+    },
+    {
+        "name" : "addnewownedaddress",
+        "params" : {
+            "address" : "someaddress"
+        }
+    },
+    {
+        "name" : "getownedentrys",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getwatchonlyentrys",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getallwatchedentrys",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getwatchedaddresses",
+        "returns" : [
+            "someaddress",
+            "someaddress"
+        ]
+    },
+    {
+        "name" : "getownedaddresses",
+        "returns" : [
+            "someaddress",
+            "someaddress"
+        ]
+    },
+    {
+        "name" : "createnewentry",
+        "params" : {
+            "key" : "somekey",
+            "value" : {
+                "type" : "ipv6",
+                "value" : "somevalue"
+            },
+            "address" : "someaddress",
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
+    },
+    {
+        "name" : "renewentry",
+        "params" : {
+            "key" : "somekey",
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
+    },
+    {
+        "name" : "updateentry",
+        "params" : {
+            "key" : "somekey",
+            "value" : {
+                "type" : "ipv6",
+                "value" : "somevalue"
+            },
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
+    },
+    {
+        "name" : "deleteentry",
+        "params" : {
+            "key" : "somekey",
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
+    },
+    {
+        "name" : "transferownership",
+        "params" : {
+            "key" : "somekey",
+            "newowner" : "someaddress",
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
+    },
+    {
+        "name" : "paytoentryowner",
+        "params" : {
+            "key" : "somekey",
+            "amount" : 10
+        },
+        "returns" : "sometxid"
+    }
+]

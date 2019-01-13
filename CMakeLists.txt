@@ -69,6 +69,7 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/WalletError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/rpc/LookupOnlyServer.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/rpc/ReadOnlyWalletServer.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/rpc/ReadWriteWalletServer.hpp
 
   PRIVATE
   src/core/Operation.cpp
@@ -93,6 +94,7 @@ target_sources(buddy-src
   src/wallet/ReadWriteWallet.cpp
   src/rpc/LookupOnlyServer.cpp
   src/rpc/ReadOnlyWalletServer.cpp
+  src/rpc/ReadWriteWalletServer.cpp
   )
 
 # make headers available
