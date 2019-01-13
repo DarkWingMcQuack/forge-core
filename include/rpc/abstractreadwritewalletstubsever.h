@@ -30,12 +30,12 @@ namespace buddy {
                     this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::getallwatchedentrysI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::getwatchedaddressesI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getownedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::getownedaddressesI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("createnewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::createnewentryI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("renewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::renewentryI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("updateentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::updateentryI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("deleteentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::deleteentryI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("transferownership", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"key",jsonrpc::JSON_STRING,"newowner",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::transferownershipI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("paytoentryowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "amount",jsonrpc::JSON_INTEGER,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::paytoentryownerI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("createnewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::createnewentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("renewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::renewentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("updateentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::updateentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("deleteentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::deleteentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("transferownership", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"newowner",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::transferownershipI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("paytoentryowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "amount",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::paytoentryownerI);
                 }
 
                 inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
@@ -104,27 +104,27 @@ namespace buddy {
                 }
                 inline virtual void createnewentryI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->createnewentry(request["address"].asString(), request["burnvalue"].asInt(), request["key"].asString(), request["value"]);
+                    response = this->createnewentry(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
                 }
                 inline virtual void renewentryI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->renewentry(request["burnvalue"].asInt(), request["key"].asString());
+                    response = this->renewentry(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString());
                 }
                 inline virtual void updateentryI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->updateentry(request["burnvalue"].asInt(), request["key"].asString(), request["value"]);
+                    response = this->updateentry(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
                 }
                 inline virtual void deleteentryI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->deleteentry(request["burnvalue"].asInt(), request["key"].asString());
+                    response = this->deleteentry(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString());
                 }
                 inline virtual void transferownershipI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->transferownership(request["burnvalue"].asInt(), request["key"].asString(), request["newowner"].asString());
+                    response = this->transferownership(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["newowner"].asString());
                 }
                 inline virtual void paytoentryownerI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->paytoentryowner(request["amount"].asInt(), request["key"].asString());
+                    response = this->paytoentryowner(request["amount"].asInt(), request["isstring"].asBool(), request["key"].asString());
                 }
                 virtual bool updatelookup() = 0;
                 virtual void shutdown() = 0;
@@ -142,12 +142,12 @@ namespace buddy {
                 virtual Json::Value getallwatchedentrys() = 0;
                 virtual Json::Value getwatchedaddresses() = 0;
                 virtual Json::Value getownedaddresses() = 0;
-                virtual std::string createnewentry(const std::string& address, int burnvalue, const std::string& key, const Json::Value& value) = 0;
-                virtual std::string renewentry(int burnvalue, const std::string& key) = 0;
-                virtual std::string updateentry(int burnvalue, const std::string& key, const Json::Value& value) = 0;
-                virtual std::string deleteentry(int burnvalue, const std::string& key) = 0;
-                virtual std::string transferownership(int burnvalue, const std::string& key, const std::string& newowner) = 0;
-                virtual std::string paytoentryowner(int amount, const std::string& key) = 0;
+                virtual std::string createnewentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
+                virtual std::string renewentry(int burnvalue, bool isstring, const std::string& key) = 0;
+                virtual std::string updateentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
+                virtual std::string deleteentry(int burnvalue, bool isstring, const std::string& key) = 0;
+                virtual std::string transferownership(int burnvalue, bool isstring, const std::string& key, const std::string& newowner) = 0;
+                virtual std::string paytoentryowner(int amount, bool isstring, const std::string& key) = 0;
         };
 
     }

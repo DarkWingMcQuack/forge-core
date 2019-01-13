@@ -139,6 +139,7 @@
         "name" : "createnewentry",
         "params" : {
             "key" : "somekey",
+            "isstring" : true,
             "value" : {
                 "type" : "ipv6",
                 "value" : "somevalue"
@@ -152,6 +153,7 @@
         "name" : "renewentry",
         "params" : {
             "key" : "somekey",
+            "isstring" : true,
             "burnvalue" : 10
         },
         "returns" : "sometxid"
@@ -160,6 +162,7 @@
         "name" : "updateentry",
         "params" : {
             "key" : "somekey",
+            "isstring" : true, //if string is interpreted as string or as bytevec
             "value" : {
                 "type" : "ipv6",
                 "value" : "somevalue"
@@ -172,6 +175,7 @@
         "name" : "deleteentry",
         "params" : {
             "key" : "somekey",
+            "isstring" : true, //if string is interpreted as string or as bytevec
             "burnvalue" : 10
         },
         "returns" : "sometxid"
@@ -180,6 +184,7 @@
         "name" : "transferownership",
         "params" : {
             "key" : "somekey",
+            "isstring" : true, //if string is interpreted as string or as bytevec
             "newowner" : "someaddress",
             "burnvalue" : 10
         },
@@ -189,6 +194,7 @@
         "name" : "paytoentryowner",
         "params" : {
             "key" : "somekey",
+            "isstring" : true, //if string is interpreted as string or as bytevec
             "amount" : 10
         },
         "returns" : "sometxid"

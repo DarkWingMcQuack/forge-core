@@ -59,29 +59,35 @@ public:
 
     virtual auto createnewentry(const std::string& address,
                                 int burnvalue,
+                                bool is_string,
                                 const std::string& key,
                                 const Json::Value& value)
         -> std::string override;
 
     virtual auto renewentry(int burnvalue,
+                            bool is_string,
                             const std::string& key)
         -> std::string override;
 
     virtual auto updateentry(int burnvalue,
+                             bool is_string,
                              const std::string& key,
                              const Json::Value& value)
         -> std::string override;
 
     virtual auto deleteentry(int burnvalue,
+                             bool is_string,
                              const std::string& key)
         -> std::string override;
 
     virtual auto transferownership(int burnvalue,
+                                   bool is_string,
                                    const std::string& key,
                                    const std::string& newowner)
         -> std::string override;
 
     virtual auto paytoentryowner(int amount,
+                                 bool is_string,
                                  const std::string& key)
         -> std::string override;
 

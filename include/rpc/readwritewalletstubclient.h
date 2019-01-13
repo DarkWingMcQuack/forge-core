@@ -157,11 +157,12 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string createnewentry(const std::string& address, int burnvalue, const std::string& key, const Json::Value& value) 
+                std::string createnewentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
                 {
                     Json::Value p;
                     p["address"] = address;
                     p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
                     p["key"] = key;
                     p["value"] = value;
                     Json::Value result = this->CallMethod("createnewentry",p);
@@ -170,10 +171,11 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string renewentry(int burnvalue, const std::string& key) 
+                std::string renewentry(int burnvalue, bool isstring, const std::string& key) 
                 {
                     Json::Value p;
                     p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
                     p["key"] = key;
                     Json::Value result = this->CallMethod("renewentry",p);
                     if (result.isString())
@@ -181,10 +183,11 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string updateentry(int burnvalue, const std::string& key, const Json::Value& value) 
+                std::string updateentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
                 {
                     Json::Value p;
                     p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
                     p["key"] = key;
                     p["value"] = value;
                     Json::Value result = this->CallMethod("updateentry",p);
@@ -193,10 +196,11 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string deleteentry(int burnvalue, const std::string& key) 
+                std::string deleteentry(int burnvalue, bool isstring, const std::string& key) 
                 {
                     Json::Value p;
                     p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
                     p["key"] = key;
                     Json::Value result = this->CallMethod("deleteentry",p);
                     if (result.isString())
@@ -204,10 +208,11 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string transferownership(int burnvalue, const std::string& key, const std::string& newowner) 
+                std::string transferownership(int burnvalue, bool isstring, const std::string& key, const std::string& newowner) 
                 {
                     Json::Value p;
                     p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
                     p["key"] = key;
                     p["newowner"] = newowner;
                     Json::Value result = this->CallMethod("transferownership",p);
@@ -216,10 +221,11 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string paytoentryowner(int amount, const std::string& key) 
+                std::string paytoentryowner(int amount, bool isstring, const std::string& key) 
                 {
                     Json::Value p;
                     p["amount"] = amount;
+                    p["isstring"] = isstring;
                     p["key"] = key;
                     Json::Value result = this->CallMethod("paytoentryowner",p);
                     if (result.isString())

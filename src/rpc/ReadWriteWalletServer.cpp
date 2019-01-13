@@ -385,6 +385,7 @@ auto ReadWriteWalletServer::getownedaddresses()
 
 auto ReadWriteWalletServer::createnewentry(const std::string& address,
                                            int burnvalue,
+                                           bool is_string,
                                            const std::string& key,
                                            const Json::Value& value)
     -> std::string
@@ -432,6 +433,7 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
 }
 
 auto ReadWriteWalletServer::renewentry(int burnvalue,
+                                       bool is_string,
                                        const std::string& key)
     -> std::string
 {
@@ -454,6 +456,7 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
 }
 
 auto ReadWriteWalletServer::updateentry(int burnvalue,
+                                        bool is_string,
                                         const std::string& key,
                                         const Json::Value& value)
     -> std::string
@@ -484,6 +487,7 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
 }
 
 auto ReadWriteWalletServer::deleteentry(int burnvalue,
+                                        bool is_string,
                                         const std::string& key)
     -> std::string
 {
@@ -506,6 +510,7 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
 }
 
 auto ReadWriteWalletServer::transferownership(int burnvalue,
+                                              bool is_string,
                                               const std::string& key,
                                               const std::string& newowner)
     -> std::string
@@ -532,6 +537,7 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
 }
 
 auto ReadWriteWalletServer::paytoentryowner(int amount,
+                                            bool is_string,
                                             const std::string& key)
     -> std::string
 {
