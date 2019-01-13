@@ -9,7 +9,7 @@
 #include <fmt/ranges.h>
 #include <g3log/g3log.hpp>
 #include <jsonrpccpp/client/connectors/httpclient.h>
-#include <rpc/readonlywalletstubclient.h>
+#include <rpc/readwritewalletstubclient.h>
 #include <thread>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
@@ -22,34 +22,23 @@ using buddy::env::initConsoleLogger;
 using buddy::env::initFileLogger;
 using buddy::env::parseConfigFile;
 using buddy::env::ProgramOptions;
-using buddy::rpc::ReadOnlyWalletStubClient;
+using buddy::rpc::ReadWriteWalletStubClient;
 using jsonrpc::HttpClient;
 using jsonrpc::JSONRPC_CLIENT_V2;
 using jsonrpc::JsonRpcException;
 
 
-auto main(int argc, char* argv[]) -> int
+std::string key;
+bool is_string;
+std::string owner;
+Json::Value entry_value;
+int burn_value;
+
+
+Json::Value response;
+
+auto addLookupOnlySubcommands(CLI::App& app, ReadWriteWalletStubClient& client)
 {
-    using namespace std::string_literals;
-
-    static const auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
-
-    auto params = parseConfigFile(default_buddy_dir);
-    auto port = params.getRpcPort();
-    HttpClient httpclient("http://localhost:" + std::to_string(port));
-    ReadOnlyWalletStubClient client{httpclient, JSONRPC_CLIENT_V2};
-
-    Json::Value response;
-
-    CLI::App app{"buddy-cli is a tool to easily communicate with a buddyd server via CLI"};
-
-    std::string key;
-    bool is_string;
-    std::string owner;
-
-    app.set_help_all_flag("--help-all",
-                          "Show all help");
-
     app.add_subcommand("shutdown",
                        "stops the buddyd server")
         ->callback([&] {
@@ -74,6 +63,76 @@ auto main(int argc, char* argv[]) -> int
             response = client.checkvalidity();
         });
 
+    auto lookupvalue_opt =
+        app.add_subcommand("lookupvalue",
+                           "looks up the value of a given byte vector/string")
+            ->callback([&] {
+                response = client.lookupvalue(is_string, key);
+            });
+
+    auto lookupowner_opt =
+        app.add_subcommand("lookupowner",
+                           "looks up the owner of an entry identified by a given byte vector/string key")
+            ->callback([&] {
+                response = client.lookupowner(is_string, key);
+            });
+
+    auto lookupactivationblock_opt =
+        app.add_subcommand("lookupactivationblock",
+                           "looks up the in which block the entry with the given key was last activated")
+            ->callback([&] {
+                response = client.lookupactivationblock(is_string, key);
+            });
+
+    auto lookupallentrysof_opt =
+        app.add_subcommand("lookupallentrysof",
+                           "returns a vector of all entrys the given owner currently owns")
+            ->callback([&] {
+                response = client.lookupallentrysof(owner);
+            });
+
+    lookupvalue_opt
+        ->add_option("--key",
+                     key,
+                     "the key of which the value will be looked up")
+        ->required();
+
+    lookupvalue_opt
+        ->add_flag("--isstring",
+                   is_string,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    lookupowner_opt
+        ->add_option("--key",
+                     key,
+                     "the key of which the owner will be looked up")
+        ->required();
+
+    lookupowner_opt
+        ->add_flag("--isstring",
+                   is_string,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    lookupactivationblock_opt
+        ->add_option("--key",
+                     key,
+                     "the key of which the value will be looked up")
+        ->required();
+
+    lookupactivationblock_opt
+        ->add_flag("--isstring",
+                   is_string,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    lookupallentrysof_opt
+        ->add_option("--owner",
+                     owner,
+                     "owner address of which all the entrys will be looked up")
+        ->required();
+}
+
+auto addReadOnlySubcommands(CLI::App& app, ReadWriteWalletStubClient& client)
+{
     app.add_subcommand("addwatchonlyaddress",
                        "adds a new address to watch")
         ->callback([&] {
@@ -127,76 +186,52 @@ auto main(int argc, char* argv[]) -> int
         ->callback([&] {
             response = client.getownedaddresses();
         });
+}
 
-    auto lookupvalue_opt =
-        app.add_subcommand("lookupvalue",
-                           "looks up the value of a given byte vector/string")
-            ->callback([&] {
-                response = client.lookupvalue(is_string, key);
-            });
+auto addReadWriteSubcommands(CLI::App& app, ReadWriteWalletStubClient& client)
+{
 
-    auto lookupowner_opt =
-        app.add_subcommand("lookupowner",
-                           "looks up the owner of an entry identified by a given byte vector/string key")
+    auto createnewentry_opt =
+        app.add_subcommand("createnewentry",
+                           "creates a new entry")
             ->callback([&] {
-                response = client.lookupowner(is_string, key);
-            });
-
-    auto lookupactivationblock_opt =
-        app.add_subcommand("lookupactivationblock",
-                           "looks up the in which block the entry with the given key was last activated")
-            ->callback([&] {
-                response = client.lookupactivationblock(is_string, key);
-            });
-
-    auto lookupallentrysof_opt =
-        app.add_subcommand("lookupallentrysof",
-                           "returns a vector of all entrys the given owner currently owns")
-            ->callback([&] {
-                response = client.lookupallentrysof(owner);
+                response = client.createnewentry(owner, burn_value, is_string, key, entry_value);
             });
 
 
     app.require_subcommand();
 
-    lookupvalue_opt
+    createnewentry_opt
         ->add_option("--key",
                      key,
                      "the key of which the value will be looked up")
         ->required();
+}
 
-    lookupvalue_opt
-        ->add_flag("--isstring",
-                   is_string,
-                   "if set, the given key will be interpreted as string and not as byte vector");
 
-    lookupowner_opt
-        ->add_option("--key",
-                     key,
-                     "the key of which the owner will be looked up")
-        ->required();
 
-    lookupowner_opt
-        ->add_flag("--isstring",
-                   is_string,
-                   "if set, the given key will be interpreted as string and not as byte vector");
 
-    lookupactivationblock_opt
-        ->add_option("--key",
-                     key,
-                     "the key of which the value will be looked up")
-        ->required();
+auto main(int argc, char* argv[]) -> int
+{
+    using namespace std::string_literals;
 
-    lookupactivationblock_opt
-        ->add_flag("--isstring",
-                   is_string,
-                   "if set, the given key will be interpreted as string and not as byte vector");
+    static const auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
 
-    lookupallentrysof_opt
-        ->add_option("--owner",
-                     owner,
-                     "owner address of which all the entrys will be looked up")
-        ->required();
+    auto params = parseConfigFile(default_buddy_dir);
+    auto port = params.getRpcPort();
+    HttpClient httpclient("http://localhost:" + std::to_string(port));
+    ReadWriteWalletStubClient client{httpclient, JSONRPC_CLIENT_V2};
+
+    Json::Value response;
+
+    CLI::App app{"buddy-cli is a tool to easily communicate with a buddyd server via CLI"};
+
+    app.set_help_all_flag("--help-all",
+                          "Show all help");
+
+    addLookupOnlySubcommands(app, client);
+    addReadOnlySubcommands(app, client);
+
 
 
 

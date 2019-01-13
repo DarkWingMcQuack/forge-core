@@ -17,6 +17,7 @@
 #include <lookup/LookupManager.hpp>
 #include <rpc/LookupOnlyServer.hpp>
 #include <rpc/ReadOnlyWalletServer.hpp>
+#include <rpc/ReadWriteWalletServer.hpp>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,9 +29,9 @@
 #include <unistd.h>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
+#include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
 
-using buddy::daemon::ReadOnlyOdinDaemon;
 using buddy::lookup::LookupManager;
 using buddy::daemon::ReadOnlyDaemonBase;
 using buddy::daemon::make_readonly_daemon;
@@ -46,6 +47,7 @@ using buddy::env::parseOptions;
 using buddy::env::ProgramOptions;
 using buddy::rpc::LookupOnlyServer;
 using buddy::rpc::ReadOnlyWalletServer;
+using buddy::rpc::ReadWriteWalletServer;
 using jsonrpc::HttpServer;
 using jsonrpc::JSONRPC_SERVER_V1V2;
 
@@ -163,6 +165,43 @@ auto runReadOnlyWalletServer(const ProgramOptions& params)
     rpcserver.StopListening();
 }
 
+auto runReadWriteWalletServer(const ProgramOptions& params)
+{
+    auto reader = make_readonly_daemon(params.getCoinHost(),
+                                       params.getCoinUser(),
+                                       params.getCoinPassword(),
+                                       params.getCoinPort(),
+                                       Coin::Odin);
+
+    auto writer = make_writing_daemon(params.getCoinHost(),
+                                      params.getCoinUser(),
+                                      params.getCoinPassword(),
+                                      params.getCoinPort(),
+                                      Coin::Odin);
+
+    auto lookup = std::make_unique<LookupManager>(std::move(reader));
+    ReadWriteWallet wallet{std::move(lookup),
+                           std::move(writer)};
+
+    auto port = params.getRpcPort();
+    auto threads = params.getNumberOfThreads();
+
+
+    HttpServer httpserver{static_cast<int>(port),
+                          "",
+                          "",
+                          static_cast<int>(threads)};
+
+    ReadWriteWalletServer rpcserver{httpserver,
+                                    JSONRPC_SERVER_V1V2,
+                                    std::move(wallet)};
+    rpcserver.StartListening();
+
+    buddy::rpc::waitForShutdown(rpcserver);
+
+    rpcserver.StopListening();
+}
+
 auto main(int argc, char* argv[]) -> int
 {
     using namespace std::chrono_literals;
@@ -183,11 +222,6 @@ auto main(int argc, char* argv[]) -> int
         initConsoleLogger();
     }
 
-    // auto writer = make_writing_daemon(params.getCoinHost(),
-    //                                   params.getCoinUser(),
-    //                                   params.getCoinPassword(),
-    //                                   params.getCoinPort(),
-    //                                   Coin::Odin);
 
     switch(params.getMode()) {
 
@@ -199,7 +233,8 @@ auto main(int argc, char* argv[]) -> int
         runReadOnlyWalletServer(params);
         break;
 
-    default:
+    case buddy::env::Mode::ReadWrite:
+        runReadWriteWalletServer(params);
         break;
     }
 }
