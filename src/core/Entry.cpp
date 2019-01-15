@@ -1,6 +1,7 @@
 #include <core/Entry.hpp>
 #include <core/Operation.hpp>
 #include <cstddef>
+#include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
 #include <vector>
@@ -195,13 +196,8 @@ auto buddy::core::jsonToEntryValue(Json::Value&& value)
     }
 
     if(!value.isMember("type")
-       || (value["type"] != "ipv6"
-           && value["type"] != "ipv4"
-           && value["type"] != "none"
-           && value["type"] != "bytearray")
-       || !value.isMember("value")
-       || !(value["type"] != "none"
-            && !value["value"].isString())) {
+       || !value.isMember("value")) {
+        LOG(DEBUG) << "REEEEEEEEEEEEEEEEEEEEE";
         return std::nullopt;
     }
 
