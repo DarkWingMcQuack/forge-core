@@ -201,6 +201,9 @@ auto extractMetadata(std::string&& hex)
 auto stringToByteVec(const std::string& str)
     -> utilxx::Opt<std::vector<std::byte>>;
 
+auto stringToASCIIByteVec(const std::string& str)
+    -> std::vector<std::byte>;
+
 auto metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
     -> bool;
 

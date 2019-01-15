@@ -479,3 +479,18 @@ auto buddy::core::toHexString(const std::vector<std::byte>& bytes)
     }
     return ss.str();
 }
+
+
+auto buddy::core::stringToASCIIByteVec(const std::string& str)
+    -> std::vector<std::byte>
+{
+    std::vector<std::byte> byte_vec;
+    std::transform(std::begin(str),
+                   std::end(str),
+                   std::back_inserter(byte_vec),
+                   [](auto character) {
+                       return static_cast<std::byte>(character);
+                   });
+
+    return byte_vec;
+}
