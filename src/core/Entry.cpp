@@ -190,6 +190,10 @@ auto buddy::core::entryToRawData(const Entry& entry)
 auto buddy::core::jsonToEntryValue(Json::Value&& value)
     -> utilxx::Opt<EntryValue>
 {
+    if(value.isNull()) {
+        return EntryValue{NoneValue{}};
+    }
+
     if(!value.isMember("type")
        || (value["type"] != "ipv6"
            && value["type"] != "ipv4"
