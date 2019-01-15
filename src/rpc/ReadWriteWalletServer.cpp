@@ -397,7 +397,7 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     }
     auto key_vec_opt = buddy::core::stringToByteVec(key);
     if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode value"};
+        throw JsonRpcException{"unable to decode key"};
     }
 
     auto entry_value = std::move(entry_value_opt.getValue());
