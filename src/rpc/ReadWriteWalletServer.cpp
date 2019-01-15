@@ -395,7 +395,17 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     if(!entry_value_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
-    auto key_vec_opt = buddy::core::stringToByteVec(key);
+
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
+
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
     }
