@@ -178,6 +178,42 @@ auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
+auto buddy::cli::addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto updateentry_opt =
+        app.add_subcommand("updateentry",
+                           "updates an entry to map to a new value")
+            ->callback([&] {
+                ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
+                RESPONSE = client.updateentry(BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
+            });
+
+    updateentry_opt
+        ->add_option("--key",
+                     KEY,
+                     "the key of the entry which will be updated")
+        ->required();
+
+    updateentry_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    updateentry_opt
+        ->add_option("--value",
+                     ENTRY_VALUE_STR,
+                     "value the entry holds, expected to be a json object "
+                     "with valid \"type\" and \"value\" fields. "
+                     "If not given, the entry will hold \"none\" as value");
+
+    updateentry_opt
+        ->add_option("--burn-value",
+                     BURN_VALUE,
+                     "number of coins which will be burned")
+        ->required();
+}
+
 auto buddy::cli::addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
@@ -213,4 +249,5 @@ auto buddy::cli::addReadWriteSubcommands(CLI::App& app, buddy::rpc::ReadWriteWal
     addCreateEntry(app, client);
     addPayToEntry(app, client);
     addRenewEntry(app, client);
+    addUpdateEntry(app, client);
 }
