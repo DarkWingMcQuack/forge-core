@@ -114,7 +114,7 @@ auto runLookupOnlyServer(const ProgramOptions& params)
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
-                                       Coin::Odin);
+                                       params.getCoin());
 
     auto port = params.getRpcPort();
     auto threads = params.getNumberOfThreads();
@@ -141,7 +141,7 @@ auto runReadOnlyWalletServer(const ProgramOptions& params)
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
-                                       Coin::Odin);
+                                       params.getCoin());
 
     auto lookup = std::make_unique<LookupManager>(std::move(daemon));
     ReadOnlyWallet wallet{std::move(lookup)};
@@ -171,13 +171,13 @@ auto runReadWriteWalletServer(const ProgramOptions& params)
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
-                                       Coin::Odin);
+                                       params.getCoin());
 
     auto writer = make_writing_daemon(params.getCoinHost(),
                                       params.getCoinUser(),
                                       params.getCoinPassword(),
                                       params.getCoinPort(),
-                                      Coin::Odin);
+                                      params.getCoin());
 
     auto lookup = std::make_unique<LookupManager>(std::move(reader));
     ReadWriteWallet wallet{std::move(lookup),
