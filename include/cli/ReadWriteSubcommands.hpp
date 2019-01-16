@@ -18,6 +18,9 @@ auto addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client
 auto addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
+auto addTransferOwnership(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+
 auto addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
