@@ -156,7 +156,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
     fs::create_directory(config_path);
 
     if(!fs::exists(config_path + "/buddy.conf")) {
-        fmt::print("config file {} not found, please create a valid config file in the workdir",
+        fmt::print("config file {} not found, please create a valid config file in the workdir\n",
                    config_path + "/buddy.conf");
         std::exit(-1);
     }
