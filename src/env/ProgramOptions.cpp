@@ -1,6 +1,10 @@
 #include <CLI/CLI.hpp>
 #include <cpptoml.h>
 #include <env/ProgramOptions.hpp>
+//TODO:I am currently using gcc 7.3 use the <filesystem> header once
+// my system switches to gcc 8
+#include <experimental/filesystem>
+
 #include <fmt/core.h>
 #include <fstream>
 #include <g3log/g3log.hpp>
@@ -125,6 +129,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
     -> ProgramOptions
 {
     using namespace std::string_literals;
+    namespace fs = std::experimental::filesystem;
 
     static const auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
 
@@ -147,6 +152,15 @@ auto buddy::env::parseOptions(int argc, char* argv[])
         std::exit(app.exit(e));
     }
 
+
+    fs::create_directory(config_path);
+
+    if(!fs::exists(config_path + "/buddy.conf")) {
+        fmt::print("config file {} not found, please create a valid config file in the workdir",
+                   config_path + "/buddy.conf");
+        std::exit(-1);
+    }
+
     auto params = parseConfigFile(config_path);
 
     params.setShouldLogToConsole(log_to_console);
@@ -157,6 +171,8 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 auto buddy::env::parseConfigFile(const std::string& config_path)
     -> ProgramOptions
 {
+    namespace fs = std::experimental::filesystem;
+
     auto config = cpptoml::parse_file(config_path + "/buddy.conf");
     auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
     auto mode_str = *config->get_qualified_as<std::string>("server.mode");
@@ -171,6 +187,11 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
     auto rpc_password = config->get_qualified_as<std::string>("rpc.password").value_or("password");
     auto threads = config->get_qualified_as<std::int64_t>("server.threads").value_or(5);
 
+
+    //create the log folder
+    fs::create_directory(log_path);
+
+    //try to get the mode
     auto mode = [&]() {
         if(mode_str == "lookup")
             return buddy::env::Mode::LookupOnly;
@@ -180,15 +201,15 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
             return buddy::env::Mode::ReadWrite;
         else {
             fmt::print("invalid value for \"server.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
-            std::exit(0);
+            std::exit(-1);
         }
     }();
 
+    //try to get the coind
     auto coin_opt = core::fromString(coin_str);
-
     if(!coin_opt) {
         fmt::print("invalid value for \"coin.coin\" = {}", coin_str);
-        std::exit(0);
+        std::exit(-1);
     }
 
     return ProgramOptions{std::move(log_path),

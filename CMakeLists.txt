@@ -123,6 +123,7 @@ target_link_libraries(buddy-src LINK_PUBLIC
   jsonrpc::server
   jsoncpp
   g3logger
+  stdc++fs #TODO: this is horrible to do imo
   ${CMAKE_THREAD_LIBS_INIT})
 
 #executable buddyd
