@@ -70,6 +70,10 @@ target_sources(buddy-src
   ${CMAKE_CURRENT_LIST_DIR}/include/rpc/LookupOnlyServer.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/rpc/ReadOnlyWalletServer.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/rpc/ReadWriteWalletServer.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/cli/LookupOnlySubcommands.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/cli/ReadOnlySubcommands.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/cli/ReadWriteSubcommands.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/cli/CLIGlobalVariables.hpp
 
   PRIVATE
   src/core/Operation.cpp
@@ -95,6 +99,9 @@ target_sources(buddy-src
   src/rpc/LookupOnlyServer.cpp
   src/rpc/ReadOnlyWalletServer.cpp
   src/rpc/ReadWriteWalletServer.cpp
+  src/cli/LookupOnlySubcommands.cpp
+  src/cli/ReadOnlySubcommands.cpp
+  src/cli/ReadWriteSubcommands.cpp
   )
 
 # make headers available
@@ -103,6 +110,7 @@ target_include_directories(buddy-src PUBLIC
   ${UTILXX_INCLUDE_DIR}
   ${CPPTOML_INCLUDE_DIR}
   ${CXXOPTS_INCLUDE_DIR}
+  ${CLI11_INCLUDE_DIR}
   fmt
   g3logger
   jsonrpc::client
