@@ -178,6 +178,34 @@ auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
+auto buddy::cli::addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto deleteentry_opt =
+        app.add_subcommand("",
+                           "deletes the given entry for another period")
+            ->callback([&] {
+                RESPONSE = client.deleteentry(BURN_VALUE, IS_STRING, KEY);
+            });
+
+    deleteentry_opt
+        ->add_option("--key",
+                     KEY,
+                     "the key of entry which will be deleted")
+        ->required();
+
+    deleteentry_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    deleteentry_opt
+        ->add_option("--amount",
+                     BURN_VALUE,
+                     "number of coins which will be burned to perform the deletion")
+        ->required();
+}
+
 auto buddy::cli::addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
@@ -242,7 +270,6 @@ auto buddy::cli::addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
-
 auto buddy::cli::addReadWriteSubcommands(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
@@ -250,4 +277,5 @@ auto buddy::cli::addReadWriteSubcommands(CLI::App& app, buddy::rpc::ReadWriteWal
     addPayToEntry(app, client);
     addRenewEntry(app, client);
     addUpdateEntry(app, client);
+    addDeleteEntry(app, client);
 }

@@ -15,6 +15,9 @@ auto addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
 auto addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
+auto addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+
 auto addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
