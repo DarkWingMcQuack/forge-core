@@ -51,6 +51,9 @@ public:
     auto getCoin() const
         -> core::Coin;
 
+    auto getDaemon() const
+        -> const daemon::ReadOnlyDaemonBase&;
+
 private:
     auto processBlock(core::Block&& block)
         -> utilxx::Result<void, ManagerError>;

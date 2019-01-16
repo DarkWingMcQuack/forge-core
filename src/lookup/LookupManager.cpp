@@ -226,6 +226,13 @@ auto buddy::lookup::generateMessage(ManagerError&& error)
 }
 
 
+auto LookupManager::getDaemon() const
+    -> const daemon::ReadOnlyDaemonBase&
+{
+    return *daemon_;
+}
+
+
 auto LookupManager::getCoin() const
     -> core::Coin
 {
