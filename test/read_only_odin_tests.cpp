@@ -125,7 +125,6 @@ TEST(ReadOnlyOdinDaemonTest, processGetUnspentInvalid)
     EXPECT_EQ(res_3.getValue().size(), 0);
 }
 
-
 TEST(ReadOnlyOdinDaemonTest, processGetAddressesValid)
 {
     auto json_str1 = readFile("addressgroupings_valid1.json");
