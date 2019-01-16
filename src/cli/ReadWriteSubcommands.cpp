@@ -172,7 +172,7 @@ auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
                    "if set, the given key will be interpreted as string and not as byte vector");
 
     renewentry_opt
-        ->add_option("--amount",
+        ->add_option("--burn-value",
                      BURN_VALUE,
                      "number of coins which will be burned to perform the renewal")
         ->required();
@@ -200,7 +200,7 @@ auto buddy::cli::addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
                    "if set, the given key will be interpreted as string and not as byte vector");
 
     deleteentry_opt
-        ->add_option("--amount",
+        ->add_option("--burn-value",
                      BURN_VALUE,
                      "number of coins which will be burned to perform the deletion")
         ->required();
