@@ -315,7 +315,7 @@ auto buddy::core::entryValueToJson(EntryValue value)
             [](NoneValue&& value) {
                 Json::Value json;
                 json["type"] = "none";
-                json["value"] = nullptr;
+                json["value"] = Json::nullValue;
 
                 return json;
             }};
