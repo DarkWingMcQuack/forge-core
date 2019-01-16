@@ -150,6 +150,34 @@ auto buddy::cli::addCreateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
                      "If not given, then a new address will be generated");
 }
 
+auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto renewentry_opt =
+        app.add_subcommand("",
+                           "renews the given entry for another period")
+            ->callback([&] {
+                RESPONSE = client.renewentry(BURN_VALUE, IS_STRING, KEY);
+            });
+
+    renewentry_opt
+        ->add_option("--key",
+                     KEY,
+                     "the key of entry which will be renewed")
+        ->required();
+
+    renewentry_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    renewentry_opt
+        ->add_option("--amount",
+                     BURN_VALUE,
+                     "number of coins which will be burned to perform the renewal")
+        ->required();
+}
+
 auto buddy::cli::addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
@@ -184,4 +212,5 @@ auto buddy::cli::addReadWriteSubcommands(CLI::App& app, buddy::rpc::ReadWriteWal
 {
     addCreateEntry(app, client);
     addPayToEntry(app, client);
+    addRenewEntry(app, client);
 }
