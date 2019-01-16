@@ -102,23 +102,21 @@ auto ReadWriteWalletServer::lookupvalue(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    auto key_vec_opt =
+        [&] {
+            if(isstring) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
 
-    if(isstring) {
-        std::transform(std::cbegin(key),
-                       std::cend(key),
-                       std::back_inserter(key_vec),
-                       [](auto c) {
-                           return static_cast<std::byte>(c);
-                       });
-    } else {
-        auto vec_opt = core::stringToByteVec(key);
-        if(!vec_opt) {
-            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
-        }
-
-        key_vec = std::move(vec_opt.getValue());
+    if(!key_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
     }
+
+    auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = lookup_.lookupValue(key_vec);
 
@@ -138,23 +136,20 @@ auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
-
-    if(isstring) {
-        std::transform(std::cbegin(key),
-                       std::cend(key),
-                       std::back_inserter(key_vec),
-                       [](auto c) {
-                           return static_cast<std::byte>(c);
-                       });
-    } else {
-        auto vec_opt = core::stringToByteVec(key);
-        if(!vec_opt) {
-            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
-        }
-
-        key_vec = std::move(vec_opt.getValue());
+    auto key_vec_opt =
+        [&] {
+            if(isstring) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
+    if(!key_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
     }
+
+    auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = lookup_.lookupOwner(key_vec);
 
@@ -174,23 +169,21 @@ auto ReadWriteWalletServer::lookupactivationblock(bool isstring, const std::stri
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    auto key_vec_opt =
+        [&] {
+            if(isstring) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
 
-    if(isstring) {
-        std::transform(std::cbegin(key),
-                       std::cend(key),
-                       std::back_inserter(key_vec),
-                       [](auto c) {
-                           return static_cast<std::byte>(c);
-                       });
-    } else {
-        auto vec_opt = core::stringToByteVec(key);
-        if(!vec_opt) {
-            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
-        }
-
-        key_vec = std::move(vec_opt.getValue());
+    if(!key_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
     }
+
+    auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = lookup_.lookupActivationBlock(key_vec);
 
