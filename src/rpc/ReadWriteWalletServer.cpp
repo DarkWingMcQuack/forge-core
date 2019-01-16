@@ -447,7 +447,15 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
                                        const std::string& key)
     -> std::string
 {
-    auto key_vec_opt = buddy::core::stringToByteVec(key);
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -476,7 +484,16 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     if(!entry_value_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
-    auto key_vec_opt = buddy::core::stringToByteVec(key);
+
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -501,7 +518,15 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
                                         const std::string& key)
     -> std::string
 {
-    auto key_vec_opt = buddy::core::stringToByteVec(key);
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -525,7 +550,15 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
                                               const std::string& newowner)
     -> std::string
 {
-    auto key_vec_opt = buddy::core::stringToByteVec(key);
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -551,7 +584,15 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
                                             const std::string& key)
     -> std::string
 {
-    auto key_vec_opt = buddy::core::stringToByteVec(key);
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return buddy::core::stringToByteVec(key);
+            }
+        }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
