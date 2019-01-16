@@ -5,7 +5,6 @@
 #include <cli/ReadOnlySubcommands.hpp>
 #include <cli/ReadWriteSubcommands.hpp>
 #include <core/Operation.hpp>
-#include <cxxopts.hpp>
 #include <env/LoggingSetup.hpp>
 #include <env/ProgramOptions.hpp>
 #include <fmt/core.h>

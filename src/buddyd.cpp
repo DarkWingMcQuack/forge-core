@@ -1,6 +1,5 @@
 #include <chrono>
 #include <core/Operation.hpp>
-#include <cxxopts.hpp>
 #include <daemon/WriteOnlyDaemonBase.hpp>
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <env/LoggingSetup.hpp>
