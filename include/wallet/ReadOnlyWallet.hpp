@@ -37,6 +37,9 @@ public:
     auto getOwnedAddresses() const
         -> const std::set<std::string>&;
 
+    auto ownesAddress(const std::string& addr) const
+        -> bool;
+
     auto getLookup() const
         -> const lookup::LookupManager&;
     auto getLookup()

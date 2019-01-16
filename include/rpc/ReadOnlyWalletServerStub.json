@@ -129,6 +129,13 @@
         ]
     },
     {
+        "name" : "ownesaddress",
+        "params" : {
+            "address": "someaddress"
+        },
+        "returns" : true
+    },
+    {
         "name" : "getownedaddresses",
         "returns" : [
             "someaddress",

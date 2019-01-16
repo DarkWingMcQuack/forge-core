@@ -102,3 +102,15 @@ auto buddy::cli::addGetOwnedAddresses(CLI::App& app, buddy::rpc::ReadWriteWallet
             RESPONSE = client.getownedaddresses();
         });
 }
+
+auto buddy::cli::addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    app.add_subcommand("ownesaddress",
+                       "returns if the current wallet ownes the given address")
+        ->callback([&] {
+            RESPONSE = client.ownesaddress(OWNER);
+        })
+        ->add_option("--address", OWNER)
+        ->required();
+}

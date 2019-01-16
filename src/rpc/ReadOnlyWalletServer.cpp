@@ -383,6 +383,12 @@ auto ReadOnlyWalletServer::getownedaddresses()
     return ret_json;
 }
 
+auto ReadOnlyWalletServer::ownesaddress(const std::string& address)
+    -> bool
+{
+    return wallet_.ownesAddress(address);
+}
+
 auto ReadOnlyWalletServer::hasShutdownRequest() const
     -> bool
 {

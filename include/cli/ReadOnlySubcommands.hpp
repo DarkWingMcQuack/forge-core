@@ -22,6 +22,8 @@ auto addGetWatchedAddresses(CLI::App& app, rpc::ReadWriteWalletStubClient& clien
     -> void;
 auto addGetOwnedAddresses(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
+auto addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void;
 
 auto addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;

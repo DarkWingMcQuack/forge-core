@@ -29,6 +29,7 @@ namespace buddy {
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadOnlyWalletStubSever::getwatchonlyentrysI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadOnlyWalletStubSever::getallwatchedentrysI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadOnlyWalletStubSever::getwatchedaddressesI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("ownesaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadOnlyWalletStubSever::ownesaddressI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getownedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadOnlyWalletStubSever::getownedaddressesI);
                 }
 
@@ -92,6 +93,10 @@ namespace buddy {
                 {
                     response = this->getwatchedaddresses();
                 }
+                inline virtual void ownesaddressI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->ownesaddress(request["address"].asString());
+                }
                 inline virtual void getownedaddressesI(const Json::Value &/*request*/, Json::Value &response)
                 {
                     response = this->getownedaddresses();
@@ -111,6 +116,7 @@ namespace buddy {
                 virtual Json::Value getwatchonlyentrys() = 0;
                 virtual Json::Value getallwatchedentrys() = 0;
                 virtual Json::Value getwatchedaddresses() = 0;
+                virtual bool ownesaddress(const std::string& address) = 0;
                 virtual Json::Value getownedaddresses() = 0;
         };
 

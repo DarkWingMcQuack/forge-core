@@ -157,6 +157,16 @@ namespace buddy {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                bool ownesaddress(const std::string& address) 
+                {
+                    Json::Value p;
+                    p["address"] = address;
+                    Json::Value result = this->CallMethod("ownesaddress",p);
+                    if (result.isBool())
+                        return result.asBool();
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
                 std::string createnewentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
                 {
                     Json::Value p;

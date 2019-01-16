@@ -30,6 +30,7 @@ namespace buddy {
                     this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::getallwatchedentrysI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::getwatchedaddressesI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getownedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::getownedaddressesI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("ownesaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::ownesaddressI);
                     this->bindAndAddMethod(jsonrpc::Procedure("createnewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::createnewentryI);
                     this->bindAndAddMethod(jsonrpc::Procedure("renewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::renewentryI);
                     this->bindAndAddMethod(jsonrpc::Procedure("updateentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &buddy::rpc::AbstractReadWriteWalletStubSever::updateentryI);
@@ -102,6 +103,10 @@ namespace buddy {
                 {
                     response = this->getownedaddresses();
                 }
+                inline virtual void ownesaddressI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->ownesaddress(request["address"].asString());
+                }
                 inline virtual void createnewentryI(const Json::Value &request, Json::Value &response)
                 {
                     response = this->createnewentry(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
@@ -142,6 +147,7 @@ namespace buddy {
                 virtual Json::Value getallwatchedentrys() = 0;
                 virtual Json::Value getwatchedaddresses() = 0;
                 virtual Json::Value getownedaddresses() = 0;
+                virtual bool ownesaddress(const std::string& address) = 0;
                 virtual std::string createnewentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
                 virtual std::string renewentry(int burnvalue, bool isstring, const std::string& key) = 0;
                 virtual std::string updateentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;

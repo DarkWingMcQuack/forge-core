@@ -56,6 +56,8 @@ public:
         -> Json::Value override;
     virtual auto getownedaddresses()
         -> Json::Value override;
+    virtual auto ownesaddress(const std::string& address)
+        -> bool override;
 
     virtual auto createnewentry(const std::string& address,
                                 int burnvalue,

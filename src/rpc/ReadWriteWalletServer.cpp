@@ -376,6 +376,12 @@ auto ReadWriteWalletServer::getownedaddresses()
     return ret_json;
 }
 
+auto ReadWriteWalletServer::ownesaddress(const std::string& address)
+    -> bool
+{
+    return wallet_.ownesAddress(address);
+}
+
 auto ReadWriteWalletServer::createnewentry(const std::string& address,
                                            int burnvalue,
                                            bool is_string,

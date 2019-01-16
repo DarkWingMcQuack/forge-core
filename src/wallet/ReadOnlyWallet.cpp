@@ -95,6 +95,12 @@ auto ReadOnlyWallet::getOwnedAddresses() const
     return owned_addresses_;
 }
 
+auto ReadOnlyWallet::ownesAddress(const std::string& addr) const
+    -> bool
+{
+    return owned_addresses_.find(addr) != owned_addresses_.end();
+}
+
 auto ReadOnlyWallet::getLookup() const
     -> const lookup::LookupManager&
 {

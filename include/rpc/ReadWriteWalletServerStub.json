@@ -136,6 +136,13 @@
         ]
     },
     {
+        "name" : "ownesaddress",
+        "params" : {
+            "address": "someaddress"
+        },
+        "returns" : true
+    },
+    {
         "name" : "createnewentry",
         "params" : {
             "key" : "somekey",
