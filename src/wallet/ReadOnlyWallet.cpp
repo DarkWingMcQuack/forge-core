@@ -12,7 +12,17 @@ using buddy::core::Entry;
 
 
 ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)
-    : lookup_(std::move(lookup)) {}
+    : lookup_(std::move(lookup))
+{
+    lookup_
+        ->getDaemon()
+        .getAddresses()
+        .onValue([this](auto&& addresses) {
+            for(auto&& addr : addresses) {
+                this->addNewOwnedAddress(std::move(addr));
+            }
+        });
+}
 
 auto ReadOnlyWallet::addWatchOnlyAddress(std::string&& adr)
     -> void
