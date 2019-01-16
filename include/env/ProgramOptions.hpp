@@ -1,5 +1,6 @@
 #pragma once
 
+#include <core/Coin.hpp>
 #include <string>
 #include <utilxx/Opt.hpp>
 
@@ -24,6 +25,7 @@ public:
                    std::int64_t number_of_threads,
                    Mode mode,
                    bool daemonize,
+                   core::Coin coin,
                    std::int64_t coin_port,
                    std::string&& coin_host,
                    std::string&& coin_user,
@@ -39,12 +41,15 @@ public:
         -> bool;
 
     auto setShouldLogToConsole(bool)
-        -> bool;
+        -> void;
 
     auto getMode() const
         -> Mode;
     auto shouldDaemonize() const
         -> bool;
+
+    auto getCoin() const
+        -> core::Coin;
 
     auto getNumberOfThreads() const
         -> std::int64_t;
@@ -73,6 +78,7 @@ private:
 
     Mode mode_;
     bool daemonize_;
+    core::Coin coin_;
 
     std::int64_t coin_port_;
     std::string coin_host_;

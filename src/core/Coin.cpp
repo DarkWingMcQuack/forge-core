@@ -1,6 +1,16 @@
 #include <core/Coin.hpp>
 #include <cstdint>
 
+using buddy::core::Coin;
+
+
+auto buddy::core::fromString(std::string_view str)
+    -> utilxx::Opt<Coin>
+{
+    if(str == "odin") {
+        return Coin::Odin;
+    }
+}
 
 auto buddy::core::getMaturity(Coin c)
     -> std::int64_t

@@ -1,5 +1,5 @@
+#include <CLI/CLI.hpp>
 #include <cpptoml.h>
-#include <cxxopts.hpp>
 #include <env/ProgramOptions.hpp>
 #include <fmt/core.h>
 #include <fstream>
@@ -13,6 +13,7 @@ ProgramOptions::ProgramOptions(std::string&& logfolder,
                                std::int64_t number_of_threads,
                                Mode mode,
                                bool daemonize,
+                               core::Coin coin,
                                std::int64_t coin_port,
                                std::string&& coin_host,
                                std::string&& coin_user,
@@ -24,6 +25,7 @@ ProgramOptions::ProgramOptions(std::string&& logfolder,
       number_of_threads_(number_of_threads),
       mode_(mode),
       daemonize_(daemonize),
+      coin_(coin),
       coin_port_(coin_port),
       coin_host_(std::move(coin_host)),
       coin_user_(std::move(coin_user)),
@@ -46,7 +48,7 @@ auto ProgramOptions::shouldLogToConsole() const
 }
 
 auto ProgramOptions::setShouldLogToConsole(bool value)
-    -> bool
+    -> void
 {
     log_to_console_ = value;
 }
@@ -56,6 +58,12 @@ auto ProgramOptions::getMode() const
     -> Mode
 {
     return mode_;
+}
+
+auto ProgramOptions::getCoin() const
+    -> core::Coin
+{
+    return coin_;
 }
 
 auto ProgramOptions::shouldDaemonize() const
@@ -118,41 +126,32 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 {
     using namespace std::string_literals;
 
-    cxxopts::Options options("cppBUDDY", "Implementation of the BUDDY protocol");
+    static const auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
 
-    static auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
+    CLI::App app{"buddyd server, adding a second layer to blockchains"};
 
-    // clang-format off
-    options.add_options()
-        ("help", "Print help and exit.")
-        ("w,workdir", "path to the workingfolder of buddy",
-         cxxopts::value<std::string>()->default_value(default_buddy_dir))
-        ("l,log", "if set, logging will be displayed on the terminal",
-         cxxopts::value<bool>()->default_value("false"));
-    // clang-format on
+    bool log_to_console = false;
+    auto config_path = default_buddy_dir;
+    app.set_help_all_flag("--help-all",
+                          "Show all help");
 
+    app.add_flag("-l,--log",
+                 log_to_console,
+                 "if set, logging will be displayed on the terminal");
+    app.add_option("-w,--workdir",
+                   config_path,
+                   "path to the workingfolder of buddy");
     try {
-        auto result = options.parse(argc, argv);
-
-        if(result.count("help")) {
-            fmt::print("{}\n", options.help());
-            std::exit(0);
-        }
-
-        auto config_path = result["workdir"].as<std::string>();
-        auto log_to_console = result["log"].as<bool>();
-
-        auto params = parseConfigFile(config_path);
-
-        params.setShouldLogToConsole(log_to_console);
-
-        return params;
-
-    } catch(const std::exception& e) {
-        fmt::print("{}\n", e.what());
-        fmt::print("Something went wrong with the parameters or the config file\n");
-        std::exit(-1);
+        app.parse(argc, argv);
+    } catch(const CLI::ParseError& e) {
+        std::exit(app.exit(e));
     }
+
+    auto params = parseConfigFile(config_path);
+
+    params.setShouldLogToConsole(log_to_console);
+
+    return params;
 }
 
 auto buddy::env::parseConfigFile(const std::string& config_path)
@@ -162,6 +161,7 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
     auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
     auto mode_str = *config->get_qualified_as<std::string>("server.mode");
     auto daemonize = *config->get_qualified_as<bool>("server.daemon");
+    auto coin_str = *config->get_qualified_as<std::string>("coin.coin");
     auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
     auto coin_host = *config->get_qualified_as<std::string>("coin.host");
     auto coin_user = *config->get_qualified_as<std::string>("coin.user");
@@ -184,10 +184,18 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
         }
     }();
 
+    auto coin_opt = core::fromString(coin_str);
+
+    if(!coin_opt) {
+        fmt::print("invalid value for \"coin.coin\" = {}", coin_str);
+        std::exit(0);
+    }
+
     return ProgramOptions{std::move(log_path),
                           threads,
                           mode,
                           daemonize,
+                          coin_opt.getValue(),
                           coin_port,
                           std::move(coin_host),
                           std::move(coin_user),

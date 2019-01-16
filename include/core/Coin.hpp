@@ -1,12 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <string_view>
+#include <utilxx/Opt.hpp>
 
 namespace buddy::core {
 
 enum class Coin {
     Odin
 };
+
+auto fromString(std::string_view str)
+    -> utilxx::Opt<Coin>;
 
 auto getMaturity(Coin c)
     -> std::int64_t;
