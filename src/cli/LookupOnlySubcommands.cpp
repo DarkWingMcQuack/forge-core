@@ -91,7 +91,7 @@ auto buddy::cli::addLookupOwner(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
 
     lookupowner_opt
         ->add_option("--key",
-                     IS_STRING,
+                     KEY,
                      "the key of which the owner will be looked up")
         ->required();
 
