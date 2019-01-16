@@ -450,7 +450,7 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
             }
         }();
     if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode value"};
+        throw JsonRpcException{"unable to decode key"};
     }
 
     auto key_vec = std::move(key_vec_opt.getValue());
@@ -488,7 +488,7 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
             }
         }();
     if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode value"};
+        throw JsonRpcException{"unable to decode key"};
     }
 
     auto entry_value = std::move(entry_value_opt.getValue());
@@ -521,7 +521,7 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
             }
         }();
     if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode value"};
+        throw JsonRpcException{"unable to decode key"};
     }
 
     auto key_vec = std::move(key_vec_opt.getValue());
@@ -553,7 +553,7 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
             }
         }();
     if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode value"};
+        throw JsonRpcException{"unable to decode key"};
     }
 
     auto key_vec = std::move(key_vec_opt.getValue());
@@ -587,7 +587,7 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
             }
         }();
     if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode value"};
+        throw JsonRpcException{"unable to decode key"};
     }
 
     auto key_vec = std::move(key_vec_opt.getValue());
