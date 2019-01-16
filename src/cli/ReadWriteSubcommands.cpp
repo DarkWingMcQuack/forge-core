@@ -154,7 +154,7 @@ auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
     -> void
 {
     auto renewentry_opt =
-        app.add_subcommand("",
+        app.add_subcommand("renewentry",
                            "renews the given entry for another period")
             ->callback([&] {
                 RESPONSE = client.renewentry(BURN_VALUE, IS_STRING, KEY);
@@ -182,7 +182,7 @@ auto buddy::cli::addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
     -> void
 {
     auto deleteentry_opt =
-        app.add_subcommand("",
+        app.add_subcommand("deleteentry",
                            "deletes the given entry for another period")
             ->callback([&] {
                 RESPONSE = client.deleteentry(BURN_VALUE, IS_STRING, KEY);
