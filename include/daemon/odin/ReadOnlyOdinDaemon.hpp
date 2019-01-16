@@ -49,6 +49,10 @@ public:
         -> utilxx::Result<std::vector<core::Unspent>,
                           DaemonError> override;
 
+    auto getAddresses() const
+        -> utilxx::Result<std::vector<std::string>,
+                          DaemonError> override;
+
 protected:
     auto sendcommand(const std::string& command,
                      Json::Value params) const
@@ -81,6 +85,10 @@ auto processGetBlockResponse(Json::Value&& response,
 auto processGetUnspentResponse(Json::Value&& response,
                                const Json::Value& params)
     -> utilxx::Result<std::vector<core::Unspent>,
+                      DaemonError>;
+
+auto processGetAddressesResponse(Json::Value&& response)
+    -> utilxx::Result<std::vector<std::string>,
                       DaemonError>;
 } // namespace odin
 

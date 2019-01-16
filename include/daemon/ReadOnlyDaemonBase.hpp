@@ -42,6 +42,10 @@ public:
                                 std::int64_t index) const
         -> utilxx::Result<std::int64_t, DaemonError> = 0;
 
+    virtual auto getAddresses() const
+        -> utilxx::Result<std::vector<std::string>,
+                          DaemonError> = 0;
+
     virtual auto getCoin() const
         -> core::Coin final;
 

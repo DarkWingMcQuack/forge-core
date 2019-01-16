@@ -198,6 +198,18 @@ auto ReadOnlyOdinDaemon::getOutputValue(std::string txid,
         });
 }
 
+auto ReadOnlyOdinDaemon::getAddresses() const
+    -> utilxx::Result<std::vector<std::string>,
+                      DaemonError>
+{
+    static const auto command = "listaddressgroupings";
+
+    return sendcommand(command, {})
+        .flatMap([&](auto&& json) {
+            return odin::processGetAddressesResponse(std::move(json));
+        });
+}
+
 auto buddy::daemon::odin::processGetTransactionResponse(Json::Value&& json,
                                                         const Json::Value& params)
     -> utilxx::Result<Transaction, DaemonError>
@@ -298,4 +310,32 @@ auto buddy::daemon::odin::processGetUnspentResponse(Json::Value&& response,
                          });
 
     return std::move(ret_vec);
+}
+
+auto buddy::daemon::odin::processGetAddressesResponse(Json::Value&& response)
+    -> utilxx::Result<std::vector<std::string>,
+                      DaemonError>
+{
+    if(!response.isArray()) {
+        return DaemonError{"result of \"listaddressgroupings\" was not an json array"};
+    }
+
+    std::vector<std::string> addresses;
+
+    for(auto&& group : response) {
+        if(!group.isArray()) {
+            continue;
+        }
+
+        for(auto&& elem : group) {
+            if(!elem.isValidIndex(0)
+               || !elem[0].isString()) {
+                break;
+            }
+
+            addresses.push_back(std::move(elem[0].asString()));
+        }
+    }
+
+    return addresses;
 }
