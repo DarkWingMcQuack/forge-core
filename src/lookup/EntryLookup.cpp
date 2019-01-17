@@ -298,7 +298,7 @@ auto EntryLookup::operator()(EntryCreationOp&& op)
                             std::move(value_tuple)});
     }
 
-    LOG(INFO) << "executed entry creation op";
+    LOG(DEBUG) << "executed entry creation op";
 
     return {};
 }
@@ -325,7 +325,7 @@ auto EntryLookup::operator()(EntryRenewalOp&& op)
             }
         });
 
-    LOG(INFO) << "executed entry renewal op";
+    LOG(DEBUG) << "executed entry renewal op";
 
     return {};
 }
@@ -334,7 +334,7 @@ auto EntryLookup::operator()(OwnershipTransferOp&& op)
     -> Result<void, LookupError>
 {
     auto old_owner = std::move(op.getOwner());
-    auto new_owner = std::move(op.getOwner());
+    auto new_owner = std::move(op.getNewOwner());
     auto key = std::move(op.getEntryKey());
     auto value = std::move(op.getEntryValue());
 
@@ -352,7 +352,7 @@ auto EntryLookup::operator()(OwnershipTransferOp&& op)
             }
         });
 
-    LOG(INFO) << "executed ownership transfer op";
+    LOG(DEBUG) << "executed ownership transfer op";
 
     return {};
 }
@@ -376,7 +376,7 @@ auto EntryLookup::operator()(EntryUpdateOp&& op)
             }
         });
 
-    LOG(INFO) << "executed entry update op";
+    LOG(DEBUG) << "executed entry update op";
 
     return {};
 }
@@ -403,7 +403,7 @@ auto EntryLookup::operator()(EntryDeletionOp&& op)
             }
         });
 
-    LOG(INFO) << "executed entry deletion op";
+    LOG(DEBUG) << "executed entry deletion op";
 
     return {};
 }
