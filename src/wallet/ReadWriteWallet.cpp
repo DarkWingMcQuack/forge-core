@@ -118,7 +118,7 @@ auto ReadWriteWallet::renewEntry(core::EntryKey&& key,
                 auto entry_str = toHexString(entry.first);
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
-                    "entry {} who is currently owned by {}",
+                    "entry {} which is currently owned by {}",
                     entry_str,
                     owner);
                 return WalletError{std::move(error)};
@@ -181,7 +181,7 @@ auto ReadWriteWallet::updateEntry(core::EntryKey&& key,
         auto entry_str = toHexString(key);
         auto error = fmt::format(
             "it seems that you aren't the owner of "
-            "entry {} who is currently owned by {}",
+            "entry {} which is currently owned by {}",
             entry_str,
             owner);
         return WalletError{std::move(error)};
@@ -230,7 +230,7 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey&& key,
                 auto entry_str = toHexString(entry.first);
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
-                    "entry {} who is currently owned by {}",
+                    "entry {} which is currently owned by {}",
                     entry_str,
                     owner);
                 return WalletError{std::move(error)};
@@ -288,7 +288,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey&& key,
                 auto entry_str = toHexString(entry.first);
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
-                    "entry {} who is currently owned by {}",
+                    "entry {} which is currently owned by {}",
                     entry_str,
                     owner);
                 return WalletError{std::move(error)};
