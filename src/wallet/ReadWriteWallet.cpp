@@ -41,6 +41,9 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
         .mapError([](auto&& error) {
             return WalletError{std::move(error.what())};
         })
+        .onValue([this](auto address) {
+            addNewOwnedAddress(std::move(address));
+        })
         .flatMap([&](auto&& address) {
             return createNewEntry(std::move(key),
                                   std::move(value),
@@ -58,6 +61,14 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
     //create entry
     auto entry = Entry{std::move(key),
                        std::move(value)};
+
+    if(!ownesAddress(address)) {
+        auto error = fmt::format(
+            "it seems that you aren't the owner of "
+            "the address {}",
+            address);
+        return WalletError{std::move(error)};
+    }
 
     //create metadata
     auto metadata =
@@ -90,16 +101,29 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey&& key,
         });
 }
 
-
 auto ReadWriteWallet::renewEntry(core::EntryKey&& key,
                                  std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //create an entry and get the owner
     return createEntryOwnerPairFromKey(std::move(key))
-        .map([&](auto&& entry_owner_pair) {
+        .flatMap([&](auto&& entry_owner_pair)
+                     -> Result<std::pair<std::vector<std::byte>,
+                                         std::string>,
+                               WalletError> {
             //create metadata for the OP_RETURN burn
             auto [entry, owner] = std::move(entry_owner_pair);
+
+            if(!ownesAddress(owner)) {
+                auto entry_str = toHexString(entry.first);
+                auto error = fmt::format(
+                    "it seems that you aren't the owner of "
+                    "entry {} who is currently owned by {}",
+                    entry_str,
+                    owner);
+                return WalletError{std::move(error)};
+            }
+
             auto metadata =
                 createEntryRenewalOpMetadata(std::move(entry));
 
@@ -110,6 +134,8 @@ auto ReadWriteWallet::renewEntry(core::EntryKey&& key,
         .flatMap([&](auto&& pair) {
             //extract metadata and owner
             auto [metadata, owner] = std::move(pair);
+
+
             auto owner_copy = owner;
 
             //send burn amount + fee to the owner address
@@ -151,6 +177,16 @@ auto ReadWriteWallet::updateEntry(core::EntryKey&& key,
 
     auto owner = owner_opt.getValue().get();
 
+    if(!ownesAddress(owner)) {
+        auto entry_str = toHexString(key);
+        auto error = fmt::format(
+            "it seems that you aren't the owner of "
+            "entry {} who is currently owned by {}",
+            entry_str,
+            owner);
+        return WalletError{std::move(error)};
+    }
+
     //create metadata for the tx
     auto metadata = createEntryUpdateOpMetadata(std::move(key),
                                                 std::move(new_value));
@@ -183,9 +219,23 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey&& key,
 {
     //create an entry and get the owner
     return createEntryOwnerPairFromKey(std::move(key))
-        .map([&](auto&& entry_owner_pair) {
+        .flatMap([&](auto&& entry_owner_pair)
+                     -> Result<std::pair<std::vector<std::byte>,
+                                         std::string>,
+                               WalletError> {
             //create metadata for the OP_RETURN burn
             auto [entry, owner] = std::move(entry_owner_pair);
+
+            if(!ownesAddress(owner)) {
+                auto entry_str = toHexString(entry.first);
+                auto error = fmt::format(
+                    "it seems that you aren't the owner of "
+                    "entry {} who is currently owned by {}",
+                    entry_str,
+                    owner);
+                return WalletError{std::move(error)};
+            }
+
             auto metadata =
                 createEntryDeletionOpMetadata(std::move(entry));
 
@@ -227,9 +277,23 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey&& key,
     -> utilxx::Result<std::string, WalletError>
 {
     return createEntryOwnerPairFromKey(std::move(key))
-        .map([&](auto&& entry_owner_pair) {
+        .flatMap([&](auto&& entry_owner_pair)
+                     -> Result<std::pair<std::vector<std::byte>,
+                                         std::string>,
+                               WalletError> {
             //create metadata for the OP_RETURN burn
             auto [entry, owner] = std::move(entry_owner_pair);
+
+            if(!ownesAddress(owner)) {
+                auto entry_str = toHexString(entry.first);
+                auto error = fmt::format(
+                    "it seems that you aren't the owner of "
+                    "entry {} who is currently owned by {}",
+                    entry_str,
+                    owner);
+                return WalletError{std::move(error)};
+            }
+
             auto metadata =
                 createOwnershipTransferOpMetadata(std::move(entry));
 
