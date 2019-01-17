@@ -51,11 +51,21 @@ auto buddy::core::getDefaultTxFee(Coin c)
 }
 
 
-auto buddy::core::getBuddyValidityLength(Coin c)
+auto buddy::core::getValidityLength(Coin c)
     -> std::int64_t
 {
     switch(c) {
     case Coin::Odin:
         return 1051200; //1051200 blocks = 2 years
+    }
+}
+
+
+auto buddy::core::getMinimumTxAmount(Coin c)
+    -> std::int64_t
+{
+    switch(c) {
+    case Coin::Odin:
+        return 10000; //1051200 blocks = 2 years
     }
 }

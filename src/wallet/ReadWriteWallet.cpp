@@ -16,6 +16,7 @@ using buddy::wallet::ReadWriteWallet;
 using buddy::wallet::WalletError;
 using buddy::core::Entry;
 using buddy::core::getDefaultTxFee;
+using buddy::core::getMinimumTxAmount;
 using buddy::core::toHexString;
 using buddy::core::EntryKey;
 using buddy::core::EntryValue;
@@ -305,16 +306,21 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey&& key,
             //extract metadata and owner
             auto [metadata, owner] = std::move(pair);
             auto owner_copy = owner;
+            auto coin = getLookup().getCoin();
 
             //send burn amount + fee to the owner address
             return daemon_
-                //send +1 because this will be send to the new owner address
-                ->sendToAddress(burn_amount + 1 + getDefaultTxFee(getLookup().getCoin()),
+                //send +minTxAmount because this will be send to the new owner address
+                ->sendToAddress(burn_amount
+                                    + getMinimumTxAmount(coin)
+                                    + getDefaultTxFee(getLookup().getCoin()),
                                 std::move(owner_copy))
                 .flatMap([&](auto&& txid) {
                     return daemon_
                         ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount + getDefaultTxFee(getLookup().getCoin()),
+                                                       burn_amount
+                                                           + getMinimumTxAmount(coin)
+                                                           + getDefaultTxFee(getLookup().getCoin()),
                                                        owner)
                         .flatMap([&](auto vout_idx) {
                             return daemon_

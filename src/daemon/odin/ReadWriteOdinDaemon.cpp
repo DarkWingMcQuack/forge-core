@@ -228,7 +228,7 @@ auto ReadWriteOdinDaemon::burnAmount(std::string&& txid,
                                        index,
                                        std::move(metadata),
                                        amount,
-                                       {{txid, output_value - (fee + amount)}});
+                                       {{change_address, output_value - (fee + amount)}});
         });
 }
 
@@ -431,9 +431,10 @@ auto buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Valu
             return DaemonError{std::move(error)};
         }
 
-        auto holds_address = std::find(std::cbegin(out["scriptPubKey"]["addresses"]),
-                                       std::cend(out["scriptPubKey"]["addresses"]),
-                                       address)
+        auto holds_address =
+            std::find(std::cbegin(out["scriptPubKey"]["addresses"]),
+                      std::cend(out["scriptPubKey"]["addresses"]),
+                      address)
             != std::cend(out["addresses"]);
 
         if(coins_expected == roundDouble(out["value"].asDouble())

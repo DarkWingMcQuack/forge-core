@@ -25,7 +25,10 @@ auto getBlockTimeInSeconds(Coin c)
 auto getDefaultTxFee(Coin c)
     -> std::int64_t;
 
-auto getBuddyValidityLength(Coin c)
+auto getValidityLength(Coin c)
+    -> std::int64_t;
+
+auto getMinimumTxAmount(Coin c)
     -> std::int64_t;
 
 } // namespace buddy::core
