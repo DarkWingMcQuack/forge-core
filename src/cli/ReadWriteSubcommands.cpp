@@ -6,8 +6,8 @@
 #include <fmt/core.h>
 #include <rpc/readwritewalletstubclient.h>
 
-using buddy::core::stringToByteVec;
-using buddy::core::stringToASCIIByteVec;
+using forge::core::stringToByteVec;
+using forge::core::stringToASCIIByteVec;
 
 
 namespace {
@@ -107,7 +107,7 @@ auto checkAndTransformValueString(const std::string& str)
 
 } // namespace
 
-auto buddy::cli::addCreateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addCreateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto createnewentry_opt =
@@ -150,7 +150,7 @@ auto buddy::cli::addCreateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
                      "If not given, then a new address will be generated");
 }
 
-auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto renewentry_opt =
@@ -178,7 +178,7 @@ auto buddy::cli::addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
-auto buddy::cli::addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto deleteentry_opt =
@@ -206,7 +206,7 @@ auto buddy::cli::addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
         ->required();
 }
 
-auto buddy::cli::addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto updateentry_opt =
@@ -242,7 +242,7 @@ auto buddy::cli::addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
         ->required();
 }
 
-auto buddy::cli::addTransferOwnership(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto transferownership_opt =
@@ -277,7 +277,7 @@ auto buddy::cli::addTransferOwnership(CLI::App& app, buddy::rpc::ReadWriteWallet
         ->required();
 }
 
-auto buddy::cli::addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto createnewentry_opt =
@@ -305,7 +305,7 @@ auto buddy::cli::addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
-auto buddy::cli::addReadWriteSubcommands(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     addCreateEntry(app, client);

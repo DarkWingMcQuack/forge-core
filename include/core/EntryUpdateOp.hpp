@@ -2,7 +2,7 @@
 
 #include <core/Entry.hpp>
 
-namespace buddy::core {
+namespace forge::core {
 
 class EntryUpdateOp
 {
@@ -51,4 +51,4 @@ auto createEntryUpdateOpMetadata(EntryKey&& key,
     -> std::vector<std::byte>;
 
 
-} // namespace buddy::core
+} // namespace forge::core

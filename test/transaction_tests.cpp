@@ -3,12 +3,12 @@
 #include <gtest/gtest.h>
 #include <json/value.h>
 
-using buddy::core::buildTxIn;
-using buddy::core::buildTxOut;
-using buddy::core::buildTransaction;
-using buddy::core::stringToByteVec;
-using buddy::core::extractMetadata;
-using buddy::core::metadataStartsWithBuddyId;
+using forge::core::buildTxIn;
+using forge::core::buildTxOut;
+using forge::core::buildTransaction;
+using forge::core::stringToByteVec;
+using forge::core::extractMetadata;
+using forge::core::metadataStartsWithForgeId;
 
 
 TEST(TransactionTest, TxInParsingValid)
@@ -430,10 +430,10 @@ TEST(TransactionTest, StartsWithIdCheckValid)
     ASSERT_TRUE(third_valid);
     ASSERT_TRUE(fourth_valid);
 
-    EXPECT_TRUE(metadataStartsWithBuddyId(first_valid.getValue()));
-    EXPECT_TRUE(metadataStartsWithBuddyId(second_valid.getValue()));
-    EXPECT_TRUE(metadataStartsWithBuddyId(third_valid.getValue()));
-    EXPECT_TRUE(metadataStartsWithBuddyId(fourth_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithForgeId(first_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithForgeId(second_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithForgeId(third_valid.getValue()));
+    EXPECT_TRUE(metadataStartsWithForgeId(fourth_valid.getValue()));
 }
 
 TEST(TransactionTest, StartsWithIdCheckInvalid)
@@ -448,8 +448,8 @@ TEST(TransactionTest, StartsWithIdCheckInvalid)
     ASSERT_TRUE(third_valid);
     ASSERT_TRUE(fourth_valid);
 
-    EXPECT_FALSE(metadataStartsWithBuddyId(first_valid.getValue()));
-    EXPECT_FALSE(metadataStartsWithBuddyId(second_valid.getValue()));
-    EXPECT_FALSE(metadataStartsWithBuddyId(third_valid.getValue()));
-    EXPECT_FALSE(metadataStartsWithBuddyId(fourth_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithForgeId(first_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithForgeId(second_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithForgeId(third_valid.getValue()));
+    EXPECT_FALSE(metadataStartsWithForgeId(fourth_valid.getValue()));
 }

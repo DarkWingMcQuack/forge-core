@@ -4,7 +4,7 @@
 #include <rpc/readwritewalletstubclient.h>
 
 
-auto buddy::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     addAddWatchOnlyAddress(app, client);
@@ -17,7 +17,7 @@ auto buddy::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubC
     addGetOwnedAddresses(app, client);
 }
 
-auto buddy::cli::addAddWatchOnlyAddress(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addAddWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("addwatchonlyaddress",
@@ -29,7 +29,7 @@ auto buddy::cli::addAddWatchOnlyAddress(CLI::App& app, buddy::rpc::ReadWriteWall
         ->required();
 }
 
-auto buddy::cli::addDeleteWatchOnlyAddress(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addDeleteWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("deletewatchonlyaddress",
@@ -41,7 +41,7 @@ auto buddy::cli::addDeleteWatchOnlyAddress(CLI::App& app, buddy::rpc::ReadWriteW
         ->required();
 }
 
-auto buddy::cli::addAddNewOwnedAddress(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addAddNewOwnedAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("addnewownedaddress",
@@ -53,7 +53,7 @@ auto buddy::cli::addAddNewOwnedAddress(CLI::App& app, buddy::rpc::ReadWriteWalle
         ->required();
 }
 
-auto buddy::cli::addGetOwnedEntrys(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getownedentrys",
@@ -63,7 +63,7 @@ auto buddy::cli::addGetOwnedEntrys(CLI::App& app, buddy::rpc::ReadWriteWalletStu
         });
 }
 
-auto buddy::cli::addGetWatchedOnlyEntrys(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedOnlyEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getwatchedonlyentrys",
@@ -73,7 +73,7 @@ auto buddy::cli::addGetWatchedOnlyEntrys(CLI::App& app, buddy::rpc::ReadWriteWal
         });
 }
 
-auto buddy::cli::addGetAllWatchedEntrys(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetAllWatchedEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getallwatchedentrys",
@@ -83,7 +83,7 @@ auto buddy::cli::addGetAllWatchedEntrys(CLI::App& app, buddy::rpc::ReadWriteWall
         });
 }
 
-auto buddy::cli::addGetWatchedAddresses(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedAddresses(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getwatchedaddresses",
@@ -93,7 +93,7 @@ auto buddy::cli::addGetWatchedAddresses(CLI::App& app, buddy::rpc::ReadWriteWall
         });
 }
 
-auto buddy::cli::addGetOwnedAddresses(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedAddresses(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getownedaddresses",
@@ -103,7 +103,7 @@ auto buddy::cli::addGetOwnedAddresses(CLI::App& app, buddy::rpc::ReadWriteWallet
         });
 }
 
-auto buddy::cli::addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("ownesaddress",

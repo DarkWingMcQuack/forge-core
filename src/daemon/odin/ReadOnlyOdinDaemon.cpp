@@ -10,21 +10,21 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::daemon::ReadOnlyOdinDaemon;
-using buddy::daemon::DaemonError;
+using forge::daemon::ReadOnlyOdinDaemon;
+using forge::daemon::DaemonError;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::Try;
-using buddy::core::getMaturity;
-using buddy::core::Block;
-using buddy::core::buildBlock;
-using buddy::core::TxIn;
-using buddy::core::buildTxIn;
-using buddy::core::TxOut;
-using buddy::core::Unspent;
-using buddy::core::buildTxOut;
-using buddy::core::Transaction;
-using buddy::core::buildTransaction;
+using forge::core::getMaturity;
+using forge::core::Block;
+using forge::core::buildBlock;
+using forge::core::TxIn;
+using forge::core::buildTxIn;
+using forge::core::TxOut;
+using forge::core::Unspent;
+using forge::core::buildTxOut;
+using forge::core::Transaction;
+using forge::core::buildTransaction;
 
 using jsonrpc::Client;
 using jsonrpc::JSONRPC_CLIENT_V1;
@@ -210,7 +210,7 @@ auto ReadOnlyOdinDaemon::getAddresses() const
         });
 }
 
-auto buddy::daemon::odin::processGetTransactionResponse(Json::Value&& json,
+auto forge::daemon::odin::processGetTransactionResponse(Json::Value&& json,
                                                         const Json::Value& params)
     -> utilxx::Result<Transaction, DaemonError>
 {
@@ -228,7 +228,7 @@ auto buddy::daemon::odin::processGetTransactionResponse(Json::Value&& json,
     return DaemonError{std::move(error_str)};
 }
 
-auto buddy::daemon::odin::processGetBlockCountResponse(Json::Value&& response,
+auto forge::daemon::odin::processGetBlockCountResponse(Json::Value&& response,
                                                        const Json::Value & /*params*/)
     -> utilxx::Result<std::int64_t, DaemonError>
 {
@@ -239,7 +239,7 @@ auto buddy::daemon::odin::processGetBlockCountResponse(Json::Value&& response,
     return response.asInt64();
 }
 
-auto buddy::daemon::odin::processGetBlockHashResponse(Json::Value&& response,
+auto forge::daemon::odin::processGetBlockHashResponse(Json::Value&& response,
                                                       const Json::Value& params)
     -> utilxx::Result<std::string, DaemonError>
 {
@@ -252,7 +252,7 @@ auto buddy::daemon::odin::processGetBlockHashResponse(Json::Value&& response,
     return response.asString();
 }
 
-auto buddy::daemon::odin::processGetBlockResponse(Json::Value&& response,
+auto forge::daemon::odin::processGetBlockResponse(Json::Value&& response,
                                                   const Json::Value& params)
     -> utilxx::Result<Block, DaemonError>
 {
@@ -270,7 +270,7 @@ auto buddy::daemon::odin::processGetBlockResponse(Json::Value&& response,
     return DaemonError{std::move(error_str)};
 }
 
-auto buddy::daemon::odin::processGetUnspentResponse(Json::Value&& response,
+auto forge::daemon::odin::processGetUnspentResponse(Json::Value&& response,
                                                     const Json::Value& params)
     -> utilxx::Result<std::vector<Unspent>,
                       DaemonError>
@@ -312,7 +312,7 @@ auto buddy::daemon::odin::processGetUnspentResponse(Json::Value&& response,
     return std::move(ret_vec);
 }
 
-auto buddy::daemon::odin::processGetAddressesResponse(Json::Value&& response)
+auto forge::daemon::odin::processGetAddressesResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::string>,
                       DaemonError>
 {

@@ -4,7 +4,7 @@
 #include <rpc/readwritewalletstubclient.h>
 
 
-auto buddy::cli::addLookupOnlySubcommands(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     addShutdown(app, client);
@@ -17,17 +17,17 @@ auto buddy::cli::addLookupOnlySubcommands(CLI::App& app, buddy::rpc::ReadWriteWa
     addLookupAllEntrysOf(app, client);
 }
 
-auto buddy::cli::addShutdown(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("shutdown",
-                       "stops the buddyd server")
+                       "stops the forged server")
         ->callback([&] {
             client.shutdown();
         });
 }
 
-auto buddy::cli::addUpdateLookup(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addUpdateLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("updatelookup",
@@ -37,7 +37,7 @@ auto buddy::cli::addUpdateLookup(CLI::App& app, buddy::rpc::ReadWriteWalletStubC
         });
 }
 
-auto buddy::cli::addRebuildLookup(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addRebuildLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("rebuildlookup",
@@ -47,7 +47,7 @@ auto buddy::cli::addRebuildLookup(CLI::App& app, buddy::rpc::ReadWriteWalletStub
         });
 }
 
-auto buddy::cli::addCheckValidity(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("checkvalidity",
@@ -57,7 +57,7 @@ auto buddy::cli::addCheckValidity(CLI::App& app, buddy::rpc::ReadWriteWalletStub
         });
 }
 
-auto buddy::cli::addLookupValue(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto lookupvalue_opt =
@@ -79,7 +79,7 @@ auto buddy::cli::addLookupValue(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto buddy::cli::addLookupOwner(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupOwner(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto lookupowner_opt =
@@ -101,7 +101,7 @@ auto buddy::cli::addLookupOwner(CLI::App& app, buddy::rpc::ReadWriteWalletStubCl
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto buddy::cli::addLookupActivationBlock(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto lookupactivationblock_opt =
@@ -123,7 +123,7 @@ auto buddy::cli::addLookupActivationBlock(CLI::App& app, buddy::rpc::ReadWriteWa
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto buddy::cli::addLookupAllEntrysOf(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto lookupallentrysof_opt =

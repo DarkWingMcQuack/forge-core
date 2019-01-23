@@ -7,7 +7,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace buddy::lookup {
+namespace forge::lookup {
 
 class LookupError final : public std::runtime_error
 {
@@ -101,4 +101,4 @@ private:
     std::int64_t start_block_;
 };
 
-} // namespace buddy::lookup
+} // namespace forge::lookup

@@ -2,10 +2,10 @@
 #include <core/Operation.hpp>
 #include <core/OwnershipTransferOp.hpp>
 
-using buddy::core::Entry;
-using buddy::core::OwnershipTransferOp;
-using buddy::core::OWNERSHIP_TRANSFER_FLAG;
-using buddy::core::BUDDY_IDENTIFIER_MASK;
+using forge::core::Entry;
+using forge::core::OwnershipTransferOp;
+using forge::core::OWNERSHIP_TRANSFER_FLAG;
+using forge::core::FORGE_IDENTIFIER_MASK;
 
 OwnershipTransferOp::OwnershipTransferOp(Entry&& entry,
                                          std::string&& old_owner,
@@ -90,17 +90,17 @@ auto OwnershipTransferOp::getValue() const
     return value_;
 }
 
-auto buddy::core::createOwnershipTransferOpMetadata(Entry&& entry)
+auto forge::core::createOwnershipTransferOpMetadata(Entry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = buddy::core::entryToRawData(entry);
-    auto flag = buddy::core::OWNERSHIP_TRANSFER_FLAG;
+    auto data = forge::core::entryToRawData(entry);
+    auto flag = forge::core::OWNERSHIP_TRANSFER_FLAG;
 
     data.insert(std::begin(data), flag);
 
     data.insert(std::begin(data),
-                std::begin(BUDDY_IDENTIFIER_MASK),
-                std::end(BUDDY_IDENTIFIER_MASK));
+                std::begin(FORGE_IDENTIFIER_MASK),
+                std::end(FORGE_IDENTIFIER_MASK));
 
     return data;
 }

@@ -6,7 +6,7 @@
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <utilxx/Result.hpp>
 
-namespace buddy::daemon {
+namespace forge::daemon {
 
 class WriteOnlyDaemonBase
 {
@@ -99,4 +99,4 @@ auto make_writing_daemon(const std::string& host,
                          core::Coin coin)
     -> std::unique_ptr<WriteOnlyDaemonBase>;
 
-} // namespace buddy::daemon
+} // namespace forge::daemon

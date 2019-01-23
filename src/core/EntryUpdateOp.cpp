@@ -2,12 +2,12 @@
 #include <core/EntryUpdateOp.hpp>
 #include <core/Operation.hpp>
 
-using buddy::core::Entry;
-using buddy::core::EntryKey;
-using buddy::core::EntryValue;
-using buddy::core::EntryUpdateOp;
-using buddy::core::ENTRY_UPDATE_FLAG;
-using buddy::core::BUDDY_IDENTIFIER_MASK;
+using forge::core::Entry;
+using forge::core::EntryKey;
+using forge::core::EntryValue;
+using forge::core::EntryUpdateOp;
+using forge::core::ENTRY_UPDATE_FLAG;
+using forge::core::FORGE_IDENTIFIER_MASK;
 
 EntryUpdateOp::EntryUpdateOp(Entry&& entry,
                              std::string&& owner,
@@ -77,20 +77,20 @@ auto EntryUpdateOp::getOwner()
     return owner_;
 }
 
-auto buddy::core::createEntryUpdateOpMetadata(EntryKey&& key,
+auto forge::core::createEntryUpdateOpMetadata(EntryKey&& key,
                                               EntryValue new_value)
     -> std::vector<std::byte>
 {
     auto entry = Entry{std::move(key),
                        std::move(new_value)};
-    auto data = buddy::core::entryToRawData(entry);
-    auto flag = buddy::core::ENTRY_UPDATE_FLAG;
+    auto data = forge::core::entryToRawData(entry);
+    auto flag = forge::core::ENTRY_UPDATE_FLAG;
 
     data.insert(std::begin(data), flag);
 
     data.insert(std::begin(data),
-                std::begin(BUDDY_IDENTIFIER_MASK),
-                std::end(BUDDY_IDENTIFIER_MASK));
+                std::begin(FORGE_IDENTIFIER_MASK),
+                std::end(FORGE_IDENTIFIER_MASK));
 
     return data;
 }

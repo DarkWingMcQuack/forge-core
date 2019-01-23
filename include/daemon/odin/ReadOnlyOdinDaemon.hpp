@@ -9,7 +9,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace buddy::daemon {
+namespace forge::daemon {
 
 
 class ReadOnlyOdinDaemon : public ReadOnlyDaemonBase
@@ -92,4 +92,4 @@ auto processGetAddressesResponse(Json::Value&& response)
                       DaemonError>;
 } // namespace odin
 
-} // namespace buddy::daemon
+} // namespace forge::daemon

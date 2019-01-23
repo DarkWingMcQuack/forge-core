@@ -43,7 +43,7 @@ struct ColorCoutSink
 
 } // namespace
 
-auto buddy::env::initFileLogger(std::string_view log_preview,
+auto forge::env::initFileLogger(std::string_view log_preview,
                                 std::string_view log_folder)
     -> void
 {
@@ -54,7 +54,7 @@ auto buddy::env::initFileLogger(std::string_view log_preview,
     g3::initializeLogging(worker.get());
 }
 
-auto buddy::env::initConsoleLogger()
+auto forge::env::initConsoleLogger()
     -> void
 {
     static auto worker = g3::LogWorker::createLogWorker();

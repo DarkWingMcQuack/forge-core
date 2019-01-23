@@ -12,16 +12,16 @@
 #include <utilxx/Overload.hpp>
 #include <wallet/ReadOnlyWallet.hpp>
 
-using buddy::rpc::ReadOnlyWalletServer;
-using buddy::core::getBlockTimeInSeconds;
-using buddy::core::Entry;
-using buddy::core::EntryKey;
-using buddy::core::EntryValue;
-using buddy::core::IPv4Value;
-using buddy::core::IPv6Value;
-using buddy::core::ByteArray;
-using buddy::core::NoneValue;
-using buddy::wallet::ReadOnlyWallet;
+using forge::rpc::ReadOnlyWalletServer;
+using forge::core::getBlockTimeInSeconds;
+using forge::core::Entry;
+using forge::core::EntryKey;
+using forge::core::EntryValue;
+using forge::core::IPv4Value;
+using forge::core::IPv6Value;
+using forge::core::ByteArray;
+using forge::core::NoneValue;
+using forge::wallet::ReadOnlyWallet;
 using jsonrpc::PARAMS_BY_NAME;
 using jsonrpc::Procedure;
 using jsonrpc::JsonRpcException;
@@ -395,7 +395,7 @@ auto ReadOnlyWalletServer::hasShutdownRequest() const
     return should_shutdown_.load();
 }
 
-auto buddy::rpc::waitForShutdown(const ReadOnlyWalletServer& server)
+auto forge::rpc::waitForShutdown(const ReadOnlyWalletServer& server)
     -> void
 {
     using namespace std::literals::chrono_literals;

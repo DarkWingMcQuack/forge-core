@@ -9,7 +9,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace buddy::lookup {
+namespace forge::lookup {
 
 using ManagerError = std::variant<LookupError,
                                   daemon::DaemonError>;
@@ -66,4 +66,4 @@ private:
     std::vector<std::string> block_hashes_;
 };
 
-} // namespace buddy::lookup
+} // namespace forge::lookup

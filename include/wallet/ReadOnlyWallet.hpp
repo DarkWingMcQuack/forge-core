@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace buddy::wallet {
+namespace forge::wallet {
 
 class ReadOnlyWallet
 {
@@ -51,4 +51,4 @@ protected:
     std::unique_ptr<lookup::LookupManager> lookup_;
 };
 
-} // namespace buddy::wallet
+} // namespace forge::wallet

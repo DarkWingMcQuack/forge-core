@@ -10,17 +10,17 @@
 #include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::lookup::LookupManager;
-using buddy::lookup::EntryLookup;
-using buddy::lookup::LookupError;
-using buddy::core::EntryKey;
-using buddy::core::EntryValue;
-using buddy::core::Operation;
-using buddy::core::getMaturity;
+using forge::lookup::LookupManager;
+using forge::lookup::EntryLookup;
+using forge::lookup::LookupError;
+using forge::core::EntryKey;
+using forge::core::EntryValue;
+using forge::core::Operation;
+using forge::core::getMaturity;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::traverse;
-using buddy::daemon::ReadOnlyDaemonBase;
+using forge::daemon::ReadOnlyDaemonBase;
 
 LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
     : daemon_(std::move(daemon)),
@@ -136,9 +136,9 @@ auto LookupManager::processBlock(core::Block&& block)
                     })
         .flatMap([&](auto&& txs)
                      -> Result<void, ManagerError> {
-            //vector of all buddy ops in the block
+            //vector of all forge ops in the block
             std::vector<Operation> ops;
-            //exract all buddy ops from the txs
+            //exract all forge ops from the txs
             for(auto&& tx : txs) {
                 std::string_view txid = tx.getTxid();
 
@@ -208,7 +208,7 @@ auto LookupManager::getEntrysOfOwner(const std::string& owner) const
 }
 
 
-auto buddy::lookup::generateMessage(ManagerError&& error)
+auto forge::lookup::generateMessage(ManagerError&& error)
     -> std::string
 {
     static constexpr auto visitor = utilxx::overload{

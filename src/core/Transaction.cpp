@@ -10,16 +10,16 @@
 #include <vector>
 
 
-using buddy::core::TxIn;
-using buddy::core::TxOut;
-using buddy::core::Unspent;
-using buddy::core::Transaction;
-using buddy::daemon::ReadOnlyDaemonBase;
-using buddy::daemon::DaemonError;
+using forge::core::TxIn;
+using forge::core::TxOut;
+using forge::core::Unspent;
+using forge::core::Transaction;
+using forge::daemon::ReadOnlyDaemonBase;
+using forge::daemon::DaemonError;
 using utilxx::Result;
 using utilxx::Opt;
 using utilxx::traverse;
-using buddy::core::BUDDY_IDENTIFIER_MASK;
+using forge::core::FORGE_IDENTIFIER_MASK;
 using namespace std::string_literals;
 
 
@@ -313,7 +313,7 @@ auto Unspent::getAddress()
     return address_;
 }
 
-auto buddy::core::buildTxIn(Json::Value&& json)
+auto forge::core::buildTxIn(Json::Value&& json)
     -> utilxx::Opt<TxIn>
 {
     try {
@@ -332,7 +332,7 @@ auto buddy::core::buildTxIn(Json::Value&& json)
     }
 }
 
-auto buddy::core::buildTxOut(Json::Value&& json)
+auto forge::core::buildTxOut(Json::Value&& json)
     -> utilxx::Opt<TxOut>
 {
     try {
@@ -367,7 +367,7 @@ auto buddy::core::buildTxOut(Json::Value&& json)
     }
 }
 
-auto buddy::core::buildTransaction(Json::Value&& json)
+auto forge::core::buildTransaction(Json::Value&& json)
     -> utilxx::Opt<Transaction>
 {
     try {
@@ -409,7 +409,7 @@ auto buddy::core::buildTransaction(Json::Value&& json)
     }
 }
 
-auto buddy::core::extractMetadata(std::string&& hex)
+auto forge::core::extractMetadata(std::string&& hex)
     -> utilxx::Opt<std::vector<std::byte>>
 {
     if(hex.size() < 4) {
@@ -428,7 +428,7 @@ auto buddy::core::extractMetadata(std::string&& hex)
     return stringToByteVec(hex);
 }
 
-auto buddy::core::stringToByteVec(const std::string& str)
+auto forge::core::stringToByteVec(const std::string& str)
     -> utilxx::Opt<std::vector<std::byte>>
 {
     //check if the string has even characters
@@ -458,18 +458,18 @@ auto buddy::core::stringToByteVec(const std::string& str)
     return data;
 }
 
-auto buddy::core::metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
+auto forge::core::metadataStartsWithForgeId(const std::vector<std::byte>& metadata)
     -> bool
 {
     if(metadata.size() < 3) {
         return false;
     }
-    return std::equal(std::cbegin(BUDDY_IDENTIFIER_MASK),
-                      std::cend(BUDDY_IDENTIFIER_MASK),
+    return std::equal(std::cbegin(FORGE_IDENTIFIER_MASK),
+                      std::cend(FORGE_IDENTIFIER_MASK),
                       std::cbegin(metadata));
 }
 
-auto buddy::core::toHexString(const std::vector<std::byte>& bytes)
+auto forge::core::toHexString(const std::vector<std::byte>& bytes)
     -> std::string
 {
     std::stringstream ss;
@@ -481,7 +481,7 @@ auto buddy::core::toHexString(const std::vector<std::byte>& bytes)
 }
 
 
-auto buddy::core::stringToASCIIByteVec(const std::string& str)
+auto forge::core::stringToASCIIByteVec(const std::string& str)
     -> std::vector<std::byte>
 {
     std::vector<std::byte> byte_vec;

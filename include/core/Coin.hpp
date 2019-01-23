@@ -4,7 +4,7 @@
 #include <string_view>
 #include <utilxx/Opt.hpp>
 
-namespace buddy::core {
+namespace forge::core {
 
 enum class Coin {
     Odin
@@ -31,4 +31,4 @@ auto getValidityLength(Coin c)
 auto getMinimumTxAmount(Coin c)
     -> std::int64_t;
 
-} // namespace buddy::core
+} // namespace forge::core

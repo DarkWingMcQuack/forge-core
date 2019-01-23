@@ -11,18 +11,18 @@
 using utilxx::Result;
 using utilxx::traverse;
 using utilxx::Opt;
-using buddy::core::Operation;
-using buddy::core::getValue;
-using buddy::core::EntryValue;
-using buddy::core::EntryKey;
-using buddy::core::Entry;
-using buddy::core::EntryCreationOp;
-using buddy::core::EntryUpdateOp;
-using buddy::core::OwnershipTransferOp;
-using buddy::core::EntryRenewalOp;
-using buddy::core::EntryDeletionOp;
-using buddy::lookup::LookupError;
-using buddy::lookup::EntryLookup;
+using forge::core::Operation;
+using forge::core::getValue;
+using forge::core::EntryValue;
+using forge::core::EntryKey;
+using forge::core::Entry;
+using forge::core::EntryCreationOp;
+using forge::core::EntryUpdateOp;
+using forge::core::OwnershipTransferOp;
+using forge::core::EntryRenewalOp;
+using forge::core::EntryDeletionOp;
+using forge::lookup::LookupError;
+using forge::lookup::EntryLookup;
 
 
 EntryLookup::EntryLookup(std::int64_t start_block)

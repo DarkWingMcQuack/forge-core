@@ -10,17 +10,17 @@
 #include <utilxx/Result.hpp>
 #include <vector>
 
-using buddy::core::Entry;
+using forge::core::Entry;
 using utilxx::Result;
 using utilxx::overload;
 using utilxx::Opt;
-using buddy::core::Transaction;
-using buddy::daemon::ReadOnlyDaemonBase;
-using buddy::daemon::DaemonError;
-using buddy::core::parseEntry;
-using buddy::core::BUDDY_IDENTIFIER_MASK;
+using forge::core::Transaction;
+using forge::daemon::ReadOnlyDaemonBase;
+using forge::daemon::DaemonError;
+using forge::core::parseEntry;
+using forge::core::FORGE_IDENTIFIER_MASK;
 
-auto buddy::core::getEntryKey(const Operation& operation)
+auto forge::core::getEntryKey(const Operation& operation)
     -> const EntryKey&
 {
     return std::visit(
@@ -31,7 +31,7 @@ auto buddy::core::getEntryKey(const Operation& operation)
         operation);
 }
 
-auto buddy::core::getEntryKey(Operation&& operation)
+auto forge::core::getEntryKey(Operation&& operation)
     -> EntryKey
 {
     return std::visit(
@@ -41,7 +41,7 @@ auto buddy::core::getEntryKey(Operation&& operation)
         operation);
 }
 
-auto buddy::core::getEntry(const Operation& operation)
+auto forge::core::getEntry(const Operation& operation)
     -> const Entry&
 {
     return std::visit(
@@ -52,7 +52,7 @@ auto buddy::core::getEntry(const Operation& operation)
         operation);
 }
 
-auto buddy::core::getEntry(Operation&& operation)
+auto forge::core::getEntry(Operation&& operation)
     -> Entry
 {
     return std::visit(
@@ -62,7 +62,7 @@ auto buddy::core::getEntry(Operation&& operation)
         operation);
 }
 
-auto buddy::core::getOwner(const Operation& operation)
+auto forge::core::getOwner(const Operation& operation)
     -> const std::string&
 {
     return std::visit(
@@ -73,7 +73,7 @@ auto buddy::core::getOwner(const Operation& operation)
         operation);
 }
 
-auto buddy::core::getOwner(Operation&& operation)
+auto forge::core::getOwner(Operation&& operation)
     -> std::string
 {
     return std::visit(
@@ -83,7 +83,7 @@ auto buddy::core::getOwner(Operation&& operation)
         operation);
 }
 
-auto buddy::core::getValue(const Operation& operation)
+auto forge::core::getValue(const Operation& operation)
     -> const std::int64_t
 {
     return std::visit(
@@ -93,7 +93,7 @@ auto buddy::core::getValue(const Operation& operation)
         operation);
 }
 
-auto buddy::core::extractFlag(const Operation& operation)
+auto forge::core::extractFlag(const Operation& operation)
     -> std::byte
 {
     constexpr static auto flag_extractor =
@@ -109,7 +109,7 @@ auto buddy::core::extractFlag(const Operation& operation)
 }
 
 
-auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
+auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
                                 std::int64_t block,
                                 std::string&& owner,
                                 std::int64_t value,
@@ -170,7 +170,7 @@ auto buddy::core::parseMetadata(const std::vector<std::byte>& metadata,
         });
 }
 
-auto buddy::core::parseTransactionToEntry(Transaction&& tx,
+auto forge::core::parseTransactionToEntry(Transaction&& tx,
                                           std::int64_t block,
                                           const std::unique_ptr<ReadOnlyDaemonBase>& daemon)
     -> Result<Opt<Operation>, DaemonError>
@@ -179,7 +179,7 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
 
     //check if the transaction has exactly one op return
     //output and exactly one input
-    //if this is not the case the tx does not repressent a buddy op
+    //if this is not the case the tx does not repressent a forge op
     if(!tx.hasExactlyOneOpReturnOutput()
        || !tx.hasExactlyOneInput()) {
         return ResultType{std::nullopt};
@@ -224,9 +224,9 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
     //get metadata from the op return output
     auto metadata = std::move(metadata_opt.getValue());
 
-    //check if the metadata starts with a buddy id
-    //if not the tx is not a valid buddy tx and can be ignored
-    if(!metadataStartsWithBuddyId(metadata)) {
+    //check if the metadata starts with a forge id
+    //if not the tx is not a valid forge tx and can be ignored
+    if(!metadataStartsWithForgeId(metadata)) {
         return ResultType{std::nullopt};
     }
 
@@ -254,19 +254,19 @@ auto buddy::core::parseTransactionToEntry(Transaction&& tx,
 }
 
 
-auto buddy::core::operationToMetadata(const Operation& op)
+auto forge::core::operationToMetadata(const Operation& op)
     -> std::vector<std::byte>
 {
     const auto& entry = getEntry(op);
     auto flag = extractFlag(op);
 
-    auto data = buddy::core::entryToRawData(entry);
+    auto data = forge::core::entryToRawData(entry);
 
     data.insert(std::begin(data), flag);
 
     data.insert(std::begin(data),
-                std::begin(BUDDY_IDENTIFIER_MASK),
-                std::end(BUDDY_IDENTIFIER_MASK));
+                std::begin(FORGE_IDENTIFIER_MASK),
+                std::end(FORGE_IDENTIFIER_MASK));
 
     return data;
 }

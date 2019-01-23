@@ -1,7 +1,7 @@
 #pragma once
 #include <exception>
 
-namespace buddy::daemon {
+namespace forge::daemon {
 
 class DaemonError final : public std::runtime_error
 {
@@ -9,4 +9,4 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-} // namespace buddy::daemon
+} // namespace forge::daemon

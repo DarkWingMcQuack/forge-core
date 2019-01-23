@@ -9,7 +9,7 @@
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/WalletError.hpp>
 
-namespace buddy::wallet {
+namespace forge::wallet {
 
 class ReadWriteWallet : public ReadOnlyWallet
 {
@@ -115,4 +115,4 @@ private:
     std::unique_ptr<daemon::WriteOnlyDaemonBase> daemon_;
 };
 
-} // namespace buddy::wallet
+} // namespace forge::wallet

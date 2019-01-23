@@ -7,7 +7,7 @@
 #include <thread>
 #include <wallet/ReadWriteWallet.hpp>
 
-namespace buddy::rpc {
+namespace forge::rpc {
 
 class ReadWriteWalletServer : public AbstractReadWriteWalletStubSever
 {
@@ -107,4 +107,4 @@ private:
 auto waitForShutdown(const ReadWriteWalletServer& server)
     -> void;
 
-} // namespace buddy::rpc
+} // namespace forge::rpc

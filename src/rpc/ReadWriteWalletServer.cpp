@@ -12,16 +12,16 @@
 #include <utilxx/Overload.hpp>
 #include <wallet/ReadWriteWallet.hpp>
 
-using buddy::rpc::ReadWriteWalletServer;
-using buddy::core::getBlockTimeInSeconds;
-using buddy::core::Entry;
-using buddy::core::EntryKey;
-using buddy::core::EntryValue;
-using buddy::core::IPv4Value;
-using buddy::core::IPv6Value;
-using buddy::core::ByteArray;
-using buddy::core::NoneValue;
-using buddy::wallet::ReadWriteWallet;
+using forge::rpc::ReadWriteWalletServer;
+using forge::core::getBlockTimeInSeconds;
+using forge::core::Entry;
+using forge::core::EntryKey;
+using forge::core::EntryValue;
+using forge::core::IPv4Value;
+using forge::core::IPv6Value;
+using forge::core::ByteArray;
+using forge::core::NoneValue;
+using forge::wallet::ReadWriteWallet;
 using jsonrpc::PARAMS_BY_NAME;
 using jsonrpc::Procedure;
 using jsonrpc::JsonRpcException;
@@ -105,10 +105,10 @@ auto ReadWriteWalletServer::lookupvalue(bool isstring, const std::string& key)
     auto key_vec_opt =
         [&] {
             if(isstring) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
 
@@ -126,7 +126,7 @@ auto ReadWriteWalletServer::lookupvalue(bool isstring, const std::string& key)
         throw JsonRpcException{std::move(error_msg)};
     }
 
-    return buddy::core::entryValueToJson(res.getValue().get());
+    return forge::core::entryValueToJson(res.getValue().get());
 }
 
 auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
@@ -139,10 +139,10 @@ auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
     auto key_vec_opt =
         [&] {
             if(isstring) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
     if(!key_vec_opt.hasValue()) {
@@ -172,10 +172,10 @@ auto ReadWriteWalletServer::lookupactivationblock(bool isstring, const std::stri
     auto key_vec_opt =
         [&] {
             if(isstring) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
 
@@ -226,7 +226,7 @@ auto ReadWriteWalletServer::lookupallentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return buddy::core::entryToJson(std::move(entry));
+                                          return forge::core::entryToJson(std::move(entry));
                                       });
 
     auto ret_json =
@@ -390,7 +390,7 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     -> std::string
 {
     auto value_copy = value;
-    auto entry_value_opt = buddy::core::jsonToEntryValue(std::move(value_copy));
+    auto entry_value_opt = forge::core::jsonToEntryValue(std::move(value_copy));
     if(!entry_value_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -398,10 +398,10 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     auto key_vec_opt =
         [&] {
             if(is_string) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
 
@@ -449,10 +449,10 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
     auto key_vec_opt =
         [&] {
             if(is_string) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
     if(!key_vec_opt.hasValue()) {
@@ -479,7 +479,7 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     -> std::string
 {
     auto value_copy = value;
-    auto entry_value_opt = buddy::core::jsonToEntryValue(std::move(value_copy));
+    auto entry_value_opt = forge::core::jsonToEntryValue(std::move(value_copy));
     if(!entry_value_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -487,10 +487,10 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     auto key_vec_opt =
         [&] {
             if(is_string) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
     if(!key_vec_opt.hasValue()) {
@@ -520,10 +520,10 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
     auto key_vec_opt =
         [&] {
             if(is_string) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
     if(!key_vec_opt.hasValue()) {
@@ -552,10 +552,10 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
     auto key_vec_opt =
         [&] {
             if(is_string) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
     if(!key_vec_opt.hasValue()) {
@@ -586,10 +586,10 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
     auto key_vec_opt =
         [&] {
             if(is_string) {
-                auto byte_vec = buddy::core::stringToASCIIByteVec(key);
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
             } else {
-                return buddy::core::stringToByteVec(key);
+                return forge::core::stringToByteVec(key);
             }
         }();
     if(!key_vec_opt.hasValue()) {
@@ -616,7 +616,7 @@ auto ReadWriteWalletServer::hasShutdownRequest() const
 }
 
 
-auto buddy::rpc::waitForShutdown(const ReadWriteWalletServer& server)
+auto forge::rpc::waitForShutdown(const ReadWriteWalletServer& server)
     -> void
 {
     using namespace std::literals::chrono_literals;

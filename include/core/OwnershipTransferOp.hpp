@@ -2,7 +2,7 @@
 
 #include <core/Entry.hpp>
 
-namespace buddy::core {
+namespace forge::core {
 
 class OwnershipTransferOp
 {
@@ -56,4 +56,4 @@ auto createOwnershipTransferOpMetadata(Entry&& entry)
     -> std::vector<std::byte>;
 
 
-} // namespace buddy::core
+} // namespace forge::core

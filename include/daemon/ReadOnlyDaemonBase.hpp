@@ -8,7 +8,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace buddy::daemon {
+namespace forge::daemon {
 
 class ReadOnlyDaemonBase
 {
@@ -65,4 +65,4 @@ auto make_readonly_daemon(const std::string& host,
 
 
 
-} // namespace buddy::daemon
+} // namespace forge::daemon

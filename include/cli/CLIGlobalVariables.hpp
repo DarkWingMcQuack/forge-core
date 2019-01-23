@@ -3,7 +3,7 @@
 #include <json/json.h>
 #include <string>
 
-namespace buddy::cli {
+namespace forge::cli {
 
 inline std::string KEY = "";
 
@@ -21,4 +21,4 @@ inline int BURN_VALUE = 0;
 
 inline Json::Value RESPONSE;
 
-} // namespace buddy::cli
+} // namespace forge::cli

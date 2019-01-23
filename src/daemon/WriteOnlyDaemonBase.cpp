@@ -6,8 +6,8 @@
 #include <g3log/g3log.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::daemon::WriteOnlyDaemonBase;
-using buddy::daemon::ReadWriteOdinDaemon;
+using forge::daemon::WriteOnlyDaemonBase;
+using forge::daemon::ReadWriteOdinDaemon;
 
 
 
@@ -43,7 +43,7 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
 }
 
 
-auto buddy::daemon::make_writing_daemon(const std::string& host,
+auto forge::daemon::make_writing_daemon(const std::string& host,
                                         const std::string& user,
                                         const std::string& password,
                                         std::int64_t port,

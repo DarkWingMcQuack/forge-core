@@ -11,7 +11,7 @@
 #include <string>
 #include <utilxx/Opt.hpp>
 
-using buddy::env::ProgramOptions;
+using forge::env::ProgramOptions;
 
 ProgramOptions::ProgramOptions(std::string&& logfolder,
                                std::int64_t number_of_threads,
@@ -125,18 +125,18 @@ auto ProgramOptions::getNumberOfThreads() const
 }
 
 
-auto buddy::env::parseOptions(int argc, char* argv[])
+auto forge::env::parseOptions(int argc, char* argv[])
     -> ProgramOptions
 {
     using namespace std::string_literals;
     namespace fs = std::experimental::filesystem;
 
-    static const auto default_buddy_dir = getenv("HOME") + "/.buddy"s;
+    static const auto default_forge_dir = getenv("HOME") + "/.forge"s;
 
-    CLI::App app{"buddyd server, adding a second layer to blockchains"};
+    CLI::App app{"forged server, adding a second layer to blockchains"};
 
     bool log_to_console = false;
-    auto config_path = default_buddy_dir;
+    auto config_path = default_forge_dir;
     app.set_help_all_flag("--help-all",
                           "Show all help");
 
@@ -145,7 +145,7 @@ auto buddy::env::parseOptions(int argc, char* argv[])
                  "if set, logging will be displayed on the terminal");
     app.add_option("-w,--workdir",
                    config_path,
-                   "path to the workingfolder of buddy");
+                   "path to the workingfolder of forge");
     try {
         app.parse(argc, argv);
     } catch(const CLI::ParseError& e) {
@@ -155,9 +155,9 @@ auto buddy::env::parseOptions(int argc, char* argv[])
 
     fs::create_directory(config_path);
 
-    if(!fs::exists(config_path + "/buddy.conf")) {
+    if(!fs::exists(config_path + "/forge.conf")) {
         fmt::print("config file {} not found, please create a valid config file in the workdir\n",
-                   config_path + "/buddy.conf");
+                   config_path + "/forge.conf");
         std::exit(-1);
     }
 
@@ -168,12 +168,12 @@ auto buddy::env::parseOptions(int argc, char* argv[])
     return params;
 }
 
-auto buddy::env::parseConfigFile(const std::string& config_path)
+auto forge::env::parseConfigFile(const std::string& config_path)
     -> ProgramOptions
 {
     namespace fs = std::experimental::filesystem;
 
-    auto config = cpptoml::parse_file(config_path + "/buddy.conf");
+    auto config = cpptoml::parse_file(config_path + "/forge.conf");
     auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
     auto mode_str = *config->get_qualified_as<std::string>("server.mode");
     auto daemonize = *config->get_qualified_as<bool>("server.daemon");
@@ -194,11 +194,11 @@ auto buddy::env::parseConfigFile(const std::string& config_path)
     //try to get the mode
     auto mode = [&]() {
         if(mode_str == "lookup")
-            return buddy::env::Mode::LookupOnly;
+            return forge::env::Mode::LookupOnly;
         else if(mode_str == "readonly")
-            return buddy::env::Mode::ReadOnly;
+            return forge::env::Mode::ReadOnly;
         else if(mode_str == "readwrite")
-            return buddy::env::Mode::ReadWrite;
+            return forge::env::Mode::ReadWrite;
         else {
             fmt::print("invalid value for \"server.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
             std::exit(-1);

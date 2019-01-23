@@ -5,7 +5,7 @@
 #include <utilxx/Opt.hpp>
 #include <vector>
 
-namespace buddy::core {
+namespace forge::core {
 
 class Block
 {
@@ -49,4 +49,4 @@ private:
 auto buildBlock(Json::Value&& json)
     -> utilxx::Opt<Block>;
 
-} // namespace buddy::core
+} // namespace forge::core

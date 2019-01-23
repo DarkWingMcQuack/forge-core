@@ -5,10 +5,10 @@
 #include <vector>
 #include <wallet/ReadOnlyWallet.hpp>
 
-using buddy::lookup::LookupManager;
-using buddy::lookup::LookupError;
-using buddy::wallet::ReadOnlyWallet;
-using buddy::core::Entry;
+using forge::lookup::LookupManager;
+using forge::lookup::LookupError;
+using forge::wallet::ReadOnlyWallet;
+using forge::core::Entry;
 
 
 ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)

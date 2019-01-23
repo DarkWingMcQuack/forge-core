@@ -2,7 +2,7 @@
 
 #include <core/Entry.hpp>
 
-namespace buddy::core {
+namespace forge::core {
 
 class EntryRenewalOp
 {
@@ -48,4 +48,4 @@ private:
 auto createEntryRenewalOpMetadata(Entry&& entry)
     -> std::vector<std::byte>;
 
-} // namespace buddy::core
+} // namespace forge::core

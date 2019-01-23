@@ -9,7 +9,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace buddy::daemon {
+namespace forge::daemon {
 
 class ReadOnlyOdinDaemon final : public ReadOnlyDaemonBase
 {
@@ -50,4 +50,4 @@ private:
     mutable jsonrpc::Client client_;
 };
 
-} // namespace buddy::daemon
+} // namespace forge::daemon

@@ -6,7 +6,7 @@
 #include <rpc/abstractlookuponlystubsever.h>
 #include <thread>
 
-namespace buddy::rpc {
+namespace forge::rpc {
 
 class LookupOnlyServer : public AbstractLookupOnlyStubSever
 {
@@ -53,4 +53,4 @@ private:
 auto waitForShutdown(const LookupOnlyServer& server)
     -> void;
 
-} // namespace buddy::rpc
+} // namespace forge::rpc

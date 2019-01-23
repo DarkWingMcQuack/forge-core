@@ -6,7 +6,7 @@
 #include <utilxx/Opt.hpp>
 #include <vector>
 
-namespace buddy::core {
+namespace forge::core {
 
 using EntryKey = std::vector<std::byte>;
 
@@ -65,4 +65,4 @@ auto entryValueToJson(EntryValue value)
 auto entryToJson(Entry value)
     -> Json::Value;
 
-} // namespace buddy::core
+} // namespace forge::core

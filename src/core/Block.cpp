@@ -5,7 +5,7 @@
 #include <utilxx/Opt.hpp>
 #include <vector>
 
-using buddy::core::Block;
+using forge::core::Block;
 using utilxx::Opt;
 
 
@@ -58,7 +58,7 @@ auto Block::getHash()
 
 
 
-auto buddy::core::buildBlock(Json::Value&& json)
+auto forge::core::buildBlock(Json::Value&& json)
     -> utilxx::Opt<Block>
 {
     //use try-catch such if all the json.asFoo()

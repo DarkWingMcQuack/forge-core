@@ -11,19 +11,19 @@
 #include <wallet/ReadWriteWallet.hpp>
 #include <wallet/WalletError.hpp>
 
-using buddy::wallet::ReadOnlyWallet;
-using buddy::wallet::ReadWriteWallet;
-using buddy::wallet::WalletError;
-using buddy::core::Entry;
-using buddy::core::getDefaultTxFee;
-using buddy::core::getMinimumTxAmount;
-using buddy::core::toHexString;
-using buddy::core::EntryKey;
-using buddy::core::EntryValue;
-using buddy::core::createEntryCreationOpMetadata;
-using buddy::core::createEntryRenewalOpMetadata;
-using buddy::core::createEntryUpdateOpMetadata;
-using buddy::core::createEntryDeletionOpMetadata;
+using forge::wallet::ReadOnlyWallet;
+using forge::wallet::ReadWriteWallet;
+using forge::wallet::WalletError;
+using forge::core::Entry;
+using forge::core::getDefaultTxFee;
+using forge::core::getMinimumTxAmount;
+using forge::core::toHexString;
+using forge::core::EntryKey;
+using forge::core::EntryValue;
+using forge::core::createEntryCreationOpMetadata;
+using forge::core::createEntryRenewalOpMetadata;
+using forge::core::createEntryUpdateOpMetadata;
+using forge::core::createEntryDeletionOpMetadata;
 using utilxx::Result;
 
 ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,

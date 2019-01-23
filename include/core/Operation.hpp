@@ -14,7 +14,7 @@
 #include <vector>
 
 
-namespace buddy::core {
+namespace forge::core {
 
 // clang-format off
 constexpr inline auto ENTRY_CREATION_FLAG     = static_cast<std::byte>(0b00000001);
@@ -66,4 +66,4 @@ auto parseMetadata(const std::vector<std::byte>& metadata,
 auto operationToMetadata(const Operation& op)
     -> std::vector<std::byte>;
 
-} // namespace buddy::core
+} // namespace forge::core

@@ -4,7 +4,7 @@
 #include <cli/CLIGlobalVariables.hpp>
 #include <rpc/readwritewalletstubclient.h>
 
-namespace buddy::cli {
+namespace forge::cli {
 
 auto addAddWatchOnlyAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
@@ -27,4 +27,4 @@ auto addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
 
 auto addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
-} // namespace buddy::cli
+} // namespace forge::cli

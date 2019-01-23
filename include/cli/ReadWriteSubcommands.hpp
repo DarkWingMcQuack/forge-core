@@ -4,28 +4,28 @@
 #include <cli/CLIGlobalVariables.hpp>
 #include <rpc/readwritewalletstubclient.h>
 
-namespace buddy::cli {
+namespace forge::cli {
 
-auto addCreateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addCreateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addRenewEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addUpdateEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addDeleteEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addTransferOwnership(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addPayToEntry(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addReadWriteSubcommands(CLI::App& app, buddy::rpc::ReadWriteWalletStubClient& client)
+auto addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
 
-} // namespace buddy::cli
+} // namespace forge::cli

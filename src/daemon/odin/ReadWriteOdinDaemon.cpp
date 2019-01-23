@@ -11,13 +11,13 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using buddy::daemon::ReadWriteOdinDaemon;
-using buddy::daemon::ReadOnlyOdinDaemon;
+using forge::daemon::ReadWriteOdinDaemon;
+using forge::daemon::ReadOnlyOdinDaemon;
 using utilxx::Opt;
 using utilxx::Result;
-using buddy::core::stringToByteVec;
-using buddy::core::toHexString;
-using buddy::core::getDefaultTxFee;
+using forge::core::stringToByteVec;
+using forge::core::toHexString;
+using forge::core::getDefaultTxFee;
 using namespace std::string_literals;
 
 
@@ -302,7 +302,7 @@ auto ReadWriteOdinDaemon::getVOutIdxByAmountAndAddress(std::string txid,
 }
 
 
-auto buddy::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
+auto forge::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::byte>,
                       DaemonError>
 {
@@ -329,7 +329,7 @@ auto buddy::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
     }
 }
 
-auto buddy::daemon::odin::processSignRawTxResponse(Json::Value&& response)
+auto forge::daemon::odin::processSignRawTxResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::byte>,
                       DaemonError>
 {
@@ -365,7 +365,7 @@ auto buddy::daemon::odin::processSignRawTxResponse(Json::Value&& response)
     return hex_vec.getValue();
 }
 
-auto buddy::daemon::odin::processGenerateNewAddressResponse(Json::Value&& response)
+auto forge::daemon::odin::processGenerateNewAddressResponse(Json::Value&& response)
     -> utilxx::Result<std::string, DaemonError>
 {
     if(!response.isString()) {
@@ -375,7 +375,7 @@ auto buddy::daemon::odin::processGenerateNewAddressResponse(Json::Value&& respon
     return response.asString();
 }
 
-auto buddy::daemon::odin::processDecodeTxidOfRawTxResponse(Json::Value&& response)
+auto forge::daemon::odin::processDecodeTxidOfRawTxResponse(Json::Value&& response)
     -> utilxx::Result<std::string, DaemonError>
 {
     if(!response.isMember("txid")
@@ -388,7 +388,7 @@ auto buddy::daemon::odin::processDecodeTxidOfRawTxResponse(Json::Value&& respons
     return response["txid"].asString();
 }
 
-auto buddy::daemon::odin::processSendToAddressResponse(Json::Value&& response,
+auto forge::daemon::odin::processSendToAddressResponse(Json::Value&& response,
                                                        const std::string& address)
     -> utilxx::Result<std::string, DaemonError>
 {
@@ -402,7 +402,7 @@ auto buddy::daemon::odin::processSendToAddressResponse(Json::Value&& response,
 }
 
 
-auto buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
+auto forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
                                                                       std::int64_t amount,
                                                                       const std::string& address)
     -> utilxx::Result<std::int64_t, DaemonError>

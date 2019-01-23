@@ -3,8 +3,8 @@
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
 #include <memory>
 
-using buddy::daemon::ReadOnlyDaemonBase;
-using buddy::daemon::ReadOnlyOdinDaemon;
+using forge::daemon::ReadOnlyDaemonBase;
+using forge::daemon::ReadOnlyOdinDaemon;
 
 auto ReadOnlyDaemonBase::getCoin() const
     -> core::Coin
@@ -12,7 +12,7 @@ auto ReadOnlyDaemonBase::getCoin() const
     return coin_;
 }
 
-auto buddy::daemon::make_readonly_daemon(const std::string& host,
+auto forge::daemon::make_readonly_daemon(const std::string& host,
                                          const std::string& user,
                                          const std::string& password,
                                          std::int64_t port,

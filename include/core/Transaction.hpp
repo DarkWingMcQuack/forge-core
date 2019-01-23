@@ -8,9 +8,9 @@
 #include <utilxx/Opt.hpp>
 #include <vector>
 
-namespace buddy::core {
+namespace forge::core {
 
-constexpr static std::array<std::byte, 3> BUDDY_IDENTIFIER_MASK{static_cast<std::byte>(0xC6),
+constexpr static std::array<std::byte, 3> FORGE_IDENTIFIER_MASK{static_cast<std::byte>(0xC6),
                                                                 static_cast<std::byte>(0xDC),
                                                                 static_cast<std::byte>(0x75)};
 
@@ -204,10 +204,10 @@ auto stringToByteVec(const std::string& str)
 auto stringToASCIIByteVec(const std::string& str)
     -> std::vector<std::byte>;
 
-auto metadataStartsWithBuddyId(const std::vector<std::byte>& metadata)
+auto metadataStartsWithForgeId(const std::vector<std::byte>& metadata)
     -> bool;
 
 auto toHexString(const std::vector<std::byte>& bytes)
     -> std::string;
 
-} // namespace buddy::core
+} // namespace forge::core

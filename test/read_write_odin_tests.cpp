@@ -8,10 +8,10 @@
 TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseValid)
 {
     using namespace std::string_literals;
-    using buddy::core::stringToByteVec;
+    using forge::core::stringToByteVec;
 
     auto response1 = "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635"s;
-    auto res_1 = buddy::daemon::odin::processGenerateRawTxResponse(response1);
+    auto res_1 = forge::daemon::odin::processGenerateRawTxResponse(response1);
     ASSERT_TRUE(res_1.hasValue());
 
     auto expected1 =
@@ -21,7 +21,7 @@ TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseValid)
 
 
     auto response2 = "e1f0d6373e51c572df26f19e161bc0463978604c1148fb4d66fe7800e8c66f31"s;
-    auto res_2 = buddy::daemon::odin::processGenerateRawTxResponse(response2);
+    auto res_2 = forge::daemon::odin::processGenerateRawTxResponse(response2);
     ASSERT_TRUE(res_2.hasValue());
 
     auto expected2 =
@@ -33,24 +33,24 @@ TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseValid)
 TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseInvalid)
 {
     using namespace std::string_literals;
-    using buddy::core::stringToByteVec;
+    using forge::core::stringToByteVec;
 
     auto response1 = "6X14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635"s;
-    auto res_1 = buddy::daemon::odin::processGenerateRawTxResponse(response1);
+    auto res_1 = forge::daemon::odin::processGenerateRawTxResponse(response1);
     ASSERT_TRUE(res_1.hasError());
 
-    auto res_2 = buddy::daemon::odin::processGenerateRawTxResponse(10);
+    auto res_2 = forge::daemon::odin::processGenerateRawTxResponse(10);
     ASSERT_TRUE(res_2.hasError());
 }
 
 TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseValid)
 {
-    using buddy::core::stringToByteVec;
+    using forge::core::stringToByteVec;
 
     auto file1 = readFile("sign_raw_tx_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processSignRawTxResponse(std::move(json1));
+    auto res1 = forge::daemon::odin::processSignRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
 
@@ -66,7 +66,7 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
     auto file1 = readFile("sign_raw_tx_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processSignRawTxResponse(std::move(json1));
+    auto res1 = forge::daemon::odin::processSignRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -74,14 +74,14 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
     auto file2 = readFile("sign_raw_tx_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = buddy::daemon::odin::processSignRawTxResponse(std::move(json2));
+    auto res2 = forge::daemon::odin::processSignRawTxResponse(std::move(json2));
 
     ASSERT_TRUE(res2.hasError());
 
     auto file3 = readFile("sign_raw_tx_invalid3.json");
     auto json3 = parseString(file3);
 
-    auto res3 = buddy::daemon::odin::processSignRawTxResponse(std::move(json3));
+    auto res3 = forge::daemon::odin::processSignRawTxResponse(std::move(json3));
 
     ASSERT_TRUE(res3.hasError());
     EXPECT_STREQ(res3.getError().what(), "fuckin error");
@@ -90,7 +90,7 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
     auto file4 = readFile("sign_raw_tx_invalid4.json");
     auto json4 = parseString(file4);
 
-    auto res4 = buddy::daemon::odin::processSignRawTxResponse(std::move(json4));
+    auto res4 = forge::daemon::odin::processSignRawTxResponse(std::move(json4));
 
     ASSERT_TRUE(res4.hasError());
 }
@@ -100,7 +100,7 @@ TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseValid)
     auto file1 = readFile("generate_new_address_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+    auto res1 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
     EXPECT_EQ(res1.getValue(), "oRDxB5XznfHGDMPcRyjD2cnq6hahtpWkTT");
@@ -111,7 +111,7 @@ TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseInvalid)
     auto file1 = readFile("generate_new_address_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+    auto res1 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -119,7 +119,7 @@ TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseInvalid)
     auto file2 = readFile("generate_new_address_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
+    auto res2 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
 
     ASSERT_TRUE(res2.hasError());
 }
@@ -129,7 +129,7 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseValid)
     auto file1 = readFile("decode_txid_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
+    auto res1 = forge::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
     EXPECT_EQ(res1.getValue(), "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635");
@@ -140,7 +140,7 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
     auto file1 = readFile("decode_txid_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
+    auto res1 = forge::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -148,7 +148,7 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
     auto file2 = readFile("decode_txid_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = buddy::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
+    auto res2 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
 
     ASSERT_TRUE(res2.hasError());
 }
@@ -156,12 +156,12 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
 
 TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseValid)
 {
-    using buddy::core::stringToByteVec;
+    using forge::core::stringToByteVec;
 
     auto file1 = readFile("send_to_address_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processSendToAddressResponse(std::move(json1),
+    auto res1 = forge::daemon::odin::processSendToAddressResponse(std::move(json1),
                                                                   {});
 
     ASSERT_TRUE(res1.hasValue());
@@ -174,7 +174,7 @@ TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
     auto file1 = readFile("send_to_address_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = buddy::daemon::odin::processSendToAddressResponse(std::move(json1),
+    auto res1 = forge::daemon::odin::processSendToAddressResponse(std::move(json1),
                                                                   {});
 
     ASSERT_TRUE(res1.hasError());
@@ -183,7 +183,7 @@ TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
     auto file2 = readFile("send_to_address_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = buddy::daemon::odin::processSendToAddressResponse(std::move(json1),
+    auto res2 = forge::daemon::odin::processSendToAddressResponse(std::move(json1),
                                                                   {});
 
     ASSERT_TRUE(res2.hasError());
@@ -191,13 +191,13 @@ TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
 
 TEST(ReadWriteOdinDaemonTest, processGetVOutIdxByAmountAndAddressResponseValid)
 {
-    using buddy::core::stringToByteVec;
+    using forge::core::stringToByteVec;
 
     auto file1 = readFile("vout_index_valid1.json");
     auto json1 = parseString(file1);
 
     auto res1 =
-        buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json1),
+        forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json1),
                                                                          52000,
                                                                          "oeotQimis9AwftfjrQMfj29bcwnmGUDnEr");
 
@@ -210,7 +210,7 @@ TEST(ReadWriteOdinDaemonTest, processGetVOutIdxByAmountAndAddressResponseValid)
 
 
     auto res2 =
-        buddy::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json2),
+        forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json2),
                                                                          999945162,
                                                                          "oYHBhrLBc1JiLZqPqNBTXY8SLt71yCWxPP");
 

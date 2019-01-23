@@ -8,19 +8,19 @@
 
 
 using utilxx::Opt;
-using buddy::core::Entry;
-using buddy::core::IPv4Value;
-using buddy::core::IPv6Value;
-using buddy::core::ByteArray;
-using buddy::core::NoneValue;
-using buddy::core::VALUE_FLAG_INDEX;
-using buddy::core::IPv4_VALUE_FLAG;
-using buddy::core::IPv6_VALUE_FLAG;
-using buddy::core::NONE_VALUE_FLAG;
-using buddy::core::BYTE_ARRAY_VALUE_FLAG;
+using forge::core::Entry;
+using forge::core::IPv4Value;
+using forge::core::IPv6Value;
+using forge::core::ByteArray;
+using forge::core::NoneValue;
+using forge::core::VALUE_FLAG_INDEX;
+using forge::core::IPv4_VALUE_FLAG;
+using forge::core::IPv6_VALUE_FLAG;
+using forge::core::NONE_VALUE_FLAG;
+using forge::core::BYTE_ARRAY_VALUE_FLAG;
 
 
-auto buddy::core::parseValue(const std::vector<std::byte>& data)
+auto forge::core::parseValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<EntryValue>
 {
     if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
@@ -69,7 +69,7 @@ auto buddy::core::parseValue(const std::vector<std::byte>& data)
     return std::nullopt;
 }
 
-auto buddy::core::parseKey(const std::vector<std::byte>& data)
+auto forge::core::parseKey(const std::vector<std::byte>& data)
     -> utilxx::Opt<EntryKey>
 {
     if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
@@ -111,7 +111,7 @@ auto buddy::core::parseKey(const std::vector<std::byte>& data)
     return std::nullopt;
 }
 
-auto buddy::core::parseEntry(const std::vector<std::byte>& data)
+auto forge::core::parseEntry(const std::vector<std::byte>& data)
     -> Opt<Entry>
 {
     //3 bytes mask
@@ -131,7 +131,7 @@ auto buddy::core::parseEntry(const std::vector<std::byte>& data)
                    std::move(value_opt));
 }
 
-auto buddy::core::extractValueFlag(const EntryValue& value)
+auto forge::core::extractValueFlag(const EntryValue& value)
     -> std::byte
 {
     static constexpr auto value_flag_visitor =
@@ -145,7 +145,7 @@ auto buddy::core::extractValueFlag(const EntryValue& value)
 }
 
 
-auto buddy::core::entryValueToRawData(const EntryValue& value)
+auto forge::core::entryValueToRawData(const EntryValue& value)
     -> std::vector<std::byte>
 {
 
@@ -170,7 +170,7 @@ auto buddy::core::entryValueToRawData(const EntryValue& value)
 }
 
 
-auto buddy::core::entryToRawData(const Entry& entry)
+auto forge::core::entryToRawData(const Entry& entry)
     -> std::vector<std::byte>
 {
     auto key_data = std::move(entry.first);
@@ -188,7 +188,7 @@ auto buddy::core::entryToRawData(const Entry& entry)
 
 
 //TODO: test
-auto buddy::core::jsonToEntryValue(Json::Value&& value)
+auto forge::core::jsonToEntryValue(Json::Value&& value)
     -> utilxx::Opt<EntryValue>
 {
     if(value.isNull()) {
@@ -278,7 +278,7 @@ auto buddy::core::jsonToEntryValue(Json::Value&& value)
 }
 
 //TODO: test
-auto buddy::core::entryValueToJson(EntryValue value)
+auto forge::core::entryValueToJson(EntryValue value)
     -> Json::Value
 {
     static const auto visitor =
@@ -290,7 +290,7 @@ auto buddy::core::entryValueToJson(EntryValue value)
                 std::vector<std::byte> helper(std::begin(value),
                                               std::end(value));
 
-                json["value"] = buddy::core::toHexString(helper);
+                json["value"] = forge::core::toHexString(helper);
 
                 return json;
             },
@@ -301,14 +301,14 @@ auto buddy::core::entryValueToJson(EntryValue value)
                 std::vector<std::byte> helper(std::begin(value),
                                               std::end(value));
 
-                json["value"] = buddy::core::toHexString(helper);
+                json["value"] = forge::core::toHexString(helper);
 
                 return json;
             },
             [](ByteArray&& value) {
                 Json::Value json;
                 json["type"] = "bytearray";
-                json["value"] = buddy::core::toHexString(value);
+                json["value"] = forge::core::toHexString(value);
 
                 return json;
             },
@@ -324,13 +324,13 @@ auto buddy::core::entryValueToJson(EntryValue value)
                       std::move(value));
 }
 
-auto buddy::core::entryToJson(Entry value)
+auto forge::core::entryToJson(Entry value)
     -> Json::Value
 {
     Json::Value ret_json;
-    ret_json["key"] = buddy::core::toHexString(value.first);
+    ret_json["key"] = forge::core::toHexString(value.first);
 
-    auto trash_json = buddy::core::entryValueToJson(value.second);
+    auto trash_json = forge::core::entryValueToJson(value.second);
 
     ret_json["type"] = std::move(trash_json["type"]);
     ret_json["value"] = std::move(trash_json["value"]);

@@ -8,7 +8,7 @@ TEST(BlockTest, BlockBuildingValid)
     auto json_str1 = readFile("block_valid1.json");
     auto json1 = parseString(json_str1);
 
-    auto block1 = buddy::core::buildBlock(std::move(json1));
+    auto block1 = forge::core::buildBlock(std::move(json1));
 
     ASSERT_TRUE(block1);
 
@@ -28,14 +28,14 @@ TEST(BlockTest, BlockBuildingInvalid)
     auto json_str1 = readFile("block_invalid1.json");
     auto json1 = parseString(json_str1);
 
-    auto block1 = buddy::core::buildBlock(std::move(json1));
+    auto block1 = forge::core::buildBlock(std::move(json1));
 
     ASSERT_FALSE(block1);
 
     auto json_str2 = readFile("block_invalid2.json");
     auto json2 = parseString(json_str2);
 
-    auto block2 = buddy::core::buildBlock(std::move(json2));
+    auto block2 = forge::core::buildBlock(std::move(json2));
 
     ASSERT_FALSE(block2);
 }

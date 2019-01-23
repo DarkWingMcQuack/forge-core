@@ -5,8 +5,8 @@
 #include <iostream>
 #include <lookup/EntryLookup.hpp>
 
-using namespace buddy::core;
-using namespace buddy::lookup;
+using namespace forge::core;
+using namespace forge::lookup;
 
 auto createOp(std::string&& data,
               std::string&& owner,
@@ -59,7 +59,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
               lookup.lookup(first_key).getValue().get());
 
     auto second_key = stringToByteVec("0011223344").getValue();
-    buddy::core::NoneValue expected2;
+    forge::core::NoneValue expected2;
 
     ASSERT_TRUE(lookup.lookupOwner(second_key));
 
@@ -129,7 +129,7 @@ TEST(EntryLookupTest, BasicEntryDeletionTest)
     ASSERT_FALSE(lookup.lookupOwner(first_key));
 
     auto second_key = stringToByteVec("0011223344").getValue();
-    buddy::core::NoneValue expected2;
+    forge::core::NoneValue expected2;
 
     ASSERT_TRUE(lookup.lookupOwner(second_key));
 
@@ -177,7 +177,7 @@ TEST(EntryLookupTest, BasicEntryUpdateTest)
               lookup.lookup(first_key).getValue().get());
 
     auto second_key = stringToByteVec("0011223344").getValue();
-    buddy::core::NoneValue expected2;
+    forge::core::NoneValue expected2;
 
     ASSERT_TRUE(lookup.lookupOwner(first_key));
 

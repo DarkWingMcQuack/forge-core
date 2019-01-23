@@ -9,7 +9,7 @@
 #include <json/value.h>
 #include <utilxx/Result.hpp>
 
-namespace buddy::daemon {
+namespace forge::daemon {
 
 class ReadWriteOdinDaemon : public ReadOnlyOdinDaemon,
                             public WriteOnlyDaemonBase
@@ -110,4 +110,4 @@ auto processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
     -> utilxx::Result<std::int64_t, DaemonError>;
 
 } // namespace odin
-} // namespace buddy::daemon
+} // namespace forge::daemon

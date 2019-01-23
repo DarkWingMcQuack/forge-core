@@ -14,7 +14,7 @@ if(USE_CLANG)
   SET(CMAKE_RANLIB        "llvm-ranlib")
 endif(USE_CLANG)
 
-project(cppBUDDY)
+project(cppFORGE)
 
 #set C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -42,8 +42,8 @@ include(cmake/ccache.cmake)
 # needed for multithreading
 find_package(Threads)
 
-add_library(buddy-src "")
-target_sources(buddy-src
+add_library(forge-src "")
+target_sources(forge-src
   PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Operation.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Entry.hpp
@@ -105,7 +105,7 @@ target_sources(buddy-src
   )
 
 # make headers available
-target_include_directories(buddy-src PUBLIC
+target_include_directories(forge-src PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${UTILXX_INCLUDE_DIR}
   ${CPPTOML_INCLUDE_DIR}
@@ -117,7 +117,7 @@ target_include_directories(buddy-src PUBLIC
   jsoncpp)
 
 #link against libarys
-target_link_libraries(buddy-src LINK_PUBLIC
+target_link_libraries(forge-src LINK_PUBLIC
   fmt
   jsonrpc::client
   jsonrpc::server
@@ -126,49 +126,49 @@ target_link_libraries(buddy-src LINK_PUBLIC
   stdc++fs #TODO: this is horrible to do imo
   ${CMAKE_THREAD_LIBS_INIT})
 
-#executable buddyd
-add_executable(buddyd
-  src/buddyd.cpp)
+#executable forged
+add_executable(forged
+  src/forged.cpp)
 
-#executable buddy-cli
-add_executable(buddy-cli
-  src/buddy-cli.cpp)
+#executable forge-cli
+add_executable(forge-cli
+  src/forge-cli.cpp)
 
 
 #make sure everything is build in the right order
-add_dependencies(buddy-src fmt-project)
-add_dependencies(buddy-src jsonrpc-project)
-# add_dependencies(buddy-src boost-project)
-# add_dependencies(buddy-src cxxopts-project)
-add_dependencies(buddy-src g3logger-project)
-add_dependencies(buddy-src utilxx-project)
-add_dependencies(buddy-src cpptoml-project)
-add_dependencies(buddyd buddy-src)
-add_dependencies(buddy-cli buddy-src)
+add_dependencies(forge-src fmt-project)
+add_dependencies(forge-src jsonrpc-project)
+# add_dependencies(forge-src boost-project)
+# add_dependencies(forge-src cxxopts-project)
+add_dependencies(forge-src g3logger-project)
+add_dependencies(forge-src utilxx-project)
+add_dependencies(forge-src cpptoml-project)
+add_dependencies(forged forge-src)
+add_dependencies(forge-cli forge-src)
 
 
-# make headers available in buddyd.cpp
-target_include_directories(buddyd PUBLIC
+# make headers available in forged.cpp
+target_include_directories(forged PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   fmt
   ${CXXOPTS_INCLUDE_DIR})
 
-#link buddyd.cpp against fmt and thread lib
-target_link_libraries(buddyd LINK_PUBLIC
-  buddy-src
+#link forged.cpp against fmt and thread lib
+target_link_libraries(forged LINK_PUBLIC
+  forge-src
   fmt
   jsonrpc::server
   ${CMAKE_THREAD_LIBS_INIT})
 
-# make headers available in buddy-cli.cpp
-target_include_directories(buddy-cli PUBLIC
+# make headers available in forge-cli.cpp
+target_include_directories(forge-cli PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CLI11_INCLUDE_DIR}
   fmt)
 
-#link buddy-cli.cpp against fmt and thread lib
-target_link_libraries(buddy-cli LINK_PUBLIC
-  buddy-src
+#link forge-cli.cpp against fmt and thread lib
+target_link_libraries(forge-cli LINK_PUBLIC
+  forge-src
   fmt
   ${CMAKE_THREAD_LIBS_INIT})
 

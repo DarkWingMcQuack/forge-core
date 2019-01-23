@@ -5,7 +5,7 @@
 #include <utilxx/Opt.hpp>
 
 
-namespace buddy::env {
+namespace forge::env {
 
 enum class Mode {
     LookupOnly,
@@ -96,4 +96,4 @@ auto parseOptions(int argc, char* argv[])
 auto parseConfigFile(const std::string& config_path)
     -> ProgramOptions;
 
-} // namespace buddy::env
+} // namespace forge::env

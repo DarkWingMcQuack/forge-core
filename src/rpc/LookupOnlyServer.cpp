@@ -10,15 +10,15 @@
 #include <utilxx/Algorithm.hpp>
 #include <utilxx/Overload.hpp>
 
-using buddy::rpc::LookupOnlyServer;
-using buddy::core::getBlockTimeInSeconds;
-using buddy::core::Entry;
-using buddy::core::EntryKey;
-using buddy::core::EntryValue;
-using buddy::core::IPv4Value;
-using buddy::core::IPv6Value;
-using buddy::core::ByteArray;
-using buddy::core::NoneValue;
+using forge::rpc::LookupOnlyServer;
+using forge::core::getBlockTimeInSeconds;
+using forge::core::Entry;
+using forge::core::EntryKey;
+using forge::core::EntryValue;
+using forge::core::IPv4Value;
+using forge::core::IPv6Value;
+using forge::core::ByteArray;
+using forge::core::NoneValue;
 using jsonrpc::PARAMS_BY_NAME;
 using jsonrpc::Procedure;
 using jsonrpc::JsonRpcException;
@@ -252,7 +252,7 @@ auto LookupOnlyServer::hasShutdownRequest() const
     return should_shutdown_.load();
 }
 
-auto buddy::rpc::waitForShutdown(const LookupOnlyServer& server)
+auto forge::rpc::waitForShutdown(const LookupOnlyServer& server)
     -> void
 {
     using namespace std::literals::chrono_literals;

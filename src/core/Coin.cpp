@@ -1,10 +1,10 @@
 #include <core/Coin.hpp>
 #include <cstdint>
 
-using buddy::core::Coin;
+using forge::core::Coin;
 
 
-auto buddy::core::fromString(std::string_view str)
+auto forge::core::fromString(std::string_view str)
     -> utilxx::Opt<Coin>
 {
     if(str == "odin") {
@@ -12,7 +12,7 @@ auto buddy::core::fromString(std::string_view str)
     }
 }
 
-auto buddy::core::getMaturity(Coin c)
+auto forge::core::getMaturity(Coin c)
     -> std::int64_t
 {
     switch(c) {
@@ -21,7 +21,7 @@ auto buddy::core::getMaturity(Coin c)
     }
 }
 
-auto buddy::core::getStartingBlock(Coin c)
+auto forge::core::getStartingBlock(Coin c)
     -> std::int64_t
 {
     switch(c) {
@@ -32,7 +32,7 @@ auto buddy::core::getStartingBlock(Coin c)
     }
 }
 
-auto buddy::core::getBlockTimeInSeconds(Coin c)
+auto forge::core::getBlockTimeInSeconds(Coin c)
     -> std::int64_t
 {
     switch(c) {
@@ -41,7 +41,7 @@ auto buddy::core::getBlockTimeInSeconds(Coin c)
     }
 }
 
-auto buddy::core::getDefaultTxFee(Coin c)
+auto forge::core::getDefaultTxFee(Coin c)
     -> std::int64_t
 {
     switch(c) {
@@ -51,7 +51,7 @@ auto buddy::core::getDefaultTxFee(Coin c)
 }
 
 
-auto buddy::core::getValidityLength(Coin c)
+auto forge::core::getValidityLength(Coin c)
     -> std::int64_t
 {
     switch(c) {
@@ -61,7 +61,7 @@ auto buddy::core::getValidityLength(Coin c)
 }
 
 
-auto buddy::core::getMinimumTxAmount(Coin c)
+auto forge::core::getMinimumTxAmount(Coin c)
     -> std::int64_t
 {
     switch(c) {

@@ -2,10 +2,10 @@
 #include <core/EntryCreationOp.hpp>
 #include <core/Operation.hpp>
 
-using buddy::core::Entry;
-using buddy::core::EntryCreationOp;
-using buddy::core::ENTRY_CREATION_FLAG;
-using buddy::core::BUDDY_IDENTIFIER_MASK;
+using forge::core::Entry;
+using forge::core::EntryCreationOp;
+using forge::core::ENTRY_CREATION_FLAG;
+using forge::core::FORGE_IDENTIFIER_MASK;
 
 EntryCreationOp::EntryCreationOp(Entry&& entry,
                                  std::string&& owner,
@@ -76,17 +76,17 @@ auto EntryCreationOp::getOwner()
 }
 
 
-auto buddy::core::createEntryCreationOpMetadata(Entry&& entry)
+auto forge::core::createEntryCreationOpMetadata(Entry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = buddy::core::entryToRawData(entry);
-    auto flag = buddy::core::ENTRY_CREATION_FLAG;
+    auto data = forge::core::entryToRawData(entry);
+    auto flag = forge::core::ENTRY_CREATION_FLAG;
 
     data.insert(std::begin(data), flag);
 
     data.insert(std::begin(data),
-                std::begin(BUDDY_IDENTIFIER_MASK),
-                std::end(BUDDY_IDENTIFIER_MASK));
+                std::begin(FORGE_IDENTIFIER_MASK),
+                std::end(FORGE_IDENTIFIER_MASK));
 
     return data;
 }

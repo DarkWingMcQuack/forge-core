@@ -2,10 +2,10 @@
 #include <core/EntryDeletionOp.hpp>
 #include <core/Operation.hpp>
 
-using buddy::core::Entry;
-using buddy::core::EntryDeletionOp;
-using buddy::core::ENTRY_DELETION_FLAG;
-using buddy::core::BUDDY_IDENTIFIER_MASK;
+using forge::core::Entry;
+using forge::core::EntryDeletionOp;
+using forge::core::ENTRY_DELETION_FLAG;
+using forge::core::FORGE_IDENTIFIER_MASK;
 
 EntryDeletionOp::EntryDeletionOp(Entry&& entry,
                                  std::string&& owner,
@@ -75,17 +75,17 @@ auto EntryDeletionOp::getOwner()
     return owner_;
 }
 
-auto buddy::core::createEntryDeletionOpMetadata(Entry&& entry)
+auto forge::core::createEntryDeletionOpMetadata(Entry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = buddy::core::entryToRawData(entry);
-    auto flag = buddy::core::ENTRY_DELETION_FLAG;
+    auto data = forge::core::entryToRawData(entry);
+    auto flag = forge::core::ENTRY_DELETION_FLAG;
 
     data.insert(std::begin(data), flag);
 
     data.insert(std::begin(data),
-                std::begin(BUDDY_IDENTIFIER_MASK),
-                std::end(BUDDY_IDENTIFIER_MASK));
+                std::begin(FORGE_IDENTIFIER_MASK),
+                std::end(FORGE_IDENTIFIER_MASK));
 
     return data;
 }
