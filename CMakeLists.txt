@@ -138,9 +138,8 @@ add_executable(forge-cli
 #make sure everything is build in the right order
 add_dependencies(forge-src fmt-project)
 add_dependencies(forge-src jsonrpc-project)
-# add_dependencies(forge-src boost-project)
-# add_dependencies(forge-src cxxopts-project)
 add_dependencies(forge-src g3logger-project)
+add_dependencies(forge-src CLI11-project)
 add_dependencies(forge-src utilxx-project)
 add_dependencies(forge-src cpptoml-project)
 add_dependencies(forged forge-src)
