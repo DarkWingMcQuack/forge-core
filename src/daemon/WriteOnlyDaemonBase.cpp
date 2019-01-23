@@ -11,13 +11,13 @@ using forge::daemon::ReadWriteOdinDaemon;
 
 
 
-auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string&& txid_input,
+auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string txid_input,
                                               std::int64_t index,
-                                              std::vector<std::byte>&& metadata,
+                                              std::vector<std::byte> metadata,
                                               std::int64_t burn_value,
                                               std::vector<
                                                   std::pair<std::string,
-                                                            std::int64_t>>&& outputs) const
+                                                            std::int64_t>> outputs) const
     -> utilxx::Result<std::string, DaemonError>
 {
     return generateRawTx(std::move(txid_input),

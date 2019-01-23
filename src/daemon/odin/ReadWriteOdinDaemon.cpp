@@ -21,13 +21,13 @@ using forge::core::getDefaultTxFee;
 using namespace std::string_literals;
 
 
-auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
+auto ReadWriteOdinDaemon::generateRawTx(std::string input_txid,
                                         std::int64_t index,
-                                        std::vector<std::byte>&& metadata,
+                                        std::vector<std::byte> metadata,
                                         std::int64_t burn_value,
                                         std::vector<
                                             std::pair<std::string,
-                                                      std::int64_t>>&& outputs) const
+                                                      std::int64_t>> outputs) const
     -> Result<std::vector<std::byte>,
               DaemonError>
 {
@@ -45,13 +45,13 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string&& input_txid,
         });
 }
 
-auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string&& input_txid,
+auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string input_txid,
                                                     std::int64_t index,
-                                                    std::vector<std::byte>&& metadata,
+                                                    std::vector<std::byte> metadata,
                                                     std::int64_t burn_value,
                                                     std::vector<
                                                         std::pair<std::string,
-                                                                  std::int64_t>>&& outputs) const
+                                                                  std::int64_t>> outputs) const
     -> Json::Value
 {
     auto metadata_str = toHexString(metadata);
@@ -86,7 +86,7 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string&& input_txid,
     return param;
 }
 
-auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
+auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte> tx) const
     -> Result<std::vector<std::byte>,
               DaemonError>
 {
@@ -101,7 +101,7 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte>&& tx) const
         });
 }
 
-auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte>&& tx) const
+auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte> tx) const
     -> Result<std::string, DaemonError>
 {
     static const auto command = "sendrawtransaction"s;
@@ -148,7 +148,7 @@ auto ReadWriteOdinDaemon::decodeTxidOfRawTx(const std::vector<std::byte>& tx) co
 }
 
 auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
-                                     std::vector<std::byte>&& metadata) const
+                                     std::vector<std::byte> metadata) const
     -> utilxx::Result<std::string, DaemonError>
 {
     auto fees = getDefaultTxFee(getCoin());
@@ -196,11 +196,11 @@ auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
         });
 }
 
-auto ReadWriteOdinDaemon::burnAmount(std::string&& txid,
+auto ReadWriteOdinDaemon::burnAmount(std::string txid,
                                      std::int64_t index,
                                      std::int64_t amount,
-                                     std::vector<std::byte>&& metadata,
-                                     std::string&& change_address) const
+                                     std::vector<std::byte> metadata,
+                                     std::string change_address) const
     -> utilxx::Result<std::string, DaemonError>
 {
     return getOutputValue(txid, index)
@@ -232,9 +232,9 @@ auto ReadWriteOdinDaemon::burnAmount(std::string&& txid,
         });
 }
 
-auto ReadWriteOdinDaemon::burnOutput(std::string&& txid,
+auto ReadWriteOdinDaemon::burnOutput(std::string txid,
                                      std::int64_t index,
-                                     std::vector<std::byte>&& metadata) const
+                                     std::vector<std::byte> metadata) const
     -> utilxx::Result<std::string, DaemonError>
 {
     return getOutputValue(txid, index)
@@ -262,7 +262,7 @@ std::string roundDouble(double num)
 } // namespace
 
 auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
-                                        std::string&& address) const
+                                        std::string address) const
     -> utilxx::Result<std::string, DaemonError>
 {
     static const auto command = "sendtoaddress"s;

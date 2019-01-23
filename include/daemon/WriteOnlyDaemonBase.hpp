@@ -14,34 +14,36 @@ public:
     virtual ~WriteOnlyDaemonBase() = default;
 
     //creates, signes and sends a transaction
-    virtual auto writeTxToBlockchain(std::string&& txid_input,
+    virtual auto writeTxToBlockchain(std::string txid_input,
                                      std::int64_t index,
-                                     std::vector<std::byte>&& metadata,
+                                     std::vector<std::byte> metadata,
                                      std::int64_t burn_value,
                                      std::vector<
                                          std::pair<std::string,
-                                                   std::int64_t>>&& outputs) const
+                                                   std::int64_t>>
+                                         outputs) const
         -> utilxx::Result<std::string, DaemonError>;
 
     //generate a raw transaction with one input
     //on OP_RETURN Output and some other arbitrary outputs
-    virtual auto generateRawTx(std::string&& input_txid,
+    virtual auto generateRawTx(std::string input_txid,
                                std::int64_t index,
-                               std::vector<std::byte>&& metadata,
+                               std::vector<std::byte> metadata,
                                std::int64_t burn_value,
                                std::vector<
                                    std::pair<std::string,
-                                             std::int64_t>>&& outputs) const
+                                             std::int64_t>>
+                                   outputs) const
         -> utilxx::Result<std::vector<std::byte>,
                           DaemonError> = 0;
 
     //sign a given transaction
-    virtual auto signRawTx(std::vector<std::byte>&& tx) const
+    virtual auto signRawTx(std::vector<std::byte> tx) const
         -> utilxx::Result<std::vector<std::byte>,
                           DaemonError> = 0;
 
     //broadcast a signed tx to the p2p network
-    virtual auto sendRawTx(std::vector<std::byte>&& tx) const
+    virtual auto sendRawTx(std::vector<std::byte> tx) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
     //extracts the txid of a raw transaction
@@ -54,7 +56,7 @@ public:
 
     //sends the given amount of coins to the given address
     virtual auto sendToAddress(std::int64_t amount,
-                               std::string&& address) const
+                               std::string address) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
     //should check unspent outputs,
@@ -64,7 +66,7 @@ public:
     //if value > amount + fee generate a new address and use this address
     //and send the rest of the output to this address
     virtual auto burnAmount(std::int64_t amount,
-                            std::vector<std::byte>&& metadata) const
+                            std::vector<std::byte> metadata) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
     //burns the given amount of the given output txid,
@@ -72,17 +74,17 @@ public:
     //and sends the remaining coins of the given output
     //to the change_address
     //requires amount + fee < output value
-    virtual auto burnAmount(std::string&& txid,
+    virtual auto burnAmount(std::string txid,
                             std::int64_t index,
                             std::int64_t amount,
-                            std::vector<std::byte>&& metadata,
-                            std::string&& change_address) const
+                            std::vector<std::byte> metadata,
+                            std::string change_address) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
     //burn a whole output and write the given metadata to the blockchain
-    virtual auto burnOutput(std::string&& txid,
+    virtual auto burnOutput(std::string txid,
                             std::int64_t index,
-                            std::vector<std::byte>&& metadata) const
+                            std::vector<std::byte> metadata) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
 
