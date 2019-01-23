@@ -13,13 +13,13 @@ class ReadOnlyWallet
 public:
     ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup);
 
-    auto addWatchOnlyAddress(std::string&& adr)
+    auto addWatchOnlyAddress(std::string adr)
         -> void;
 
     auto deleteWatchOnlyAddress(const std::string& adr)
         -> void;
 
-    auto addNewOwnedAddress(std::string&& adr)
+    auto addNewOwnedAddress(std::string adr)
         -> void;
 
     auto getOwnedEntrys() const

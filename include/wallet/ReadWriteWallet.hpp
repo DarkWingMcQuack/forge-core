@@ -22,8 +22,8 @@ public:
     //will be used to create the OP_RETURN transaction
     //on success, the txid of the burn is returned
     //on error a WalletError is returned
-    auto createNewEntry(core::EntryKey&& key,
-                        core::EntryValue&& value,
+    auto createNewEntry(core::EntryKey key,
+                        core::EntryValue value,
                         std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
@@ -33,9 +33,9 @@ public:
     //do the burn with the given value
     //on success, the txid of the burn is returned
     //on error a WalletError is returned
-    auto createNewEntry(core::EntryKey&& key,
-                        core::EntryValue&& value,
-                        std::string&& address,
+    auto createNewEntry(core::EntryKey key,
+                        core::EntryValue value,
+                        std::string address,
                         std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
@@ -48,7 +48,7 @@ public:
     //given parameters the renewal is valid and will be executed
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto renewEntry(core::EntryKey&& key,
+    auto renewEntry(core::EntryKey key,
                     std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
@@ -62,8 +62,8 @@ public:
     //if so the operation is executed and a updateing TX is created
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto updateEntry(core::EntryKey&& key,
-                     core::EntryValue&& new_value,
+    auto updateEntry(core::EntryKey key,
+                     core::EntryValue new_value,
                      std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
@@ -77,7 +77,7 @@ public:
     //if so the operation is executed and a updateing TX is created
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto deleteEntry(core::EntryKey&& key,
+    auto deleteEntry(core::EntryKey key,
                      std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
@@ -90,8 +90,8 @@ public:
     //if so the operation is executed and a updateing TX is created
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto transferOwnership(core::EntryKey&& key,
-                           std::string&& new_owner,
+    auto transferOwnership(core::EntryKey key,
+                           std::string new_owner,
                            std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
@@ -101,12 +101,12 @@ public:
     //can be used as a DNS for payments to usernames
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto payToEntryOwner(core::EntryKey&& key,
+    auto payToEntryOwner(core::EntryKey key,
                          std::int64_t amount)
         -> utilxx::Result<std::string, WalletError>;
 
 private:
-    auto createEntryOwnerPairFromKey(core::EntryKey&& key)
+    auto createEntryOwnerPairFromKey(core::EntryKey key)
         -> utilxx::Result<std::pair<core::Entry,
                                     std::string>,
                           WalletError>;
