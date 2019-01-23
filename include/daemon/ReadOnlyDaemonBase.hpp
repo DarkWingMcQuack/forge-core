@@ -19,10 +19,10 @@ public:
     virtual auto getNewestBlock() const
         -> utilxx::Result<core::Block, DaemonError> = 0;
 
-    virtual auto getTransaction(std::string&& txid) const
+    virtual auto getTransaction(std::string txid) const
         -> utilxx::Result<core::Transaction, DaemonError> = 0;
 
-    virtual auto resolveTxIn(core::TxIn&& vin) const
+    virtual auto resolveTxIn(core::TxIn vin) const
         -> utilxx::Result<core::TxOut, DaemonError> = 0;
 
     virtual auto getBlockCount() const
@@ -31,7 +31,7 @@ public:
     virtual auto getBlockHash(std::int64_t index) const
         -> utilxx::Result<std::string, DaemonError> = 0;
 
-    virtual auto getBlock(std::string&& hash) const
+    virtual auto getBlock(std::string hash) const
         -> utilxx::Result<core::Block, DaemonError> = 0;
 
     virtual auto getUnspent() const

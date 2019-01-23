@@ -94,7 +94,7 @@ auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
         });
 }
 
-auto ReadOnlyOdinDaemon::getBlock(std::string&& hash) const
+auto ReadOnlyOdinDaemon::getBlock(std::string hash) const
     -> utilxx::Result<Block, DaemonError>
 {
     static const auto command = "getblock"s;
@@ -123,7 +123,7 @@ auto ReadOnlyOdinDaemon::getNewestBlock() const
         });
 }
 
-auto ReadOnlyOdinDaemon::resolveTxIn(TxIn&& vin) const
+auto ReadOnlyOdinDaemon::resolveTxIn(TxIn vin) const
     -> utilxx::Result<TxOut, DaemonError>
 {
     auto index = vin.getVoutIndex();
@@ -143,7 +143,7 @@ auto ReadOnlyOdinDaemon::resolveTxIn(TxIn&& vin) const
         });
 }
 
-auto ReadOnlyOdinDaemon::getTransaction(std::string&& txid) const
+auto ReadOnlyOdinDaemon::getTransaction(std::string txid) const
     -> utilxx::Result<core::Transaction, DaemonError>
 {
     static const auto command = "getrawtransaction";

@@ -11,7 +11,6 @@
 
 namespace forge::daemon {
 
-
 class ReadOnlyOdinDaemon : public ReadOnlyDaemonBase
 {
 public:
@@ -26,10 +25,10 @@ public:
     auto getNewestBlock() const
         -> utilxx::Result<core::Block, DaemonError> override;
 
-    auto getTransaction(std::string&& txid) const
+    auto getTransaction(std::string txid) const
         -> utilxx::Result<core::Transaction, DaemonError> override;
 
-    auto resolveTxIn(core::TxIn&& vin) const
+    auto resolveTxIn(core::TxIn vin) const
         -> utilxx::Result<core::TxOut, DaemonError> override;
 
     auto getBlockCount() const
@@ -38,7 +37,7 @@ public:
     auto getBlockHash(std::int64_t index) const
         -> utilxx::Result<std::string, DaemonError> override;
 
-    auto getBlock(std::string&& hash) const
+    auto getBlock(std::string hash) const
         -> utilxx::Result<core::Block, DaemonError> override;
 
     auto getOutputValue(std::string txid,
