@@ -22,6 +22,8 @@ constexpr inline auto ENTRY_RENEWAL_FLAG      = static_cast<std::byte>(0b0000001
 constexpr inline auto OWNERSHIP_TRANSFER_FLAG = static_cast<std::byte>(0b00000100);
 constexpr inline auto ENTRY_UPDATE_FLAG       = static_cast<std::byte>(0b00001000);
 constexpr inline auto ENTRY_DELETION_FLAG     = static_cast<std::byte>(0b00010000);
+
+constexpr inline auto ENTRY_OPERATION_FLAG_INDEX = 3;
 // clang-format on
 
 using Operation = std::variant<EntryCreationOp,

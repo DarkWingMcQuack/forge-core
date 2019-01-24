@@ -123,7 +123,7 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
     return parseEntry(metadata)
         .flatMap([&](auto&& entry)
                      -> utilxx::Opt<Operation> {
-            switch(static_cast<std::byte>(metadata[3])) {
+            switch(static_cast<std::byte>(metadata[ENTRY_OPERATION_FLAG_INDEX])) {
 
             case ENTRY_CREATION_FLAG:
                 return Operation{
