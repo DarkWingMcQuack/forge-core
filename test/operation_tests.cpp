@@ -7,7 +7,7 @@ using namespace forge::core;
 
 TEST(OperationTest, EntryCreationOpParsingValid)
 {
-    auto metadata = extractMetadata("6a00c6dc750101aabbccdddeadbeef").getValue();
+    auto metadata = extractMetadata("6a00c6dc75010101aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
     auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     std::int64_t value = 10;
@@ -32,12 +32,12 @@ TEST(OperationTest, EntryCreationOpParsingValid)
 
     auto data = operationToMetadata(op);
 
-    EXPECT_EQ(data, stringToByteVec("c6dc750101aabbccdddeadbeef").getValue());
+    EXPECT_EQ(data, stringToByteVec("c6dc75010101aabbccdddeadbeef").getValue());
 }
 
 TEST(OperationTest, EntryRenewalOpParsingValid)
 {
-    auto metadata = extractMetadata("6a00c6dc750201aabbccdddeadbeef").getValue();
+    auto metadata = extractMetadata("6a00c6dc75010201aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
     auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     std::int64_t value = 10;
@@ -61,12 +61,12 @@ TEST(OperationTest, EntryRenewalOpParsingValid)
 
     auto data = operationToMetadata(op);
 
-    EXPECT_EQ(data, stringToByteVec("c6dc750201aabbccdddeadbeef").getValue());
+    EXPECT_EQ(data, stringToByteVec("c6dc75010201aabbccdddeadbeef").getValue());
 }
 
 TEST(OperationTest, OwnershipTransferOpParsingValid)
 {
-    auto metadata = extractMetadata("6a00c6dc750401aabbccdddeadbeef").getValue();
+    auto metadata = extractMetadata("6a00c6dc75010401aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
     auto old_owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
@@ -93,12 +93,12 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
 
     auto data = operationToMetadata(op);
 
-    EXPECT_EQ(data, stringToByteVec("c6dc750401aabbccdddeadbeef").getValue());
+    EXPECT_EQ(data, stringToByteVec("c6dc75010401aabbccdddeadbeef").getValue());
 }
 
 TEST(OperationTest, EntryUpdateOpParsingValid)
 {
-    auto metadata = extractMetadata("6a00c6dc750801ffffffffdeadbeef").getValue();
+    auto metadata = extractMetadata("6a00c6dc75010801ffffffffdeadbeef").getValue();
     std::int64_t block = 1000;
     auto old_owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
@@ -129,5 +129,5 @@ TEST(OperationTest, EntryUpdateOpParsingValid)
 
     auto data = operationToMetadata(op);
 
-    EXPECT_EQ(data, stringToByteVec("c6dc750801ffffffffdeadbeef").getValue());
+    EXPECT_EQ(data, stringToByteVec("c6dc75010801ffffffffdeadbeef").getValue());
 }

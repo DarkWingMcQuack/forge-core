@@ -28,15 +28,15 @@ auto createOp(std::string&& data,
 
 TEST(EntryLookupTest, BasicEntryCreationTest)
 {
-    std::vector ops{createOp("6a00c6dc750101aabbccdddeadbeef",
+    std::vector ops{createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                              10,
                              10),
-                    createOp("6a00c6dc750101aabbccdddeadbeef",
+                    createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              9),
-                    createOp("6a00c6dc7501040011223344",
+                    createOp("6a00c6dc750101040011223344",
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              9)};
@@ -70,7 +70,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
     //entry update
     ops.clear();
-    ops = {createOp("6a00c6dc750801ffffffffdeadbeef",
+    ops = {createOp("6a00c6dc75010801ffffffffdeadbeef",
                     "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                     11,
                     11)};
@@ -91,7 +91,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
     //entry deletion
     ops.clear();
-    ops = {createOp("6a00c6dc751001ffffffffdeadbeef",
+    ops = {createOp("6a00c6dc75011001ffffffffdeadbeef",
                     "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                     12,
                     12)};
@@ -103,11 +103,11 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
 TEST(EntryLookupTest, BasicEntryDeletionTest)
 {
-    std::vector ops{createOp("6a00c6dc750101aabbccdddeadbeef",
+    std::vector ops{createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                              10,
                              10),
-                    createOp("6a00c6dc7501040011223344",
+                    createOp("6a00c6dc750101040011223344",
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              10)};
@@ -117,7 +117,7 @@ TEST(EntryLookupTest, BasicEntryDeletionTest)
 
     //entry deletion
     ops.clear();
-    ops = {createOp("6a00c6dc751001aabbccdddeadbeef",
+    ops = {createOp("6a00c6dc75011001aabbccdddeadbeef",
                     "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                     12,
                     12)};
@@ -141,11 +141,11 @@ TEST(EntryLookupTest, BasicEntryDeletionTest)
 
 TEST(EntryLookupTest, BasicEntryUpdateTest)
 {
-    std::vector ops{createOp("6a00c6dc750101aabbccdddeadbeef",
+    std::vector ops{createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                              10,
                              10),
-                    createOp("6a00c6dc7501040011223344",
+                    createOp("6a00c6dc750101040011223344",
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              10)};
@@ -155,7 +155,7 @@ TEST(EntryLookupTest, BasicEntryUpdateTest)
 
     //entry deletion
     ops.clear();
-    ops = {createOp("6a00c6dc750801ffffffffdeadbeef",
+    ops = {createOp("6a00c6dc75010801ffffffffdeadbeef",
                     "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                     12,
                     12)};

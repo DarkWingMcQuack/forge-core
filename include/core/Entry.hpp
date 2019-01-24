@@ -23,12 +23,14 @@ struct NoneValue{
 };
 // clang-format on
 
-constexpr std::int64_t VALUE_FLAG_INDEX = 4;
+constexpr static inline auto ENTRY_IDENTIFICATION_FLAG = static_cast<std::byte>(0b00000001);
 
-constexpr auto IPv4_VALUE_FLAG = static_cast<std::byte>(0b00000001);
-constexpr auto IPv6_VALUE_FLAG = static_cast<std::byte>(0b00000010);
-constexpr auto NONE_VALUE_FLAG = static_cast<std::byte>(0b00000100);
-constexpr auto BYTE_ARRAY_VALUE_FLAG = static_cast<std::byte>(0b00001000);
+constexpr static inline auto VALUE_FLAG_INDEX = 5;
+
+constexpr static inline auto IPv4_VALUE_FLAG = static_cast<std::byte>(0b00000001);
+constexpr static inline auto IPv6_VALUE_FLAG = static_cast<std::byte>(0b00000010);
+constexpr static inline auto NONE_VALUE_FLAG = static_cast<std::byte>(0b00000100);
+constexpr static inline auto BYTE_ARRAY_VALUE_FLAG = static_cast<std::byte>(0b00001000);
 
 using EntryValue = std::variant<IPv4Value,
                                 IPv6Value,

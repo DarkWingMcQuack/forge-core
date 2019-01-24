@@ -175,9 +175,10 @@ auto forge::core::entryToRawData(const Entry& entry)
 {
     auto key_data = std::move(entry.first);
     auto value_data = entryValueToRawData(entry.second);
-    auto flag = extractValueFlag(entry.second);
+    auto value_flag = extractValueFlag(entry.second);
 
-    value_data.insert(std::begin(value_data), flag);
+    value_data.insert(std::begin(value_data),
+                      value_flag);
 
     value_data.insert(std::end(value_data),
                       std::begin(key_data),
@@ -197,7 +198,6 @@ auto forge::core::jsonToEntryValue(Json::Value&& value)
 
     if(!value.isMember("type")
        || !value.isMember("value")) {
-        LOG(DEBUG) << "REEEEEEEEEEEEEEEEEEEEE";
         return std::nullopt;
     }
 

@@ -262,7 +262,11 @@ auto forge::core::operationToMetadata(const Operation& op)
 
     auto data = forge::core::entryToRawData(entry);
 
-    data.insert(std::begin(data), flag);
+    data.insert(std::begin(data),
+                flag);
+
+    data.insert(std::begin(data),
+                ENTRY_IDENTIFICATION_FLAG);
 
     data.insert(std::begin(data),
                 std::begin(FORGE_IDENTIFIER_MASK),
