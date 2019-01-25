@@ -223,7 +223,6 @@ TEST(OperationTest, UpdateOpMetadataCreation)
     EXPECT_EQ(created_metadata, expected_metadata);
 }
 
-
 TEST(OperationTest, DeletionOpMetadataCreation)
 {
     auto expected_metadata = extractMetadata("6a00c6dc75011001aabbccdddeadbeef").getValue();
