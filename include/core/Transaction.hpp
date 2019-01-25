@@ -10,10 +10,6 @@
 
 namespace forge::core {
 
-constexpr static std::array<std::byte, 3> FORGE_IDENTIFIER_MASK{static_cast<std::byte>(0xC6),
-                                                                static_cast<std::byte>(0xDC),
-                                                                static_cast<std::byte>(0x75)};
-
 class TxIn
 {
 public:

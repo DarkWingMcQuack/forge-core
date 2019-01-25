@@ -320,7 +320,7 @@ TEST(EntryTest, EntryParsingValidIpv6)
     auto expected11 = forge::core::stringToByteVec("0210101010101010101010101010101010deadbeef").getValue();
     EXPECT_EQ(data11, expected11);
 
-    auto data2 = forge::core::stringToByteVec("ffffff00ff02aabbccddeeff11223344556677889900deadbeef").getValue();
+    auto data2 = forge::core::stringToByteVec("ffffff01ff02aabbccddeeff11223344556677889900deadbeef").getValue();
     auto entry_opt2 = forge::core::parseEntry(data2);
     std::array value2{
         (std::byte)0xaa,

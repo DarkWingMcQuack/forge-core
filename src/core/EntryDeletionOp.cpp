@@ -1,5 +1,6 @@
 #include <core/Entry.hpp>
 #include <core/EntryDeletionOp.hpp>
+#include <core/FlagIndexes.hpp>
 #include <core/Operation.hpp>
 
 using forge::core::Entry;

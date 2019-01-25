@@ -1,4 +1,5 @@
 #include <core/Entry.hpp>
+#include <core/FlagIndexes.hpp>
 #include <core/Operation.hpp>
 #include <core/OwnershipTransferOp.hpp>
 

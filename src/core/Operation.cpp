@@ -1,4 +1,5 @@
 #include <core/Entry.hpp>
+#include <core/FlagIndexes.hpp>
 #include <core/Operation.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
@@ -123,7 +124,7 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
     return parseEntry(metadata)
         .flatMap([&](auto&& entry)
                      -> utilxx::Opt<Operation> {
-            switch(static_cast<std::byte>(metadata[ENTRY_OPERATION_FLAG_INDEX])) {
+            switch(static_cast<std::byte>(metadata[OPERATION_FLAG_INDEX])) {
 
             case ENTRY_CREATION_FLAG:
                 return Operation{

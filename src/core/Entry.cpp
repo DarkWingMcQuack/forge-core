@@ -1,4 +1,5 @@
 #include <core/Entry.hpp>
+#include <core/FlagIndexes.hpp>
 #include <core/Operation.hpp>
 #include <cstddef>
 #include <g3log/g3log.hpp>
@@ -13,7 +14,7 @@ using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
 using forge::core::NoneValue;
-using forge::core::VALUE_FLAG_INDEX;
+using forge::core::ENTRY_VALUE_FLAG_INDEX;
 using forge::core::IPv4_VALUE_FLAG;
 using forge::core::IPv6_VALUE_FLAG;
 using forge::core::NONE_VALUE_FLAG;
@@ -23,44 +24,44 @@ using forge::core::BYTE_ARRAY_VALUE_FLAG;
 auto forge::core::parseValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<EntryValue>
 {
-    if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 1) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
         return EntryValue{NoneValue{}};
     }
 
-    if(data[VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 2) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 2) {
         auto value_length = static_cast<std::int64_t>(data[5]);
 
         //check the bounds
-        if(VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
+        if(ENTRY_VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
             return std::nullopt;
         }
 
         ByteArray byte_array;
-        std::copy(std::begin(data) + VALUE_FLAG_INDEX + 2,
-                  std::begin(data) + VALUE_FLAG_INDEX + 2 + value_length,
+        std::copy(std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2,
+                  std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
                   std::begin(byte_array));
 
         return EntryValue{std::move(byte_array)};
     }
 
-    if(data[VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 5) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 5) {
         IPv4Value ipv4;
-        std::copy(std::begin(data) + VALUE_FLAG_INDEX + 1,
-                  std::begin(data) + VALUE_FLAG_INDEX + 5,
+        std::copy(std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
+                  std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
                   std::begin(ipv4));
         return EntryValue{std::move(ipv4)};
     }
 
 
-    if(data[VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 17) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 17) {
 
         IPv6Value ipv6;
-        std::copy(std::begin(data) + VALUE_FLAG_INDEX + 1,
-                  std::begin(data) + VALUE_FLAG_INDEX + 17,
+        std::copy(std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
+                  std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
                   std::begin(ipv6));
 
         return EntryValue{std::move(ipv6)};
@@ -72,39 +73,39 @@ auto forge::core::parseValue(const std::vector<std::byte>& data)
 auto forge::core::parseKey(const std::vector<std::byte>& data)
     -> utilxx::Opt<EntryKey>
 {
-    if(data[VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 1) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
 
-        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 1,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
                         std::end(data)};
     }
 
-    if(data[VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 2) {
-        auto value_length = static_cast<std::int64_t>(data[VALUE_FLAG_INDEX + 1]);
+    if(data[ENTRY_VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 2) {
+        auto value_length = static_cast<std::int64_t>(data[ENTRY_VALUE_FLAG_INDEX + 1]);
 
         //check the bounds
-        if(VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
+        if(ENTRY_VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
             return std::nullopt;
         }
 
-        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 2 + value_length,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
                         std::end(data)};
     }
 
-    if(data[VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 5) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 5) {
 
-        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 5,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
                         std::end(data)};
     }
 
 
 
-    if(data[VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
-       && data.size() > VALUE_FLAG_INDEX + 17) {
+    if(data[ENTRY_VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
+       && data.size() > ENTRY_VALUE_FLAG_INDEX + 17) {
 
-        return EntryKey{std::begin(data) + VALUE_FLAG_INDEX + 17,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
                         std::end(data)};
     }
 
@@ -115,11 +116,17 @@ auto forge::core::parseEntry(const std::vector<std::byte>& data)
     -> Opt<Entry>
 {
     //3 bytes mask
+    //1 tokeyn type flag
     //1 op flag
     //1 value flag
     //at least 4 value
     //at least 1 key
-    if(data.size() < 10) {
+    if(data.size() < 11) {
+        return std::nullopt;
+    }
+
+    //check that the metadata actualy refers to a mutable entry
+    if(data[TOKEN_TYPE_INDEX] != ENTRY_IDENTIFICATION_FLAG) {
         return std::nullopt;
     }
 
