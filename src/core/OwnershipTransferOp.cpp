@@ -99,6 +99,8 @@ auto forge::core::createOwnershipTransferOpMetadata(Entry&& entry)
 
     data.insert(std::begin(data), flag);
 
+    data.insert(std::begin(data), ENTRY_IDENTIFICATION_FLAG);
+
     data.insert(std::begin(data),
                 std::begin(FORGE_IDENTIFIER_MASK),
                 std::end(FORGE_IDENTIFIER_MASK));
