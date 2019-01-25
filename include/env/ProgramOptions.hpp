@@ -7,16 +7,30 @@
 
 namespace forge::env {
 
+constexpr static inline auto DEFAULT_CONFIG_FILE =
+    "[server]\n"
+    "mode = \"readwrite\"\n"
+    "daemon = true\n"
+    "threads = 10\n\n"
+
+    "[rpc]\n"
+    "user = \"\"\n"
+    "password = \"\"\n"
+    "port = 6969\n\n"
+
+    "[coin]\n"
+    "coin = \"odin\"\n"
+    "user = \"user\"\n"
+    "password = \"password\"\n"
+    "host = \"localhost\"\n"
+    "port = 22101\n";
+
+
 enum class Mode {
     LookupOnly,
     ReadOnly,
     ReadWrite
 };
-
-auto operator>>(std::istream& in, Mode& mode)
-    -> std::istream&;
-auto operator<<(std::ostream& os, const Mode& mode)
-    -> std::ostream&;
 
 class ProgramOptions
 {

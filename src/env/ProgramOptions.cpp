@@ -156,9 +156,15 @@ auto forge::env::parseOptions(int argc, char* argv[])
     fs::create_directory(config_path);
 
     if(!fs::exists(config_path + "/forge.conf")) {
-        fmt::print("config file {} not found, please create a valid config file in the workdir\n",
+        fmt::print("config file {} not found\n",
                    config_path + "/forge.conf");
-        std::exit(-1);
+
+        std::ofstream ofs{config_path + "/forge.conf"};
+
+        ofs << DEFAULT_CONFIG_FILE;
+
+        fmt::print("created default config file in workdir {}\n",
+                   config_path);
     }
 
     auto params = parseConfigFile(config_path);
