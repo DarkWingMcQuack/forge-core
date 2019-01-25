@@ -131,3 +131,118 @@ TEST(OperationTest, EntryUpdateOpParsingValid)
 
     EXPECT_EQ(data, stringToByteVec("c6dc75010801ffffffffdeadbeef").getValue());
 }
+
+TEST(OperationTest, CreationOpMetadataCreation)
+{
+    auto expected_metadata = extractMetadata("6a00c6dc75010101aabbccdddeadbeef").getValue();
+
+    std::vector key1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    std::array value1{
+        (std::byte)0xaa,
+        (std::byte)0xbb,
+        (std::byte)0xcc,
+        (std::byte)0xdd};
+
+    std::pair expected1{key1, forge::core::EntryValue{value1}};
+
+    auto created_metadata = createEntryCreationOpMetadata(std::move(expected1));
+
+    EXPECT_EQ(created_metadata, expected_metadata);
+}
+
+TEST(OperationTest, RenewalOpMetadataCreation)
+{
+    auto expected_metadata = extractMetadata("6a00c6dc75010201aabbccdddeadbeef").getValue();
+
+    std::vector key1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    std::array value1{
+        (std::byte)0xaa,
+        (std::byte)0xbb,
+        (std::byte)0xcc,
+        (std::byte)0xdd};
+
+    std::pair expected1{key1, forge::core::EntryValue{value1}};
+
+    auto created_metadata = createEntryRenewalOpMetadata(std::move(expected1));
+
+    EXPECT_EQ(created_metadata, expected_metadata);
+}
+
+TEST(OperationTest, OwnershipTransferOpMetadataCreation)
+{
+    auto expected_metadata = extractMetadata("6a00c6dc75010401aabbccdddeadbeef").getValue();
+
+    std::vector key1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    std::array value1{
+        (std::byte)0xaa,
+        (std::byte)0xbb,
+        (std::byte)0xcc,
+        (std::byte)0xdd};
+
+    std::pair expected1{key1, forge::core::EntryValue{value1}};
+
+    auto created_metadata = createOwnershipTransferOpMetadata(std::move(expected1));
+
+    EXPECT_EQ(created_metadata, expected_metadata);
+}
+
+TEST(OperationTest, UpdateOpMetadataCreation)
+{
+    auto expected_metadata = extractMetadata("6a00c6dc75010801aabbccdddeadbeef").getValue();
+
+    std::vector key1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    std::array value1{
+        (std::byte)0xaa,
+        (std::byte)0xbb,
+        (std::byte)0xcc,
+        (std::byte)0xdd};
+
+    auto created_metadata = createEntryUpdateOpMetadata(std::move(key1),
+                                                        std::move(value1));
+
+    EXPECT_EQ(created_metadata, expected_metadata);
+}
+
+
+TEST(OperationTest, DeletionOpMetadataCreation)
+{
+    auto expected_metadata = extractMetadata("6a00c6dc75011001aabbccdddeadbeef").getValue();
+
+    std::vector key1{
+        (std::byte)0xde,
+        (std::byte)0xad,
+        (std::byte)0xbe,
+        (std::byte)0xef};
+
+    std::array value1{
+        (std::byte)0xaa,
+        (std::byte)0xbb,
+        (std::byte)0xcc,
+        (std::byte)0xdd};
+
+    std::pair expected1{key1, forge::core::EntryValue{value1}};
+
+    auto created_metadata = createEntryDeletionOpMetadata(std::move(expected1));
+
+    EXPECT_EQ(created_metadata, expected_metadata);
+}
