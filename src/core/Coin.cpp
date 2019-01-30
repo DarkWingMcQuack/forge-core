@@ -10,6 +10,8 @@ auto forge::core::fromString(std::string_view str)
     if(str == "odin") {
         return Coin::Odin;
     }
+
+    return std::nullopt;
 }
 
 auto forge::core::getMaturity(Coin c)
