@@ -4,8 +4,8 @@
 #include <fmt/core.h>
 #include <functional>
 #include <g3log/g3log.hpp>
-#include <lookup/UMEntryLookup.hpp>
 #include <lookup/LookupManager.hpp>
+#include <lookup/UMEntryLookup.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
@@ -143,8 +143,8 @@ auto LookupManager::processBlock(core::Block&& block)
                 std::string_view txid = tx.getTxid();
 
                 auto op_res = parseTransactionToUMEntry(std::move(tx),
-                                                      block_height,
-                                                      daemon_);
+                                                        block_height,
+                                                        daemon_.get());
                 //if we dont get an opt, but an error, we return it
                 if(!op_res) {
                     LOG(WARNING) << op_res.getError().what();

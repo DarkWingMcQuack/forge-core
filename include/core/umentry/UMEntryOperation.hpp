@@ -53,7 +53,7 @@ auto extractOperationFlag(const UMEntryOperation&)
 
 auto parseTransactionToUMEntry(core::Transaction&& tx,
                                std::int64_t block,
-                               const std::unique_ptr<daemon::ReadOnlyDaemonBase>& daemon)
+                               const daemon::ReadOnlyDaemonBase* daemon)
     -> utilxx::Result<utilxx::Opt<UMEntryOperation>, daemon::DaemonError>;
 
 auto parseMetadata(const std::vector<std::byte>& metadata,

@@ -173,10 +173,12 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
 
 auto forge::core::parseTransactionToUMEntry(Transaction&& tx,
                                             std::int64_t block,
-                                            const std::unique_ptr<ReadOnlyDaemonBase>& daemon)
+                                            const daemon::ReadOnlyDaemonBase* daemon)
     -> Result<Opt<UMEntryOperation>, DaemonError>
 {
     using ResultType = Result<Opt<UMEntryOperation>, DaemonError>;
+
+    LOG_IF(FATAL, !daemon) << "ReadOnlyDaemonBase pointer is null";
 
     //check if the transaction has exactly one op return
     //output and exactly one input
