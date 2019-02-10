@@ -257,7 +257,7 @@ auto forge::core::parseTransactionToUMEntry(Transaction&& tx,
 }
 
 
-auto forge::core::operationToMetadata(const UMEntryOperation& op)
+auto forge::core::toMetadata(const UMEntryOperation& op)
     -> std::vector<std::byte>
 {
     const auto& entry = getUMEntry(op);

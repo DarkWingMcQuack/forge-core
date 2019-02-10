@@ -30,32 +30,43 @@ using UMEntryOperation = std::variant<UMEntryCreationOp,
                                       UMEntryUpdateOp,
                                       UMEntryDeletionOp>;
 
+//extracts the UMEntryKey from a given operaton
 auto getUMEntryKey(const UMEntryOperation&)
     -> const UMEntryKey&;
 auto getUMEntryKey(UMEntryOperation &&)
     -> UMEntryKey;
 
+//extracts the UMEntry from a given operaton
 auto getUMEntry(const UMEntryOperation&)
     -> const UMEntry&;
 auto getUMEntry(UMEntryOperation &&)
     -> UMEntry;
 
+//extracts owner of the UMEntry from a given operaton
 auto getOwner(const UMEntryOperation&)
     -> const std::string&;
 auto getOwner(UMEntryOperation &&)
     -> std::string;
 
+//extracts burn value with which the given operation was
+//burned onto the chain
 auto getValue(const UMEntryOperation&)
     -> const std::int64_t;
 
+//extracts the operation flag which specifys which operation it is
 auto extractOperationFlag(const UMEntryOperation&)
     -> std::byte;
 
+//checks the metadata of a transaction and parses it into
+//an UMEntryOperation if it holds the needed information
+//and the metadata has the needed formating
 auto parseTransactionToUMEntry(core::Transaction&& tx,
                                std::int64_t block,
                                const daemon::ReadOnlyDaemonBase* daemon)
     -> utilxx::Result<utilxx::Opt<UMEntryOperation>, daemon::DaemonError>;
 
+//parses given metadata and constructs a UNEntryOperation from
+//the given information if possible
 auto parseMetadata(const std::vector<std::byte>& metadata,
                    std::int64_t block,
                    std::string&& owner,
@@ -63,7 +74,9 @@ auto parseMetadata(const std::vector<std::byte>& metadata,
                    utilxx::Opt<std::string>&& new_owner = std::nullopt)
     -> utilxx::Opt<UMEntryOperation>;
 
-auto operationToMetadata(const UMEntryOperation& op)
+//given a UMEntryOperation, this function builds a matching
+//metadata which can be used to write it on the blockchain
+auto toMetadata(const UMEntryOperation& op)
     -> std::vector<std::byte>;
 
 } // namespace forge::core

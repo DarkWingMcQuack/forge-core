@@ -30,7 +30,7 @@ TEST(OperationTest, UMEntryCreationOpParsingValid)
     EXPECT_EQ(creation.getValue(), 10);
     EXPECT_EQ(creation.getBlock(), 1000);
 
-    auto data = operationToMetadata(op);
+    auto data = toMetadata(op);
 
     EXPECT_EQ(data, stringToByteVec("c6dc75010101aabbccdddeadbeef").getValue());
 }
@@ -59,7 +59,7 @@ TEST(OperationTest, UMEntryRenewalOpParsingValid)
     EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 
-    auto data = operationToMetadata(op);
+    auto data = toMetadata(op);
 
     EXPECT_EQ(data, stringToByteVec("c6dc75010201aabbccdddeadbeef").getValue());
 }
@@ -91,7 +91,7 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
     EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 
-    auto data = operationToMetadata(op);
+    auto data = toMetadata(op);
 
     EXPECT_EQ(data, stringToByteVec("c6dc75010401aabbccdddeadbeef").getValue());
 }
@@ -127,7 +127,7 @@ TEST(OperationTest, UMEntryUpdateOpParsingValid)
     EXPECT_EQ(creation.getNewUMEntryValue(), UMEntryValue{expected});
     EXPECT_EQ(creation.getBlock(), 1000);
 
-    auto data = operationToMetadata(op);
+    auto data = toMetadata(op);
 
     EXPECT_EQ(data, stringToByteVec("c6dc75010801ffffffffdeadbeef").getValue());
 }
