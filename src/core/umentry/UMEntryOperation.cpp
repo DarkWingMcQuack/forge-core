@@ -94,7 +94,7 @@ auto forge::core::getValue(const UMEntryOperation& operation)
         operation);
 }
 
-auto forge::core::extractFlag(const UMEntryOperation& operation)
+auto forge::core::extractOperationFlag(const UMEntryOperation& operation)
     -> std::byte
 {
     constexpr static auto flag_extractor =
@@ -145,10 +145,10 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
                     .map([&](auto&& new_owner) {
                         return UMEntryOperation{
                             UMEntryOwnershipTransferOp{std::move(entry),
-                                                std::move(owner),
-                                                std::move(new_owner),
-                                                block,
-                                                value}};
+                                                       std::move(owner),
+                                                       std::move(new_owner),
+                                                       block,
+                                                       value}};
                     });
 
             case UMENTRY_UPDATE_FLAG:
@@ -259,7 +259,7 @@ auto forge::core::operationToMetadata(const UMEntryOperation& op)
     -> std::vector<std::byte>
 {
     const auto& entry = getUMEntry(op);
-    auto flag = extractFlag(op);
+    auto flag = extractOperationFlag(op);
 
     auto data = forge::core::entryToRawData(entry);
 

@@ -48,7 +48,7 @@ auto getOwner(UMEntryOperation &&)
 auto getValue(const UMEntryOperation&)
     -> const std::int64_t;
 
-auto extractFlag(const UMEntryOperation&)
+auto extractOperationFlag(const UMEntryOperation&)
     -> std::byte;
 
 auto parseTransactionToUMEntry(core::Transaction&& tx,
