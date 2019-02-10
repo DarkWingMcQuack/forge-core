@@ -23,7 +23,7 @@ struct NoneValue{
 };
 // clang-format on
 
-constexpr static inline auto ENTRY_IDENTIFICATION_FLAG = static_cast<std::byte>(0b00000001);
+constexpr static inline auto UMENTRY_IDENTIFICATION_FLAG = static_cast<std::byte>(0b00000001);
 
 constexpr static inline auto IPv4_VALUE_FLAG = static_cast<std::byte>(0b00000001);
 constexpr static inline auto IPv6_VALUE_FLAG = static_cast<std::byte>(0b00000010);

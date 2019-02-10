@@ -126,7 +126,7 @@ auto forge::core::parseUMEntry(const std::vector<std::byte>& data)
     }
 
     //check that the metadata actualy refers to a mutable entry
-    if(data[TOKEN_TYPE_INDEX] != ENTRY_IDENTIFICATION_FLAG) {
+    if(data[TOKEN_TYPE_INDEX] != UMENTRY_IDENTIFICATION_FLAG) {
         return std::nullopt;
     }
 

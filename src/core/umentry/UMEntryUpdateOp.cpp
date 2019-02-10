@@ -7,7 +7,7 @@ using forge::core::UMEntry;
 using forge::core::UMEntryKey;
 using forge::core::UMEntryValue;
 using forge::core::UMEntryUpdateOp;
-using forge::core::ENTRY_UPDATE_FLAG;
+using forge::core::UMENTRY_UPDATE_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryUpdateOp::UMEntryUpdateOp(UMEntry&& entry,
@@ -85,11 +85,11 @@ auto forge::core::createUMEntryUpdateOpMetadata(UMEntryKey&& key,
     auto entry = UMEntry{std::move(key),
                        std::move(new_value)};
     auto data = forge::core::entryToRawData(entry);
-    auto flag = forge::core::ENTRY_UPDATE_FLAG;
+    auto flag = forge::core::UMENTRY_UPDATE_FLAG;
 
     data.insert(std::begin(data), flag);
 
-    data.insert(std::begin(data), ENTRY_IDENTIFICATION_FLAG);
+    data.insert(std::begin(data), UMENTRY_IDENTIFICATION_FLAG);
 
     data.insert(std::begin(data),
                 std::begin(FORGE_IDENTIFIER_MASK),

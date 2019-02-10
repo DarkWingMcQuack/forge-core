@@ -5,7 +5,7 @@
 
 using forge::core::UMEntry;
 using forge::core::UMEntryOwnershipTransferOp;
-using forge::core::OWNERSHIP_TRANSFER_FLAG;
+using forge::core::UMENTRY_OWNERSHIP_TRANSFER_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryOwnershipTransferOp::UMEntryOwnershipTransferOp(UMEntry&& entry,
@@ -95,11 +95,11 @@ auto forge::core::createUMEntryOwnershipTransferOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
     auto data = forge::core::entryToRawData(entry);
-    auto flag = forge::core::OWNERSHIP_TRANSFER_FLAG;
+    auto flag = forge::core::UMENTRY_OWNERSHIP_TRANSFER_FLAG;
 
     data.insert(std::begin(data), flag);
 
-    data.insert(std::begin(data), ENTRY_IDENTIFICATION_FLAG);
+    data.insert(std::begin(data), UMENTRY_IDENTIFICATION_FLAG);
 
     data.insert(std::begin(data),
                 std::begin(FORGE_IDENTIFIER_MASK),

@@ -17,11 +17,11 @@
 namespace forge::core {
 
 // clang-format off
-constexpr inline auto ENTRY_CREATION_FLAG     = static_cast<std::byte>(0b00000001);
-constexpr inline auto ENTRY_RENEWAL_FLAG      = static_cast<std::byte>(0b00000010);
-constexpr inline auto OWNERSHIP_TRANSFER_FLAG = static_cast<std::byte>(0b00000100);
-constexpr inline auto ENTRY_UPDATE_FLAG       = static_cast<std::byte>(0b00001000);
-constexpr inline auto ENTRY_DELETION_FLAG     = static_cast<std::byte>(0b00010000);
+constexpr inline auto UMENTRY_CREATION_FLAG     = static_cast<std::byte>(0b00000001);
+constexpr inline auto UMENTRY_RENEWAL_FLAG      = static_cast<std::byte>(0b00000010);
+constexpr inline auto UMENTRY_OWNERSHIP_TRANSFER_FLAG = static_cast<std::byte>(0b00000100);
+constexpr inline auto UMENTRY_UPDATE_FLAG       = static_cast<std::byte>(0b00001000);
+constexpr inline auto UMENTRY_DELETION_FLAG     = static_cast<std::byte>(0b00010000);
 // clang-format on
 
 using UMEntryOperation = std::variant<UMEntryCreationOp,

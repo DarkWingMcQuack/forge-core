@@ -99,11 +99,11 @@ auto forge::core::extractFlag(const UMEntryOperation& operation)
 {
     constexpr static auto flag_extractor =
         overload{
-            [](const UMEntryCreationOp&) { return ENTRY_CREATION_FLAG; },
-            [](const UMEntryRenewalOp&) { return ENTRY_RENEWAL_FLAG; },
-            [](const UMEntryOwnershipTransferOp&) { return OWNERSHIP_TRANSFER_FLAG; },
-            [](const UMEntryUpdateOp&) { return ENTRY_UPDATE_FLAG; },
-            [](const UMEntryDeletionOp&) { return ENTRY_DELETION_FLAG; }};
+            [](const UMEntryCreationOp&) { return UMENTRY_CREATION_FLAG; },
+            [](const UMEntryRenewalOp&) { return UMENTRY_RENEWAL_FLAG; },
+            [](const UMEntryOwnershipTransferOp&) { return UMENTRY_OWNERSHIP_TRANSFER_FLAG; },
+            [](const UMEntryUpdateOp&) { return UMENTRY_UPDATE_FLAG; },
+            [](const UMEntryDeletionOp&) { return UMENTRY_DELETION_FLAG; }};
 
     return std::visit(flag_extractor,
                       operation);
@@ -126,21 +126,21 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
                      -> utilxx::Opt<UMEntryOperation> {
             switch(static_cast<std::byte>(metadata[OPERATION_FLAG_INDEX])) {
 
-            case ENTRY_CREATION_FLAG:
+            case UMENTRY_CREATION_FLAG:
                 return UMEntryOperation{
                     UMEntryCreationOp{std::move(entry),
                                       std::move(owner),
                                       block,
                                       value}};
 
-            case ENTRY_RENEWAL_FLAG:
+            case UMENTRY_RENEWAL_FLAG:
                 return UMEntryOperation{
                     UMEntryRenewalOp{std::move(entry),
                                      std::move(owner),
                                      block,
                                      value}};
 
-            case OWNERSHIP_TRANSFER_FLAG:
+            case UMENTRY_OWNERSHIP_TRANSFER_FLAG:
                 return new_owner_opt
                     .map([&](auto&& new_owner) {
                         return UMEntryOperation{
@@ -151,14 +151,14 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
                                                 value}};
                     });
 
-            case ENTRY_UPDATE_FLAG:
+            case UMENTRY_UPDATE_FLAG:
                 return UMEntryOperation{
                     UMEntryUpdateOp{std::move(entry),
                                     std::move(owner),
                                     block,
                                     value}};
 
-            case ENTRY_DELETION_FLAG:
+            case UMENTRY_DELETION_FLAG:
                 return UMEntryOperation{
                     UMEntryDeletionOp{std::move(entry),
                                       std::move(owner),
@@ -267,7 +267,7 @@ auto forge::core::operationToMetadata(const UMEntryOperation& op)
                 flag);
 
     data.insert(std::begin(data),
-                ENTRY_IDENTIFICATION_FLAG);
+                UMENTRY_IDENTIFICATION_FLAG);
 
     data.insert(std::begin(data),
                 std::begin(FORGE_IDENTIFIER_MASK),

@@ -5,7 +5,7 @@
 
 using forge::core::UMEntry;
 using forge::core::UMEntryRenewalOp;
-using forge::core::ENTRY_RENEWAL_FLAG;
+using forge::core::UMENTRY_RENEWAL_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryRenewalOp::UMEntryRenewalOp(UMEntry&& entry,
@@ -80,11 +80,11 @@ auto forge::core::createUMEntryRenewalOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
     auto data = forge::core::entryToRawData(entry);
-    auto flag = forge::core::ENTRY_RENEWAL_FLAG;
+    auto flag = forge::core::UMENTRY_RENEWAL_FLAG;
 
     data.insert(std::begin(data), flag);
 
-    data.insert(std::begin(data), ENTRY_IDENTIFICATION_FLAG);
+    data.insert(std::begin(data), UMENTRY_IDENTIFICATION_FLAG);
 
     data.insert(std::begin(data),
                 std::begin(FORGE_IDENTIFIER_MASK),
