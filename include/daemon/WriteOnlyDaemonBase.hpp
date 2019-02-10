@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/Coin.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <daemon/DaemonError.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <utilxx/Result.hpp>

@@ -22,14 +22,14 @@ public:
     auto addNewOwnedAddress(std::string adr)
         -> void;
 
-    auto getOwnedEntrys() const
-        -> std::vector<core::Entry>;
+    auto getOwnedUMEntrys() const
+        -> std::vector<core::UMEntry>;
 
-    auto getWatchOnlyEntrys() const
-        -> std::vector<core::Entry>;
+    auto getWatchOnlyUMEntrys() const
+        -> std::vector<core::UMEntry>;
 
-    auto getAllWatchedEntrys() const
-        -> std::vector<core::Entry>;
+    auto getAllWatchedUMEntrys() const
+        -> std::vector<core::UMEntry>;
 
     auto getWatchedAddresses() const
         -> const std::set<std::string>&;

@@ -1,14 +1,14 @@
-#include <core/Entry.hpp>
-#include <core/EntryCreationOp.hpp>
+#include <core/umentry/UMEntry.hpp>
+#include <core/umentry/UMEntryCreationOp.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 
-using forge::core::Entry;
-using forge::core::EntryCreationOp;
+using forge::core::UMEntry;
+using forge::core::UMEntryCreationOp;
 using forge::core::ENTRY_CREATION_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-EntryCreationOp::EntryCreationOp(Entry&& entry,
+UMEntryCreationOp::UMEntryCreationOp(UMEntry&& entry,
                                  std::string&& owner,
                                  std::int64_t block,
                                  std::int64_t value)
@@ -18,66 +18,66 @@ EntryCreationOp::EntryCreationOp(Entry&& entry,
       value_(value) {}
 
 
-auto EntryCreationOp::getEntryKey() const
-    -> const EntryKey&
+auto UMEntryCreationOp::getUMEntryKey() const
+    -> const UMEntryKey&
 {
     return entry_.first;
 }
 
-auto EntryCreationOp::getEntryKey()
-    -> EntryKey&
+auto UMEntryCreationOp::getUMEntryKey()
+    -> UMEntryKey&
 {
     return entry_.first;
 }
 
-auto EntryCreationOp::getEntryValue() const
-    -> const EntryValue&
+auto UMEntryCreationOp::getUMEntryValue() const
+    -> const UMEntryValue&
 {
     return entry_.second;
 }
 
-auto EntryCreationOp::getEntryValue()
-    -> EntryValue&
+auto UMEntryCreationOp::getUMEntryValue()
+    -> UMEntryValue&
 {
     return entry_.second;
 }
 
-auto EntryCreationOp::getEntry() const
-    -> const Entry&
+auto UMEntryCreationOp::getUMEntry() const
+    -> const UMEntry&
 {
     return entry_;
 }
-auto EntryCreationOp::getEntry()
-    -> Entry&
+auto UMEntryCreationOp::getUMEntry()
+    -> UMEntry&
 {
     return entry_;
 }
 
-auto EntryCreationOp::getValue() const
+auto UMEntryCreationOp::getValue() const
     -> std::int64_t
 {
     return value_;
 }
 
-auto EntryCreationOp::getBlock() const
+auto UMEntryCreationOp::getBlock() const
     -> std::int64_t
 {
     return block_;
 }
 
-auto EntryCreationOp::getOwner() const
+auto UMEntryCreationOp::getOwner() const
     -> const std::string&
 {
     return owner_;
 }
-auto EntryCreationOp::getOwner()
+auto UMEntryCreationOp::getOwner()
     -> std::string&
 {
     return owner_;
 }
 
 
-auto forge::core::createEntryCreationOpMetadata(Entry&& entry)
+auto forge::core::createUMEntryCreationOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
     auto data = forge::core::entryToRawData(entry);

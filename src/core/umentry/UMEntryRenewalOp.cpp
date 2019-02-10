@@ -1,14 +1,14 @@
-#include <core/Entry.hpp>
-#include <core/EntryRenewalOp.hpp>
+#include <core/umentry/UMEntry.hpp>
+#include <core/umentry/UMEntryRenewalOp.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 
-using forge::core::Entry;
-using forge::core::EntryRenewalOp;
+using forge::core::UMEntry;
+using forge::core::UMEntryRenewalOp;
 using forge::core::ENTRY_RENEWAL_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-EntryRenewalOp::EntryRenewalOp(Entry&& entry,
+UMEntryRenewalOp::UMEntryRenewalOp(UMEntry&& entry,
                                std::string&& owner,
                                std::int64_t block,
                                std::int64_t value)
@@ -18,65 +18,65 @@ EntryRenewalOp::EntryRenewalOp(Entry&& entry,
       value_(value) {}
 
 
-auto EntryRenewalOp::getEntryKey() const
-    -> const EntryKey&
+auto UMEntryRenewalOp::getUMEntryKey() const
+    -> const UMEntryKey&
 {
     return entry_.first;
 }
 
-auto EntryRenewalOp::getEntryKey()
-    -> EntryKey&
+auto UMEntryRenewalOp::getUMEntryKey()
+    -> UMEntryKey&
 {
     return entry_.first;
 }
 
-auto EntryRenewalOp::getEntryValue() const
-    -> const EntryValue&
+auto UMEntryRenewalOp::getUMEntryValue() const
+    -> const UMEntryValue&
 {
     return entry_.second;
 }
 
-auto EntryRenewalOp::getEntry() const
-    -> const Entry&
+auto UMEntryRenewalOp::getUMEntry() const
+    -> const UMEntry&
 {
     return entry_;
 }
-auto EntryRenewalOp::getEntry()
-    -> Entry&
+auto UMEntryRenewalOp::getUMEntry()
+    -> UMEntry&
 {
     return entry_;
 }
 
-auto EntryRenewalOp::getValue() const
+auto UMEntryRenewalOp::getValue() const
     -> std::int64_t
 {
     return value_;
 }
 
-auto EntryRenewalOp::getBlock() const
+auto UMEntryRenewalOp::getBlock() const
     -> std::int64_t
 {
     return block_;
 }
 
-auto EntryRenewalOp::getEntryValue()
-    -> EntryValue&
+auto UMEntryRenewalOp::getUMEntryValue()
+    -> UMEntryValue&
 {
     return entry_.second;
 }
 
-auto EntryRenewalOp::getOwner() const
+auto UMEntryRenewalOp::getOwner() const
     -> const std::string&
 {
     return owner_;
 }
-auto EntryRenewalOp::getOwner()
+auto UMEntryRenewalOp::getOwner()
     -> std::string&
 {
     return owner_;
 }
 
-auto forge::core::createEntryRenewalOpMetadata(Entry&& entry)
+auto forge::core::createUMEntryRenewalOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
     auto data = forge::core::entryToRawData(entry);

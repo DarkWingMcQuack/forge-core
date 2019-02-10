@@ -8,7 +8,7 @@
 using forge::lookup::LookupManager;
 using forge::lookup::LookupError;
 using forge::wallet::ReadOnlyWallet;
-using forge::core::Entry;
+using forge::core::UMEntry;
 
 
 ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)
@@ -42,12 +42,12 @@ auto ReadOnlyWallet::addNewOwnedAddress(std::string adr)
     owned_addresses_.insert(std::move(adr));
 }
 
-auto ReadOnlyWallet::getOwnedEntrys() const
-    -> std::vector<Entry>
+auto ReadOnlyWallet::getOwnedUMEntrys() const
+    -> std::vector<UMEntry>
 {
-    std::vector<Entry> ret_vec;
+    std::vector<UMEntry> ret_vec;
     for(auto&& addr : owned_addresses_) {
-        auto new_entrys = lookup_->getEntrysOfOwner(addr);
+        auto new_entrys = lookup_->getUMEntrysOfOwner(addr);
         ret_vec.insert(std::end(ret_vec),
                        std::make_move_iterator(std::begin(new_entrys)),
                        std::make_move_iterator(std::end(new_entrys)));
@@ -56,12 +56,12 @@ auto ReadOnlyWallet::getOwnedEntrys() const
     return ret_vec;
 }
 
-auto ReadOnlyWallet::getWatchOnlyEntrys() const
-    -> std::vector<Entry>
+auto ReadOnlyWallet::getWatchOnlyUMEntrys() const
+    -> std::vector<UMEntry>
 {
-    std::vector<Entry> ret_vec;
+    std::vector<UMEntry> ret_vec;
     for(auto&& addr : watched_addresses_) {
-        auto new_entrys = lookup_->getEntrysOfOwner(addr);
+        auto new_entrys = lookup_->getUMEntrysOfOwner(addr);
         ret_vec.insert(std::end(ret_vec),
                        std::make_move_iterator(std::begin(new_entrys)),
                        std::make_move_iterator(std::end(new_entrys)));
@@ -70,11 +70,11 @@ auto ReadOnlyWallet::getWatchOnlyEntrys() const
     return ret_vec;
 }
 
-auto ReadOnlyWallet::getAllWatchedEntrys() const
-    -> std::vector<Entry>
+auto ReadOnlyWallet::getAllWatchedUMEntrys() const
+    -> std::vector<UMEntry>
 {
-    auto owned_entrys = getOwnedEntrys();
-    auto watched_entrys = getWatchOnlyEntrys();
+    auto owned_entrys = getOwnedUMEntrys();
+    auto watched_entrys = getWatchOnlyUMEntrys();
 
     owned_entrys.insert(std::begin(owned_entrys),
                         std::make_move_iterator(std::begin(watched_entrys)),

@@ -1,8 +1,8 @@
 #include <core/Coin.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <functional>
 #include <g3log/g3log.hpp>
-#include <lookup/EntryLookup.hpp>
+#include <lookup/UMEntryLookup.hpp>
 #include <unordered_map>
 #include <utilxx/Algorithm.hpp>
 #include <utilxx/Opt.hpp>
@@ -11,41 +11,41 @@
 using utilxx::Result;
 using utilxx::traverse;
 using utilxx::Opt;
-using forge::core::Operation;
+using forge::core::UMEntryOperation;
 using forge::core::getValue;
-using forge::core::EntryValue;
-using forge::core::EntryKey;
-using forge::core::Entry;
-using forge::core::EntryCreationOp;
-using forge::core::EntryUpdateOp;
-using forge::core::OwnershipTransferOp;
-using forge::core::EntryRenewalOp;
-using forge::core::EntryDeletionOp;
+using forge::core::UMEntryValue;
+using forge::core::UMEntryKey;
+using forge::core::UMEntry;
+using forge::core::UMEntryCreationOp;
+using forge::core::UMEntryUpdateOp;
+using forge::core::UMEntryOwnershipTransferOp;
+using forge::core::UMEntryRenewalOp;
+using forge::core::UMEntryDeletionOp;
 using forge::lookup::LookupError;
-using forge::lookup::EntryLookup;
+using forge::lookup::UMEntryLookup;
 
 
-EntryLookup::EntryLookup(std::int64_t start_block)
+UMEntryLookup::UMEntryLookup(std::int64_t start_block)
     : block_height_(start_block),
       start_block_(start_block){};
 
-EntryLookup::EntryLookup()
+UMEntryLookup::UMEntryLookup()
     : block_height_(0){};
 
-auto EntryLookup::executeOperations(std::vector<Operation>&& ops)
+auto UMEntryLookup::executeOperations(std::vector<UMEntryOperation>&& ops)
     -> Result<void, LookupError>
 {
     ops = filterNonRelevantOperations(std::move(ops));
 
     return traverse(std::move(ops),
-                    [this](Operation&& op) {
+                    [this](UMEntryOperation&& op) {
                         return std::visit(*this,
                                           std::move(op));
                     });
 }
 
-auto EntryLookup::lookup(const EntryKey& key) const
-    -> Opt<std::reference_wrapper<const EntryValue>>
+auto UMEntryLookup::lookup(const UMEntryKey& key) const
+    -> Opt<std::reference_wrapper<const UMEntryValue>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -55,8 +55,8 @@ auto EntryLookup::lookup(const EntryKey& key) const
     return std::nullopt;
 }
 
-auto EntryLookup::lookup(const EntryKey& key)
-    -> Opt<std::reference_wrapper<EntryValue>>
+auto UMEntryLookup::lookup(const UMEntryKey& key)
+    -> Opt<std::reference_wrapper<UMEntryValue>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -66,7 +66,7 @@ auto EntryLookup::lookup(const EntryKey& key)
     return std::nullopt;
 }
 
-auto EntryLookup::lookupOwner(const EntryKey& key) const
+auto UMEntryLookup::lookupOwner(const UMEntryKey& key) const
     -> Opt<std::reference_wrapper<const std::string>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -77,7 +77,7 @@ auto EntryLookup::lookupOwner(const EntryKey& key) const
     return std::nullopt;
 }
 
-auto EntryLookup::lookupOwner(const EntryKey& key)
+auto UMEntryLookup::lookupOwner(const UMEntryKey& key)
     -> Opt<std::reference_wrapper<std::string>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -88,9 +88,9 @@ auto EntryLookup::lookupOwner(const EntryKey& key)
     return std::nullopt;
 }
 
-auto EntryLookup::lookupEntry(const EntryKey& key) const
+auto UMEntryLookup::lookupUMEntry(const UMEntryKey& key) const
     -> utilxx::Opt<
-        std::tuple<std::reference_wrapper<const core::EntryValue>,
+        std::tuple<std::reference_wrapper<const core::UMEntryValue>,
                    std::reference_wrapper<const std::string>,
                    std::reference_wrapper<const std::int64_t>>>
 {
@@ -104,9 +104,9 @@ auto EntryLookup::lookupEntry(const EntryKey& key) const
     return std::nullopt;
 }
 
-auto EntryLookup::lookupEntry(const EntryKey& key)
+auto UMEntryLookup::lookupUMEntry(const UMEntryKey& key)
     -> utilxx::Opt<
-        std::tuple<std::reference_wrapper<core::EntryValue>,
+        std::tuple<std::reference_wrapper<core::UMEntryValue>,
                    std::reference_wrapper<std::string>,
                    std::reference_wrapper<std::int64_t>>>
 {
@@ -120,7 +120,7 @@ auto EntryLookup::lookupEntry(const EntryKey& key)
     return std::nullopt;
 }
 
-auto EntryLookup::lookupActivationBlock(const core::EntryKey& key)
+auto UMEntryLookup::lookupActivationBlock(const core::UMEntryKey& key)
     -> utilxx::Opt<std::reference_wrapper<std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -131,7 +131,7 @@ auto EntryLookup::lookupActivationBlock(const core::EntryKey& key)
     return std::nullopt;
 }
 
-auto EntryLookup::lookupActivationBlock(const core::EntryKey& key) const
+auto UMEntryLookup::lookupActivationBlock(const core::UMEntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -142,14 +142,14 @@ auto EntryLookup::lookupActivationBlock(const core::EntryKey& key) const
     return std::nullopt;
 }
 
-auto EntryLookup::setBlockHeight(std::int64_t height)
+auto UMEntryLookup::setBlockHeight(std::int64_t height)
     -> void
 {
     block_height_ = height;
 }
 
 
-auto EntryLookup::removeEntrysOlderThan(std::int64_t diff)
+auto UMEntryLookup::removeUMEntrysOlderThan(std::int64_t diff)
     -> void
 {
     auto iter = lookup_map_.begin();
@@ -170,13 +170,13 @@ auto EntryLookup::removeEntrysOlderThan(std::int64_t diff)
     }
 }
 
-auto EntryLookup::isCurrentlyValid(const Operation& op) const
+auto UMEntryLookup::isCurrentlyValid(const UMEntryOperation& op) const
     -> bool
 {
     const auto& op_key = std::visit(
         [](const auto& op)
-            -> const core::EntryKey& {
-            return op.getEntryKey();
+            -> const core::UMEntryKey& {
+            return op.getUMEntryKey();
         },
         op);
 
@@ -186,7 +186,7 @@ auto EntryLookup::isCurrentlyValid(const Operation& op) const
     //if an entry with key_op does not exist
     //then the op musst be an entry creation
     if(iter == lookup_map_.end()) {
-        return std::holds_alternative<EntryCreationOp>(op);
+        return std::holds_alternative<UMEntryCreationOp>(op);
     }
 
     //here an entry with the key_op already exists
@@ -206,8 +206,8 @@ auto EntryLookup::isCurrentlyValid(const Operation& op) const
         .valueOr(false);
 }
 
-auto EntryLookup::filterNonRelevantOperations(std::vector<Operation>&& ops) const
-    -> std::vector<Operation>
+auto UMEntryLookup::filterNonRelevantOperations(std::vector<UMEntryOperation>&& ops) const
+    -> std::vector<UMEntryOperation>
 {
     //erase non valid operations
     ops.erase(
@@ -218,16 +218,16 @@ auto EntryLookup::filterNonRelevantOperations(std::vector<Operation>&& ops) cons
                        }),
         ops.end());
 
-    std::map<core::EntryKey,
-             std::vector<Operation>>
+    std::map<core::UMEntryKey,
+             std::vector<UMEntryOperation>>
         bucket_map;
 
     //fill map with operations
     for(auto&& op : ops) {
         auto key = std::visit(
             [](const auto& op)
-                -> const EntryKey& {
-                return op.getEntryKey();
+                -> const UMEntryKey& {
+                return op.getUMEntryKey();
             },
             op);
 
@@ -239,7 +239,7 @@ auto EntryLookup::filterNonRelevantOperations(std::vector<Operation>&& ops) cons
         }
     }
 
-    std::vector<Operation> relevant_ops;
+    std::vector<UMEntryOperation> relevant_ops;
     for(auto&& [_, operations] : bucket_map) {
         //its save to asume that there is a max element, because those
         //vectors cannot be empty
@@ -259,16 +259,16 @@ auto EntryLookup::filterNonRelevantOperations(std::vector<Operation>&& ops) cons
     return relevant_ops;
 }
 
-auto EntryLookup::getEntrysOfOwner(const std::string& owner) const
-    -> std::vector<core::Entry>
+auto UMEntryLookup::getUMEntrysOfOwner(const std::string& owner) const
+    -> std::vector<core::UMEntry>
 {
-    std::vector<core::Entry> ret_vec;
+    std::vector<core::UMEntry> ret_vec;
     utilxx::transform_if(std::cbegin(lookup_map_),
                          std::cend(lookup_map_),
                          std::back_inserter(ret_vec),
                          [](const auto& value) {
-                             return Entry{value.first,
-                                          std::get<0>(value.second)};
+                             return UMEntry{value.first,
+                                            std::get<0>(value.second)};
                          },
                          [&owner](const auto& value) {
                              const auto& value_owner = std::get<1>(value.second);
@@ -279,12 +279,12 @@ auto EntryLookup::getEntrysOfOwner(const std::string& owner) const
     return ret_vec;
 }
 
-auto EntryLookup::operator()(EntryCreationOp&& op)
+auto UMEntryLookup::operator()(UMEntryCreationOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getEntryKey());
-    auto value = std::move(op.getEntryValue());
+    auto key = std::move(op.getUMEntryKey());
+    auto value = std::move(op.getUMEntryValue());
     auto block = op.getBlock();
 
     //if there is no entry with this key,
@@ -303,15 +303,15 @@ auto EntryLookup::operator()(EntryCreationOp&& op)
     return {};
 }
 
-auto EntryLookup::operator()(EntryRenewalOp&& op)
+auto UMEntryLookup::operator()(UMEntryRenewalOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getEntryKey());
-    auto value = std::move(op.getEntryValue());
+    auto key = std::move(op.getUMEntryKey());
+    auto value = std::move(op.getUMEntryValue());
     auto new_block = op.getBlock();
 
-    lookupEntry(key)
+    lookupUMEntry(key)
         .onValue([&new_block,
                   &value,
                   &owner](auto&& pair) {
@@ -330,15 +330,15 @@ auto EntryLookup::operator()(EntryRenewalOp&& op)
     return {};
 }
 
-auto EntryLookup::operator()(OwnershipTransferOp&& op)
+auto UMEntryLookup::operator()(UMEntryOwnershipTransferOp&& op)
     -> Result<void, LookupError>
 {
     auto old_owner = std::move(op.getOwner());
     auto new_owner = std::move(op.getNewOwner());
-    auto key = std::move(op.getEntryKey());
-    auto value = std::move(op.getEntryValue());
+    auto key = std::move(op.getUMEntryKey());
+    auto value = std::move(op.getUMEntryValue());
 
-    lookupEntry(key)
+    lookupUMEntry(key)
         .onValue([&new_owner,
                   &old_owner,
                   &value](auto&& entry) {
@@ -357,14 +357,14 @@ auto EntryLookup::operator()(OwnershipTransferOp&& op)
     return {};
 }
 
-auto EntryLookup::operator()(EntryUpdateOp&& op)
+auto UMEntryLookup::operator()(UMEntryUpdateOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getEntryKey());
-    auto new_value = std::move(op.getNewEntryValue());
+    auto key = std::move(op.getUMEntryKey());
+    auto new_value = std::move(op.getNewUMEntryValue());
 
-    lookupEntry(key)
+    lookupUMEntry(key)
         .onValue([&owner,
                   &new_value](auto&& entry) {
             auto [looked_value_ref,
@@ -381,14 +381,14 @@ auto EntryLookup::operator()(EntryUpdateOp&& op)
     return {};
 }
 
-auto EntryLookup::operator()(EntryDeletionOp&& op)
+auto UMEntryLookup::operator()(UMEntryDeletionOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getEntryKey());
-    auto value = std::move(op.getEntryValue());
+    auto key = std::move(op.getUMEntryKey());
+    auto value = std::move(op.getUMEntryValue());
 
-    lookupEntry(key)
+    lookupUMEntry(key)
         .onValue([&value,
                   &owner,
                   &key,
@@ -408,13 +408,13 @@ auto EntryLookup::operator()(EntryDeletionOp&& op)
     return {};
 }
 
-auto EntryLookup::getBlockHeight() const
+auto UMEntryLookup::getBlockHeight() const
     -> std::int64_t
 {
     return block_height_;
 }
 
-auto EntryLookup::clear()
+auto UMEntryLookup::clear()
     -> void
 {
     lookup_map_.clear();

@@ -12,9 +12,9 @@
 
 using forge::rpc::LookupOnlyServer;
 using forge::core::getBlockTimeInSeconds;
-using forge::core::Entry;
-using forge::core::EntryKey;
-using forge::core::EntryValue;
+using forge::core::UMEntry;
+using forge::core::UMEntryKey;
+using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
@@ -99,7 +99,7 @@ auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    UMEntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -135,7 +135,7 @@ auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    UMEntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -171,7 +171,7 @@ auto LookupOnlyServer::lookupactivationblock(bool isstring, const std::string& k
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    UMEntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -224,7 +224,7 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = lookup_.getEntrysOfOwner(owner);
+    auto entrys = lookup_.getUMEntrysOfOwner(owner);
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),

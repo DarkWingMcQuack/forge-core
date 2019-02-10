@@ -1,16 +1,16 @@
-#include <core/Entry.hpp>
-#include <core/EntryUpdateOp.hpp>
+#include <core/umentry/UMEntry.hpp>
+#include <core/umentry/UMEntryUpdateOp.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 
-using forge::core::Entry;
-using forge::core::EntryKey;
-using forge::core::EntryValue;
-using forge::core::EntryUpdateOp;
+using forge::core::UMEntry;
+using forge::core::UMEntryKey;
+using forge::core::UMEntryValue;
+using forge::core::UMEntryUpdateOp;
 using forge::core::ENTRY_UPDATE_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-EntryUpdateOp::EntryUpdateOp(Entry&& entry,
+UMEntryUpdateOp::UMEntryUpdateOp(UMEntry&& entry,
                              std::string&& owner,
                              std::int64_t block,
                              std::int64_t value)
@@ -20,69 +20,69 @@ EntryUpdateOp::EntryUpdateOp(Entry&& entry,
       value_(value) {}
 
 
-auto EntryUpdateOp::getEntryKey() const
-    -> const EntryKey&
+auto UMEntryUpdateOp::getUMEntryKey() const
+    -> const UMEntryKey&
 {
     return entry_.first;
 }
 
-auto EntryUpdateOp::getEntryKey()
-    -> EntryKey&
+auto UMEntryUpdateOp::getUMEntryKey()
+    -> UMEntryKey&
 {
     return entry_.first;
 }
 
-auto EntryUpdateOp::getNewEntryValue() const
-    -> const EntryValue&
+auto UMEntryUpdateOp::getNewUMEntryValue() const
+    -> const UMEntryValue&
 {
     return entry_.second;
 }
 
-auto EntryUpdateOp::getNewEntryValue()
-    -> EntryValue&
+auto UMEntryUpdateOp::getNewUMEntryValue()
+    -> UMEntryValue&
 {
     return entry_.second;
 }
 
-auto EntryUpdateOp::getEntry() const
-    -> const Entry&
+auto UMEntryUpdateOp::getUMEntry() const
+    -> const UMEntry&
 {
     return entry_;
 }
-auto EntryUpdateOp::getEntry()
-    -> Entry&
+auto UMEntryUpdateOp::getUMEntry()
+    -> UMEntry&
 {
     return entry_;
 }
 
-auto EntryUpdateOp::getBlock() const
+auto UMEntryUpdateOp::getBlock() const
     -> std::int64_t
 {
     return block_;
 }
 
-auto EntryUpdateOp::getValue() const
+auto UMEntryUpdateOp::getValue() const
     -> std::int64_t
 {
     return value_;
 }
 
-auto EntryUpdateOp::getOwner() const
+auto UMEntryUpdateOp::getOwner() const
     -> const std::string&
 {
     return owner_;
 }
-auto EntryUpdateOp::getOwner()
+auto UMEntryUpdateOp::getOwner()
     -> std::string&
 {
     return owner_;
 }
 
-auto forge::core::createEntryUpdateOpMetadata(EntryKey&& key,
-                                              EntryValue new_value)
+auto forge::core::createUMEntryUpdateOpMetadata(UMEntryKey&& key,
+                                              UMEntryValue new_value)
     -> std::vector<std::byte>
 {
-    auto entry = Entry{std::move(key),
+    auto entry = UMEntry{std::move(key),
                        std::move(new_value)};
     auto data = forge::core::entryToRawData(entry);
     auto flag = forge::core::ENTRY_UPDATE_FLAG;

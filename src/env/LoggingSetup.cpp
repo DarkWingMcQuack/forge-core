@@ -30,14 +30,14 @@ struct ColorCoutSink
         return WHITE;
     }
 
-    void ReceiveLogMessage(g3::LogMessageMover logEntry)
+    void ReceiveLogMessage(g3::LogMessageMover logUMEntry)
     {
-        auto level = logEntry.get()._level;
+        auto level = logUMEntry.get()._level;
         auto color = GetColor(level);
 
         fmt::print("\033[{}m{}\033[m",
                    color,
-                   logEntry.get().toString());
+                   logUMEntry.get().toString());
     }
 };
 

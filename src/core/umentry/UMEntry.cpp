@@ -1,6 +1,6 @@
-#include <core/Entry.hpp>
+#include <core/umentry/UMEntry.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <cstddef>
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
@@ -9,7 +9,7 @@
 
 
 using utilxx::Opt;
-using forge::core::Entry;
+using forge::core::UMEntry;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
@@ -22,11 +22,11 @@ using forge::core::BYTE_ARRAY_VALUE_FLAG;
 
 
 auto forge::core::parseValue(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryValue>
+    -> utilxx::Opt<UMEntryValue>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
-        return EntryValue{NoneValue{}};
+        return UMEntryValue{NoneValue{}};
     }
 
     if(data[ENTRY_VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
@@ -43,7 +43,7 @@ auto forge::core::parseValue(const std::vector<std::byte>& data)
                   std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
                   std::begin(byte_array));
 
-        return EntryValue{std::move(byte_array)};
+        return UMEntryValue{std::move(byte_array)};
     }
 
     if(data[ENTRY_VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
@@ -52,7 +52,7 @@ auto forge::core::parseValue(const std::vector<std::byte>& data)
         std::copy(std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
                   std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
                   std::begin(ipv4));
-        return EntryValue{std::move(ipv4)};
+        return UMEntryValue{std::move(ipv4)};
     }
 
 
@@ -64,19 +64,19 @@ auto forge::core::parseValue(const std::vector<std::byte>& data)
                   std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
                   std::begin(ipv6));
 
-        return EntryValue{std::move(ipv6)};
+        return UMEntryValue{std::move(ipv6)};
     }
 
     return std::nullopt;
 }
 
 auto forge::core::parseKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryKey>
+    -> utilxx::Opt<UMEntryKey>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
 
-        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
+        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
                         std::end(data)};
     }
 
@@ -89,14 +89,14 @@ auto forge::core::parseKey(const std::vector<std::byte>& data)
             return std::nullopt;
         }
 
-        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
+        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
                         std::end(data)};
     }
 
     if(data[ENTRY_VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 5) {
 
-        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
+        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
                         std::end(data)};
     }
 
@@ -105,15 +105,15 @@ auto forge::core::parseKey(const std::vector<std::byte>& data)
     if(data[ENTRY_VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 17) {
 
-        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
+        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
                         std::end(data)};
     }
 
     return std::nullopt;
 }
 
-auto forge::core::parseEntry(const std::vector<std::byte>& data)
-    -> Opt<Entry>
+auto forge::core::parseUMEntry(const std::vector<std::byte>& data)
+    -> Opt<UMEntry>
 {
     //3 bytes mask
     //1 tokeyn type flag
@@ -138,7 +138,7 @@ auto forge::core::parseEntry(const std::vector<std::byte>& data)
                    std::move(value_opt));
 }
 
-auto forge::core::extractValueFlag(const EntryValue& value)
+auto forge::core::extractValueFlag(const UMEntryValue& value)
     -> std::byte
 {
     static constexpr auto value_flag_visitor =
@@ -152,7 +152,7 @@ auto forge::core::extractValueFlag(const EntryValue& value)
 }
 
 
-auto forge::core::entryValueToRawData(const EntryValue& value)
+auto forge::core::entryValueToRawData(const UMEntryValue& value)
     -> std::vector<std::byte>
 {
 
@@ -177,7 +177,7 @@ auto forge::core::entryValueToRawData(const EntryValue& value)
 }
 
 
-auto forge::core::entryToRawData(const Entry& entry)
+auto forge::core::entryToRawData(const UMEntry& entry)
     -> std::vector<std::byte>
 {
     auto key_data = std::move(entry.first);
@@ -196,11 +196,11 @@ auto forge::core::entryToRawData(const Entry& entry)
 
 
 //TODO: test
-auto forge::core::jsonToEntryValue(Json::Value&& value)
-    -> utilxx::Opt<EntryValue>
+auto forge::core::jsonToUMEntryValue(Json::Value&& value)
+    -> utilxx::Opt<UMEntryValue>
 {
     if(value.isNull()) {
-        return EntryValue{NoneValue{}};
+        return UMEntryValue{NoneValue{}};
     }
 
     if(!value.isMember("type")
@@ -233,7 +233,7 @@ auto forge::core::jsonToEntryValue(Json::Value&& value)
                     16,
                     ret_array.begin());
 
-        return EntryValue{std::move(ret_array)};
+        return UMEntryValue{std::move(ret_array)};
     }
 
     if(type_str == "ipv4") {
@@ -258,7 +258,7 @@ auto forge::core::jsonToEntryValue(Json::Value&& value)
                     4,
                     ret_array.begin());
 
-        return EntryValue{std::move(ret_array)};
+        return UMEntryValue{std::move(ret_array)};
     }
 
     if(type_str == "bytearray") {
@@ -274,18 +274,18 @@ auto forge::core::jsonToEntryValue(Json::Value&& value)
 
         auto byte_vec = std::move(byte_vec_opt.getValue());
 
-        return EntryValue{std::move(byte_vec)};
+        return UMEntryValue{std::move(byte_vec)};
     }
 
     if(type_str == "none") {
-        return EntryValue{NoneValue{}};
+        return UMEntryValue{NoneValue{}};
     }
 
     return std::nullopt;
 }
 
 //TODO: test
-auto forge::core::entryValueToJson(EntryValue value)
+auto forge::core::entryValueToJson(UMEntryValue value)
     -> Json::Value
 {
     static const auto visitor =
@@ -331,7 +331,7 @@ auto forge::core::entryValueToJson(EntryValue value)
                       std::move(value));
 }
 
-auto forge::core::entryToJson(Entry value)
+auto forge::core::entryToJson(UMEntry value)
     -> Json::Value
 {
     Json::Value ret_json;

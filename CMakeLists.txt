@@ -45,13 +45,13 @@ find_package(Threads)
 add_library(forge-src "")
 target_sources(forge-src
   PUBLIC
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/Operation.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/Entry.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryCreationOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryRenewalOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryDeletionOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/EntryUpdateOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/OwnershipTransferOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryOperation.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntry.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryCreationOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryRenewalOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryDeletionOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryUpdateOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryOwnershipTransferOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
@@ -60,7 +60,7 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadOnlyOdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadWriteOdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/lookup/EntryLookup.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/lookup/UMEntryLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/env/LoggingSetup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/env/ProgramOptions.hpp
@@ -76,13 +76,13 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/CLIGlobalVariables.hpp
 
   PRIVATE
-  src/core/Operation.cpp
-  src/core/Entry.cpp
-  src/core/EntryCreationOp.cpp
-  src/core/EntryRenewalOp.cpp
-  src/core/EntryDeletionOp.cpp
-  src/core/EntryUpdateOp.cpp
-  src/core/OwnershipTransferOp.cpp
+  src/core/umentry/UMEntryOperation.cpp
+  src/core/umentry/UMEntry.cpp
+  src/core/umentry/UMEntryCreationOp.cpp
+  src/core/umentry/UMEntryRenewalOp.cpp
+  src/core/umentry/UMEntryDeletionOp.cpp
+  src/core/umentry/UMEntryUpdateOp.cpp
+  src/core/umentry/UMEntryOwnershipTransferOp.cpp
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
@@ -90,7 +90,7 @@ target_sources(forge-src
   src/daemon/odin/ReadOnlyOdinDaemon.cpp
   src/daemon/odin/ReadWriteOdinDaemon.cpp
   src/core/Transaction.cpp
-  src/lookup/EntryLookup.cpp
+  src/lookup/UMEntryLookup.cpp
   src/lookup/LookupManager.cpp
   src/env/LoggingSetup.cpp
   src/env/ProgramOptions.cpp

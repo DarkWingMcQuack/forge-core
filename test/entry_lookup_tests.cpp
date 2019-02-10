@@ -1,9 +1,9 @@
-#include <core/Entry.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntry.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <core/Transaction.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
-#include <lookup/EntryLookup.hpp>
+#include <lookup/UMEntryLookup.hpp>
 
 using namespace forge::core;
 using namespace forge::lookup;
@@ -12,7 +12,7 @@ auto createOp(std::string&& data,
               std::string&& owner,
               std::int64_t block,
               std::int64_t value)
-    -> Operation
+    -> UMEntryOperation
 {
     auto metadata =
         extractMetadata(std::move(data))
@@ -26,7 +26,7 @@ auto createOp(std::string&& data,
 }
 
 
-TEST(EntryLookupTest, BasicEntryCreationTest)
+TEST(UMEntryLookupTest, BasicUMEntryCreationTest)
 {
     std::vector ops{createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
@@ -40,7 +40,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              9)};
-    EntryLookup lookup{0};
+    UMEntryLookup lookup{0};
 
     lookup.executeOperations(std::move(ops));
 
@@ -55,7 +55,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
     EXPECT_EQ("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
               lookup.lookupOwner(first_key).getValue().get());
-    EXPECT_EQ(EntryValue{expected1},
+    EXPECT_EQ(UMEntryValue{expected1},
               lookup.lookup(first_key).getValue().get());
 
     auto second_key = stringToByteVec("0011223344").getValue();
@@ -65,7 +65,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
     EXPECT_EQ("oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
               lookup.lookupOwner(second_key).getValue().get());
-    EXPECT_EQ(EntryValue{expected2},
+    EXPECT_EQ(UMEntryValue{expected2},
               lookup.lookup(second_key).getValue().get());
 
     //entry update
@@ -86,7 +86,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
 
     EXPECT_EQ("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
               lookup.lookupOwner(first_key).getValue().get());
-    EXPECT_EQ(EntryValue{expected1},
+    EXPECT_EQ(UMEntryValue{expected1},
               lookup.lookup(first_key).getValue().get());
 
     //entry deletion
@@ -101,7 +101,7 @@ TEST(EntryLookupTest, BasicEntryCreationTest)
     ASSERT_FALSE(lookup.lookupOwner(first_key));
 }
 
-TEST(EntryLookupTest, BasicEntryDeletionTest)
+TEST(UMEntryLookupTest, BasicUMEntryDeletionTest)
 {
     std::vector ops{createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
@@ -111,7 +111,7 @@ TEST(EntryLookupTest, BasicEntryDeletionTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              10)};
-    EntryLookup lookup{0};
+    UMEntryLookup lookup{0};
 
     lookup.executeOperations(std::move(ops));
 
@@ -135,11 +135,11 @@ TEST(EntryLookupTest, BasicEntryDeletionTest)
 
     EXPECT_EQ("oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
               lookup.lookupOwner(second_key).getValue().get());
-    EXPECT_EQ(EntryValue{expected2},
+    EXPECT_EQ(UMEntryValue{expected2},
               lookup.lookup(second_key).getValue().get());
 }
 
-TEST(EntryLookupTest, BasicEntryUpdateTest)
+TEST(UMEntryLookupTest, BasicUMEntryUpdateTest)
 {
     std::vector ops{createOp("6a00c6dc75010101aabbccdddeadbeef",
                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
@@ -149,7 +149,7 @@ TEST(EntryLookupTest, BasicEntryUpdateTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              10)};
-    EntryLookup lookup{0};
+    UMEntryLookup lookup{0};
 
     lookup.executeOperations(std::move(ops));
 
@@ -173,7 +173,7 @@ TEST(EntryLookupTest, BasicEntryUpdateTest)
 
     EXPECT_EQ("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
               lookup.lookupOwner(first_key).getValue().get());
-    EXPECT_EQ(EntryValue{expected1},
+    EXPECT_EQ(UMEntryValue{expected1},
               lookup.lookup(first_key).getValue().get());
 
     auto second_key = stringToByteVec("0011223344").getValue();
@@ -183,6 +183,6 @@ TEST(EntryLookupTest, BasicEntryUpdateTest)
 
     EXPECT_EQ("oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
               lookup.lookupOwner(second_key).getValue().get());
-    EXPECT_EQ(EntryValue{expected2},
+    EXPECT_EQ(UMEntryValue{expected2},
               lookup.lookup(second_key).getValue().get());
 }

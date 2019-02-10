@@ -1,7 +1,7 @@
-#include <core/Entry.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/Operation.hpp>
 #include <core/Transaction.hpp>
+#include <core/umentry/UMEntry.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <cstddef>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
@@ -11,59 +11,59 @@
 #include <utilxx/Result.hpp>
 #include <vector>
 
-using forge::core::Entry;
+using forge::core::UMEntry;
 using utilxx::Result;
 using utilxx::overload;
 using utilxx::Opt;
 using forge::core::Transaction;
 using forge::daemon::ReadOnlyDaemonBase;
 using forge::daemon::DaemonError;
-using forge::core::parseEntry;
+using forge::core::parseUMEntry;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-auto forge::core::getEntryKey(const Operation& operation)
-    -> const EntryKey&
+auto forge::core::getUMEntryKey(const UMEntryOperation& operation)
+    -> const UMEntryKey&
 {
     return std::visit(
         [](const auto& op)
-            -> const EntryKey& {
-            return op.getEntryKey();
+            -> const UMEntryKey& {
+            return op.getUMEntryKey();
         },
         operation);
 }
 
-auto forge::core::getEntryKey(Operation&& operation)
-    -> EntryKey
+auto forge::core::getUMEntryKey(UMEntryOperation&& operation)
+    -> UMEntryKey
 {
     return std::visit(
         [](auto&& op) {
-            return std::move(op.getEntryKey());
+            return std::move(op.getUMEntryKey());
         },
         operation);
 }
 
-auto forge::core::getEntry(const Operation& operation)
-    -> const Entry&
+auto forge::core::getUMEntry(const UMEntryOperation& operation)
+    -> const UMEntry&
 {
     return std::visit(
         [](const auto& op)
-            -> const Entry& {
-            return op.getEntry();
+            -> const UMEntry& {
+            return op.getUMEntry();
         },
         operation);
 }
 
-auto forge::core::getEntry(Operation&& operation)
-    -> Entry
+auto forge::core::getUMEntry(UMEntryOperation&& operation)
+    -> UMEntry
 {
     return std::visit(
         [](auto&& op) {
-            return std::move(op.getEntry());
+            return std::move(op.getUMEntry());
         },
         operation);
 }
 
-auto forge::core::getOwner(const Operation& operation)
+auto forge::core::getOwner(const UMEntryOperation& operation)
     -> const std::string&
 {
     return std::visit(
@@ -74,7 +74,7 @@ auto forge::core::getOwner(const Operation& operation)
         operation);
 }
 
-auto forge::core::getOwner(Operation&& operation)
+auto forge::core::getOwner(UMEntryOperation&& operation)
     -> std::string
 {
     return std::visit(
@@ -84,7 +84,7 @@ auto forge::core::getOwner(Operation&& operation)
         operation);
 }
 
-auto forge::core::getValue(const Operation& operation)
+auto forge::core::getValue(const UMEntryOperation& operation)
     -> const std::int64_t
 {
     return std::visit(
@@ -94,16 +94,16 @@ auto forge::core::getValue(const Operation& operation)
         operation);
 }
 
-auto forge::core::extractFlag(const Operation& operation)
+auto forge::core::extractFlag(const UMEntryOperation& operation)
     -> std::byte
 {
     constexpr static auto flag_extractor =
         overload{
-            [](const EntryCreationOp&) { return ENTRY_CREATION_FLAG; },
-            [](const EntryRenewalOp&) { return ENTRY_RENEWAL_FLAG; },
-            [](const OwnershipTransferOp&) { return OWNERSHIP_TRANSFER_FLAG; },
-            [](const EntryUpdateOp&) { return ENTRY_UPDATE_FLAG; },
-            [](const EntryDeletionOp&) { return ENTRY_DELETION_FLAG; }};
+            [](const UMEntryCreationOp&) { return ENTRY_CREATION_FLAG; },
+            [](const UMEntryRenewalOp&) { return ENTRY_RENEWAL_FLAG; },
+            [](const UMEntryOwnershipTransferOp&) { return OWNERSHIP_TRANSFER_FLAG; },
+            [](const UMEntryUpdateOp&) { return ENTRY_UPDATE_FLAG; },
+            [](const UMEntryDeletionOp&) { return ENTRY_DELETION_FLAG; }};
 
     return std::visit(flag_extractor,
                       operation);
@@ -115,36 +115,36 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
                                 std::string&& owner,
                                 std::int64_t value,
                                 utilxx::Opt<std::string>&& new_owner_opt)
-    -> Opt<Operation>
+    -> Opt<UMEntryOperation>
 {
     if(metadata.size() < 10) {
         return std::nullopt;
     }
 
-    return parseEntry(metadata)
+    return parseUMEntry(metadata)
         .flatMap([&](auto&& entry)
-                     -> utilxx::Opt<Operation> {
+                     -> utilxx::Opt<UMEntryOperation> {
             switch(static_cast<std::byte>(metadata[OPERATION_FLAG_INDEX])) {
 
             case ENTRY_CREATION_FLAG:
-                return Operation{
-                    EntryCreationOp{std::move(entry),
-                                    std::move(owner),
-                                    block,
-                                    value}};
+                return UMEntryOperation{
+                    UMEntryCreationOp{std::move(entry),
+                                      std::move(owner),
+                                      block,
+                                      value}};
 
             case ENTRY_RENEWAL_FLAG:
-                return Operation{
-                    EntryRenewalOp{std::move(entry),
-                                   std::move(owner),
-                                   block,
-                                   value}};
+                return UMEntryOperation{
+                    UMEntryRenewalOp{std::move(entry),
+                                     std::move(owner),
+                                     block,
+                                     value}};
 
             case OWNERSHIP_TRANSFER_FLAG:
                 return new_owner_opt
                     .map([&](auto&& new_owner) {
-                        return Operation{
-                            OwnershipTransferOp{std::move(entry),
+                        return UMEntryOperation{
+                            UMEntryOwnershipTransferOp{std::move(entry),
                                                 std::move(owner),
                                                 std::move(new_owner),
                                                 block,
@@ -152,18 +152,18 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
                     });
 
             case ENTRY_UPDATE_FLAG:
-                return Operation{
-                    EntryUpdateOp{std::move(entry),
-                                  std::move(owner),
-                                  block,
-                                  value}};
-
-            case ENTRY_DELETION_FLAG:
-                return Operation{
-                    EntryDeletionOp{std::move(entry),
+                return UMEntryOperation{
+                    UMEntryUpdateOp{std::move(entry),
                                     std::move(owner),
                                     block,
                                     value}};
+
+            case ENTRY_DELETION_FLAG:
+                return UMEntryOperation{
+                    UMEntryDeletionOp{std::move(entry),
+                                      std::move(owner),
+                                      block,
+                                      value}};
 
             default:
                 return std::nullopt;
@@ -171,12 +171,12 @@ auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
         });
 }
 
-auto forge::core::parseTransactionToEntry(Transaction&& tx,
-                                          std::int64_t block,
-                                          const std::unique_ptr<ReadOnlyDaemonBase>& daemon)
-    -> Result<Opt<Operation>, DaemonError>
+auto forge::core::parseTransactionToUMEntry(Transaction&& tx,
+                                            std::int64_t block,
+                                            const std::unique_ptr<ReadOnlyDaemonBase>& daemon)
+    -> Result<Opt<UMEntryOperation>, DaemonError>
 {
-    using ResultType = Result<Opt<Operation>, DaemonError>;
+    using ResultType = Result<Opt<UMEntryOperation>, DaemonError>;
 
     //check if the transaction has exactly one op return
     //output and exactly one input
@@ -255,10 +255,10 @@ auto forge::core::parseTransactionToEntry(Transaction&& tx,
 }
 
 
-auto forge::core::operationToMetadata(const Operation& op)
+auto forge::core::operationToMetadata(const UMEntryOperation& op)
     -> std::vector<std::byte>
 {
-    const auto& entry = getEntry(op);
+    const auto& entry = getUMEntry(op);
     auto flag = extractFlag(op);
 
     auto data = forge::core::entryToRawData(entry);

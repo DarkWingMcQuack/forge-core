@@ -1,4 +1,4 @@
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <daemon/DaemonError.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/WriteOnlyDaemonBase.hpp>

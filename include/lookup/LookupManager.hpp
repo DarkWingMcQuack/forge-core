@@ -1,10 +1,10 @@
 #pragma once
 
 #include <core/Coin.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <functional>
-#include <lookup/EntryLookup.hpp>
+#include <lookup/UMEntryLookup.hpp>
 #include <shared_mutex>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
@@ -33,20 +33,20 @@ public:
     auto rebuildLookup()
         -> utilxx::Result<void, ManagerError>;
 
-    auto lookupValue(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const core::EntryValue>>;
+    auto lookupValue(const core::UMEntryKey& key) const
+        -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
-    auto lookupOwner(const core::EntryKey& key) const
+    auto lookupOwner(const core::UMEntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;
 
-    auto lookupActivationBlock(const core::EntryKey& key) const
+    auto lookupActivationBlock(const core::UMEntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupIsValid() const
         -> utilxx::Result<bool, daemon::DaemonError>;
 
-    auto getEntrysOfOwner(const std::string& owner) const
-        -> std::vector<core::Entry>;
+    auto getUMEntrysOfOwner(const std::string& owner) const
+        -> std::vector<core::UMEntry>;
 
     auto getCoin() const
         -> core::Coin;
@@ -62,7 +62,7 @@ private:
     std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
 
     mutable std::shared_mutex rw_mtx_;
-    EntryLookup lookup_;
+    UMEntryLookup lookup_;
     std::vector<std::string> block_hashes_;
 };
 

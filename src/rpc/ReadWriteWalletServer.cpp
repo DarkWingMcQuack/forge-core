@@ -14,9 +14,9 @@
 
 using forge::rpc::ReadWriteWalletServer;
 using forge::core::getBlockTimeInSeconds;
-using forge::core::Entry;
-using forge::core::EntryKey;
-using forge::core::EntryValue;
+using forge::core::UMEntry;
+using forge::core::UMEntryKey;
+using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
@@ -220,7 +220,7 @@ auto ReadWriteWalletServer::lookupallentrysof(const std::string& owner)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = lookup_.getEntrysOfOwner(owner);
+    auto entrys = lookup_.getUMEntrysOfOwner(owner);
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -268,7 +268,7 @@ auto ReadWriteWalletServer::getownedentrys()
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = wallet_.getOwnedEntrys();
+    auto entrys = wallet_.getOwnedUMEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -296,7 +296,7 @@ auto ReadWriteWalletServer::getwatchonlyentrys()
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = wallet_.getWatchOnlyEntrys();
+    auto entrys = wallet_.getWatchOnlyUMEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -324,7 +324,7 @@ auto ReadWriteWalletServer::getallwatchedentrys()
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = wallet_.getAllWatchedEntrys();
+    auto entrys = wallet_.getAllWatchedUMEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -390,7 +390,7 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     -> std::string
 {
     auto value_copy = value;
-    auto entry_value_opt = forge::core::jsonToEntryValue(std::move(value_copy));
+    auto entry_value_opt = forge::core::jsonToUMEntryValue(std::move(value_copy));
     if(!entry_value_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -413,7 +413,7 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     if(address.empty()) {
-        auto res = wallet_.createNewEntry(std::move(key_vec),
+        auto res = wallet_.createNewUMEntry(std::move(key_vec),
                                           std::move(entry_value),
                                           burnvalue);
 
@@ -427,7 +427,7 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
 
     } else {
         auto address_copy = address;
-        auto res = wallet_.createNewEntry(std::move(key_vec),
+        auto res = wallet_.createNewUMEntry(std::move(key_vec),
                                           std::move(entry_value),
                                           std::move(address_copy),
                                           burnvalue);
@@ -461,7 +461,7 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.renewEntry(std::move(key_vec),
+    auto res = wallet_.renewUMEntry(std::move(key_vec),
                                   burnvalue);
 
     if(!res) {
@@ -479,7 +479,7 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     -> std::string
 {
     auto value_copy = value;
-    auto entry_value_opt = forge::core::jsonToEntryValue(std::move(value_copy));
+    auto entry_value_opt = forge::core::jsonToUMEntryValue(std::move(value_copy));
     if(!entry_value_opt.hasValue()) {
         throw JsonRpcException{"unable to decode value"};
     }
@@ -500,7 +500,7 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     auto entry_value = std::move(entry_value_opt.getValue());
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.updateEntry(std::move(key_vec),
+    auto res = wallet_.updateUMEntry(std::move(key_vec),
                                    std::move(entry_value),
                                    burnvalue);
 
@@ -532,7 +532,7 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.deleteEntry(std::move(key_vec),
+    auto res = wallet_.deleteUMEntry(std::move(key_vec),
                                    burnvalue);
 
     if(!res) {
@@ -598,7 +598,7 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.payToEntryOwner(std::move(key_vec),
+    auto res = wallet_.payToUMEntryOwner(std::move(key_vec),
                                        amount);
 
     if(!res) {

@@ -1,21 +1,21 @@
 #include <core/Coin.hpp>
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
 #include <functional>
 #include <g3log/g3log.hpp>
-#include <lookup/EntryLookup.hpp>
+#include <lookup/UMEntryLookup.hpp>
 #include <lookup/LookupManager.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
 
 using forge::lookup::LookupManager;
-using forge::lookup::EntryLookup;
+using forge::lookup::UMEntryLookup;
 using forge::lookup::LookupError;
-using forge::core::EntryKey;
-using forge::core::EntryValue;
-using forge::core::Operation;
+using forge::core::UMEntryKey;
+using forge::core::UMEntryValue;
+using forge::core::UMEntryOperation;
 using forge::core::getMaturity;
 using utilxx::Opt;
 using utilxx::Result;
@@ -98,21 +98,21 @@ auto LookupManager::rebuildLookup()
     return {};
 }
 
-auto LookupManager::lookupValue(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const core::EntryValue>>
+auto LookupManager::lookupValue(const core::UMEntryKey& key) const
+    -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>
 {
     std::shared_lock lock{rw_mtx_};
     return lookup_.lookup(key);
 }
 
-auto LookupManager::lookupOwner(const core::EntryKey& key) const
+auto LookupManager::lookupOwner(const core::UMEntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
     std::shared_lock lock{rw_mtx_};
     return lookup_.lookupOwner(key);
 }
 
-auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
+auto LookupManager::lookupActivationBlock(const core::UMEntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
     std::shared_lock lock{rw_mtx_};
@@ -137,12 +137,12 @@ auto LookupManager::processBlock(core::Block&& block)
         .flatMap([&](auto&& txs)
                      -> Result<void, ManagerError> {
             //vector of all forge ops in the block
-            std::vector<Operation> ops;
+            std::vector<UMEntryOperation> ops;
             //exract all forge ops from the txs
             for(auto&& tx : txs) {
                 std::string_view txid = tx.getTxid();
 
-                auto op_res = parseTransactionToEntry(std::move(tx),
+                auto op_res = parseTransactionToUMEntry(std::move(tx),
                                                       block_height,
                                                       daemon_);
                 //if we dont get an opt, but an error, we return it
@@ -154,7 +154,7 @@ auto LookupManager::processBlock(core::Block&& block)
                 LOG_IF(DEBUG, op_res.getValue().hasValue()) << "found operation " << txid;
 
                 //check if the operation was parsed, and if
-                //we add it to the std::vector<Operation> vec
+                //we add it to the std::vector<UMEntryOperation> vec
                 if(auto op_opt = std::move(op_res.getValue());
                    op_opt) {
                     ops.push_back(std::move(op_opt.getValue()));
@@ -200,11 +200,11 @@ auto LookupManager::lookupIsValid() const
     return true;
 }
 
-auto LookupManager::getEntrysOfOwner(const std::string& owner) const
-    -> std::vector<core::Entry>
+auto LookupManager::getUMEntrysOfOwner(const std::string& owner) const
+    -> std::vector<core::UMEntry>
 {
     std::shared_lock lock{rw_mtx_};
-    return lookup_.getEntrysOfOwner(owner);
+    return lookup_.getUMEntrysOfOwner(owner);
 }
 
 

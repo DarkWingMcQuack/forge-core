@@ -4,7 +4,7 @@
         "GlossDiv": {
             "title": "S",
             "GlossList": {
-                "GlossEntry": {
+                "GlossUMEntry": {
                     "ID": "SGML",
                     "SortAs": "SGML",
                     "GlossTerm": "Standard Generalized Markup Language",

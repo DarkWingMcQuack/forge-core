@@ -20,7 +20,7 @@ auto addLookupOwner(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client
     -> void;
 auto addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
-auto addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addLookupAllUMEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
 auto addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)

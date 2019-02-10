@@ -14,9 +14,9 @@
 
 using forge::rpc::ReadOnlyWalletServer;
 using forge::core::getBlockTimeInSeconds;
-using forge::core::Entry;
-using forge::core::EntryKey;
-using forge::core::EntryValue;
+using forge::core::UMEntry;
+using forge::core::UMEntryKey;
+using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
@@ -102,7 +102,7 @@ auto ReadOnlyWalletServer::lookupvalue(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    UMEntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -138,7 +138,7 @@ auto ReadOnlyWalletServer::lookupowner(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    UMEntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -174,7 +174,7 @@ auto ReadOnlyWalletServer::lookupactivationblock(bool isstring, const std::strin
         throw JsonRpcException{"Server is indexing"};
     }
 
-    EntryKey key_vec;
+    UMEntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -227,7 +227,7 @@ auto ReadOnlyWalletServer::lookupallentrysof(const std::string& owner)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = lookup_.getEntrysOfOwner(owner);
+    auto entrys = lookup_.getUMEntrysOfOwner(owner);
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -275,7 +275,7 @@ auto ReadOnlyWalletServer::getownedentrys()
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = wallet_.getOwnedEntrys();
+    auto entrys = wallet_.getOwnedUMEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -303,7 +303,7 @@ auto ReadOnlyWalletServer::getwatchonlyentrys()
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = wallet_.getWatchOnlyEntrys();
+    auto entrys = wallet_.getWatchOnlyUMEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -331,7 +331,7 @@ auto ReadOnlyWalletServer::getallwatchedentrys()
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = wallet_.getAllWatchedEntrys();
+    auto entrys = wallet_.getAllWatchedUMEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),

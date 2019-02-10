@@ -8,7 +8,7 @@
 
 namespace forge::core {
 
-using EntryKey = std::vector<std::byte>;
+using UMEntryKey = std::vector<std::byte>;
 
 
 // clang-format off
@@ -30,39 +30,39 @@ constexpr static inline auto IPv6_VALUE_FLAG = static_cast<std::byte>(0b00000010
 constexpr static inline auto NONE_VALUE_FLAG = static_cast<std::byte>(0b00000100);
 constexpr static inline auto BYTE_ARRAY_VALUE_FLAG = static_cast<std::byte>(0b00001000);
 
-using EntryValue = std::variant<IPv4Value,
+using UMEntryValue = std::variant<IPv4Value,
                                 IPv6Value,
                                 ByteArray,
                                 NoneValue>;
 
-using Entry = std::pair<EntryKey,
-                        EntryValue>;
+using UMEntry = std::pair<UMEntryKey,
+                        UMEntryValue>;
 
 auto parseValue(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryValue>;
+    -> utilxx::Opt<UMEntryValue>;
 
 auto parseKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryKey>;
+    -> utilxx::Opt<UMEntryKey>;
 
-auto parseEntry(const std::vector<std::byte>& data)
-    -> utilxx::Opt<Entry>;
+auto parseUMEntry(const std::vector<std::byte>& data)
+    -> utilxx::Opt<UMEntry>;
 
-auto extractValueFlag(const EntryValue& value)
+auto extractValueFlag(const UMEntryValue& value)
     -> std::byte;
 
-auto entryValueToRawData(const EntryValue& value)
+auto entryValueToRawData(const UMEntryValue& value)
     -> std::vector<std::byte>;
 
-auto entryToRawData(const Entry& entry)
+auto entryToRawData(const UMEntry& entry)
     -> std::vector<std::byte>;
 
-auto jsonToEntryValue(Json::Value&& value)
-    -> utilxx::Opt<EntryValue>;
+auto jsonToUMEntryValue(Json::Value&& value)
+    -> utilxx::Opt<UMEntryValue>;
 
-auto entryValueToJson(EntryValue value)
+auto entryValueToJson(UMEntryValue value)
     -> Json::Value;
 
-auto entryToJson(Entry value)
+auto entryToJson(UMEntry value)
     -> Json::Value;
 
 } // namespace forge::core

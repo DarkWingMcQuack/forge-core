@@ -1,31 +1,31 @@
 #pragma once
 
-#include <core/Entry.hpp>
+#include <core/umentry/UMEntry.hpp>
 
 namespace forge::core {
 
-class EntryCreationOp
+class UMEntryCreationOp
 {
 public:
-    EntryCreationOp(Entry&& entry,
+    UMEntryCreationOp(UMEntry&& entry,
                     std::string&& owner,
                     std::int64_t block,
                     std::int64_t value);
 
-    auto getEntryKey() const
-        -> const EntryKey&;
-    auto getEntryKey()
-        -> EntryKey&;
+    auto getUMEntryKey() const
+        -> const UMEntryKey&;
+    auto getUMEntryKey()
+        -> UMEntryKey&;
 
-    auto getEntryValue() const
-        -> const EntryValue&;
-    auto getEntryValue()
-        -> EntryValue&;
+    auto getUMEntryValue() const
+        -> const UMEntryValue&;
+    auto getUMEntryValue()
+        -> UMEntryValue&;
 
-    auto getEntry() const
-        -> const Entry&;
-    auto getEntry()
-        -> Entry&;
+    auto getUMEntry() const
+        -> const UMEntry&;
+    auto getUMEntry()
+        -> UMEntry&;
 
     auto getValue() const
         -> std::int64_t;
@@ -39,13 +39,13 @@ public:
         -> std::string&;
 
 private:
-    Entry entry_;
+    UMEntry entry_;
     std::string owner_;
     std::int64_t block_;
     std::int64_t value_;
 };
 
-auto createEntryCreationOpMetadata(Entry&& entry)
+auto createUMEntryCreationOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>;
 
 } // namespace forge::core

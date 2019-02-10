@@ -1,14 +1,14 @@
-#include <core/Entry.hpp>
+#include <core/umentry/UMEntry.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/Operation.hpp>
-#include <core/OwnershipTransferOp.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
+#include <core/umentry/UMEntryOwnershipTransferOp.hpp>
 
-using forge::core::Entry;
-using forge::core::OwnershipTransferOp;
+using forge::core::UMEntry;
+using forge::core::UMEntryOwnershipTransferOp;
 using forge::core::OWNERSHIP_TRANSFER_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-OwnershipTransferOp::OwnershipTransferOp(Entry&& entry,
+UMEntryOwnershipTransferOp::UMEntryOwnershipTransferOp(UMEntry&& entry,
                                          std::string&& old_owner,
                                          std::string&& new_owner,
                                          std::int64_t block,
@@ -20,78 +20,78 @@ OwnershipTransferOp::OwnershipTransferOp(Entry&& entry,
       value_(value) {}
 
 
-auto OwnershipTransferOp::getEntryKey() const
-    -> const EntryKey&
+auto UMEntryOwnershipTransferOp::getUMEntryKey() const
+    -> const UMEntryKey&
 {
     return entry_.first;
 }
 
-auto OwnershipTransferOp::getEntryKey()
-    -> EntryKey&
+auto UMEntryOwnershipTransferOp::getUMEntryKey()
+    -> UMEntryKey&
 {
     return entry_.first;
 }
 
-auto OwnershipTransferOp::getEntryValue() const
-    -> const EntryValue&
+auto UMEntryOwnershipTransferOp::getUMEntryValue() const
+    -> const UMEntryValue&
 {
     return entry_.second;
 }
 
-auto OwnershipTransferOp::getEntryValue()
-    -> EntryValue&
+auto UMEntryOwnershipTransferOp::getUMEntryValue()
+    -> UMEntryValue&
 {
     return entry_.second;
 }
 
-auto OwnershipTransferOp::getEntry() const
-    -> const Entry&
+auto UMEntryOwnershipTransferOp::getUMEntry() const
+    -> const UMEntry&
 {
     return entry_;
 }
-auto OwnershipTransferOp::getEntry()
-    -> Entry&
+auto UMEntryOwnershipTransferOp::getUMEntry()
+    -> UMEntry&
 {
     return entry_;
 }
 
-auto OwnershipTransferOp::getNewOwner() const
+auto UMEntryOwnershipTransferOp::getNewOwner() const
     -> const std::string&
 {
     return new_owner_;
 }
 
-auto OwnershipTransferOp::getNewOwner()
+auto UMEntryOwnershipTransferOp::getNewOwner()
     -> std::string&
 {
     return new_owner_;
 }
 
-auto OwnershipTransferOp::getOwner() const
+auto UMEntryOwnershipTransferOp::getOwner() const
     -> const std::string&
 {
     return old_owner_;
 }
 
-auto OwnershipTransferOp::getOwner()
+auto UMEntryOwnershipTransferOp::getOwner()
     -> std::string&
 {
     return old_owner_;
 }
 
-auto OwnershipTransferOp::getBlock() const
+auto UMEntryOwnershipTransferOp::getBlock() const
     -> std::int64_t
 {
     return block_;
 }
 
-auto OwnershipTransferOp::getValue() const
+auto UMEntryOwnershipTransferOp::getValue() const
     -> std::int64_t
 {
     return value_;
 }
 
-auto forge::core::createOwnershipTransferOpMetadata(Entry&& entry)
+auto forge::core::createUMEntryOwnershipTransferOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
     auto data = forge::core::entryToRawData(entry);

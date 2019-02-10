@@ -1,11 +1,11 @@
-#include <core/Operation.hpp>
+#include <core/umentry/UMEntryOperation.hpp>
 #include <core/Transaction.hpp>
 #include <gtest/gtest.h>
 
 using namespace std::string_literals;
 using namespace forge::core;
 
-TEST(OperationTest, EntryCreationOpParsingValid)
+TEST(OperationTest, UMEntryCreationOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010101aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
@@ -21,12 +21,12 @@ TEST(OperationTest, EntryCreationOpParsingValid)
 
     const auto& op = op_opt.getValue();
 
-    ASSERT_TRUE(std::holds_alternative<EntryCreationOp>(op));
+    ASSERT_TRUE(std::holds_alternative<UMEntryCreationOp>(op));
 
-    auto creation = std::get<EntryCreationOp>(op);
+    auto creation = std::get<UMEntryCreationOp>(op);
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
-    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getValue(), 10);
     EXPECT_EQ(creation.getBlock(), 1000);
 
@@ -35,7 +35,7 @@ TEST(OperationTest, EntryCreationOpParsingValid)
     EXPECT_EQ(data, stringToByteVec("c6dc75010101aabbccdddeadbeef").getValue());
 }
 
-TEST(OperationTest, EntryRenewalOpParsingValid)
+TEST(OperationTest, UMEntryRenewalOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010201aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
@@ -51,12 +51,12 @@ TEST(OperationTest, EntryRenewalOpParsingValid)
 
     const auto& op = op_opt.getValue();
 
-    ASSERT_TRUE(std::holds_alternative<EntryRenewalOp>(op));
+    ASSERT_TRUE(std::holds_alternative<UMEntryRenewalOp>(op));
 
-    auto creation = std::get<EntryRenewalOp>(op);
+    auto creation = std::get<UMEntryRenewalOp>(op);
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
-    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 
     auto data = operationToMetadata(op);
@@ -82,13 +82,13 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
 
     const auto& op = op_opt.getValue();
 
-    ASSERT_TRUE(std::holds_alternative<OwnershipTransferOp>(op));
+    ASSERT_TRUE(std::holds_alternative<UMEntryOwnershipTransferOp>(op));
 
-    auto creation = std::get<OwnershipTransferOp>(op);
+    auto creation = std::get<UMEntryOwnershipTransferOp>(op);
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
     EXPECT_EQ(creation.getNewOwner(), "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W");
-    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 
     auto data = operationToMetadata(op);
@@ -96,7 +96,7 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
     EXPECT_EQ(data, stringToByteVec("c6dc75010401aabbccdddeadbeef").getValue());
 }
 
-TEST(OperationTest, EntryUpdateOpParsingValid)
+TEST(OperationTest, UMEntryUpdateOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010801ffffffffdeadbeef").getValue();
     std::int64_t block = 1000;
@@ -113,9 +113,9 @@ TEST(OperationTest, EntryUpdateOpParsingValid)
 
     const auto& op = op_opt.getValue();
 
-    ASSERT_TRUE(std::holds_alternative<EntryUpdateOp>(op));
+    ASSERT_TRUE(std::holds_alternative<UMEntryUpdateOp>(op));
 
-    auto creation = std::get<EntryUpdateOp>(op);
+    auto creation = std::get<UMEntryUpdateOp>(op);
 
     std::array expected{(std::byte)0xff,
                         (std::byte)0xff,
@@ -123,8 +123,8 @@ TEST(OperationTest, EntryUpdateOpParsingValid)
                         (std::byte)0xff};
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
-    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
-    EXPECT_EQ(creation.getNewEntryValue(), EntryValue{expected});
+    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getNewUMEntryValue(), UMEntryValue{expected});
     EXPECT_EQ(creation.getBlock(), 1000);
 
     auto data = operationToMetadata(op);
@@ -148,9 +148,9 @@ TEST(OperationTest, CreationOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::EntryValue{value1}};
+    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
 
-    auto created_metadata = createEntryCreationOpMetadata(std::move(expected1));
+    auto created_metadata = createUMEntryCreationOpMetadata(std::move(expected1));
 
     EXPECT_EQ(created_metadata, expected_metadata);
 }
@@ -171,9 +171,9 @@ TEST(OperationTest, RenewalOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::EntryValue{value1}};
+    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
 
-    auto created_metadata = createEntryRenewalOpMetadata(std::move(expected1));
+    auto created_metadata = createUMEntryRenewalOpMetadata(std::move(expected1));
 
     EXPECT_EQ(created_metadata, expected_metadata);
 }
@@ -194,9 +194,9 @@ TEST(OperationTest, OwnershipTransferOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::EntryValue{value1}};
+    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
 
-    auto created_metadata = createOwnershipTransferOpMetadata(std::move(expected1));
+    auto created_metadata = createUMEntryOwnershipTransferOpMetadata(std::move(expected1));
 
     EXPECT_EQ(created_metadata, expected_metadata);
 }
@@ -217,7 +217,7 @@ TEST(OperationTest, UpdateOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    auto created_metadata = createEntryUpdateOpMetadata(std::move(key1),
+    auto created_metadata = createUMEntryUpdateOpMetadata(std::move(key1),
                                                         std::move(value1));
 
     EXPECT_EQ(created_metadata, expected_metadata);
@@ -239,9 +239,9 @@ TEST(OperationTest, DeletionOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::EntryValue{value1}};
+    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
 
-    auto created_metadata = createEntryDeletionOpMetadata(std::move(expected1));
+    auto created_metadata = createUMEntryDeletionOpMetadata(std::move(expected1));
 
     EXPECT_EQ(created_metadata, expected_metadata);
 }

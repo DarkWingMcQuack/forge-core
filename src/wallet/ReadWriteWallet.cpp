@@ -1,6 +1,6 @@
 #include <core/Coin.hpp>
-#include <core/EntryCreationOp.hpp>
-#include <core/EntryRenewalOp.hpp>
+#include <core/umentry/UMEntryCreationOp.hpp>
+#include <core/umentry/UMEntryRenewalOp.hpp>
 #include <fmt/core.h>
 #include <fmt/format.h>
 #include <lookup/LookupManager.hpp>
@@ -14,16 +14,16 @@
 using forge::wallet::ReadOnlyWallet;
 using forge::wallet::ReadWriteWallet;
 using forge::wallet::WalletError;
-using forge::core::Entry;
+using forge::core::UMEntry;
 using forge::core::getDefaultTxFee;
 using forge::core::getMinimumTxAmount;
 using forge::core::toHexString;
-using forge::core::EntryKey;
-using forge::core::EntryValue;
-using forge::core::createEntryCreationOpMetadata;
-using forge::core::createEntryRenewalOpMetadata;
-using forge::core::createEntryUpdateOpMetadata;
-using forge::core::createEntryDeletionOpMetadata;
+using forge::core::UMEntryKey;
+using forge::core::UMEntryValue;
+using forge::core::createUMEntryCreationOpMetadata;
+using forge::core::createUMEntryRenewalOpMetadata;
+using forge::core::createUMEntryUpdateOpMetadata;
+using forge::core::createUMEntryDeletionOpMetadata;
 using utilxx::Result;
 
 ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
@@ -32,8 +32,8 @@ ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup
       daemon_(std::move(daemon)) {}
 
 
-auto ReadWriteWallet::createNewEntry(core::EntryKey key,
-                                     core::EntryValue value,
+auto ReadWriteWallet::createNewUMEntry(core::UMEntryKey key,
+                                     core::UMEntryValue value,
                                      std::int64_t burn_amount)
     -> Result<std::string, WalletError>
 {
@@ -46,21 +46,21 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey key,
             addNewOwnedAddress(std::move(address));
         })
         .flatMap([&](auto&& address) {
-            return createNewEntry(std::move(key),
+            return createNewUMEntry(std::move(key),
                                   std::move(value),
                                   std::move(address),
                                   burn_amount);
         });
 }
 
-auto ReadWriteWallet::createNewEntry(core::EntryKey key,
-                                     core::EntryValue value,
+auto ReadWriteWallet::createNewUMEntry(core::UMEntryKey key,
+                                     core::UMEntryValue value,
                                      std::string address,
                                      std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //create entry
-    auto entry = Entry{std::move(key),
+    auto entry = UMEntry{std::move(key),
                        std::move(value)};
 
     if(!ownesAddress(address)) {
@@ -73,7 +73,7 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey key,
 
     //create metadata
     auto metadata =
-        createEntryCreationOpMetadata(std::move(entry));
+        createUMEntryCreationOpMetadata(std::move(entry));
 
     return daemon_
         //send the needed amount to the address
@@ -100,12 +100,12 @@ auto ReadWriteWallet::createNewEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::renewEntry(core::EntryKey key,
+auto ReadWriteWallet::renewUMEntry(core::UMEntryKey key,
                                  std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //create an entry and get the owner
-    return createEntryOwnerPairFromKey(std::move(key))
+    return createUMEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto&& entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -124,7 +124,7 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
             }
 
             auto metadata =
-                createEntryRenewalOpMetadata(std::move(entry));
+                createUMEntryRenewalOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -158,8 +158,8 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::updateEntry(core::EntryKey key,
-                                  core::EntryValue new_value,
+auto ReadWriteWallet::updateUMEntry(core::UMEntryKey key,
+                                  core::UMEntryValue new_value,
                                   std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
@@ -185,7 +185,7 @@ auto ReadWriteWallet::updateEntry(core::EntryKey key,
     }
 
     //create metadata for the tx
-    auto metadata = createEntryUpdateOpMetadata(std::move(key),
+    auto metadata = createUMEntryUpdateOpMetadata(std::move(key),
                                                 std::move(new_value));
 
     return daemon_
@@ -210,12 +210,12 @@ auto ReadWriteWallet::updateEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::deleteEntry(core::EntryKey key,
+auto ReadWriteWallet::deleteUMEntry(core::UMEntryKey key,
                                   std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //create an entry and get the owner
-    return createEntryOwnerPairFromKey(std::move(key))
+    return createUMEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto&& entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -234,7 +234,7 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey key,
             }
 
             auto metadata =
-                createEntryDeletionOpMetadata(std::move(entry));
+                createUMEntryDeletionOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -267,12 +267,12 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::transferOwnership(core::EntryKey key,
+auto ReadWriteWallet::transferOwnership(core::UMEntryKey key,
                                         std::string new_owner,
                                         std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
-    return createEntryOwnerPairFromKey(std::move(key))
+    return createUMEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto&& entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -291,7 +291,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
             }
 
             auto metadata =
-                createOwnershipTransferOpMetadata(std::move(entry));
+                createUMEntryOwnershipTransferOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -331,7 +331,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
+auto ReadWriteWallet::payToUMEntryOwner(core::UMEntryKey key,
                                       std::int64_t amount)
     -> utilxx::Result<std::string, WalletError>
 {
@@ -354,8 +354,8 @@ auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
-    -> utilxx::Result<std::pair<core::Entry,
+auto ReadWriteWallet::createUMEntryOwnerPairFromKey(core::UMEntryKey key)
+    -> utilxx::Result<std::pair<core::UMEntry,
                                 std::string>,
                       WalletError>
 {
@@ -372,7 +372,7 @@ auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
 
     auto value = lookup_opt.getValue().first.get();
 
-    auto entry = Entry{std::move(key),
+    auto entry = UMEntry{std::move(key),
                        std::move(value)};
 
     auto owner = lookup_opt.getValue().second.get();
