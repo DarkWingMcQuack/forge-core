@@ -37,6 +37,9 @@ public:
     virtual auto checkvalidity()
         -> bool override;
 
+    virtual auto getlastvalidblockheight()
+        -> int override;
+
     virtual auto lookupallentrysof(const std::string& owner)
         -> Json::Value override;
 

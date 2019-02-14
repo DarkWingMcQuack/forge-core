@@ -41,6 +41,10 @@
         "returns" : true
     },
     {
+        "name" : "getlastvalidblockheight",
+        "returns" :  10
+    },
+    {
         "name" : "lookupallentrysof",
         "params" : {
             "owner" : "someowner"

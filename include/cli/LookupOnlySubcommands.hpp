@@ -14,6 +14,8 @@ auto addRebuildLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& clie
     -> void;
 auto addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
+auto addGetLastValidBlockHeight(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
 auto addLookupValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 auto addLookupOwner(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)

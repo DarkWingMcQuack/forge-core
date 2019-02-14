@@ -213,6 +213,23 @@ auto ReadWriteWalletServer::checkvalidity()
     return res.getValue();
 }
 
+auto ReadWriteWalletServer::getlastvalidblockheight()
+    -> int
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto res = lookup_.getLastValidBlockHeight();
+
+    if(!res) {
+        auto error_msg = lookup::generateMessage(std::move(res.getError()));
+        throw JsonRpcException{std::move(error_msg)};
+    }
+
+    return res.getValue();
+}
+
 auto ReadWriteWalletServer::lookupallentrysof(const std::string& owner)
     -> Json::Value
 {
@@ -414,8 +431,8 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
 
     if(address.empty()) {
         auto res = wallet_.createNewUMEntry(std::move(key_vec),
-                                          std::move(entry_value),
-                                          burnvalue);
+                                            std::move(entry_value),
+                                            burnvalue);
 
 
         if(!res) {
@@ -428,9 +445,9 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     } else {
         auto address_copy = address;
         auto res = wallet_.createNewUMEntry(std::move(key_vec),
-                                          std::move(entry_value),
-                                          std::move(address_copy),
-                                          burnvalue);
+                                            std::move(entry_value),
+                                            std::move(address_copy),
+                                            burnvalue);
 
         if(!res) {
             auto error_msg = res.getError().what();
@@ -462,7 +479,7 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = wallet_.renewUMEntry(std::move(key_vec),
-                                  burnvalue);
+                                    burnvalue);
 
     if(!res) {
         auto error_msg = res.getError().what();
@@ -501,8 +518,8 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = wallet_.updateUMEntry(std::move(key_vec),
-                                   std::move(entry_value),
-                                   burnvalue);
+                                     std::move(entry_value),
+                                     burnvalue);
 
     if(!res) {
         auto error_msg = res.getError().what();
@@ -533,7 +550,7 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = wallet_.deleteUMEntry(std::move(key_vec),
-                                   burnvalue);
+                                     burnvalue);
 
     if(!res) {
         auto error_msg = res.getError().what();
@@ -599,7 +616,7 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = wallet_.payToUMEntryOwner(std::move(key_vec),
-                                       amount);
+                                         amount);
 
     if(!res) {
         auto error_msg = res.getError().what();

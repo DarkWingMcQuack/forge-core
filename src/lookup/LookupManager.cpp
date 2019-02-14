@@ -183,24 +183,17 @@ auto LookupManager::processBlock(core::Block&& block)
 auto LookupManager::lookupIsValid() const
     -> utilxx::Result<bool, daemon::DaemonError>
 {
-    auto starting_block = getStartingBlock(daemon_->getCoin());
+    return getLastValidBlockHeight()
+        .map([this](auto&& last_valid_block) {
+            auto starting_block =
+                getStartingBlock(daemon_->getCoin());
 
-    std::shared_lock lock{rw_mtx_};
-    for(auto&& hash : block_hashes_) {
-        if(auto res = daemon_->getBlockHash(++starting_block);
-           res) {
-            if(res.getValue() != hash) {
-                return false;
-            }
-        } else {
-            return res.getError();
-        }
-    }
-
-    return true;
+            return block_hashes_.size()
+                == last_valid_block - starting_block;
+        });
 }
 
-auto LookupManager::getLastValidBlock() const
+auto LookupManager::getLastValidBlockHeight() const
     -> utilxx::Result<int64_t, daemon::DaemonError>
 {
     auto starting_block = getStartingBlock(daemon_->getCoin());

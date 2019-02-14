@@ -11,6 +11,7 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
     addUpdateLookup(app, client);
     addRebuildLookup(app, client);
     addCheckValidity(app, client);
+    addGetLastValidBlockHeight(app, client);
     addLookupValue(app, client);
     addLookupOwner(app, client);
     addLookupActivationBlock(app, client);
@@ -54,6 +55,16 @@ auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStub
                        "checks if the lookup is valid in terms of blockhashes")
         ->callback([&] {
             RESPONSE = client.checkvalidity();
+        });
+}
+
+auto forge::cli::addGetLastValidBlockHeight(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    app.add_subcommand("getlastvalidblockheight",
+                       "return the blockheight until which the forge node is in sync with the coin node")
+        ->callback([&] {
+            RESPONSE = client.getlastvalidblockheight();
         });
 }
 

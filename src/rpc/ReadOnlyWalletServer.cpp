@@ -220,6 +220,23 @@ auto ReadOnlyWalletServer::checkvalidity()
     return res.getValue();
 }
 
+auto ReadOnlyWalletServer::getlastvalidblockheight()
+    -> int
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto res = lookup_.getLastValidBlockHeight();
+
+    if(!res) {
+        auto error_msg = lookup::generateMessage(std::move(res.getError()));
+        throw JsonRpcException{std::move(error_msg)};
+    }
+
+    return res.getValue();
+}
+
 auto ReadOnlyWalletServer::lookupallentrysof(const std::string& owner)
     -> Json::Value
 {

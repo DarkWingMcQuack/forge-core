@@ -45,7 +45,7 @@ public:
     auto lookupIsValid() const
         -> utilxx::Result<bool, daemon::DaemonError>;
 
-    auto getLastValidBlock() const
+    auto getLastValidBlockHeight() const
         -> utilxx::Result<int64_t, daemon::DaemonError>;
 
     auto getUMEntrysOfOwner(const std::string& owner) const

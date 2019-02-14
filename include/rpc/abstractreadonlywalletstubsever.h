@@ -21,6 +21,7 @@ namespace forge {
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupownerI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupactivationblock", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupactivationblockI);
                     this->bindAndAddMethod(jsonrpc::Procedure("checkvalidity", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::checkvalidityI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getlastvalidblockheight", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getlastvalidblockheightI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupallentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupallentrysofI);
                     this->bindAndAddNotification(jsonrpc::Procedure("addwatchonlyaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::addwatchonlyaddressI);
                     this->bindAndAddNotification(jsonrpc::Procedure("deletewatchonlyaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::deletewatchonlyaddressI);
@@ -60,6 +61,10 @@ namespace forge {
                 inline virtual void checkvalidityI(const Json::Value &/*request*/, Json::Value &response)
                 {
                     response = this->checkvalidity();
+                }
+                inline virtual void getlastvalidblockheightI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getlastvalidblockheight();
                 }
                 inline virtual void lookupallentrysofI(const Json::Value &request, Json::Value &response)
                 {
@@ -108,6 +113,7 @@ namespace forge {
                 virtual std::string lookupowner(bool isstring, const std::string& key) = 0;
                 virtual int lookupactivationblock(bool isstring, const std::string& key) = 0;
                 virtual bool checkvalidity() = 0;
+                virtual int getlastvalidblockheight() = 0;
                 virtual Json::Value lookupallentrysof(const std::string& owner) = 0;
                 virtual void addwatchonlyaddress(const std::string& address) = 0;
                 virtual void deletewatchonlyaddress(const std::string& address) = 0;

@@ -79,6 +79,16 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                int getlastvalidblockheight() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getlastvalidblockheight",p);
+                    if (result.isIntegral())
+                        return result.asInt();
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
                 Json::Value lookupallentrysof(const std::string& owner) 
                 {
                     Json::Value p;
