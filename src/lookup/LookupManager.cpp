@@ -13,7 +13,7 @@
 using forge::lookup::LookupManager;
 using forge::lookup::UMEntryLookup;
 using forge::lookup::LookupError;
-using forge::core::UMEntryKey;
+using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::UMEntryOperation;
 using forge::core::getMaturity;
@@ -98,21 +98,21 @@ auto LookupManager::rebuildLookup()
     return {};
 }
 
-auto LookupManager::lookupValue(const core::UMEntryKey& key) const
+auto LookupManager::lookupValue(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>
 {
     std::shared_lock lock{rw_mtx_};
     return lookup_.lookup(key);
 }
 
-auto LookupManager::lookupOwner(const core::UMEntryKey& key) const
+auto LookupManager::lookupOwner(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
     std::shared_lock lock{rw_mtx_};
     return lookup_.lookupOwner(key);
 }
 
-auto LookupManager::lookupActivationBlock(const core::UMEntryKey& key) const
+auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
     std::shared_lock lock{rw_mtx_};
@@ -198,6 +198,26 @@ auto LookupManager::lookupIsValid() const
     }
 
     return true;
+}
+
+auto LookupManager::getLastValidBlock() const
+    -> utilxx::Result<int64_t, daemon::DaemonError>
+{
+    auto starting_block = getStartingBlock(daemon_->getCoin());
+
+    std::shared_lock lock{rw_mtx_};
+    for(auto&& hash : block_hashes_) {
+        if(auto res = daemon_->getBlockHash(++starting_block);
+           res) {
+            if(res.getValue() != hash) {
+                return starting_block - 1;
+            }
+        } else {
+            return res.getError();
+        }
+    }
+
+    return starting_block;
 }
 
 auto LookupManager::getUMEntrysOfOwner(const std::string& owner) const

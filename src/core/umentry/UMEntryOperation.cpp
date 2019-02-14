@@ -9,6 +9,7 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
+#include <core/Entry.hpp>
 #include <vector>
 
 using forge::core::UMEntry;
@@ -21,23 +22,23 @@ using forge::daemon::DaemonError;
 using forge::core::parseUMEntry;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-auto forge::core::getUMEntryKey(const UMEntryOperation& operation)
-    -> const UMEntryKey&
+auto forge::core::getEntryKey(const UMEntryOperation& operation)
+    -> const EntryKey&
 {
     return std::visit(
         [](const auto& op)
-            -> const UMEntryKey& {
-            return op.getUMEntryKey();
+            -> const EntryKey& {
+            return op.getEntryKey();
         },
         operation);
 }
 
-auto forge::core::getUMEntryKey(UMEntryOperation&& operation)
-    -> UMEntryKey
+auto forge::core::getEntryKey(UMEntryOperation&& operation)
+    -> EntryKey
 {
     return std::visit(
         [](auto&& op) {
-            return std::move(op.getUMEntryKey());
+            return std::move(op.getEntryKey());
         },
         operation);
 }

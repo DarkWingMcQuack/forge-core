@@ -15,7 +15,7 @@
 using forge::rpc::ReadWriteWalletServer;
 using forge::core::getBlockTimeInSeconds;
 using forge::core::UMEntry;
-using forge::core::UMEntryKey;
+using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;

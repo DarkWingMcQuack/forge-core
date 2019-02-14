@@ -14,7 +14,7 @@ using utilxx::Opt;
 using forge::core::UMEntryOperation;
 using forge::core::getValue;
 using forge::core::UMEntryValue;
-using forge::core::UMEntryKey;
+using forge::core::EntryKey;
 using forge::core::UMEntry;
 using forge::core::UMEntryCreationOp;
 using forge::core::UMEntryUpdateOp;
@@ -44,7 +44,7 @@ auto UMEntryLookup::executeOperations(std::vector<UMEntryOperation>&& ops)
                     });
 }
 
-auto UMEntryLookup::lookup(const UMEntryKey& key) const
+auto UMEntryLookup::lookup(const EntryKey& key) const
     -> Opt<std::reference_wrapper<const UMEntryValue>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -55,7 +55,7 @@ auto UMEntryLookup::lookup(const UMEntryKey& key) const
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookup(const UMEntryKey& key)
+auto UMEntryLookup::lookup(const EntryKey& key)
     -> Opt<std::reference_wrapper<UMEntryValue>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -66,7 +66,7 @@ auto UMEntryLookup::lookup(const UMEntryKey& key)
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookupOwner(const UMEntryKey& key) const
+auto UMEntryLookup::lookupOwner(const EntryKey& key) const
     -> Opt<std::reference_wrapper<const std::string>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -77,7 +77,7 @@ auto UMEntryLookup::lookupOwner(const UMEntryKey& key) const
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookupOwner(const UMEntryKey& key)
+auto UMEntryLookup::lookupOwner(const EntryKey& key)
     -> Opt<std::reference_wrapper<std::string>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -88,7 +88,7 @@ auto UMEntryLookup::lookupOwner(const UMEntryKey& key)
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookupUMEntry(const UMEntryKey& key) const
+auto UMEntryLookup::lookupUMEntry(const EntryKey& key) const
     -> utilxx::Opt<
         std::tuple<std::reference_wrapper<const core::UMEntryValue>,
                    std::reference_wrapper<const std::string>,
@@ -104,7 +104,7 @@ auto UMEntryLookup::lookupUMEntry(const UMEntryKey& key) const
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookupUMEntry(const UMEntryKey& key)
+auto UMEntryLookup::lookupUMEntry(const EntryKey& key)
     -> utilxx::Opt<
         std::tuple<std::reference_wrapper<core::UMEntryValue>,
                    std::reference_wrapper<std::string>,
@@ -120,7 +120,7 @@ auto UMEntryLookup::lookupUMEntry(const UMEntryKey& key)
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookupActivationBlock(const core::UMEntryKey& key)
+auto UMEntryLookup::lookupActivationBlock(const core::EntryKey& key)
     -> utilxx::Opt<std::reference_wrapper<std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -131,7 +131,7 @@ auto UMEntryLookup::lookupActivationBlock(const core::UMEntryKey& key)
     return std::nullopt;
 }
 
-auto UMEntryLookup::lookupActivationBlock(const core::UMEntryKey& key) const
+auto UMEntryLookup::lookupActivationBlock(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
@@ -175,8 +175,8 @@ auto UMEntryLookup::isCurrentlyValid(const UMEntryOperation& op) const
 {
     const auto& op_key = std::visit(
         [](const auto& op)
-            -> const core::UMEntryKey& {
-            return op.getUMEntryKey();
+            -> const core::EntryKey& {
+            return op.getEntryKey();
         },
         op);
 
@@ -218,7 +218,7 @@ auto UMEntryLookup::filterNonRelevantOperations(std::vector<UMEntryOperation>&& 
                        }),
         ops.end());
 
-    std::map<core::UMEntryKey,
+    std::map<core::EntryKey,
              std::vector<UMEntryOperation>>
         bucket_map;
 
@@ -226,8 +226,8 @@ auto UMEntryLookup::filterNonRelevantOperations(std::vector<UMEntryOperation>&& 
     for(auto&& op : ops) {
         auto key = std::visit(
             [](const auto& op)
-                -> const UMEntryKey& {
-                return op.getUMEntryKey();
+                -> const EntryKey& {
+                return op.getEntryKey();
             },
             op);
 
@@ -283,7 +283,7 @@ auto UMEntryLookup::operator()(UMEntryCreationOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getUMEntryKey());
+    auto key = std::move(op.getEntryKey());
     auto value = std::move(op.getUMEntryValue());
     auto block = op.getBlock();
 
@@ -307,7 +307,7 @@ auto UMEntryLookup::operator()(UMEntryRenewalOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getUMEntryKey());
+    auto key = std::move(op.getEntryKey());
     auto value = std::move(op.getUMEntryValue());
     auto new_block = op.getBlock();
 
@@ -335,7 +335,7 @@ auto UMEntryLookup::operator()(UMEntryOwnershipTransferOp&& op)
 {
     auto old_owner = std::move(op.getOwner());
     auto new_owner = std::move(op.getNewOwner());
-    auto key = std::move(op.getUMEntryKey());
+    auto key = std::move(op.getEntryKey());
     auto value = std::move(op.getUMEntryValue());
 
     lookupUMEntry(key)
@@ -361,7 +361,7 @@ auto UMEntryLookup::operator()(UMEntryUpdateOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getUMEntryKey());
+    auto key = std::move(op.getEntryKey());
     auto new_value = std::move(op.getNewUMEntryValue());
 
     lookupUMEntry(key)
@@ -385,7 +385,7 @@ auto UMEntryLookup::operator()(UMEntryDeletionOp&& op)
     -> Result<void, LookupError>
 {
     auto owner = std::move(op.getOwner());
-    auto key = std::move(op.getUMEntryKey());
+    auto key = std::move(op.getEntryKey());
     auto value = std::move(op.getUMEntryValue());
 
     lookupUMEntry(key)

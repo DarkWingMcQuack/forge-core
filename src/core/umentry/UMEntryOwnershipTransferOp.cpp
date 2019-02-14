@@ -20,14 +20,14 @@ UMEntryOwnershipTransferOp::UMEntryOwnershipTransferOp(UMEntry&& entry,
       value_(value) {}
 
 
-auto UMEntryOwnershipTransferOp::getUMEntryKey() const
-    -> const UMEntryKey&
+auto UMEntryOwnershipTransferOp::getEntryKey() const
+    -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryOwnershipTransferOp::getUMEntryKey()
-    -> UMEntryKey&
+auto UMEntryOwnershipTransferOp::getEntryKey()
+    -> EntryKey&
 {
     return entry_.first;
 }

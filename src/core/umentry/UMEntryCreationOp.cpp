@@ -18,14 +18,14 @@ UMEntryCreationOp::UMEntryCreationOp(UMEntry&& entry,
       value_(value) {}
 
 
-auto UMEntryCreationOp::getUMEntryKey() const
-    -> const UMEntryKey&
+auto UMEntryCreationOp::getEntryKey() const
+    -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryCreationOp::getUMEntryKey()
-    -> UMEntryKey&
+auto UMEntryCreationOp::getEntryKey()
+    -> EntryKey&
 {
     return entry_.first;
 }

@@ -18,7 +18,7 @@ using forge::core::UMEntry;
 using forge::core::getDefaultTxFee;
 using forge::core::getMinimumTxAmount;
 using forge::core::toHexString;
-using forge::core::UMEntryKey;
+using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::createUMEntryCreationOpMetadata;
 using forge::core::createUMEntryRenewalOpMetadata;
@@ -32,7 +32,7 @@ ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup
       daemon_(std::move(daemon)) {}
 
 
-auto ReadWriteWallet::createNewUMEntry(core::UMEntryKey key,
+auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
                                      core::UMEntryValue value,
                                      std::int64_t burn_amount)
     -> Result<std::string, WalletError>
@@ -53,7 +53,7 @@ auto ReadWriteWallet::createNewUMEntry(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::createNewUMEntry(core::UMEntryKey key,
+auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
                                      core::UMEntryValue value,
                                      std::string address,
                                      std::int64_t burn_amount)
@@ -100,7 +100,7 @@ auto ReadWriteWallet::createNewUMEntry(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::renewUMEntry(core::UMEntryKey key,
+auto ReadWriteWallet::renewUMEntry(core::EntryKey key,
                                  std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
@@ -158,7 +158,7 @@ auto ReadWriteWallet::renewUMEntry(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::updateUMEntry(core::UMEntryKey key,
+auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
                                   core::UMEntryValue new_value,
                                   std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
@@ -210,7 +210,7 @@ auto ReadWriteWallet::updateUMEntry(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::deleteUMEntry(core::UMEntryKey key,
+auto ReadWriteWallet::deleteUMEntry(core::EntryKey key,
                                   std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
@@ -267,7 +267,7 @@ auto ReadWriteWallet::deleteUMEntry(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::transferOwnership(core::UMEntryKey key,
+auto ReadWriteWallet::transferOwnership(core::EntryKey key,
                                         std::string new_owner,
                                         std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
@@ -331,7 +331,7 @@ auto ReadWriteWallet::transferOwnership(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::payToUMEntryOwner(core::UMEntryKey key,
+auto ReadWriteWallet::payToUMEntryOwner(core::EntryKey key,
                                       std::int64_t amount)
     -> utilxx::Result<std::string, WalletError>
 {
@@ -354,7 +354,7 @@ auto ReadWriteWallet::payToUMEntryOwner(core::UMEntryKey key,
         });
 }
 
-auto ReadWriteWallet::createUMEntryOwnerPairFromKey(core::UMEntryKey key)
+auto ReadWriteWallet::createUMEntryOwnerPairFromKey(core::EntryKey key)
     -> utilxx::Result<std::pair<core::UMEntry,
                                 std::string>,
                       WalletError>

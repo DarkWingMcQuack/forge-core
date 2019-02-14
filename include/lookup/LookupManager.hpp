@@ -33,17 +33,20 @@ public:
     auto rebuildLookup()
         -> utilxx::Result<void, ManagerError>;
 
-    auto lookupValue(const core::UMEntryKey& key) const
+    auto lookupValue(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
-    auto lookupOwner(const core::UMEntryKey& key) const
+    auto lookupOwner(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;
 
-    auto lookupActivationBlock(const core::UMEntryKey& key) const
+    auto lookupActivationBlock(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupIsValid() const
         -> utilxx::Result<bool, daemon::DaemonError>;
+
+    auto getLastValidBlock() const
+        -> utilxx::Result<int64_t, daemon::DaemonError>;
 
     auto getUMEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::UMEntry>;

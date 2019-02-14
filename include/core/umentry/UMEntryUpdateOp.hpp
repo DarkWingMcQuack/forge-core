@@ -12,10 +12,10 @@ public:
                   std::int64_t block,
                   std::int64_t value);
 
-    auto getUMEntryKey() const
-        -> const UMEntryKey&;
-    auto getUMEntryKey()
-        -> UMEntryKey&;
+    auto getEntryKey() const
+        -> const EntryKey&;
+    auto getEntryKey()
+        -> EntryKey&;
 
     auto getNewUMEntryValue() const
         -> const UMEntryValue&;
@@ -46,7 +46,7 @@ private:
     std::int64_t value_;
 };
 
-auto createUMEntryUpdateOpMetadata(UMEntryKey&& key,
+auto createUMEntryUpdateOpMetadata(EntryKey&& key,
                                  UMEntryValue new_value)
     -> std::vector<std::byte>;
 

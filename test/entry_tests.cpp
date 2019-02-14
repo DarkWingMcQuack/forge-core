@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-TEST(UMEntryTest, UMEntryKeyParsingValidIpv4)
+TEST(UMEntryTest, EntryKeyParsingValidIpv4)
 {
     auto data1 = forge::core::stringToByteVec(
                      "ffffff" //mask
@@ -36,7 +36,7 @@ TEST(UMEntryTest, UMEntryKeyParsingValidIpv4)
     EXPECT_EQ(entry_opt2.getValue(), expected2);
 }
 
-TEST(UMEntryTest, UMEntryKeyParsingValidNoneValue)
+TEST(UMEntryTest, EntryKeyParsingValidNoneValue)
 {
     auto data1 = forge::core::stringToByteVec("ffffff00ff04deadbeef").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);
@@ -58,7 +58,7 @@ TEST(UMEntryTest, UMEntryKeyParsingValidNoneValue)
 }
 
 
-TEST(UMEntryTest, UMEntryKeyParsingValidByteArray)
+TEST(UMEntryTest, EntryKeyParsingValidByteArray)
 {
     auto data1 = forge::core::stringToByteVec("ffffff01ff0803000000deadbeef").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);
@@ -93,7 +93,7 @@ TEST(UMEntryTest, UMEntryKeyParsingValidByteArray)
     EXPECT_EQ(entry_opt4.getValue(), expected4);
 }
 
-TEST(UMEntryTest, UMEntryKeyParsingValidIpv6)
+TEST(UMEntryTest, EntryKeyParsingValidIpv6)
 {
     auto data1 = forge::core::stringToByteVec("ffffff01ff0201010101010101010101010101010101deadbeef").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);
@@ -114,28 +114,28 @@ TEST(UMEntryTest, UMEntryKeyParsingValidIpv6)
     EXPECT_EQ(entry_opt2.getValue(), expected2);
 }
 
-TEST(UMEntryTest, UMEntryKeyParsingInvalidIpv4)
+TEST(UMEntryTest, EntryKeyParsingInvalidIpv4)
 {
     auto data1 = forge::core::stringToByteVec("ffffff01ff0100000000").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);
     EXPECT_FALSE(entry_opt1);
 }
 
-TEST(UMEntryTest, UMEntryKeyParsingInvalidNoneValue)
+TEST(UMEntryTest, EntryKeyParsingInvalidNoneValue)
 {
     auto data1 = forge::core::stringToByteVec("ffffff01ff04").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);
     EXPECT_FALSE(entry_opt1);
 }
 
-TEST(UMEntryTest, UMEntryKeyParsingInvalidByteArray)
+TEST(UMEntryTest, EntryKeyParsingInvalidByteArray)
 {
     auto data1 = forge::core::stringToByteVec("ffffff01ff080500000000").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);
     EXPECT_FALSE(entry_opt1);
 }
 
-TEST(UMEntryTest, UMEntryKeyParsingInvalidIpv6)
+TEST(UMEntryTest, EntryKeyParsingInvalidIpv6)
 {
     auto data1 = forge::core::stringToByteVec("ffffff01ff0201010101010101010101010101010101").getValue();
     auto entry_opt1 = forge::core::parseKey(data1);

@@ -4,7 +4,7 @@
 #include <core/umentry/UMEntryOperation.hpp>
 
 using forge::core::UMEntry;
-using forge::core::UMEntryKey;
+using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::UMEntryUpdateOp;
 using forge::core::UMENTRY_UPDATE_FLAG;
@@ -20,14 +20,14 @@ UMEntryUpdateOp::UMEntryUpdateOp(UMEntry&& entry,
       value_(value) {}
 
 
-auto UMEntryUpdateOp::getUMEntryKey() const
-    -> const UMEntryKey&
+auto UMEntryUpdateOp::getEntryKey() const
+    -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryUpdateOp::getUMEntryKey()
-    -> UMEntryKey&
+auto UMEntryUpdateOp::getEntryKey()
+    -> EntryKey&
 {
     return entry_.first;
 }
@@ -78,7 +78,7 @@ auto UMEntryUpdateOp::getOwner()
     return owner_;
 }
 
-auto forge::core::createUMEntryUpdateOpMetadata(UMEntryKey&& key,
+auto forge::core::createUMEntryUpdateOpMetadata(EntryKey&& key,
                                               UMEntryValue new_value)
     -> std::vector<std::byte>
 {

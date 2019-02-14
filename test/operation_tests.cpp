@@ -26,7 +26,7 @@ TEST(OperationTest, UMEntryCreationOpParsingValid)
     auto creation = std::get<UMEntryCreationOp>(op);
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
-    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getValue(), 10);
     EXPECT_EQ(creation.getBlock(), 1000);
 
@@ -56,7 +56,7 @@ TEST(OperationTest, UMEntryRenewalOpParsingValid)
     auto creation = std::get<UMEntryRenewalOp>(op);
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
-    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 
     auto data = toMetadata(op);
@@ -88,7 +88,7 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
     EXPECT_EQ(creation.getNewOwner(), "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W");
-    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBlock(), 1000);
 
     auto data = toMetadata(op);
@@ -123,7 +123,7 @@ TEST(OperationTest, UMEntryUpdateOpParsingValid)
                         (std::byte)0xff};
 
     EXPECT_EQ(creation.getOwner(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
-    EXPECT_EQ(creation.getUMEntryKey(), stringToByteVec("deadbeef").getValue());
+    EXPECT_EQ(creation.getEntryKey(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getNewUMEntryValue(), UMEntryValue{expected});
     EXPECT_EQ(creation.getBlock(), 1000);
 

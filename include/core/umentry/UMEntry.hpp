@@ -4,12 +4,14 @@
 #include <cstddef>
 #include <json/value.h>
 #include <utilxx/Opt.hpp>
+#include <variant>
 #include <vector>
 
 namespace forge::core {
 
-using UMEntryKey = std::vector<std::byte>;
-
+//need to redefine here to avoid circular header
+//dependency
+using EntryKey = std::vector<std::byte>;
 
 // clang-format off
 using IPv4Value = std::array<std::byte, 4>;
@@ -23,6 +25,7 @@ struct NoneValue{
 };
 // clang-format on
 
+//flag which identifies a UMENTRY
 constexpr static inline auto UMENTRY_IDENTIFICATION_FLAG = static_cast<std::byte>(0b00000001);
 
 constexpr static inline auto IPv4_VALUE_FLAG = static_cast<std::byte>(0b00000001);
@@ -31,18 +34,18 @@ constexpr static inline auto NONE_VALUE_FLAG = static_cast<std::byte>(0b00000100
 constexpr static inline auto BYTE_ARRAY_VALUE_FLAG = static_cast<std::byte>(0b00001000);
 
 using UMEntryValue = std::variant<IPv4Value,
-                                IPv6Value,
-                                ByteArray,
-                                NoneValue>;
+                                  IPv6Value,
+                                  ByteArray,
+                                  NoneValue>;
 
-using UMEntry = std::pair<UMEntryKey,
-                        UMEntryValue>;
+using UMEntry = std::pair<EntryKey,
+                          UMEntryValue>;
 
 auto parseValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UMEntryValue>;
 
 auto parseKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UMEntryKey>;
+    -> utilxx::Opt<EntryKey>;
 
 auto parseUMEntry(const std::vector<std::byte>& data)
     -> utilxx::Opt<UMEntry>;

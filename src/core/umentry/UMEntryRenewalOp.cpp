@@ -18,14 +18,14 @@ UMEntryRenewalOp::UMEntryRenewalOp(UMEntry&& entry,
       value_(value) {}
 
 
-auto UMEntryRenewalOp::getUMEntryKey() const
-    -> const UMEntryKey&
+auto UMEntryRenewalOp::getEntryKey() const
+    -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryRenewalOp::getUMEntryKey()
-    -> UMEntryKey&
+auto UMEntryRenewalOp::getEntryKey()
+    -> EntryKey&
 {
     return entry_.first;
 }

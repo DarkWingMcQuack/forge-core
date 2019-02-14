@@ -25,31 +25,31 @@ public:
     auto executeOperations(std::vector<core::UMEntryOperation>&& ops)
         -> utilxx::Result<void, LookupError>;
 
-    auto lookup(const core::UMEntryKey& key) const
+    auto lookup(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
-    auto lookup(const core::UMEntryKey& key)
+    auto lookup(const core::EntryKey& key)
         -> utilxx::Opt<std::reference_wrapper<core::UMEntryValue>>;
 
-    auto lookupOwner(const core::UMEntryKey& key) const
+    auto lookupOwner(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;
 
-    auto lookupOwner(const core::UMEntryKey& key)
+    auto lookupOwner(const core::EntryKey& key)
         -> utilxx::Opt<std::reference_wrapper<std::string>>;
 
-    auto lookupActivationBlock(const core::UMEntryKey& key)
+    auto lookupActivationBlock(const core::EntryKey& key)
         -> utilxx::Opt<std::reference_wrapper<std::int64_t>>;
 
-    auto lookupActivationBlock(const core::UMEntryKey& key) const
+    auto lookupActivationBlock(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
 
-    auto lookupUMEntry(const core::UMEntryKey& key)
+    auto lookupUMEntry(const core::EntryKey& key)
         -> utilxx::Opt<
             std::tuple<std::reference_wrapper<core::UMEntryValue>,
                        std::reference_wrapper<std::string>,
                        std::reference_wrapper<std::int64_t>>>;
 
-    auto lookupUMEntry(const core::UMEntryKey& key) const
+    auto lookupUMEntry(const core::EntryKey& key) const
         -> utilxx::Opt<
             std::tuple<std::reference_wrapper<const core::UMEntryValue>,
                        std::reference_wrapper<const std::string>,
@@ -92,7 +92,7 @@ public:
         -> utilxx::Result<void, LookupError>;
 
 private:
-    using MapType = std::map<core::UMEntryKey, //key
+    using MapType = std::map<core::EntryKey, //key
                              std::tuple<core::UMEntryValue, //value
                                         std::string, //owner
                                         std::int64_t>>; //block

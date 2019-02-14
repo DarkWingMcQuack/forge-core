@@ -18,14 +18,14 @@ UMEntryDeletionOp::UMEntryDeletionOp(UMEntry&& entry,
       value_(value) {}
 
 
-auto UMEntryDeletionOp::getUMEntryKey() const
-    -> const UMEntryKey&
+auto UMEntryDeletionOp::getEntryKey() const
+    -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryDeletionOp::getUMEntryKey()
-    -> UMEntryKey&
+auto UMEntryDeletionOp::getEntryKey()
+    -> EntryKey&
 {
     return entry_.first;
 }

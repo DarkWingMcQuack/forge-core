@@ -15,7 +15,7 @@
 using forge::rpc::ReadOnlyWalletServer;
 using forge::core::getBlockTimeInSeconds;
 using forge::core::UMEntry;
-using forge::core::UMEntryKey;
+using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
@@ -102,7 +102,7 @@ auto ReadOnlyWalletServer::lookupvalue(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    UMEntryKey key_vec;
+    EntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -138,7 +138,7 @@ auto ReadOnlyWalletServer::lookupowner(bool isstring, const std::string& key)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    UMEntryKey key_vec;
+    EntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),
@@ -174,7 +174,7 @@ auto ReadOnlyWalletServer::lookupactivationblock(bool isstring, const std::strin
         throw JsonRpcException{"Server is indexing"};
     }
 
-    UMEntryKey key_vec;
+    EntryKey key_vec;
 
     if(isstring) {
         std::transform(std::cbegin(key),

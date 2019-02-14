@@ -5,6 +5,7 @@
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
+#include <core/Entry.hpp>
 #include <vector>
 
 
@@ -71,12 +72,12 @@ auto forge::core::parseValue(const std::vector<std::byte>& data)
 }
 
 auto forge::core::parseKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UMEntryKey>
+    -> utilxx::Opt<EntryKey>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
 
-        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 1,
                         std::end(data)};
     }
 
@@ -89,14 +90,14 @@ auto forge::core::parseKey(const std::vector<std::byte>& data)
             return std::nullopt;
         }
 
-        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 2 + value_length,
                         std::end(data)};
     }
 
     if(data[ENTRY_VALUE_FLAG_INDEX] == IPv4_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 5) {
 
-        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 5,
                         std::end(data)};
     }
 
@@ -105,7 +106,7 @@ auto forge::core::parseKey(const std::vector<std::byte>& data)
     if(data[ENTRY_VALUE_FLAG_INDEX] == IPv6_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 17) {
 
-        return UMEntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
+        return EntryKey{std::begin(data) + ENTRY_VALUE_FLAG_INDEX + 17,
                         std::end(data)};
     }
 

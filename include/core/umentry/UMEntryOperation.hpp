@@ -30,11 +30,11 @@ using UMEntryOperation = std::variant<UMEntryCreationOp,
                                       UMEntryUpdateOp,
                                       UMEntryDeletionOp>;
 
-//extracts the UMEntryKey from a given operaton
-auto getUMEntryKey(const UMEntryOperation&)
-    -> const UMEntryKey&;
-auto getUMEntryKey(UMEntryOperation &&)
-    -> UMEntryKey;
+//extracts the EntryKey from a given operaton
+auto getEntryKey(const UMEntryOperation&)
+    -> const EntryKey&;
+auto getEntryKey(UMEntryOperation &&)
+    -> EntryKey;
 
 //extracts the UMEntry from a given operaton
 auto getUMEntry(const UMEntryOperation&)
