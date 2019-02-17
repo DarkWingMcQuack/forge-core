@@ -1,14 +1,14 @@
-#include <core/umentry/UMEntry.hpp>
-#include <core/umentry/UMEntryCreationOp.hpp>
+#include <entrys/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntryDeletionOp.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/umentry/UMEntryOperation.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 
 using forge::core::UMEntry;
-using forge::core::UMEntryCreationOp;
-using forge::core::UMENTRY_CREATION_FLAG;
+using forge::core::UMEntryDeletionOp;
+using forge::core::UMENTRY_DELETION_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
-UMEntryCreationOp::UMEntryCreationOp(UMEntry&& entry,
+UMEntryDeletionOp::UMEntryDeletionOp(UMEntry&& entry,
                                  std::string&& owner,
                                  std::int64_t block,
                                  std::int64_t value)
@@ -18,70 +18,69 @@ UMEntryCreationOp::UMEntryCreationOp(UMEntry&& entry,
       value_(value) {}
 
 
-auto UMEntryCreationOp::getEntryKey() const
+auto UMEntryDeletionOp::getEntryKey() const
     -> const EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryCreationOp::getEntryKey()
+auto UMEntryDeletionOp::getEntryKey()
     -> EntryKey&
 {
     return entry_.first;
 }
 
-auto UMEntryCreationOp::getUMEntryValue() const
+auto UMEntryDeletionOp::getUMEntryValue() const
     -> const UMEntryValue&
 {
     return entry_.second;
 }
 
-auto UMEntryCreationOp::getUMEntryValue()
+auto UMEntryDeletionOp::getUMEntryValue()
     -> UMEntryValue&
 {
     return entry_.second;
 }
 
-auto UMEntryCreationOp::getUMEntry() const
+auto UMEntryDeletionOp::getUMEntry() const
     -> const UMEntry&
 {
     return entry_;
 }
-auto UMEntryCreationOp::getUMEntry()
+auto UMEntryDeletionOp::getUMEntry()
     -> UMEntry&
 {
     return entry_;
 }
 
-auto UMEntryCreationOp::getValue() const
-    -> std::int64_t
-{
-    return value_;
-}
-
-auto UMEntryCreationOp::getBlock() const
+auto UMEntryDeletionOp::getBlock() const
     -> std::int64_t
 {
     return block_;
 }
 
-auto UMEntryCreationOp::getOwner() const
+auto UMEntryDeletionOp::getValue() const
+    -> std::int64_t
+{
+    return value_;
+}
+
+auto UMEntryDeletionOp::getOwner() const
     -> const std::string&
 {
     return owner_;
 }
-auto UMEntryCreationOp::getOwner()
+auto UMEntryDeletionOp::getOwner()
     -> std::string&
 {
     return owner_;
 }
 
-
-auto forge::core::createUMEntryCreationOpMetadata(UMEntry&& entry)
+auto forge::core::createUMEntryDeletionOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
     auto data = forge::core::entryToRawData(entry);
-    auto flag = forge::core::UMENTRY_CREATION_FLAG;
+    auto flag = forge::core::UMENTRY_DELETION_FLAG;
 
     data.insert(std::begin(data), flag);
 

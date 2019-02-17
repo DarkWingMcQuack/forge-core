@@ -4,7 +4,7 @@
 #include <cli/LookupOnlySubcommands.hpp>
 #include <cli/ReadOnlySubcommands.hpp>
 #include <cli/ReadWriteSubcommands.hpp>
-#include <core/umentry/UMEntryOperation.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <env/LoggingSetup.hpp>
 #include <env/ProgramOptions.hpp>
 #include <fmt/core.h>

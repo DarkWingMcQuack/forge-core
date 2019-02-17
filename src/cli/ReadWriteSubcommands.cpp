@@ -1,7 +1,7 @@
 #include <CLI/CLI.hpp>
 #include <cli/CLIGlobalVariables.hpp>
 #include <cli/ReadWriteSubcommands.hpp>
-#include <core/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <core/Transaction.hpp>
 #include <fmt/core.h>
 #include <rpc/readwritewalletstubclient.h>

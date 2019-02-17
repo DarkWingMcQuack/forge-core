@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <daemon/WriteOnlyDaemonBase.hpp>
 #include <lookup/LookupManager.hpp>
 #include <memory>

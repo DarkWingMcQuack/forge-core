@@ -1,6 +1,6 @@
 #include <core/Coin.hpp>
-#include <core/umentry/UMEntryCreationOp.hpp>
-#include <core/umentry/UMEntryRenewalOp.hpp>
+#include <entrys/umentry/UMEntryCreationOp.hpp>
+#include <entrys/umentry/UMEntryRenewalOp.hpp>
 #include <fmt/core.h>
 #include <fmt/format.h>
 #include <lookup/LookupManager.hpp>

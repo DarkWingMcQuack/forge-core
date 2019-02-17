@@ -1,16 +1,16 @@
 #pragma once
 
-#include <core/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 
 namespace forge::core {
 
-class UMEntryRenewalOp
+class UMEntryDeletionOp
 {
 public:
-    UMEntryRenewalOp(UMEntry&& entry,
-                   std::string&& owner,
-                   std::int64_t block,
-                   std::int64_t value);
+    UMEntryDeletionOp(UMEntry&& entry,
+                    std::string&& owner,
+                    std::int64_t block,
+                    std::int64_t value);
 
     auto getEntryKey() const
         -> const EntryKey&;
@@ -45,7 +45,8 @@ private:
     std::int64_t value_;
 };
 
-auto createUMEntryRenewalOpMetadata(UMEntry&& entry)
+
+auto createUMEntryDeletionOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>;
 
 } // namespace forge::core

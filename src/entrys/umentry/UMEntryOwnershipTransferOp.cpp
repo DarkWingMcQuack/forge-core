@@ -1,7 +1,7 @@
-#include <core/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/umentry/UMEntryOperation.hpp>
-#include <core/umentry/UMEntryOwnershipTransferOp.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
+#include <entrys/umentry/UMEntryOwnershipTransferOp.hpp>
 
 using forge::core::UMEntry;
 using forge::core::UMEntryOwnershipTransferOp;

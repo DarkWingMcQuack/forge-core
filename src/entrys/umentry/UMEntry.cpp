@@ -1,6 +1,6 @@
-#include <core/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <core/FlagIndexes.hpp>
-#include <core/umentry/UMEntryOperation.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <cstddef>
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>

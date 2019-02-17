@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 
 namespace forge::core {
 

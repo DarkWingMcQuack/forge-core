@@ -2,12 +2,12 @@
 
 #include <array>
 #include <core/Transaction.hpp>
-#include <core/umentry/UMEntry.hpp>
-#include <core/umentry/UMEntryCreationOp.hpp>
-#include <core/umentry/UMEntryDeletionOp.hpp>
-#include <core/umentry/UMEntryOwnershipTransferOp.hpp>
-#include <core/umentry/UMEntryRenewalOp.hpp>
-#include <core/umentry/UMEntryUpdateOp.hpp>
+#include <entrys/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntryCreationOp.hpp>
+#include <entrys/umentry/UMEntryDeletionOp.hpp>
+#include <entrys/umentry/UMEntryOwnershipTransferOp.hpp>
+#include <entrys/umentry/UMEntryRenewalOp.hpp>
+#include <entrys/umentry/UMEntryUpdateOp.hpp>
 #include <cstddef>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <memory>

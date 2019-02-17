@@ -45,13 +45,13 @@ find_package(Threads)
 add_library(forge-src "")
 target_sources(forge-src
   PUBLIC
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryOperation.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntry.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryCreationOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryRenewalOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryDeletionOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryUpdateOp.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/core/umentry/UMEntryOwnershipTransferOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryOperation.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntry.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryCreationOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryRenewalOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryDeletionOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryUpdateOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryOwnershipTransferOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
@@ -76,13 +76,13 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/CLIGlobalVariables.hpp
 
   PRIVATE
-  src/core/umentry/UMEntryOperation.cpp
-  src/core/umentry/UMEntry.cpp
-  src/core/umentry/UMEntryCreationOp.cpp
-  src/core/umentry/UMEntryRenewalOp.cpp
-  src/core/umentry/UMEntryDeletionOp.cpp
-  src/core/umentry/UMEntryUpdateOp.cpp
-  src/core/umentry/UMEntryOwnershipTransferOp.cpp
+  src/entrys/umentry/UMEntryOperation.cpp
+  src/entrys/umentry/UMEntry.cpp
+  src/entrys/umentry/UMEntryCreationOp.cpp
+  src/entrys/umentry/UMEntryRenewalOp.cpp
+  src/entrys/umentry/UMEntryDeletionOp.cpp
+  src/entrys/umentry/UMEntryUpdateOp.cpp
+  src/entrys/umentry/UMEntryOwnershipTransferOp.cpp
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
