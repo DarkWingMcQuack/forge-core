@@ -1,15 +1,14 @@
 #include <core/FlagIndexes.hpp>
 #include <core/Transaction.hpp>
-#include <entrys/umentry/UMEntry.hpp>
-#include <entrys/umentry/UMEntryOperation.hpp>
 #include <cstddef>
 #include <daemon/ReadOnlyDaemonBase.hpp>
+#include <entrys/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
-#include <core/Entry.hpp>
 #include <vector>
 
 using forge::core::UMEntry;

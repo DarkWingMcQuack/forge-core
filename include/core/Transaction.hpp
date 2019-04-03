@@ -2,7 +2,6 @@
 
 #include <array>
 #include <cstddef>
-// #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <json/value.h>
 #include <memory>
 #include <utilxx/Opt.hpp>
@@ -17,12 +16,12 @@ public:
          std::int64_t vout_index);
 
     TxIn(TxIn&&) = default;
-    TxIn(const TxIn&) = delete;
+    TxIn(const TxIn&) = default;
 
     auto operator=(TxIn &&)
         -> TxIn& = default;
     auto operator=(const TxIn&)
-        -> TxIn& = delete;
+        -> TxIn& = default;
 
     auto getTxid() const
         -> const std::string&;
@@ -50,7 +49,7 @@ public:
     auto operator=(TxOut &&)
         -> TxOut& = default;
     auto operator=(const TxOut&)
-        -> TxOut& = delete;
+        -> TxOut& = default;
 
     auto getValue() const
         -> std::int64_t;
@@ -85,12 +84,12 @@ public:
                 std::string&& txid);
 
     Transaction(Transaction&&) = default;
-    Transaction(const Transaction&) = delete;
+    Transaction(const Transaction&) = default;
 
     auto operator=(Transaction &&)
         -> Transaction& = default;
     auto operator=(const Transaction&)
-        -> Transaction& = delete;
+        -> Transaction& = default;
 
     auto getInputs() const
         -> const std::vector<TxIn>&;
@@ -145,7 +144,7 @@ class Unspent
 public:
     Unspent() = delete;
     Unspent(Unspent&&) = default;
-    Unspent(const Unspent&) = delete;
+    Unspent(const Unspent&) = default;
     Unspent(std::int64_t value,
             std::int64_t vout_idx,
             std::int64_t confirmations,
@@ -155,7 +154,7 @@ public:
     auto operator=(Unspent &&)
         -> Unspent& = default;
     auto operator=(const Unspent&)
-        -> Unspent& = delete;
+        -> Unspent& = default;
 
     auto getValue() const
         -> std::int64_t;

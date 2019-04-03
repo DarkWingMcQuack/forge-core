@@ -1,11 +1,10 @@
-#include <entrys/umentry/UMEntry.hpp>
 #include <core/FlagIndexes.hpp>
-#include <entrys/umentry/UMEntryOperation.hpp>
 #include <cstddef>
+#include <entrys/umentry/UMEntry.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <g3log/g3log.hpp>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
-#include <core/Entry.hpp>
 #include <vector>
 
 

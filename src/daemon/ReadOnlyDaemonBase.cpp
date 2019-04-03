@@ -1,6 +1,7 @@
 #include <core/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
+#include <g3log/g3log.hpp>
 #include <memory>
 
 using forge::daemon::ReadOnlyDaemonBase;
@@ -26,5 +27,8 @@ auto forge::daemon::make_readonly_daemon(const std::string& host,
                                                     password,
                                                     port,
                                                     coin);
+    default:
+        LOG(FATAL) << "entered default case which should never happen";
+        return nullptr;
     }
 }

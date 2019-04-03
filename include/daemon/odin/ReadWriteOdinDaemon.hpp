@@ -21,7 +21,7 @@ public:
     using ReadOnlyOdinDaemon::ReadOnlyOdinDaemon;
 
     auto operator=(ReadWriteOdinDaemon &&)
-        -> ReadWriteOdinDaemon& = default;
+        -> ReadWriteOdinDaemon& = delete;
     auto operator=(const ReadWriteOdinDaemon&)
         -> ReadWriteOdinDaemon& = delete;
 
@@ -31,7 +31,8 @@ public:
                        std::int64_t burn_value,
                        std::vector<
                            std::pair<std::string,
-                                     std::int64_t>> outputs) const
+                                     std::int64_t>>
+                           outputs) const
         -> utilxx::Result<std::vector<std::byte>,
                           DaemonError> override;
 
@@ -80,7 +81,8 @@ private:
                                    std::int64_t burn_value,
                                    std::vector<
                                        std::pair<std::string,
-                                                 std::int64_t>> outputs) const
+                                                 std::int64_t>>
+                                       outputs) const
         -> Json::Value;
 };
 

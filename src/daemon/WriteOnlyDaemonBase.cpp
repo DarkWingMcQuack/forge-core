@@ -1,8 +1,8 @@
-#include <entrys/umentry/UMEntryOperation.hpp>
 #include <daemon/DaemonError.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <daemon/WriteOnlyDaemonBase.hpp>
 #include <daemon/odin/ReadWriteOdinDaemon.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <g3log/g3log.hpp>
 #include <utilxx/Result.hpp>
 
@@ -49,5 +49,9 @@ auto forge::daemon::make_writing_daemon(const std::string& host,
                                                      password,
                                                      port,
                                                      coin);
+
+    default:
+        LOG(FATAL) << "entered default case which should never happen";
+        return nullptr;
     }
 }
