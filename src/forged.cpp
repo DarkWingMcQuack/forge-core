@@ -1,10 +1,13 @@
+#include <cerrno>
 #include <chrono>
-#include <entrys/umentry/UMEntryOperation.hpp>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
 #include <daemon/WriteOnlyDaemonBase.hpp>
 #include <daemon/odin/ReadOnlyOdinDaemon.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <env/LoggingSetup.hpp>
 #include <env/ProgramOptions.hpp>
-#include <errno.h>
 #include <fcntl.h>
 #include <fmt/core.h>
 #include <fmt/ostream.h>
@@ -17,10 +20,6 @@
 #include <rpc/LookupOnlyServer.hpp>
 #include <rpc/ReadOnlyWalletServer.hpp>
 #include <rpc/ReadWriteWalletServer.hpp>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <syslog.h>
