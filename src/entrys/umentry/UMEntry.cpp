@@ -335,6 +335,7 @@ auto forge::core::entryToJson(UMEntry value)
     -> Json::Value
 {
     Json::Value ret_json;
+    ret_json["entry_type"] = "unique modifiable entry";
     ret_json["key"] = forge::core::toHexString(value.first);
 
     auto trash_json = forge::core::entryValueToJson(value.second);

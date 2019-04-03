@@ -9,19 +9,19 @@ namespace forge::cli {
 auto addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addRenewUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addDeleteUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
 auto addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addPayToUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
 auto addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)

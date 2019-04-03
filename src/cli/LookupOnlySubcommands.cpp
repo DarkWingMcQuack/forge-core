@@ -15,7 +15,7 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
     addLookupValue(app, client);
     addLookupOwner(app, client);
     addLookupActivationBlock(app, client);
-    addLookupAllUMEntrysOf(app, client);
+    addLookupAllEntrysOf(app, client);
 }
 
 auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
@@ -134,7 +134,7 @@ auto forge::cli::addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWa
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto forge::cli::addLookupAllUMEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto lookupallentrysof_opt =

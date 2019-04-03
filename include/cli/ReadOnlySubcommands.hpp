@@ -12,11 +12,11 @@ auto addDeleteWatchOnlyAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& cl
     -> void;
 auto addAddNewOwnedAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
-auto addGetOwnedUMEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto addGetOwnedEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
-auto addGetWatchedOnlyUMEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto addGetWatchedOnlyEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
-auto addGetAllWatchedUMEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto addGetAllWatchedEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
 auto addGetWatchedAddresses(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;

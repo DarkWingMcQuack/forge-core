@@ -10,9 +10,9 @@ auto forge::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubC
     addAddWatchOnlyAddress(app, client);
     addDeleteWatchOnlyAddress(app, client);
     addAddNewOwnedAddress(app, client);
-    addGetOwnedUMEntrys(app, client);
-    addGetWatchedOnlyUMEntrys(app, client);
-    addGetAllWatchedUMEntrys(app, client);
+    addGetOwnedEntrys(app, client);
+    addGetWatchedOnlyEntrys(app, client);
+    addGetAllWatchedEntrys(app, client);
     addGetWatchedAddresses(app, client);
     addGetOwnedAddresses(app, client);
 }
@@ -53,7 +53,7 @@ auto forge::cli::addAddNewOwnedAddress(CLI::App& app, forge::rpc::ReadWriteWalle
         ->required();
 }
 
-auto forge::cli::addGetOwnedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getownedentrys",
@@ -63,7 +63,7 @@ auto forge::cli::addGetOwnedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletS
         });
 }
 
-auto forge::cli::addGetWatchedOnlyUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedOnlyEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getwatchedonlyentrys",
@@ -73,7 +73,7 @@ auto forge::cli::addGetWatchedOnlyUMEntrys(CLI::App& app, forge::rpc::ReadWriteW
         });
 }
 
-auto forge::cli::addGetAllWatchedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetAllWatchedEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     app.add_subcommand("getallwatchedentrys",

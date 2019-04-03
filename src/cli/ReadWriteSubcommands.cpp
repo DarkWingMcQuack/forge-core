@@ -150,7 +150,7 @@ auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
                      "If not given, then a new address will be generated");
 }
 
-auto forge::cli::addRenewUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto renewentry_opt =
@@ -178,7 +178,7 @@ auto forge::cli::addRenewUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubC
         ->required();
 }
 
-auto forge::cli::addDeleteUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto deleteentry_opt =
@@ -206,7 +206,7 @@ auto forge::cli::addDeleteUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
         ->required();
 }
 
-auto forge::cli::addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto updateentry_opt =
@@ -277,7 +277,7 @@ auto forge::cli::addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWallet
         ->required();
 }
 
-auto forge::cli::addPayToUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto createnewentry_opt =
@@ -309,9 +309,9 @@ auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWal
     -> void
 {
     addCreateUMEntry(app, client);
-    addRenewUMEntry(app, client);
-    addUpdateUMEntry(app, client);
-    addDeleteUMEntry(app, client);
+    addRenewEntry(app, client);
+    addUpdateEntry(app, client);
+    addDeleteEntry(app, client);
     addTransferOwnership(app, client);
-    addPayToUMEntry(app, client);
+    addPayToEntry(app, client);
 }
