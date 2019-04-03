@@ -1,8 +1,8 @@
 #include <CLI/CLI.hpp>
 #include <cli/CLIGlobalVariables.hpp>
 #include <cli/ReadWriteSubcommands.hpp>
-#include <entrys/umentry/UMEntry.hpp>
 #include <core/Transaction.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <fmt/core.h>
 #include <rpc/readwritewalletstubclient.h>
 
@@ -111,8 +111,11 @@ auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
     -> void
 {
     auto createnewentry_opt =
-        app.add_subcommand("createnewentry",
-                           "creates a new entry")
+        app
+            .add_subcommand("umentry",
+                            "subcommand for handling unique modifiable entrys")
+            ->add_subcommand("create",
+                             "creates a new entry")
             ->callback([&] {
                 ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
                 RESPONSE = client.createnewentry(OWNER, BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
