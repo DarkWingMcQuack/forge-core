@@ -125,7 +125,7 @@ auto LookupOnlyServer::lookupumvalue(bool isstring, const std::string& key)
         throw JsonRpcException{std::move(error_msg)};
     }
 
-    return entryValueToJson(res.getValue().get());
+    return umentryValueToJson(res.getValue().get());
 }
 
 auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
@@ -247,7 +247,7 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return entryToJson(std::move(entry));
+                                          return umentryToJson(std::move(entry));
                                       });
 
     auto ret_json =

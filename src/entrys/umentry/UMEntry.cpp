@@ -285,7 +285,7 @@ auto forge::core::jsonToUMEntryValue(Json::Value&& value)
 }
 
 //TODO: test
-auto forge::core::entryValueToJson(UMEntryValue value)
+auto forge::core::umentryValueToJson(UMEntryValue value)
     -> Json::Value
 {
     static const auto visitor =
@@ -331,14 +331,14 @@ auto forge::core::entryValueToJson(UMEntryValue value)
                       std::move(value));
 }
 
-auto forge::core::entryToJson(UMEntry value)
+auto forge::core::umentryToJson(UMEntry value)
     -> Json::Value
 {
     Json::Value ret_json;
     ret_json["entry_type"] = "unique modifiable entry";
     ret_json["key"] = forge::core::toHexString(value.first);
 
-    auto trash_json = forge::core::entryValueToJson(value.second);
+    auto trash_json = forge::core::umentryValueToJson(value.second);
 
     ret_json["type"] = std::move(trash_json["type"]);
     ret_json["value"] = std::move(trash_json["value"]);

@@ -62,10 +62,10 @@ auto entryToRawData(const UMEntry& entry)
 auto jsonToUMEntryValue(Json::Value&& value)
     -> utilxx::Opt<UMEntryValue>;
 
-auto entryValueToJson(UMEntryValue value)
+auto umentryValueToJson(UMEntryValue value)
     -> Json::Value;
 
-auto entryToJson(UMEntry value)
+auto umentryToJson(UMEntry value)
     -> Json::Value;
 
 } // namespace forge::core
