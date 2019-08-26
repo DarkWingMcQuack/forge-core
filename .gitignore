@@ -48,3 +48,4 @@ build/
 #ignore external projects
 external/
 .ccls-cache/
+.clangd/
