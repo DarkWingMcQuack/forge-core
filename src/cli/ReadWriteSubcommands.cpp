@@ -112,8 +112,7 @@ auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
 {
     auto createnewentry_opt =
         app
-            .add_subcommand("umentry",
-                            "subcommand for handling unique modifiable entrys")
+            .get_subcommand("umentry")
             ->add_subcommand("create",
                              "creates a new entry")
             ->callback([&] {
@@ -213,8 +212,10 @@ auto forge::cli::addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
     -> void
 {
     auto updateentry_opt =
-        app.add_subcommand("updateentry",
-                           "updates an entry to map to a new value")
+        app
+            .get_subcommand("umentry")
+            ->add_subcommand("updateentry",
+                             "updates an entry to map to a new value")
             ->callback([&] {
                 ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
                 RESPONSE = client.updateentry(BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);

@@ -359,7 +359,7 @@ auto ReadWriteWallet::createUMEntryOwnerPairFromKey(core::EntryKey key)
                                 std::string>,
                       WalletError>
 {
-    auto value_opt = lookup_->lookupValue(key);
+    auto value_opt = lookup_->lookupUMValue(key);
     auto owner_opt = lookup_->lookupOwner(key);
     auto lookup_opt = utilxx::combine(std::move(value_opt),
                                       std::move(owner_opt));

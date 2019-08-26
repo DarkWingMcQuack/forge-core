@@ -92,7 +92,7 @@ auto LookupOnlyServer::rebuildlookup()
     }
 }
 
-auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
+auto LookupOnlyServer::lookupumvalue(bool isstring, const std::string& key)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -117,7 +117,7 @@ auto LookupOnlyServer::lookupvalue(bool isstring, const std::string& key)
         key_vec = std::move(vec_opt.getValue());
     }
 
-    auto res = lookup_.lookupValue(key_vec);
+    auto res = lookup_.lookupUMValue(key_vec);
 
     if(!res) {
         auto error_msg = fmt::format("no entrys with key {} found",

@@ -22,18 +22,13 @@ class LookupManager final
 public:
     LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon);
 
-    LookupManager(LookupManager&&) = default;
-
-    auto operator=(LookupManager &&)
-        -> LookupManager& = default;
-
     auto updateLookup()
         -> utilxx::Result<bool, ManagerError>;
 
     auto rebuildLookup()
         -> utilxx::Result<void, ManagerError>;
 
-    auto lookupValue(const core::EntryKey& key) const
+    auto lookupUMValue(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
     auto lookupOwner(const core::EntryKey& key) const

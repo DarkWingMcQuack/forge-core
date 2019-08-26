@@ -10,7 +10,7 @@
         "name" : "rebuildlookup"
     },
     {
-        "name" : "lookupvalue",
+        "name" : "lookupumvalue",
         "params" : {
             "key" : "somestring", //string
             "isstring" : true //if string is interpreted as string or as bytevec

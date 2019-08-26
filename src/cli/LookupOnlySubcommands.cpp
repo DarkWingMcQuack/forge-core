@@ -7,12 +7,18 @@
 auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
+    app.add_subcommand("lookup",
+                       "subcommand for handling all commands regarding the forged lookup");
+
+    app.add_subcommand("umentry",
+                       "subcommand for handling unique modifiable entrys");
+
     addShutdown(app, client);
     addUpdateLookup(app, client);
     addRebuildLookup(app, client);
     addCheckValidity(app, client);
     addGetLastValidBlockHeight(app, client);
-    addLookupValue(app, client);
+    addLookupUMValue(app, client);
     addLookupOwner(app, client);
     addLookupActivationBlock(app, client);
     addLookupAllEntrysOf(app, client);
@@ -21,8 +27,9 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
 auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("shutdown",
-                       "stops the forged server")
+    app
+        .add_subcommand("shutdown",
+                        "stops the forged server")
         ->callback([&] {
             client.shutdown();
         });
@@ -31,8 +38,9 @@ auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClien
 auto forge::cli::addUpdateLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("updatelookup",
-                       "updates the lookup to the newest block")
+    app.get_subcommand("lookup")
+        ->add_subcommand("update",
+                         "updates the lookup to the newest block")
         ->callback([&] {
             RESPONSE = client.updatelookup();
         });
@@ -41,8 +49,9 @@ auto forge::cli::addUpdateLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubC
 auto forge::cli::addRebuildLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("rebuildlookup",
-                       "rebuilds the lookup from the beginning")
+    app.get_subcommand("lookup")
+        ->add_subcommand("rebuild",
+                         "rebuilds the lookup from the beginning")
         ->callback([&] {
             client.rebuildlookup();
         });
@@ -51,8 +60,9 @@ auto forge::cli::addRebuildLookup(CLI::App& app, forge::rpc::ReadWriteWalletStub
 auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("checkvalidity",
-                       "checks if the lookup is valid in terms of blockhashes")
+    app.get_subcommand("lookup")
+        ->add_subcommand("checkvalidity",
+                         "checks if the lookup is valid in terms of blockhashes")
         ->callback([&] {
             RESPONSE = client.checkvalidity();
         });
@@ -61,30 +71,32 @@ auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStub
 auto forge::cli::addGetLastValidBlockHeight(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("getlastvalidblockheight",
-                       "return the blockheight until which the forge node is in sync with the coin node")
+    app.get_subcommand("lookup")
+        ->add_subcommand("getlastvalidblockheight",
+                         "return the blockheight until which the forge node is in sync with the coin node")
         ->callback([&] {
             RESPONSE = client.getlastvalidblockheight();
         });
 }
 
-auto forge::cli::addLookupValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupUMValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    auto lookupvalue_opt =
-        app.add_subcommand("lookupvalue",
-                           "looks up the value of a given byte vector/string")
+    auto lookupumvalue_opt =
+        app.get_subcommand("umentry")
+            ->add_subcommand("lookupvalue",
+                             "looks up the value of a given byte vector/string")
             ->callback([&] {
-                RESPONSE = client.lookupvalue(IS_STRING, KEY);
+                RESPONSE = client.lookupumvalue(IS_STRING, KEY);
             });
 
-    lookupvalue_opt
+    lookupumvalue_opt
         ->add_option("--key",
                      KEY,
                      "the key of which the value will be looked up")
         ->required();
 
-    lookupvalue_opt
+    lookupumvalue_opt
         ->add_flag("--isstring",
                    IS_STRING,
                    "if set, the given key will be interpreted as string and not as byte vector");

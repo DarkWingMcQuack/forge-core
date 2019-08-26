@@ -95,7 +95,7 @@ auto ReadWriteWalletServer::shutdown()
     should_shutdown_.store(true);
 }
 
-auto ReadWriteWalletServer::lookupvalue(bool isstring, const std::string& key)
+auto ReadWriteWalletServer::lookupumvalue(bool isstring, const std::string& key)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -118,7 +118,7 @@ auto ReadWriteWalletServer::lookupvalue(bool isstring, const std::string& key)
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = lookup_.lookupValue(key_vec);
+    auto res = lookup_.lookupUMValue(key_vec);
 
     if(!res) {
         auto error_msg = fmt::format("no entrys with key {} found",

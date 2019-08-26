@@ -36,12 +36,12 @@ namespace forge {
                     p = Json::nullValue;
                     this->CallNotification("rebuildlookup",p);
                 }
-                Json::Value lookupvalue(bool isstring, const std::string& key) 
+                Json::Value lookupumvalue(bool isstring, const std::string& key) 
                 {
                     Json::Value p;
                     p["isstring"] = isstring;
                     p["key"] = key;
-                    Json::Value result = this->CallMethod("lookupvalue",p);
+                    Json::Value result = this->CallMethod("lookupumvalue",p);
                     if (result.isObject())
                         return result;
                     else

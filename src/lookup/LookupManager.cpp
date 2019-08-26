@@ -98,7 +98,7 @@ auto LookupManager::rebuildLookup()
     return {};
 }
 
-auto LookupManager::lookupValue(const core::EntryKey& key) const
+auto LookupManager::lookupUMValue(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>
 {
     std::shared_lock lock{rw_mtx_};
