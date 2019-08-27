@@ -67,7 +67,7 @@ auto parseTransactionToUMEntry(core::Transaction&& tx,
 
 //parses given metadata and constructs a UNEntryOperation from
 //the given information if possible
-auto parseMetadata(const std::vector<std::byte>& metadata,
+auto parseMetadataToUMEntryOp(const std::vector<std::byte>& metadata,
                    std::int64_t block,
                    std::string&& owner,
                    std::int64_t value,

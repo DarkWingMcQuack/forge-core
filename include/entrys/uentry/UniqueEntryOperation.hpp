@@ -64,11 +64,11 @@ auto parseTransactionToUniqueEntry(core::Transaction&& tx,
 
 //parses given metadata and constructs a UniqueEntryOperation from
 //the given information if possible
-auto parseMetadata(const std::vector<std::byte>& metadata,
-                   std::int64_t block,
-                   std::string&& owner,
-                   std::int64_t value,
-                   utilxx::Opt<std::string>&& new_owner = std::nullopt)
+auto parseMetadataToUniqueEntryOp(const std::vector<std::byte>& metadata,
+                                  std::int64_t block,
+                                  std::string&& owner,
+                                  std::int64_t value,
+                                  utilxx::Opt<std::string>&& new_owner = std::nullopt)
     -> utilxx::Opt<UniqueEntryOperation>;
 
 //given a UniqueEntryOperation, this function builds a matching

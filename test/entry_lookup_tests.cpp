@@ -18,7 +18,7 @@ auto createOp(std::string&& data,
         extractMetadata(std::move(data))
             .getValue();
 
-    return parseMetadata(std::move(metadata),
+    return parseMetadataToUMEntryOp(std::move(metadata),
                          block,
                          std::move(owner),
                          value)

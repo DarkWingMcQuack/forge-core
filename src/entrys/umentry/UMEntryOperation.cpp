@@ -110,7 +110,7 @@ auto forge::core::extractOperationFlag(const UMEntryOperation& operation)
 }
 
 
-auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
+auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadata,
                                 std::int64_t block,
                                 std::string&& owner,
                                 std::int64_t value,
@@ -248,7 +248,7 @@ auto forge::core::parseTransactionToUMEntry(Transaction&& tx,
             //parse the metadata nd put it into
             //the ResultType
             return ResultType{
-                parseMetadata(std::move(metadata),
+                parseMetadataToUMEntryOp(std::move(metadata),
                               block,
                               std::move(owner),
                               value,

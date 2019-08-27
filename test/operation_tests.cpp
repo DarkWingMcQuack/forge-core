@@ -12,7 +12,7 @@ TEST(OperationTest, UMEntryCreationOpParsingValid)
     auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     std::int64_t value = 10;
 
-    auto op_opt = parseMetadata(std::move(metadata),
+    auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
                                 block,
                                 std::move(owner),
                                 value);
@@ -42,7 +42,7 @@ TEST(OperationTest, UMEntryRenewalOpParsingValid)
     auto owner = "oLupzckPUYtGydsBisL86zcwsBweJm1dSM"s;
     std::int64_t value = 10;
 
-    auto op_opt = parseMetadata(std::move(metadata),
+    auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
                                 block,
                                 std::move(owner),
                                 value);
@@ -72,7 +72,7 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
     auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
     std::int64_t value = 10;
 
-    auto op_opt = parseMetadata(std::move(metadata),
+    auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
                                 block,
                                 std::move(old_owner),
                                 value,
@@ -104,7 +104,7 @@ TEST(OperationTest, UMEntryUpdateOpParsingValid)
     auto new_owner = "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W"s;
     std::int64_t value = 10;
 
-    auto op_opt = parseMetadata(std::move(metadata),
+    auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
                                 block,
                                 std::move(old_owner),
                                 value);

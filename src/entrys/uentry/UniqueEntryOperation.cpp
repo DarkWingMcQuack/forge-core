@@ -109,11 +109,11 @@ auto forge::core::extractOperationFlag(const UniqueEntryOperation& operation)
 }
 
 
-auto forge::core::parseMetadata(const std::vector<std::byte>& metadata,
-                                std::int64_t block,
-                                std::string&& owner,
-                                std::int64_t value,
-                                utilxx::Opt<std::string>&& new_owner_opt)
+auto forge::core::parseMetadataToUniqueEntryOp(const std::vector<std::byte>& metadata,
+                                               std::int64_t block,
+                                               std::string&& owner,
+                                               std::int64_t value,
+                                               utilxx::Opt<std::string>&& new_owner_opt)
     -> Opt<UniqueEntryOperation>
 {
     if(metadata.size() < 10) {
@@ -242,11 +242,11 @@ auto forge::core::parseTransactionToUniqueEntry(Transaction&& tx,
             //parse the metadata nd put it into
             //the ResultType
             return ResultType{
-                parseMetadata(std::move(metadata),
-                              block,
-                              std::move(owner),
-                              value,
-                              std::move(new_owner_opt))};
+                parseMetadataToUniqueEntryOp(std::move(metadata),
+                                             block,
+                                             std::move(owner),
+                                             value,
+                                             std::move(new_owner_opt))};
         });
 }
 
