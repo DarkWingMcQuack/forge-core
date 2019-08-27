@@ -2,19 +2,12 @@
 
 #include <core/Coin.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
-#include <functional>
+#include <lookup/LookupError.hpp>
 #include <map>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
 namespace forge::lookup {
-
-class LookupError final : public std::runtime_error
-{
-public:
-    using std::runtime_error::runtime_error;
-};
-
 
 class UMEntryLookup final
 {

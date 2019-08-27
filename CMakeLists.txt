@@ -66,6 +66,7 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadOnlyOdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadWriteOdinDaemon.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/UMEntryLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/env/LoggingSetup.hpp
