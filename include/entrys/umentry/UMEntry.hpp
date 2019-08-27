@@ -41,10 +41,10 @@ using UMEntryValue = std::variant<IPv4Value,
 using UMEntry = std::pair<EntryKey,
                           UMEntryValue>;
 
-auto parseValue(const std::vector<std::byte>& data)
+auto parseUMValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UMEntryValue>;
 
-auto parseKey(const std::vector<std::byte>& data)
+auto parseUMKey(const std::vector<std::byte>& data)
     -> utilxx::Opt<EntryKey>;
 
 auto parseUMEntry(const std::vector<std::byte>& data)

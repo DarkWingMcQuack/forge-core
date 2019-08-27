@@ -21,7 +21,7 @@ using forge::core::NONE_VALUE_FLAG;
 using forge::core::BYTE_ARRAY_VALUE_FLAG;
 
 
-auto forge::core::parseValue(const std::vector<std::byte>& data)
+auto forge::core::parseUMValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UMEntryValue>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
@@ -70,7 +70,7 @@ auto forge::core::parseValue(const std::vector<std::byte>& data)
     return std::nullopt;
 }
 
-auto forge::core::parseKey(const std::vector<std::byte>& data)
+auto forge::core::parseUMKey(const std::vector<std::byte>& data)
     -> utilxx::Opt<EntryKey>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
@@ -130,8 +130,8 @@ auto forge::core::parseUMEntry(const std::vector<std::byte>& data)
         return std::nullopt;
     }
 
-    auto value_opt = parseValue(data);
-    auto key_opt = parseKey(data);
+    auto value_opt = parseUMValue(data);
+    auto key_opt = parseUMKey(data);
 
 
     return combine(std::move(key_opt),

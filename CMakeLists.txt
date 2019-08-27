@@ -52,6 +52,7 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryDeletionOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryUpdateOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryOwnershipTransferOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntry.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
@@ -83,6 +84,7 @@ target_sources(forge-src
   src/entrys/umentry/UMEntryDeletionOp.cpp
   src/entrys/umentry/UMEntryUpdateOp.cpp
   src/entrys/umentry/UMEntryOwnershipTransferOp.cpp
+  src/entrys/uentry/UniqueEntry.cpp
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
