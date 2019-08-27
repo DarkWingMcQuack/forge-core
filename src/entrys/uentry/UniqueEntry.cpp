@@ -81,7 +81,7 @@ auto forge::core::extractUniqueValueFlag(const UniqueEntryValue& value)
 auto forge::core::uniqueEntryValueToRawData(const UniqueEntryValue& value)
     -> std::vector<std::byte>
 {
-    return umEntryToRawData(value);
+    return umEntryValueToRawData(value);
 }
 
 auto forge::core::uniqueEntryToRawData(const UniqueEntry& entry)
