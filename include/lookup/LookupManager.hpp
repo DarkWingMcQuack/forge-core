@@ -34,7 +34,7 @@ public:
         -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
     auto lookupUniqueValue(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
+        -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
 
     auto lookupOwner(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;
@@ -52,7 +52,7 @@ public:
         -> std::vector<core::UMEntry>;
 
     auto getUniqueEntrysOfOwner(const std::string& owner) const
-        -> std::vector<core::UMEntry>;
+        -> std::vector<core::UniqueEntry>;
 
     auto getCoin() const
         -> core::Coin;
