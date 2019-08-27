@@ -33,6 +33,9 @@ public:
     auto lookupUMValue(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
+    auto lookupUniqueValue(const core::EntryKey& key) const
+        -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
+
     auto lookupOwner(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;
 
@@ -46,6 +49,9 @@ public:
         -> utilxx::Result<int64_t, daemon::DaemonError>;
 
     auto getUMEntrysOfOwner(const std::string& owner) const
+        -> std::vector<core::UMEntry>;
+
+    auto getUniqueEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::UMEntry>;
 
     auto getCoin() const

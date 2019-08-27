@@ -84,6 +84,7 @@ auto LookupManager::rebuildLookup()
 {
     std::unique_lock lock{rw_mtx_};
     um_entry_lookup_.clear();
+    unique_entry_lookup_.clear();
     lock.unlock();
 
     if(auto res = updateLookup();
@@ -101,18 +102,37 @@ auto LookupManager::lookupUMValue(const core::EntryKey& key) const
     return um_entry_lookup_.lookup(key);
 }
 
+auto LookupManager::lookupUniqueValue(const core::EntryKey& key) const
+    -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>
+{
+    std::shared_lock lock{rw_mtx_};
+    return unique_entry_lookup_.lookup(key);
+}
+
 auto LookupManager::lookupOwner(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
     std::shared_lock lock{rw_mtx_};
-    return um_entry_lookup_.lookupOwner(key);
+    auto um_owner_opt = um_entry_lookup_.lookupOwner(key);
+
+    if(um_owner_opt) {
+        return um_owner_opt;
+    }
+
+    return unique_entry_lookup_.lookupOwner(key);
 }
 
 auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
     std::shared_lock lock{rw_mtx_};
-    return um_entry_lookup_.lookupActivationBlock(key);
+
+    auto um_block_op = um_entry_lookup_.lookupActivationBlock(key);
+    if(um_block_op) {
+        return um_block_op;
+    }
+
+    return unique_entry_lookup_.lookupActivationBlock(key);
 }
 
 
@@ -259,6 +279,14 @@ auto LookupManager::getUMEntrysOfOwner(const std::string& owner) const
 {
     std::shared_lock lock{rw_mtx_};
     return um_entry_lookup_.getUMEntrysOfOwner(owner);
+}
+
+
+auto LookupManager::getUniqueEntrysOfOwner(const std::string& owner) const
+    -> std::vector<core::UniqueEntry>
+{
+    std::shared_lock lock{rw_mtx_};
+    return unique_entry_lookup_.getUniqueEntrysOfOwner(owner);
 }
 
 
