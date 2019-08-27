@@ -53,6 +53,11 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryUpdateOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryOwnershipTransferOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntry.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryOperation.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryCreationOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryDeletionOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryRenewalOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryOwnershipTransferOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
@@ -85,6 +90,11 @@ target_sources(forge-src
   src/entrys/umentry/UMEntryUpdateOp.cpp
   src/entrys/umentry/UMEntryOwnershipTransferOp.cpp
   src/entrys/uentry/UniqueEntry.cpp
+  src/entrys/uentry/UniqueEntryOperation.cpp
+  src/entrys/uentry/UniqueEntryCreationOp.cpp
+  src/entrys/uentry/UniqueEntryDeletionOp.cpp
+  src/entrys/uentry/UniqueEntryRenewalOp.cpp
+  src/entrys/uentry/UniqueEntryOwnershipTransferOp.cpp
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
