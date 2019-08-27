@@ -53,10 +53,10 @@ auto parseUMEntry(const std::vector<std::byte>& data)
 auto extractValueFlag(const UMEntryValue& value)
     -> std::byte;
 
-auto entryValueToRawData(const UMEntryValue& value)
+auto umEntryValueToRawData(const UMEntryValue& value)
     -> std::vector<std::byte>;
 
-auto entryToRawData(const UMEntry& entry)
+auto umEntryToRawData(const UMEntry& entry)
     -> std::vector<std::byte>;
 
 auto jsonToUMEntryValue(Json::Value&& value)

@@ -152,7 +152,7 @@ auto forge::core::extractValueFlag(const UMEntryValue& value)
 }
 
 
-auto forge::core::entryValueToRawData(const UMEntryValue& value)
+auto forge::core::umEntryValueToRawData(const UMEntryValue& value)
     -> std::vector<std::byte>
 {
 
@@ -177,11 +177,11 @@ auto forge::core::entryValueToRawData(const UMEntryValue& value)
 }
 
 
-auto forge::core::entryToRawData(const UMEntry& entry)
+auto forge::core::umEntryToRawData(const UMEntry& entry)
     -> std::vector<std::byte>
 {
     auto key_data = std::move(entry.first);
-    auto value_data = entryValueToRawData(entry.second);
+    auto value_data = umEntryValueToRawData(entry.second);
     auto value_flag = extractValueFlag(entry.second);
 
     value_data.insert(std::begin(value_data),

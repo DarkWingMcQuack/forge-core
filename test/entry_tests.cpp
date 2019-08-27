@@ -261,7 +261,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv4)
     ASSERT_TRUE(entry_opt1);
     EXPECT_EQ(entry_opt1.getValue(), expected1);
 
-    auto data11 = forge::core::entryToRawData(entry_opt1.getValue());
+    auto data11 = forge::core::umEntryToRawData(entry_opt1.getValue());
     auto expected11 = forge::core::stringToByteVec("0100000000deadbeef").getValue();
     EXPECT_EQ(data11, expected11);
 
@@ -280,7 +280,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv4)
     ASSERT_TRUE(entry_opt2);
     EXPECT_EQ(entry_opt2.getValue(), expected2);
 
-    auto data21 = forge::core::entryToRawData(entry_opt2.getValue());
+    auto data21 = forge::core::umEntryToRawData(entry_opt2.getValue());
     auto expected21 = forge::core::stringToByteVec("01aabbccddAA").getValue();
     EXPECT_EQ(data21, expected21);
 }
@@ -316,7 +316,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv6)
     ASSERT_TRUE(entry_opt1);
     EXPECT_EQ(entry_opt1.getValue(), expected1);
 
-    auto data11 = forge::core::entryToRawData(entry_opt1.getValue());
+    auto data11 = forge::core::umEntryToRawData(entry_opt1.getValue());
     auto expected11 = forge::core::stringToByteVec("0210101010101010101010101010101010deadbeef").getValue();
     EXPECT_EQ(data11, expected11);
 
@@ -345,7 +345,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv6)
     ASSERT_TRUE(entry_opt2);
     EXPECT_EQ(entry_opt2.getValue(), expected2);
 
-    auto data21 = forge::core::entryToRawData(entry_opt1.getValue());
+    auto data21 = forge::core::umEntryToRawData(entry_opt1.getValue());
     auto expected21 = forge::core::stringToByteVec("02aabbccddeeff11223344556677889900deadbeef").getValue();
     EXPECT_EQ(data11, expected11);
 }

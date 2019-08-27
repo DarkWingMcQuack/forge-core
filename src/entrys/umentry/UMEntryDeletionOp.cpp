@@ -79,7 +79,7 @@ auto UMEntryDeletionOp::getOwner()
 auto forge::core::createUMEntryDeletionOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::entryToRawData(entry);
+    auto data = forge::core::umEntryToRawData(entry);
     auto flag = forge::core::UMENTRY_DELETION_FLAG;
 
     data.insert(std::begin(data), flag);

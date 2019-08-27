@@ -80,7 +80,7 @@ auto UMEntryCreationOp::getOwner()
 auto forge::core::createUMEntryCreationOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::entryToRawData(entry);
+    auto data = forge::core::umEntryToRawData(entry);
     auto flag = forge::core::UMENTRY_CREATION_FLAG;
 
     data.insert(std::begin(data), flag);

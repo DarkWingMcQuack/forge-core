@@ -84,7 +84,7 @@ auto forge::core::createUMEntryUpdateOpMetadata(EntryKey&& key,
 {
     auto entry = UMEntry{std::move(key),
                        std::move(new_value)};
-    auto data = forge::core::entryToRawData(entry);
+    auto data = forge::core::umEntryToRawData(entry);
     auto flag = forge::core::UMENTRY_UPDATE_FLAG;
 
     data.insert(std::begin(data), flag);

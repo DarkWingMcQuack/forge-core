@@ -263,7 +263,7 @@ auto forge::core::toMetadata(const UMEntryOperation& op)
     const auto& entry = getUMEntry(op);
     auto flag = extractOperationFlag(op);
 
-    auto data = forge::core::entryToRawData(entry);
+    auto data = forge::core::umEntryToRawData(entry);
 
     data.insert(std::begin(data),
                 flag);
