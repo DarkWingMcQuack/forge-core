@@ -33,15 +33,14 @@ UMEntryLookup::UMEntryLookup()
     : block_height_(0){};
 
 auto UMEntryLookup::executeOperations(std::vector<UMEntryOperation>&& ops)
-    -> Result<void, LookupError>
+    -> void
 {
     ops = filterNonRelevantOperations(std::move(ops));
 
-    return traverse(std::move(ops),
-                    [this](UMEntryOperation&& op) {
-                        return std::visit(*this,
-                                          std::move(op));
-                    });
+    for(auto&& op : ops) {
+        std::visit(*this,
+                   std::move(op));
+    }
 }
 
 auto UMEntryLookup::lookup(const EntryKey& key) const
@@ -263,24 +262,25 @@ auto UMEntryLookup::getUMEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::UMEntry>
 {
     std::vector<core::UMEntry> ret_vec;
-    utilxx::transform_if(std::cbegin(lookup_map_),
-                         std::cend(lookup_map_),
-                         std::back_inserter(ret_vec),
-                         [](const auto& value) {
-                             return UMEntry{value.first,
-                                            std::get<0>(value.second)};
-                         },
-                         [&owner](const auto& value) {
-                             const auto& value_owner = std::get<1>(value.second);
+    utilxx::transform_if(
+        std::cbegin(lookup_map_),
+        std::cend(lookup_map_),
+        std::back_inserter(ret_vec),
+        [](const auto& value) {
+            return UMEntry{value.first,
+                           std::get<0>(value.second)};
+        },
+        [&owner](const auto& value) {
+            const auto& value_owner = std::get<1>(value.second);
 
-                             return value_owner == owner;
-                         });
+            return value_owner == owner;
+        });
 
     return ret_vec;
 }
 
 auto UMEntryLookup::operator()(UMEntryCreationOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -299,12 +299,10 @@ auto UMEntryLookup::operator()(UMEntryCreationOp&& op)
     }
 
     LOG(DEBUG) << "executed entry creation op";
-
-    return {};
 }
 
 auto UMEntryLookup::operator()(UMEntryRenewalOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -326,12 +324,10 @@ auto UMEntryLookup::operator()(UMEntryRenewalOp&& op)
         });
 
     LOG(DEBUG) << "executed entry renewal op";
-
-    return {};
 }
 
 auto UMEntryLookup::operator()(UMEntryOwnershipTransferOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto old_owner = std::move(op.getOwner());
     auto new_owner = std::move(op.getNewOwner());
@@ -353,12 +349,10 @@ auto UMEntryLookup::operator()(UMEntryOwnershipTransferOp&& op)
         });
 
     LOG(DEBUG) << "executed ownership transfer op";
-
-    return {};
 }
 
 auto UMEntryLookup::operator()(UMEntryUpdateOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -377,12 +371,10 @@ auto UMEntryLookup::operator()(UMEntryUpdateOp&& op)
         });
 
     LOG(DEBUG) << "executed entry update op";
-
-    return {};
 }
 
 auto UMEntryLookup::operator()(UMEntryDeletionOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -404,8 +396,6 @@ auto UMEntryLookup::operator()(UMEntryDeletionOp&& op)
         });
 
     LOG(DEBUG) << "executed entry deletion op";
-
-    return {};
 }
 
 auto UMEntryLookup::getBlockHeight() const

@@ -57,7 +57,7 @@ auto extractOperationFlag(const UniqueEntryOperation&)
 //checks the metadata of a transaction and parses it into
 //an UniqueEntryOperation if it holds the needed information
 //and the metadata has the needed formating
-auto parseTransactionToUniqueEntry(core::Transaction&& tx,
+auto parseTransactionToUniqueEntry(core::Transaction tx,
                                    std::int64_t block,
                                    const daemon::ReadOnlyDaemonBase* daemon)
     -> utilxx::Result<utilxx::Opt<UniqueEntryOperation>, daemon::DaemonError>;

@@ -2,14 +2,14 @@
 
 #include <array>
 #include <core/Transaction.hpp>
+#include <cstddef>
+#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryCreationOp.hpp>
 #include <entrys/umentry/UMEntryDeletionOp.hpp>
 #include <entrys/umentry/UMEntryOwnershipTransferOp.hpp>
 #include <entrys/umentry/UMEntryRenewalOp.hpp>
 #include <entrys/umentry/UMEntryUpdateOp.hpp>
-#include <cstddef>
-#include <daemon/ReadOnlyDaemonBase.hpp>
 #include <memory>
 #include <vector>
 
@@ -60,7 +60,7 @@ auto extractOperationFlag(const UMEntryOperation&)
 //checks the metadata of a transaction and parses it into
 //an UMEntryOperation if it holds the needed information
 //and the metadata has the needed formating
-auto parseTransactionToUMEntry(core::Transaction&& tx,
+auto parseTransactionToUMEntry(core::Transaction tx,
                                std::int64_t block,
                                const daemon::ReadOnlyDaemonBase* daemon)
     -> utilxx::Result<utilxx::Opt<UMEntryOperation>, daemon::DaemonError>;
@@ -68,10 +68,10 @@ auto parseTransactionToUMEntry(core::Transaction&& tx,
 //parses given metadata and constructs a UNEntryOperation from
 //the given information if possible
 auto parseMetadataToUMEntryOp(const std::vector<std::byte>& metadata,
-                   std::int64_t block,
-                   std::string&& owner,
-                   std::int64_t value,
-                   utilxx::Opt<std::string>&& new_owner = std::nullopt)
+                              std::int64_t block,
+                              std::string&& owner,
+                              std::int64_t value,
+                              utilxx::Opt<std::string>&& new_owner = std::nullopt)
     -> utilxx::Opt<UMEntryOperation>;
 
 //given a UMEntryOperation, this function builds a matching

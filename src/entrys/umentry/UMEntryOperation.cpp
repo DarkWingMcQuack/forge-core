@@ -171,7 +171,7 @@ auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadat
         });
 }
 
-auto forge::core::parseTransactionToUMEntry(Transaction&& tx,
+auto forge::core::parseTransactionToUMEntry(Transaction tx,
                                             std::int64_t block,
                                             const daemon::ReadOnlyDaemonBase* daemon)
     -> Result<Opt<UMEntryOperation>, DaemonError>

@@ -163,7 +163,7 @@ auto forge::core::parseMetadataToUniqueEntryOp(const std::vector<std::byte>& met
         });
 }
 
-auto forge::core::parseTransactionToUniqueEntry(Transaction&& tx,
+auto forge::core::parseTransactionToUniqueEntry(Transaction tx,
                                                 std::int64_t block,
                                                 const daemon::ReadOnlyDaemonBase* daemon)
     -> Result<Opt<UniqueEntryOperation>, DaemonError>

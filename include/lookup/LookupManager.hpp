@@ -1,10 +1,12 @@
 #pragma once
 
+#include "core/Transaction.hpp"
 #include <core/Coin.hpp>
-#include <entrys/umentry/UMEntryOperation.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <functional>
 #include <lookup/UMEntryLookup.hpp>
+#include <lookup/UniqueEntryLookup.hpp>
 #include <shared_mutex>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
@@ -56,11 +58,21 @@ private:
     auto processBlock(core::Block&& block)
         -> utilxx::Result<void, ManagerError>;
 
+    auto processUMEntrys(const std::vector<core::Transaction>& txs,
+                         std::int64_t block_height)
+        -> void;
+
+    auto processUniqueEntrys(const std::vector<core::Transaction>& txs,
+                             std::int64_t block_height)
+        -> void;
+
 private:
     std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
 
     mutable std::shared_mutex rw_mtx_;
-    UMEntryLookup lookup_;
+    UMEntryLookup um_entry_lookup_;
+    UniqueEntryLookup unique_entry_lookup_;
+    std::int64_t lookup_block_height_;
     std::vector<std::string> block_hashes_;
 };
 

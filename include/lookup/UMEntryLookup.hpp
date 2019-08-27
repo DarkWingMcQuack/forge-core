@@ -16,7 +16,7 @@ public:
     UMEntryLookup();
 
     auto executeOperations(std::vector<core::UMEntryOperation>&& ops)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto lookup(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
@@ -70,19 +70,19 @@ public:
         -> std::vector<core::UMEntry>;
 
     auto operator()(core::UMEntryCreationOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UMEntryRenewalOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UMEntryOwnershipTransferOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UMEntryUpdateOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UMEntryDeletionOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
 private:
     using MapType = std::map<core::EntryKey, //key

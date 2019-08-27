@@ -16,7 +16,7 @@ public:
     UniqueEntryLookup();
 
     auto executeOperations(std::vector<core::UniqueEntryOperation>&& ops)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto lookup(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
@@ -70,16 +70,16 @@ public:
         -> std::vector<core::UniqueEntry>;
 
     auto operator()(core::UniqueEntryCreationOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UniqueEntryRenewalOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UniqueEntryOwnershipTransferOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
     auto operator()(core::UniqueEntryDeletionOp&& op)
-        -> utilxx::Result<void, LookupError>;
+        -> void;
 
 private:
     using MapType = std::map<core::EntryKey, //key

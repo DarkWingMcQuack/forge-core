@@ -32,15 +32,14 @@ UniqueEntryLookup::UniqueEntryLookup()
     : block_height_(0){};
 
 auto UniqueEntryLookup::executeOperations(std::vector<UniqueEntryOperation>&& ops)
-    -> Result<void, LookupError>
+    -> void
 {
     ops = filterNonRelevantOperations(std::move(ops));
 
-    return traverse(std::move(ops),
-                    [this](UniqueEntryOperation&& op) {
-                        return std::visit(*this,
-                                          std::move(op));
-                    });
+    for(auto&& op : ops) {
+        std::visit(*this,
+                   std::move(op));
+    }
 }
 
 auto UniqueEntryLookup::lookup(const EntryKey& key) const
@@ -262,24 +261,25 @@ auto UniqueEntryLookup::getUniqueEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::UniqueEntry>
 {
     std::vector<core::UniqueEntry> ret_vec;
-    utilxx::transform_if(std::cbegin(lookup_map_),
-                         std::cend(lookup_map_),
-                         std::back_inserter(ret_vec),
-                         [](const auto& value) {
-                             return UniqueEntry{value.first,
-                                            std::get<0>(value.second)};
-                         },
-                         [&owner](const auto& value) {
-                             const auto& value_owner = std::get<1>(value.second);
+    utilxx::transform_if(
+        std::cbegin(lookup_map_),
+        std::cend(lookup_map_),
+        std::back_inserter(ret_vec),
+        [](const auto& value) {
+            return UniqueEntry{value.first,
+                               std::get<0>(value.second)};
+        },
+        [&owner](const auto& value) {
+            const auto& value_owner = std::get<1>(value.second);
 
-                             return value_owner == owner;
-                         });
+            return value_owner == owner;
+        });
 
     return ret_vec;
 }
 
 auto UniqueEntryLookup::operator()(UniqueEntryCreationOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -298,12 +298,10 @@ auto UniqueEntryLookup::operator()(UniqueEntryCreationOp&& op)
     }
 
     LOG(DEBUG) << "executed entry creation op";
-
-    return {};
 }
 
 auto UniqueEntryLookup::operator()(UniqueEntryRenewalOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -325,12 +323,10 @@ auto UniqueEntryLookup::operator()(UniqueEntryRenewalOp&& op)
         });
 
     LOG(DEBUG) << "executed entry renewal op";
-
-    return {};
 }
 
 auto UniqueEntryLookup::operator()(UniqueEntryOwnershipTransferOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto old_owner = std::move(op.getOwner());
     auto new_owner = std::move(op.getNewOwner());
@@ -352,12 +348,10 @@ auto UniqueEntryLookup::operator()(UniqueEntryOwnershipTransferOp&& op)
         });
 
     LOG(DEBUG) << "executed ownership transfer op";
-
-    return {};
 }
 
 auto UniqueEntryLookup::operator()(UniqueEntryDeletionOp&& op)
-    -> Result<void, LookupError>
+    -> void
 {
     auto owner = std::move(op.getOwner());
     auto key = std::move(op.getEntryKey());
@@ -379,8 +373,6 @@ auto UniqueEntryLookup::operator()(UniqueEntryDeletionOp&& op)
         });
 
     LOG(DEBUG) << "executed entry deletion op";
-
-    return {};
 }
 
 auto UniqueEntryLookup::getBlockHeight() const
