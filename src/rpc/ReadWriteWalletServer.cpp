@@ -129,6 +129,40 @@ auto ReadWriteWalletServer::lookupumvalue(bool isstring, const std::string& key)
     return forge::core::umentryValueToJson(res.getValue().get());
 }
 
+auto ReadWriteWalletServer::lookupuniquevalue(bool isstring, const std::string& key)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto key_vec_opt =
+        [&] {
+            if(isstring) {
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return forge::core::stringToByteVec(key);
+            }
+        }();
+
+    if(!key_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
+    }
+
+    auto key_vec = std::move(key_vec_opt.getValue());
+
+    auto res = lookup_.lookupUniqueValue(key_vec);
+
+    if(!res) {
+        auto error_msg = fmt::format("no entrys with key {} found",
+                                     key);
+        throw JsonRpcException{std::move(error_msg)};
+    }
+
+    return forge::core::umentryValueToJson(res.getValue().get());
+}
+
 auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
     -> std::string
 {

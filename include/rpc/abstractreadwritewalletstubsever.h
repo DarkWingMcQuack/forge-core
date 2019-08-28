@@ -18,6 +18,7 @@ namespace forge {
                     this->bindAndAddNotification(jsonrpc::Procedure("shutdown", jsonrpc::PARAMS_BY_NAME,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::shutdownI);
                     this->bindAndAddNotification(jsonrpc::Procedure("rebuildlookup", jsonrpc::PARAMS_BY_NAME,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::rebuildlookupI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupumvalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::lookupumvalueI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniquevalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::lookupuniquevalueI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::lookupownerI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupactivationblock", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::lookupactivationblockI);
                     this->bindAndAddMethod(jsonrpc::Procedure("checkvalidity", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::checkvalidityI);
@@ -59,6 +60,10 @@ namespace forge {
                 inline virtual void lookupumvalueI(const Json::Value &request, Json::Value &response)
                 {
                     response = this->lookupumvalue(request["isstring"].asBool(), request["key"].asString());
+                }
+                inline virtual void lookupuniquevalueI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniquevalue(request["isstring"].asBool(), request["key"].asString());
                 }
                 inline virtual void lookupownerI(const Json::Value &request, Json::Value &response)
                 {
@@ -160,6 +165,7 @@ namespace forge {
                 virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
                 virtual Json::Value lookupumvalue(bool isstring, const std::string& key) = 0;
+                virtual Json::Value lookupuniquevalue(bool isstring, const std::string& key) = 0;
                 virtual std::string lookupowner(bool isstring, const std::string& key) = 0;
                 virtual int lookupactivationblock(bool isstring, const std::string& key) = 0;
                 virtual bool checkvalidity() = 0;

@@ -21,6 +21,17 @@
         }
     },
     {
+        "name" : "lookupuniquevalue",
+        "params" : {
+            "key" : "somestring", //string
+            "isstring" : true //if string is interpreted as string or as bytevec
+        },
+        "returns" : {
+            "type" : "ipv6",
+            "value" : "somebytevec"
+        }
+    },
+    {
         "name" : "lookupowner",
         "params" : {
             "key" : "somestring", //string

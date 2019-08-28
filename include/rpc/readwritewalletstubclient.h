@@ -47,6 +47,17 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                Json::Value lookupuniquevalue(bool isstring, const std::string& key) 
+                {
+                    Json::Value p;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    Json::Value result = this->CallMethod("lookupuniquevalue",p);
+                    if (result.isObject())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
                 std::string lookupowner(bool isstring, const std::string& key) 
                 {
                     Json::Value p;
