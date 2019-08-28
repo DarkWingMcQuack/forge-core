@@ -47,6 +47,17 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                Json::Value lookupuniquevalue(bool isstring, const std::string& key) 
+                {
+                    Json::Value p;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    Json::Value result = this->CallMethod("lookupuniquevalue",p);
+                    if (result.isObject())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
                 std::string lookupowner(bool isstring, const std::string& key) 
                 {
                     Json::Value p;
@@ -99,6 +110,26 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                Json::Value lookupuniqueentrysof(const std::string& owner) 
+                {
+                    Json::Value p;
+                    p["owner"] = owner;
+                    Json::Value result = this->CallMethod("lookupuniqueentrysof",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value lookupuniquemodifiableentrysof(const std::string& owner) 
+                {
+                    Json::Value p;
+                    p["owner"] = owner;
+                    Json::Value result = this->CallMethod("lookupuniquemodifiableentrysof",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
                 void addwatchonlyaddress(const std::string& address) 
                 {
                     Json::Value p;
@@ -117,31 +148,61 @@ namespace forge {
                     p["address"] = address;
                     this->CallNotification("addnewownedaddress",p);
                 }
-                Json::Value getownedentrys() 
+                Json::Value getownedumentrys() 
                 {
                     Json::Value p;
                     p = Json::nullValue;
-                    Json::Value result = this->CallMethod("getownedentrys",p);
+                    Json::Value result = this->CallMethod("getownedumentrys",p);
                     if (result.isArray())
                         return result;
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                Json::Value getwatchonlyentrys() 
+                Json::Value getwatchonlyumentrys() 
                 {
                     Json::Value p;
                     p = Json::nullValue;
-                    Json::Value result = this->CallMethod("getwatchonlyentrys",p);
+                    Json::Value result = this->CallMethod("getwatchonlyumentrys",p);
                     if (result.isArray())
                         return result;
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                Json::Value getallwatchedentrys() 
+                Json::Value getallwatchedumentrys() 
                 {
                     Json::Value p;
                     p = Json::nullValue;
-                    Json::Value result = this->CallMethod("getallwatchedentrys",p);
+                    Json::Value result = this->CallMethod("getallwatchedumentrys",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getowneduniqueentrys() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getowneduniqueentrys",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getwatchonlyuniqueentrys() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getwatchonlyuniqueentrys",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getallwatcheduniqueentrys() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getallwatcheduniqueentrys",p);
                     if (result.isArray())
                         return result;
                     else

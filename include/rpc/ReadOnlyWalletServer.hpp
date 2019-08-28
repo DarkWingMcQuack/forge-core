@@ -28,6 +28,9 @@ public:
     virtual auto lookupumvalue(bool isstring, const std::string& key)
         -> Json::Value override;
 
+    virtual auto lookupuniquevalue(bool isstring, const std::string& key)
+        -> Json::Value override;
+
     virtual auto lookupowner(bool isstring, const std::string& key)
         -> std::string override;
 
@@ -43,17 +46,29 @@ public:
     virtual auto lookupallentrysof(const std::string& owner)
         -> Json::Value override;
 
+    virtual auto lookupuniqueentrysof(const std::string& owner)
+        -> Json::Value override;
+
+    virtual auto lookupuniquemodifiableentrysof(const std::string& owner)
+        -> Json::Value override;
+
     virtual auto addwatchonlyaddress(const std::string& address)
         -> void override;
     virtual auto deletewatchonlyaddress(const std::string& address)
         -> void override;
     virtual auto addnewownedaddress(const std::string& address)
         -> void override;
-    virtual auto getownedentrys()
+    virtual auto getownedumentrys()
         -> Json::Value override;
-    virtual auto getwatchonlyentrys()
+    virtual auto getwatchonlyumentrys()
         -> Json::Value override;
-    virtual auto getallwatchedentrys()
+    virtual auto getallwatchedumentrys()
+        -> Json::Value override;
+    virtual auto getowneduniqueentrys()
+        -> Json::Value override;
+    virtual auto getwatchonlyuniqueentrys()
+        -> Json::Value override;
+    virtual auto getallwatcheduniqueentrys()
         -> Json::Value override;
     virtual auto getwatchedaddresses()
         -> Json::Value override;

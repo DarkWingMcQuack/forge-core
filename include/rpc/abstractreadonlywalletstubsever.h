@@ -18,17 +18,23 @@ namespace forge {
                     this->bindAndAddNotification(jsonrpc::Procedure("shutdown", jsonrpc::PARAMS_BY_NAME,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::shutdownI);
                     this->bindAndAddNotification(jsonrpc::Procedure("rebuildlookup", jsonrpc::PARAMS_BY_NAME,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::rebuildlookupI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupumvalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupumvalueI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniquevalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupuniquevalueI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupownerI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupactivationblock", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupactivationblockI);
                     this->bindAndAddMethod(jsonrpc::Procedure("checkvalidity", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::checkvalidityI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getlastvalidblockheight", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getlastvalidblockheightI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupallentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupallentrysofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniqueentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupuniqueentrysofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniquemodifiableentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::lookupuniquemodifiableentrysofI);
                     this->bindAndAddNotification(jsonrpc::Procedure("addwatchonlyaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::addwatchonlyaddressI);
                     this->bindAndAddNotification(jsonrpc::Procedure("deletewatchonlyaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::deletewatchonlyaddressI);
                     this->bindAndAddNotification(jsonrpc::Procedure("addnewownedaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::addnewownedaddressI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("getownedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getownedentrysI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getwatchonlyentrysI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getallwatchedentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getownedumentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getownedumentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyumentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getwatchonlyumentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedumentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getallwatchedumentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getowneduniqueentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getowneduniqueentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyuniqueentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getwatchonlyuniqueentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatcheduniqueentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getallwatcheduniqueentrysI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getwatchedaddressesI);
                     this->bindAndAddMethod(jsonrpc::Procedure("ownesaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::ownesaddressI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getownedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getownedaddressesI);
@@ -50,6 +56,10 @@ namespace forge {
                 {
                     response = this->lookupumvalue(request["isstring"].asBool(), request["key"].asString());
                 }
+                inline virtual void lookupuniquevalueI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniquevalue(request["isstring"].asBool(), request["key"].asString());
+                }
                 inline virtual void lookupownerI(const Json::Value &request, Json::Value &response)
                 {
                     response = this->lookupowner(request["isstring"].asBool(), request["key"].asString());
@@ -70,6 +80,14 @@ namespace forge {
                 {
                     response = this->lookupallentrysof(request["owner"].asString());
                 }
+                inline virtual void lookupuniqueentrysofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniqueentrysof(request["owner"].asString());
+                }
+                inline virtual void lookupuniquemodifiableentrysofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniquemodifiableentrysof(request["owner"].asString());
+                }
                 inline virtual void addwatchonlyaddressI(const Json::Value &request)
                 {
                     this->addwatchonlyaddress(request["address"].asString());
@@ -82,17 +100,29 @@ namespace forge {
                 {
                     this->addnewownedaddress(request["address"].asString());
                 }
-                inline virtual void getownedentrysI(const Json::Value &/*request*/, Json::Value &response)
+                inline virtual void getownedumentrysI(const Json::Value &/*request*/, Json::Value &response)
                 {
-                    response = this->getownedentrys();
+                    response = this->getownedumentrys();
                 }
-                inline virtual void getwatchonlyentrysI(const Json::Value &/*request*/, Json::Value &response)
+                inline virtual void getwatchonlyumentrysI(const Json::Value &/*request*/, Json::Value &response)
                 {
-                    response = this->getwatchonlyentrys();
+                    response = this->getwatchonlyumentrys();
                 }
-                inline virtual void getallwatchedentrysI(const Json::Value &/*request*/, Json::Value &response)
+                inline virtual void getallwatchedumentrysI(const Json::Value &/*request*/, Json::Value &response)
                 {
-                    response = this->getallwatchedentrys();
+                    response = this->getallwatchedumentrys();
+                }
+                inline virtual void getowneduniqueentrysI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getowneduniqueentrys();
+                }
+                inline virtual void getwatchonlyuniqueentrysI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getwatchonlyuniqueentrys();
+                }
+                inline virtual void getallwatcheduniqueentrysI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getallwatcheduniqueentrys();
                 }
                 inline virtual void getwatchedaddressesI(const Json::Value &/*request*/, Json::Value &response)
                 {
@@ -110,17 +140,23 @@ namespace forge {
                 virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
                 virtual Json::Value lookupumvalue(bool isstring, const std::string& key) = 0;
+                virtual Json::Value lookupuniquevalue(bool isstring, const std::string& key) = 0;
                 virtual std::string lookupowner(bool isstring, const std::string& key) = 0;
                 virtual int lookupactivationblock(bool isstring, const std::string& key) = 0;
                 virtual bool checkvalidity() = 0;
                 virtual int getlastvalidblockheight() = 0;
                 virtual Json::Value lookupallentrysof(const std::string& owner) = 0;
+                virtual Json::Value lookupuniqueentrysof(const std::string& owner) = 0;
+                virtual Json::Value lookupuniquemodifiableentrysof(const std::string& owner) = 0;
                 virtual void addwatchonlyaddress(const std::string& address) = 0;
                 virtual void deletewatchonlyaddress(const std::string& address) = 0;
                 virtual void addnewownedaddress(const std::string& address) = 0;
-                virtual Json::Value getownedentrys() = 0;
-                virtual Json::Value getwatchonlyentrys() = 0;
-                virtual Json::Value getallwatchedentrys() = 0;
+                virtual Json::Value getownedumentrys() = 0;
+                virtual Json::Value getwatchonlyumentrys() = 0;
+                virtual Json::Value getallwatchedumentrys() = 0;
+                virtual Json::Value getowneduniqueentrys() = 0;
+                virtual Json::Value getwatchonlyuniqueentrys() = 0;
+                virtual Json::Value getallwatcheduniqueentrys() = 0;
                 virtual Json::Value getwatchedaddresses() = 0;
                 virtual bool ownesaddress(const std::string& address) = 0;
                 virtual Json::Value getownedaddresses() = 0;
