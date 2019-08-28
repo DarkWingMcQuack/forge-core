@@ -14,22 +14,13 @@
 
 namespace forge::core {
 
-using EntryOperation = std::variant<UMEntryOperation,
-                                    UniqueEntryOperation>;
-
-
-auto createOwnershipTransferOpMetadata(const Entry& entryA)
+auto createOwnershipTransferOpMetadata(Entry&& entry)
     -> std::vector<std::byte>;
 
-auto createRenewalOpMetadata(const Entry& entryA)
+auto createRenewalOpMetadata(Entry&& entry)
     -> std::vector<std::byte>;
 
-auto createDeletionOpMetadata(const Entry& entryA)
-    -> std::vector<std::byte>;
-
-//given a EntryOperation, this function builds a matching
-//metadata which can be used to write it on the blockchain
-auto toMetadata(const EntryOperation& op)
+auto createDeletionOpMetadata(Entry&& entry)
     -> std::vector<std::byte>;
 
 } // namespace forge::core

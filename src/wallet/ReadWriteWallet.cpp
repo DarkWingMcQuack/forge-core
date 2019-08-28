@@ -104,6 +104,58 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
         });
 }
 
+auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
+                                    core::UMEntryValue new_value,
+                                    std::int64_t burn_amount)
+    -> utilxx::Result<std::string, WalletError>
+{
+    //lookup the owner of the key
+    auto owner_opt = lookup_->lookupOwner(key);
+    if(!owner_opt) {
+        auto error =
+            fmt::format("unable to lookup the entry key: {}",
+                        toHexString(key));
+        return WalletError{std::move(error)};
+    }
+
+    auto owner = owner_opt.getValue().get();
+
+    if(!ownesAddress(owner)) {
+        auto entry_str = toHexString(key);
+        auto error = fmt::format(
+            "it seems that you aren't the owner of "
+            "entry {} which is currently owned by {}",
+            entry_str,
+            owner);
+        return WalletError{std::move(error)};
+    }
+
+    //create metadata for the tx
+    auto metadata = createUMEntryUpdateOpMetadata(std::move(key),
+                                                  std::move(new_value));
+
+    return daemon_
+        //move enought funds to the owner address
+        ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
+                        std::move(owner))
+        .flatMap([&](auto&& txid) {
+            return daemon_
+                ->getVOutIdxByAmountAndAddress(txid,
+                                               burn_amount + getDefaultTxFee(getLookup().getCoin()),
+                                               owner_opt.getValue().get())
+                .flatMap([&](auto vout_idx) {
+                    //burn the output with the metadata
+                    return daemon_
+                        ->burnOutput(std::move(txid),
+                                     vout_idx,
+                                     std::move(metadata));
+                });
+        })
+        .mapError([](auto&& error) {
+            return WalletError{std::move(error.what())};
+        });
+}
+
 auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
                                            core::UMEntryValue value,
                                            std::int64_t burn_amount)
@@ -175,6 +227,8 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
         });
 }
 
+
+
 auto ReadWriteWallet::renewEntry(core::EntryKey key,
                                  std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
@@ -198,8 +252,7 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
                 return WalletError{std::move(error)};
             }
 
-            auto metadata = core::createRenewalOpMetadata(entry);
-            // createUMEntryRenewalOpMetadata(std::move(entry));
+            auto metadata = core::createRenewalOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -233,58 +286,6 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
-                                    core::UMEntryValue new_value,
-                                    std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
-{
-    //lookup the owner of the key
-    auto owner_opt = lookup_->lookupOwner(key);
-    if(!owner_opt) {
-        auto error =
-            fmt::format("unable to lookup the entry key: {}",
-                        toHexString(key));
-        return WalletError{std::move(error)};
-    }
-
-    auto owner = owner_opt.getValue().get();
-
-    if(!ownesAddress(owner)) {
-        auto entry_str = toHexString(key);
-        auto error = fmt::format(
-            "it seems that you aren't the owner of "
-            "entry {} which is currently owned by {}",
-            entry_str,
-            owner);
-        return WalletError{std::move(error)};
-    }
-
-    //create metadata for the tx
-    auto metadata = createUMEntryUpdateOpMetadata(std::move(key),
-                                                  std::move(new_value));
-
-    return daemon_
-        //move enought funds to the owner address
-        ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                        std::move(owner))
-        .flatMap([&](auto&& txid) {
-            return daemon_
-                ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                               owner_opt.getValue().get())
-                .flatMap([&](auto vout_idx) {
-                    //burn the output with the metadata
-                    return daemon_
-                        ->burnOutput(std::move(txid),
-                                     vout_idx,
-                                     std::move(metadata));
-                });
-        })
-        .mapError([](auto&& error) {
-            return WalletError{std::move(error.what())};
-        });
-}
-
 auto ReadWriteWallet::deleteEntry(core::EntryKey key,
                                   std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
@@ -308,7 +309,7 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey key,
                 return WalletError{std::move(error)};
             }
 
-            auto metadata = core::createDeletionOpMetadata(entry);
+            auto metadata = core::createDeletionOpMetadata(std::move(entry));
             // createUMEntryDeletionOpMetadata(std::move(entry));
 
             //return metadata and the owner
@@ -365,7 +366,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
                 return WalletError{std::move(error)};
             }
 
-            auto metadata = createOwnershipTransferOpMetadata(entry);
+            auto metadata = createOwnershipTransferOpMetadata(std::move(entry));
             // createUMEntryOwnershipTransferOpMetadata(std::move(entry));
 
             //return metadata and the owner
