@@ -21,25 +21,25 @@ UMEntryDeletionOp::UMEntryDeletionOp(UMEntry&& entry,
 auto UMEntryDeletionOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryDeletionOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryDeletionOp::getUMEntryValue() const
     -> const UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryDeletionOp::getUMEntryValue()
     -> UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryDeletionOp::getUMEntry() const

@@ -115,7 +115,7 @@ auto ReadWriteWallet::renewUMEntry(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = toHexString(entry.first);
+                auto entry_str = toHexString(entry.getKey());
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -225,7 +225,7 @@ auto ReadWriteWallet::deleteUMEntry(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = toHexString(entry.first);
+                auto entry_str = toHexString(entry.getKey());
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -282,7 +282,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = toHexString(entry.first);
+                auto entry_str = toHexString(entry.getKey());
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -333,7 +333,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
 }
 
 auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
-                                        std::int64_t amount)
+                                      std::int64_t amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //lookup the owner of the key

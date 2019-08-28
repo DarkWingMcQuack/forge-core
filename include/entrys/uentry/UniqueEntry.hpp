@@ -22,8 +22,34 @@ using UniqueEntryValue = std::variant<IPv4Value,
                                       ByteArray,
                                       NoneValue>;
 
-using UniqueEntry = std::pair<EntryKey,
-                              UniqueEntryValue>;
+class UniqueEntry
+{
+public:
+    UniqueEntry(EntryKey, UniqueEntryValue);
+
+    auto extractValueFlag()
+        -> std::byte;
+
+    auto toRawData()
+        -> std::vector<std::byte>;
+
+    auto toJson()
+        -> Json::Value;
+
+    auto getKey() const
+        -> const EntryKey&;
+    auto getKey()
+        -> EntryKey&;
+
+    auto getValue() const
+        -> const UniqueEntryValue&;
+    auto getValue()
+        -> UniqueEntryValue&;
+
+private:
+    EntryKey key_;
+    UniqueEntryValue value_;
+};
 
 auto parseUniqueValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UniqueEntryValue>;

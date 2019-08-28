@@ -21,25 +21,25 @@ UniqueEntryCreationOp::UniqueEntryCreationOp(UniqueEntry&& entry,
 auto UniqueEntryCreationOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryCreationOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryCreationOp::getUniqueEntryValue() const
     -> const UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryCreationOp::getUniqueEntryValue()
     -> UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryCreationOp::getUniqueEntry() const

@@ -38,8 +38,38 @@ using UMEntryValue = std::variant<IPv4Value,
                                   ByteArray,
                                   NoneValue>;
 
-using UMEntry = std::pair<EntryKey,
-                          UMEntryValue>;
+// using UMEntry = std::pair<EntryKey,
+// UMEntryValue>;
+
+class UMEntry
+{
+public:
+    UMEntry(EntryKey, UMEntryValue);
+
+    auto extractValueFlag(const UMEntryValue& value)
+        -> std::byte;
+
+    auto toRawData(const UMEntry& entry)
+        -> std::vector<std::byte>;
+
+    auto toJson(UMEntry value)
+        -> Json::Value;
+
+    auto getKey() const
+        -> const EntryKey&;
+    auto getKey()
+        -> EntryKey&;
+
+    auto getValue() const
+        -> const UMEntryValue&;
+    auto getValue()
+        -> UMEntryValue&;
+
+private:
+    EntryKey key_;
+    UMEntryValue value_;
+};
+
 
 auto parseUMValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UMEntryValue>;

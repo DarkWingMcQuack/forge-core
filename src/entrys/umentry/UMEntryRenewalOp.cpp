@@ -1,7 +1,7 @@
-#include <entrys/umentry/UMEntry.hpp>
-#include <entrys/umentry/UMEntryRenewalOp.hpp>
 #include <core/FlagIndexes.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
+#include <entrys/umentry/UMEntryRenewalOp.hpp>
 
 using forge::core::UMEntry;
 using forge::core::UMEntryRenewalOp;
@@ -9,9 +9,9 @@ using forge::core::UMENTRY_RENEWAL_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryRenewalOp::UMEntryRenewalOp(UMEntry&& entry,
-                               std::string&& owner,
-                               std::int64_t block,
-                               std::int64_t value)
+                                   std::string&& owner,
+                                   std::int64_t block,
+                                   std::int64_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
@@ -21,19 +21,19 @@ UMEntryRenewalOp::UMEntryRenewalOp(UMEntry&& entry,
 auto UMEntryRenewalOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryRenewalOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryRenewalOp::getUMEntryValue() const
     -> const UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryRenewalOp::getUMEntry() const
@@ -62,7 +62,7 @@ auto UMEntryRenewalOp::getBlock() const
 auto UMEntryRenewalOp::getUMEntryValue()
     -> UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryRenewalOp::getOwner() const

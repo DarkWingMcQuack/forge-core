@@ -19,6 +19,52 @@ using forge::core::IPv6_VALUE_FLAG;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 
+UniqueEntry::UniqueEntry(EntryKey key, UniqueEntryValue value)
+    : key_(std::move(key)),
+      value_(std::move(value)) {}
+
+auto UniqueEntry::extractValueFlag()
+    -> std::byte
+{
+    //TODO
+}
+
+auto UniqueEntry::toRawData()
+    -> std::vector<std::byte>
+{
+    //TODO
+}
+
+auto UniqueEntry::toJson()
+    -> Json::Value
+{
+    //TODO
+}
+
+auto UniqueEntry::getKey() const
+    -> const EntryKey&
+{
+    return key_;
+}
+
+auto UniqueEntry::getKey()
+    -> EntryKey&
+{
+    return key_;
+}
+
+auto UniqueEntry::getValue() const
+    -> const UniqueEntryValue&
+{
+    return value_;
+}
+
+auto UniqueEntry::getValue()
+    -> UniqueEntryValue&
+{
+    return value_;
+}
+
 
 auto forge::core::parseUniqueValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UniqueEntryValue>
@@ -62,7 +108,11 @@ auto forge::core::parseUniqueEntry(const std::vector<std::byte>& data)
 
 
     return combine(std::move(key_opt),
-                   std::move(value_opt));
+                   std::move(value_opt))
+        .map([](auto&& pair) {
+            return UniqueEntry{std::move(pair.first),
+                               std::move(pair.second)};
+        });
 }
 
 auto forge::core::extractUniqueValueFlag(const UniqueEntryValue& value)
@@ -87,9 +137,9 @@ auto forge::core::uniqueEntryValueToRawData(const UniqueEntryValue& value)
 auto forge::core::uniqueEntryToRawData(const UniqueEntry& entry)
     -> std::vector<std::byte>
 {
-    auto key_data = std::move(entry.first);
-    auto value_data = uniqueEntryValueToRawData(entry.second);
-    auto value_flag = extractValueFlag(entry.second);
+    auto key_data = std::move(entry.getKey());
+    auto value_data = uniqueEntryValueToRawData(entry.getValue());
+    auto value_flag = extractValueFlag(entry.getValue());
 
     value_data.insert(std::begin(value_data),
                       value_flag);
@@ -126,9 +176,9 @@ auto forge::core::uniqueEntryToJson(UniqueEntry value)
 {
     Json::Value ret_json;
     ret_json["entry_type"] = "unique entry";
-    ret_json["key"] = forge::core::toHexString(value.first);
+    ret_json["key"] = forge::core::toHexString(value.getKey());
 
-    auto trash_json = forge::core::uniqueEntryValueToJson(value.second);
+    auto trash_json = forge::core::uniqueEntryValueToJson(value.getValue());
 
     ret_json["type"] = std::move(trash_json["type"]);
     ret_json["value"] = std::move(trash_json["value"]);

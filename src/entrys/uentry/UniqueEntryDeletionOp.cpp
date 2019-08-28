@@ -21,25 +21,25 @@ UniqueEntryDeletionOp::UniqueEntryDeletionOp(UniqueEntry&& entry,
 auto UniqueEntryDeletionOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryDeletionOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryDeletionOp::getUniqueEntryValue() const
     -> const UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryDeletionOp::getUniqueEntryValue()
     -> UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryDeletionOp::getUniqueEntry() const

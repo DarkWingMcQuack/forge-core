@@ -23,25 +23,25 @@ UniqueEntryOwnershipTransferOp::UniqueEntryOwnershipTransferOp(UniqueEntry&& ent
 auto UniqueEntryOwnershipTransferOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryOwnershipTransferOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryOwnershipTransferOp::getUniqueEntryValue() const
     -> const UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryOwnershipTransferOp::getUniqueEntryValue()
     -> UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryOwnershipTransferOp::getUniqueEntry() const

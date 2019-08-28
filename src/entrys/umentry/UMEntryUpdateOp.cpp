@@ -1,7 +1,7 @@
-#include <entrys/umentry/UMEntry.hpp>
-#include <entrys/umentry/UMEntryUpdateOp.hpp>
 #include <core/FlagIndexes.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
+#include <entrys/umentry/UMEntryUpdateOp.hpp>
 
 using forge::core::UMEntry;
 using forge::core::EntryKey;
@@ -11,9 +11,9 @@ using forge::core::UMENTRY_UPDATE_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryUpdateOp::UMEntryUpdateOp(UMEntry&& entry,
-                             std::string&& owner,
-                             std::int64_t block,
-                             std::int64_t value)
+                                 std::string&& owner,
+                                 std::int64_t block,
+                                 std::int64_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
@@ -23,25 +23,25 @@ UMEntryUpdateOp::UMEntryUpdateOp(UMEntry&& entry,
 auto UMEntryUpdateOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryUpdateOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryUpdateOp::getNewUMEntryValue() const
     -> const UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryUpdateOp::getNewUMEntryValue()
     -> UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryUpdateOp::getUMEntry() const
@@ -79,11 +79,11 @@ auto UMEntryUpdateOp::getOwner()
 }
 
 auto forge::core::createUMEntryUpdateOpMetadata(EntryKey&& key,
-                                              UMEntryValue new_value)
+                                                UMEntryValue new_value)
     -> std::vector<std::byte>
 {
     auto entry = UMEntry{std::move(key),
-                       std::move(new_value)};
+                         std::move(new_value)};
     auto data = forge::core::umEntryToRawData(entry);
     auto flag = forge::core::UMENTRY_UPDATE_FLAG;
 

@@ -1,5 +1,5 @@
-#include <entrys/umentry/UMEntry.hpp>
 #include <core/FlagIndexes.hpp>
+#include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <entrys/umentry/UMEntryOwnershipTransferOp.hpp>
 
@@ -9,10 +9,10 @@ using forge::core::UMENTRY_OWNERSHIP_TRANSFER_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryOwnershipTransferOp::UMEntryOwnershipTransferOp(UMEntry&& entry,
-                                         std::string&& old_owner,
-                                         std::string&& new_owner,
-                                         std::int64_t block,
-                                         std::int64_t value)
+                                                       std::string&& old_owner,
+                                                       std::string&& new_owner,
+                                                       std::int64_t block,
+                                                       std::int64_t value)
     : entry_(std::move(entry)),
       old_owner_(std::move(old_owner)),
       new_owner_(std::move(new_owner)),
@@ -23,25 +23,25 @@ UMEntryOwnershipTransferOp::UMEntryOwnershipTransferOp(UMEntry&& entry,
 auto UMEntryOwnershipTransferOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryOwnershipTransferOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryOwnershipTransferOp::getUMEntryValue() const
     -> const UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryOwnershipTransferOp::getUMEntryValue()
     -> UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryOwnershipTransferOp::getUMEntry() const

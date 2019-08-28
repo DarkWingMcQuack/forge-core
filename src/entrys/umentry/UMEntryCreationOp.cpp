@@ -21,25 +21,25 @@ UMEntryCreationOp::UMEntryCreationOp(UMEntry&& entry,
 auto UMEntryCreationOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryCreationOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UMEntryCreationOp::getUMEntryValue() const
     -> const UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryCreationOp::getUMEntryValue()
     -> UMEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UMEntryCreationOp::getUMEntry() const

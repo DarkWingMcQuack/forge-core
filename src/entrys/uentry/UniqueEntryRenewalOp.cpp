@@ -21,19 +21,19 @@ UniqueEntryRenewalOp::UniqueEntryRenewalOp(UniqueEntry&& entry,
 auto UniqueEntryRenewalOp::getEntryKey() const
     -> const EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryRenewalOp::getEntryKey()
     -> EntryKey&
 {
-    return entry_.first;
+    return entry_.getKey();
 }
 
 auto UniqueEntryRenewalOp::getUniqueEntryValue() const
     -> const UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryRenewalOp::getUniqueEntry() const
@@ -62,7 +62,7 @@ auto UniqueEntryRenewalOp::getBlock() const
 auto UniqueEntryRenewalOp::getUniqueEntryValue()
     -> UniqueEntryValue&
 {
-    return entry_.second;
+    return entry_.getValue();
 }
 
 auto UniqueEntryRenewalOp::getOwner() const
