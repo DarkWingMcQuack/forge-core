@@ -1,6 +1,6 @@
+#include <core/FlagIndexes.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryDeletionOp.hpp>
-#include <core/FlagIndexes.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 
 using forge::core::UMEntry;
@@ -9,9 +9,9 @@ using forge::core::UMENTRY_DELETION_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryDeletionOp::UMEntryDeletionOp(UMEntry&& entry,
-                                 std::string&& owner,
-                                 std::int64_t block,
-                                 std::int64_t value)
+                                     std::string&& owner,
+                                     std::int64_t block,
+                                     std::int64_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
@@ -79,7 +79,7 @@ auto UMEntryDeletionOp::getOwner()
 auto forge::core::createUMEntryDeletionOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::umEntryToRawData(entry);
+    auto data = entry.toRawData();
     auto flag = forge::core::UMENTRY_DELETION_FLAG;
 
     data.insert(std::begin(data), flag);

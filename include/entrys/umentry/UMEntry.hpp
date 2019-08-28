@@ -46,13 +46,10 @@ class UMEntry
 public:
     UMEntry(EntryKey, UMEntryValue);
 
-    auto extractValueFlag(const UMEntryValue& value)
-        -> std::byte;
-
-    auto toRawData(const UMEntry& entry)
+    auto toRawData() const
         -> std::vector<std::byte>;
 
-    auto toJson(UMEntry value)
+    auto toJson() const
         -> Json::Value;
 
     auto getKey() const
@@ -91,16 +88,10 @@ auto extractValueFlag(const UMEntryValue& value)
 auto umEntryValueToRawData(const UMEntryValue& value)
     -> std::vector<std::byte>;
 
-auto umEntryToRawData(const UMEntry& entry)
-    -> std::vector<std::byte>;
-
 auto jsonToUMEntryValue(Json::Value&& value)
     -> utilxx::Opt<UMEntryValue>;
 
 auto umentryValueToJson(UMEntryValue value)
-    -> Json::Value;
-
-auto umentryToJson(UMEntry value)
     -> Json::Value;
 
 } // namespace forge::core

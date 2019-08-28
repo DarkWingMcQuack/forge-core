@@ -250,7 +250,7 @@ auto ReadOnlyWalletServer::lookupallentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -306,7 +306,7 @@ auto ReadOnlyWalletServer::lookupuniquemodifiableentrysof(const std::string& own
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -390,7 +390,7 @@ auto ReadOnlyWalletServer::getownedumentrys()
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -418,7 +418,7 @@ auto ReadOnlyWalletServer::getwatchonlyumentrys()
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -446,7 +446,7 @@ auto ReadOnlyWalletServer::getallwatchedumentrys()
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =

@@ -111,10 +111,10 @@ auto forge::core::extractOperationFlag(const UMEntryOperation& operation)
 
 
 auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadata,
-                                std::int64_t block,
-                                std::string&& owner,
-                                std::int64_t value,
-                                utilxx::Opt<std::string>&& new_owner_opt)
+                                           std::int64_t block,
+                                           std::string&& owner,
+                                           std::int64_t value,
+                                           utilxx::Opt<std::string>&& new_owner_opt)
     -> Opt<UMEntryOperation>
 {
     if(metadata.size() < 10) {
@@ -249,10 +249,10 @@ auto forge::core::parseTransactionToUMEntry(Transaction tx,
             //the ResultType
             return ResultType{
                 parseMetadataToUMEntryOp(std::move(metadata),
-                              block,
-                              std::move(owner),
-                              value,
-                              std::move(new_owner_opt))};
+                                         block,
+                                         std::move(owner),
+                                         value,
+                                         std::move(new_owner_opt))};
         });
 }
 
@@ -263,7 +263,7 @@ auto forge::core::toMetadata(const UMEntryOperation& op)
     const auto& entry = getUMEntry(op);
     auto flag = extractOperationFlag(op);
 
-    auto data = forge::core::umEntryToRawData(entry);
+    auto data = entry.toRawData();
 
     data.insert(std::begin(data),
                 flag);

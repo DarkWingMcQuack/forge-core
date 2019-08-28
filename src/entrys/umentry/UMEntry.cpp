@@ -24,22 +24,36 @@ UMEntry::UMEntry(EntryKey key, UMEntryValue value)
     : key_(std::move(key)),
       value_(std::move(value)) {}
 
-auto UMEntry::extractValueFlag(const UMEntryValue& value)
-    -> std::byte
-{
-    //TODO
-}
-
-auto UMEntry::toRawData(const UMEntry& entry)
+auto UMEntry::toRawData() const
     -> std::vector<std::byte>
 {
-    //TODO
+    auto key_data = getKey();
+    auto value_data = umEntryValueToRawData(getValue());
+    auto value_flag = extractValueFlag(getValue());
+
+    value_data.insert(std::begin(value_data),
+                      value_flag);
+
+    value_data.insert(std::end(value_data),
+                      std::begin(key_data),
+                      std::end(key_data));
+
+    return value_data;
 }
 
-auto UMEntry::toJson(UMEntry value)
+auto UMEntry::toJson() const
     -> Json::Value
 {
-    //TODO
+    Json::Value ret_json;
+    ret_json["entry_type"] = "unique modifiable entry";
+    ret_json["key"] = forge::core::toHexString(getKey());
+
+    auto trash_json = forge::core::umentryValueToJson(getValue());
+
+    ret_json["type"] = std::move(trash_json["type"]);
+    ret_json["value"] = std::move(trash_json["value"]);
+
+    return ret_json;
 }
 
 auto UMEntry::getKey() const
@@ -239,24 +253,6 @@ auto forge::core::umEntryValueToRawData(const UMEntryValue& value)
 }
 
 
-auto forge::core::umEntryToRawData(const UMEntry& entry)
-    -> std::vector<std::byte>
-{
-    auto key_data = std::move(entry.getKey());
-    auto value_data = umEntryValueToRawData(entry.getValue());
-    auto value_flag = extractValueFlag(entry.getValue());
-
-    value_data.insert(std::begin(value_data),
-                      value_flag);
-
-    value_data.insert(std::end(value_data),
-                      std::begin(key_data),
-                      std::end(key_data));
-
-    return value_data;
-}
-
-
 //TODO: test
 auto forge::core::jsonToUMEntryValue(Json::Value&& value)
     -> utilxx::Opt<UMEntryValue>
@@ -327,7 +323,7 @@ auto forge::core::jsonToUMEntryValue(Json::Value&& value)
         if(!value_json.isString()) {
             return std::nullopt;
         }
-        auto value_str = std::move(value_json.asString());
+        auto value_str = value_json.asString();
         auto byte_vec_opt = stringToByteVec(value_str);
 
         if(!byte_vec_opt.hasValue()) {
@@ -391,19 +387,4 @@ auto forge::core::umentryValueToJson(UMEntryValue value)
 
     return std::visit(visitor,
                       std::move(value));
-}
-
-auto forge::core::umentryToJson(UMEntry value)
-    -> Json::Value
-{
-    Json::Value ret_json;
-    ret_json["entry_type"] = "unique modifiable entry";
-    ret_json["key"] = forge::core::toHexString(value.getKey());
-
-    auto trash_json = forge::core::umentryValueToJson(value.getValue());
-
-    ret_json["type"] = std::move(trash_json["type"]);
-    ret_json["value"] = std::move(trash_json["value"]);
-
-    return ret_json;
 }

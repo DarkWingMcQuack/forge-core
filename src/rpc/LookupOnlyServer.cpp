@@ -283,7 +283,7 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -339,7 +339,7 @@ auto LookupOnlyServer::lookupuniquemodifiableentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return umentryToJson(std::move(entry));
+                                          return entry.toJson();
                                       });
 
     auto ret_json =

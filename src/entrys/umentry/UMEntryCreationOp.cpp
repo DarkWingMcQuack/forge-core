@@ -1,6 +1,6 @@
+#include <core/FlagIndexes.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryCreationOp.hpp>
-#include <core/FlagIndexes.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 
 using forge::core::UMEntry;
@@ -9,9 +9,9 @@ using forge::core::UMENTRY_CREATION_FLAG;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
 UMEntryCreationOp::UMEntryCreationOp(UMEntry&& entry,
-                                 std::string&& owner,
-                                 std::int64_t block,
-                                 std::int64_t value)
+                                     std::string&& owner,
+                                     std::int64_t block,
+                                     std::int64_t value)
     : entry_(std::move(entry)),
       owner_(std::move(owner)),
       block_(block),
@@ -80,7 +80,7 @@ auto UMEntryCreationOp::getOwner()
 auto forge::core::createUMEntryCreationOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::umEntryToRawData(entry);
+    auto data = entry.toRawData();
     auto flag = forge::core::UMENTRY_CREATION_FLAG;
 
     data.insert(std::begin(data), flag);

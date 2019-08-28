@@ -79,7 +79,7 @@ auto UMEntryRenewalOp::getOwner()
 auto forge::core::createUMEntryRenewalOpMetadata(UMEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::umEntryToRawData(entry);
+    auto data = entry.toRawData();
     auto flag = forge::core::UMENTRY_RENEWAL_FLAG;
 
     data.insert(std::begin(data), flag);
