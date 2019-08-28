@@ -278,7 +278,7 @@ auto ReadWriteWalletServer::addnewownedaddress(const std::string& address)
     wallet_.addNewOwnedAddress(std::move(copy));
 }
 
-auto ReadWriteWalletServer::getownedentrys()
+auto ReadWriteWalletServer::getownedumentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -306,7 +306,7 @@ auto ReadWriteWalletServer::getownedentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getwatchonlyentrys()
+auto ReadWriteWalletServer::getwatchonlyumentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -334,7 +334,7 @@ auto ReadWriteWalletServer::getwatchonlyentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getallwatchedentrys()
+auto ReadWriteWalletServer::getallwatchedumentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -342,6 +342,90 @@ auto ReadWriteWalletServer::getallwatchedentrys()
     }
 
     auto entrys = wallet_.getAllWatchedUMEntrys();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getowneduniqueentrys()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getOwnedUniqueEntrys();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getwatchonlyuniqueentrys()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getWatchOnlyUniqueEntrys();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getallwatcheduniqueentrys()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getAllWatchedUniqueEntrys();
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
@@ -399,11 +483,11 @@ auto ReadWriteWalletServer::ownesaddress(const std::string& address)
     return wallet_.ownesAddress(address);
 }
 
-auto ReadWriteWalletServer::createnewentry(const std::string& address,
-                                           int burnvalue,
-                                           bool is_string,
-                                           const std::string& key,
-                                           const Json::Value& value)
+auto ReadWriteWalletServer::createnewumentry(const std::string& address,
+                                             int burnvalue,
+                                             bool is_string,
+                                             const std::string& key,
+                                             const Json::Value& value)
     -> std::string
 {
     auto value_copy = value;
@@ -458,41 +542,11 @@ auto ReadWriteWalletServer::createnewentry(const std::string& address,
     }
 }
 
-auto ReadWriteWalletServer::renewentry(int burnvalue,
-                                       bool is_string,
-                                       const std::string& key)
-    -> std::string
-{
-    auto key_vec_opt =
-        [&] {
-            if(is_string) {
-                auto byte_vec = forge::core::stringToASCIIByteVec(key);
-                return utilxx::Opt{byte_vec};
-            } else {
-                return forge::core::stringToByteVec(key);
-            }
-        }();
-    if(!key_vec_opt.hasValue()) {
-        throw JsonRpcException{"unable to decode key"};
-    }
 
-    auto key_vec = std::move(key_vec_opt.getValue());
-
-    auto res = wallet_.renewEntry(std::move(key_vec),
-                                  burnvalue);
-
-    if(!res) {
-        auto error_msg = res.getError().what();
-        throw JsonRpcException{std::move(error_msg)};
-    }
-
-    return res.getValue();
-}
-
-auto ReadWriteWalletServer::updateentry(int burnvalue,
-                                        bool is_string,
-                                        const std::string& key,
-                                        const Json::Value& value)
+auto ReadWriteWalletServer::updateumentry(int burnvalue,
+                                          bool is_string,
+                                          const std::string& key,
+                                          const Json::Value& value)
     -> std::string
 {
     auto value_copy = value;
@@ -529,6 +583,97 @@ auto ReadWriteWalletServer::updateentry(int burnvalue,
     return res.getValue();
 }
 
+
+auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
+                                                 int burnvalue,
+                                                 bool is_string,
+                                                 const std::string& key,
+                                                 const Json::Value& value)
+    -> std::string
+{
+    auto value_copy = value;
+    auto entry_value_opt = forge::core::jsonToUniqueEntryValue(std::move(value_copy));
+    if(!entry_value_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode value"};
+    }
+
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return forge::core::stringToByteVec(key);
+            }
+        }();
+
+    if(!key_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
+    }
+
+    auto entry_value = std::move(entry_value_opt.getValue());
+    auto key_vec = std::move(key_vec_opt.getValue());
+
+    if(address.empty()) {
+        auto res = wallet_.createNewUniqueEntry(std::move(key_vec),
+                                                std::move(entry_value),
+                                                burnvalue);
+
+
+        if(!res) {
+            auto error_msg = res.getError().what();
+            throw JsonRpcException{std::move(error_msg)};
+        }
+
+        return res.getValue();
+
+    } else {
+        auto address_copy = address;
+        auto res = wallet_.createNewUniqueEntry(std::move(key_vec),
+                                                std::move(entry_value),
+                                                std::move(address_copy),
+                                                burnvalue);
+
+        if(!res) {
+            auto error_msg = res.getError().what();
+            throw JsonRpcException{std::move(error_msg)};
+        }
+
+        return res.getValue();
+    }
+}
+
+auto ReadWriteWalletServer::renewentry(int burnvalue,
+                                       bool is_string,
+                                       const std::string& key)
+    -> std::string
+{
+    auto key_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = forge::core::stringToASCIIByteVec(key);
+                return utilxx::Opt{byte_vec};
+            } else {
+                return forge::core::stringToByteVec(key);
+            }
+        }();
+    if(!key_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
+    }
+
+    auto key_vec = std::move(key_vec_opt.getValue());
+
+    auto res = wallet_.renewEntry(std::move(key_vec),
+                                  burnvalue);
+
+    if(!res) {
+        auto error_msg = res.getError().what();
+        throw JsonRpcException{std::move(error_msg)};
+    }
+
+    return res.getValue();
+}
+
 auto ReadWriteWalletServer::deleteentry(int burnvalue,
                                         bool is_string,
                                         const std::string& key)
@@ -550,7 +695,7 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = wallet_.deleteEntry(std::move(key_vec),
-                                     burnvalue);
+                                   burnvalue);
 
     if(!res) {
         auto error_msg = res.getError().what();

@@ -117,7 +117,7 @@ auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
                              "creates a new entry")
             ->callback([&] {
                 ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
-                RESPONSE = client.createnewentry(OWNER, BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
+                RESPONSE = client.createnewumentry(OWNER, BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
             });
 
     createnewentry_opt
@@ -208,7 +208,7 @@ auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
         ->required();
 }
 
-auto forge::cli::addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto updateentry_opt =
@@ -218,7 +218,7 @@ auto forge::cli::addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
                              "updates an entry to map to a new value")
             ->callback([&] {
                 ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
-                RESPONSE = client.updateentry(BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
+                RESPONSE = client.updateumentry(BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
             });
 
     updateentry_opt
@@ -313,8 +313,8 @@ auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWal
     -> void
 {
     addCreateUMEntry(app, client);
+    addUpdateUMEntry(app, client);
     addRenewEntry(app, client);
-    addUpdateEntry(app, client);
     addDeleteEntry(app, client);
     addTransferOwnership(app, client);
     addPayToEntry(app, client);

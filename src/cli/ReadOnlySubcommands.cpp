@@ -56,30 +56,34 @@ auto forge::cli::addAddNewOwnedAddress(CLI::App& app, forge::rpc::ReadWriteWalle
 auto forge::cli::addGetOwnedEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("getownedentrys",
-                       "returns a list of all entrys the wallet ownes")
+    app.get_subcommand("umentry")
+        ->add_subcommand("getownedentrys",
+                         "returns a list of all entrys the wallet ownes")
         ->callback([&] {
-            RESPONSE = client.getownedentrys();
+            RESPONSE = client.getownedumentrys();
         });
 }
 
 auto forge::cli::addGetWatchedOnlyEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("getwatchedonlyentrys",
-                       "returns a list of all entrys the wallet observes but does not own")
+    app.get_subcommand("umentry")
+        ->add_subcommand("getwatchedonlyentrys",
+                         "returns a list of all entrys the wallet observes but does not own")
         ->callback([&] {
-            RESPONSE = client.getwatchonlyentrys();
+            RESPONSE = client.getwatchonlyumentrys();
         });
 }
 
 auto forge::cli::addGetAllWatchedEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
-    app.add_subcommand("getallwatchedentrys",
-                       "returns a list of all entrys the wallet observes")
+    app
+        .get_subcommand("umentry")
+        ->add_subcommand("getallwatchedentrys",
+                         "returns a list of all entrys the wallet observes")
         ->callback([&] {
-            RESPONSE = client.getallwatchedentrys();
+            RESPONSE = client.getallwatchedumentrys();
         });
 }
 

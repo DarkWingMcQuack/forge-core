@@ -81,7 +81,7 @@
         }
     },
     {
-        "name" : "getownedentrys",
+        "name" : "getownedumentrys",
         "returns" : [
             {
                 "key" : "somebytevec",
@@ -96,7 +96,7 @@
         ]
     },
     {
-        "name" : "getwatchonlyentrys",
+        "name" : "getwatchonlyumentrys",
         "returns" : [
             {
                 "key" : "somebytevec",
@@ -111,7 +111,52 @@
         ]
     },
     {
-        "name" : "getallwatchedentrys",
+        "name" : "getallwatchedumentrys",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getowneduniqueentrys",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getwatchonlyuniqueentrys",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getallwatcheduniqueentrys",
         "returns" : [
             {
                 "key" : "somebytevec",
@@ -147,7 +192,7 @@
         "returns" : true
     },
     {
-        "name" : "createnewentry",
+        "name" : "createnewumentry",
         "params" : {
             "key" : "somekey",
             "isstring" : true,
@@ -161,16 +206,21 @@
         "returns" : "sometxid"
     },
     {
-        "name" : "renewentry",
+        "name" : "createnewuniqueentry",
         "params" : {
             "key" : "somekey",
             "isstring" : true,
+            "value" : {
+                "type" : "ipv6",
+                "value" : "somevalue"
+            },
+            "address" : "someaddress",
             "burnvalue" : 10
         },
         "returns" : "sometxid"
     },
     {
-        "name" : "updateentry",
+        "name" : "updateumentry",
         "params" : {
             "key" : "somekey",
             "isstring" : true, //if string is interpreted as string or as bytevec
@@ -178,6 +228,15 @@
                 "type" : "ipv6",
                 "value" : "somevalue"
             },
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
+    },
+    {
+        "name" : "renewentry",
+        "params" : {
+            "key" : "somekey",
+            "isstring" : true,
             "burnvalue" : 10
         },
         "returns" : "sometxid"

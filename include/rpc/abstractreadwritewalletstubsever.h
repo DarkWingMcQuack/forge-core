@@ -26,15 +26,19 @@ namespace forge {
                     this->bindAndAddNotification(jsonrpc::Procedure("addwatchonlyaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::addwatchonlyaddressI);
                     this->bindAndAddNotification(jsonrpc::Procedure("deletewatchonlyaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::deletewatchonlyaddressI);
                     this->bindAndAddNotification(jsonrpc::Procedure("addnewownedaddress", jsonrpc::PARAMS_BY_NAME, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::addnewownedaddressI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("getownedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getownedentrysI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getwatchonlyentrysI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getallwatchedentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getownedumentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getownedumentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyumentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getwatchonlyumentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedumentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getallwatchedumentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getowneduniqueentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getowneduniqueentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyuniqueentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getwatchonlyuniqueentrysI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatcheduniqueentrys", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getallwatcheduniqueentrysI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getwatchedaddressesI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getownedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getownedaddressesI);
                     this->bindAndAddMethod(jsonrpc::Procedure("ownesaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::ownesaddressI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("createnewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::createnewentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("createnewumentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::createnewumentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("createnewuniqueentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::createnewuniqueentryI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("updateumentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::updateumentryI);
                     this->bindAndAddMethod(jsonrpc::Procedure("renewentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::renewentryI);
-                    this->bindAndAddMethod(jsonrpc::Procedure("updateentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"value",jsonrpc::JSON_OBJECT, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::updateentryI);
                     this->bindAndAddMethod(jsonrpc::Procedure("deleteentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::deleteentryI);
                     this->bindAndAddMethod(jsonrpc::Procedure("transferownership", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"newowner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::transferownershipI);
                     this->bindAndAddMethod(jsonrpc::Procedure("paytoentryowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "amount",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::paytoentryownerI);
@@ -88,17 +92,29 @@ namespace forge {
                 {
                     this->addnewownedaddress(request["address"].asString());
                 }
-                inline virtual void getownedentrysI(const Json::Value &/*request*/, Json::Value &response)
+                inline virtual void getownedumentrysI(const Json::Value &/*request*/, Json::Value &response)
                 {
-                    response = this->getownedentrys();
+                    response = this->getownedumentrys();
                 }
-                inline virtual void getwatchonlyentrysI(const Json::Value &/*request*/, Json::Value &response)
+                inline virtual void getwatchonlyumentrysI(const Json::Value &/*request*/, Json::Value &response)
                 {
-                    response = this->getwatchonlyentrys();
+                    response = this->getwatchonlyumentrys();
                 }
-                inline virtual void getallwatchedentrysI(const Json::Value &/*request*/, Json::Value &response)
+                inline virtual void getallwatchedumentrysI(const Json::Value &/*request*/, Json::Value &response)
                 {
-                    response = this->getallwatchedentrys();
+                    response = this->getallwatchedumentrys();
+                }
+                inline virtual void getowneduniqueentrysI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getowneduniqueentrys();
+                }
+                inline virtual void getwatchonlyuniqueentrysI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getwatchonlyuniqueentrys();
+                }
+                inline virtual void getallwatcheduniqueentrysI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getallwatcheduniqueentrys();
                 }
                 inline virtual void getwatchedaddressesI(const Json::Value &/*request*/, Json::Value &response)
                 {
@@ -112,17 +128,21 @@ namespace forge {
                 {
                     response = this->ownesaddress(request["address"].asString());
                 }
-                inline virtual void createnewentryI(const Json::Value &request, Json::Value &response)
+                inline virtual void createnewumentryI(const Json::Value &request, Json::Value &response)
                 {
-                    response = this->createnewentry(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
+                    response = this->createnewumentry(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
+                }
+                inline virtual void createnewuniqueentryI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->createnewuniqueentry(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
+                }
+                inline virtual void updateumentryI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->updateumentry(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
                 }
                 inline virtual void renewentryI(const Json::Value &request, Json::Value &response)
                 {
                     response = this->renewentry(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString());
-                }
-                inline virtual void updateentryI(const Json::Value &request, Json::Value &response)
-                {
-                    response = this->updateentry(request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["value"]);
                 }
                 inline virtual void deleteentryI(const Json::Value &request, Json::Value &response)
                 {
@@ -148,15 +168,19 @@ namespace forge {
                 virtual void addwatchonlyaddress(const std::string& address) = 0;
                 virtual void deletewatchonlyaddress(const std::string& address) = 0;
                 virtual void addnewownedaddress(const std::string& address) = 0;
-                virtual Json::Value getownedentrys() = 0;
-                virtual Json::Value getwatchonlyentrys() = 0;
-                virtual Json::Value getallwatchedentrys() = 0;
+                virtual Json::Value getownedumentrys() = 0;
+                virtual Json::Value getwatchonlyumentrys() = 0;
+                virtual Json::Value getallwatchedumentrys() = 0;
+                virtual Json::Value getowneduniqueentrys() = 0;
+                virtual Json::Value getwatchonlyuniqueentrys() = 0;
+                virtual Json::Value getallwatcheduniqueentrys() = 0;
                 virtual Json::Value getwatchedaddresses() = 0;
                 virtual Json::Value getownedaddresses() = 0;
                 virtual bool ownesaddress(const std::string& address) = 0;
-                virtual std::string createnewentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
+                virtual std::string createnewumentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
+                virtual std::string createnewuniqueentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
+                virtual std::string updateumentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
                 virtual std::string renewentry(int burnvalue, bool isstring, const std::string& key) = 0;
-                virtual std::string updateentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) = 0;
                 virtual std::string deleteentry(int burnvalue, bool isstring, const std::string& key) = 0;
                 virtual std::string transferownership(int burnvalue, bool isstring, const std::string& key, const std::string& newowner) = 0;
                 virtual std::string paytoentryowner(int amount, bool isstring, const std::string& key) = 0;

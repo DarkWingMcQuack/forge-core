@@ -12,7 +12,7 @@ auto addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& clie
 auto addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addUpdateEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
 auto addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)

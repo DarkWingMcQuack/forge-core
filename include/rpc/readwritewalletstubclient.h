@@ -117,31 +117,61 @@ namespace forge {
                     p["address"] = address;
                     this->CallNotification("addnewownedaddress",p);
                 }
-                Json::Value getownedentrys() 
+                Json::Value getownedumentrys() 
                 {
                     Json::Value p;
                     p = Json::nullValue;
-                    Json::Value result = this->CallMethod("getownedentrys",p);
+                    Json::Value result = this->CallMethod("getownedumentrys",p);
                     if (result.isArray())
                         return result;
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                Json::Value getwatchonlyentrys() 
+                Json::Value getwatchonlyumentrys() 
                 {
                     Json::Value p;
                     p = Json::nullValue;
-                    Json::Value result = this->CallMethod("getwatchonlyentrys",p);
+                    Json::Value result = this->CallMethod("getwatchonlyumentrys",p);
                     if (result.isArray())
                         return result;
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                Json::Value getallwatchedentrys() 
+                Json::Value getallwatchedumentrys() 
                 {
                     Json::Value p;
                     p = Json::nullValue;
-                    Json::Value result = this->CallMethod("getallwatchedentrys",p);
+                    Json::Value result = this->CallMethod("getallwatchedumentrys",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getowneduniqueentrys() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getowneduniqueentrys",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getwatchonlyuniqueentrys() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getwatchonlyuniqueentrys",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getallwatcheduniqueentrys() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getallwatcheduniqueentrys",p);
                     if (result.isArray())
                         return result;
                     else
@@ -177,7 +207,7 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
-                std::string createnewentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
+                std::string createnewumentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
                 {
                     Json::Value p;
                     p["address"] = address;
@@ -185,7 +215,34 @@ namespace forge {
                     p["isstring"] = isstring;
                     p["key"] = key;
                     p["value"] = value;
-                    Json::Value result = this->CallMethod("createnewentry",p);
+                    Json::Value result = this->CallMethod("createnewumentry",p);
+                    if (result.isString())
+                        return result.asString();
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                std::string createnewuniqueentry(const std::string& address, int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
+                {
+                    Json::Value p;
+                    p["address"] = address;
+                    p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    p["value"] = value;
+                    Json::Value result = this->CallMethod("createnewuniqueentry",p);
+                    if (result.isString())
+                        return result.asString();
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                std::string updateumentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
+                {
+                    Json::Value p;
+                    p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    p["value"] = value;
+                    Json::Value result = this->CallMethod("updateumentry",p);
                     if (result.isString())
                         return result.asString();
                     else
@@ -198,19 +255,6 @@ namespace forge {
                     p["isstring"] = isstring;
                     p["key"] = key;
                     Json::Value result = this->CallMethod("renewentry",p);
-                    if (result.isString())
-                        return result.asString();
-                    else
-                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
-                }
-                std::string updateentry(int burnvalue, bool isstring, const std::string& key, const Json::Value& value) 
-                {
-                    Json::Value p;
-                    p["burnvalue"] = burnvalue;
-                    p["isstring"] = isstring;
-                    p["key"] = key;
-                    p["value"] = value;
-                    Json::Value result = this->CallMethod("updateentry",p);
                     if (result.isString())
                         return result.asString();
                     else
