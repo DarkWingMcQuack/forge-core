@@ -45,6 +45,7 @@ find_package(Threads)
 add_library(forge-src "")
 target_sources(forge-src
   PUBLIC
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/Entry.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryOperation.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntry.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryCreationOp.hpp
@@ -84,6 +85,7 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/CLIGlobalVariables.hpp
 
   PRIVATE
+  src/entrys/Entry.cpp
   src/entrys/umentry/UMEntryOperation.cpp
   src/entrys/umentry/UMEntry.cpp
   src/entrys/umentry/UMEntryCreationOp.cpp
