@@ -31,6 +31,15 @@ public:
     auto getAllWatchedUMEntrys() const
         -> std::vector<core::UMEntry>;
 
+    auto getOwnedUniqueEntrys() const
+        -> std::vector<core::UniqueEntry>;
+
+    auto getWatchOnlyUniqueEntrys() const
+        -> std::vector<core::UniqueEntry>;
+
+    auto getAllWatchedUniqueEntrys() const
+        -> std::vector<core::UniqueEntry>;
+
     auto getWatchedAddresses() const
         -> const std::set<std::string>&;
 

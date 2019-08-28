@@ -83,6 +83,47 @@ auto ReadOnlyWallet::getAllWatchedUMEntrys() const
     return owned_entrys;
 }
 
+auto ReadOnlyWallet::getOwnedUniqueEntrys() const
+    -> std::vector<core::UniqueEntry>
+{
+    std::vector<core::UniqueEntry> ret_vec;
+    for(auto&& addr : owned_addresses_) {
+        auto new_entrys = lookup_->getUniqueEntrysOfOwner(addr);
+        ret_vec.insert(std::end(ret_vec),
+                       std::make_move_iterator(std::begin(new_entrys)),
+                       std::make_move_iterator(std::end(new_entrys)));
+    }
+
+    return ret_vec;
+}
+
+auto ReadOnlyWallet::getWatchOnlyUniqueEntrys() const
+    -> std::vector<core::UniqueEntry>
+{
+    std::vector<core::UniqueEntry> ret_vec;
+    for(auto&& addr : watched_addresses_) {
+        auto new_entrys = lookup_->getUniqueEntrysOfOwner(addr);
+        ret_vec.insert(std::end(ret_vec),
+                       std::make_move_iterator(std::begin(new_entrys)),
+                       std::make_move_iterator(std::end(new_entrys)));
+    }
+
+    return ret_vec;
+}
+
+auto ReadOnlyWallet::getAllWatchedUniqueEntrys() const
+    -> std::vector<core::UniqueEntry>
+{
+    auto owned_entrys = getOwnedUniqueEntrys();
+    auto watched_entrys = getWatchOnlyUniqueEntrys();
+
+    owned_entrys.insert(std::begin(owned_entrys),
+                        std::make_move_iterator(std::begin(watched_entrys)),
+                        std::make_move_iterator(std::end(watched_entrys)));
+
+    return owned_entrys;
+}
+
 auto ReadOnlyWallet::getWatchedAddresses() const
     -> const std::set<std::string>&
 {
