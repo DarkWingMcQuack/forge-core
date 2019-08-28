@@ -1,5 +1,5 @@
-#include <entrys/umentry/UMEntryOperation.hpp>
 #include <core/Transaction.hpp>
+#include <entrys/umentry/UMEntryOperation.hpp>
 #include <gtest/gtest.h>
 
 using namespace std::string_literals;
@@ -13,9 +13,9 @@ TEST(OperationTest, UMEntryCreationOpParsingValid)
     std::int64_t value = 10;
 
     auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
-                                block,
-                                std::move(owner),
-                                value);
+                                           block,
+                                           std::move(owner),
+                                           value);
 
     ASSERT_TRUE(op_opt);
 
@@ -43,9 +43,9 @@ TEST(OperationTest, UMEntryRenewalOpParsingValid)
     std::int64_t value = 10;
 
     auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
-                                block,
-                                std::move(owner),
-                                value);
+                                           block,
+                                           std::move(owner),
+                                           value);
 
     ASSERT_TRUE(op_opt);
 
@@ -73,10 +73,10 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
     std::int64_t value = 10;
 
     auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
-                                block,
-                                std::move(old_owner),
-                                value,
-                                std::move(new_owner));
+                                           block,
+                                           std::move(old_owner),
+                                           value,
+                                           std::move(new_owner));
 
     ASSERT_TRUE(op_opt);
 
@@ -105,9 +105,9 @@ TEST(OperationTest, UMEntryUpdateOpParsingValid)
     std::int64_t value = 10;
 
     auto op_opt = parseMetadataToUMEntryOp(std::move(metadata),
-                                block,
-                                std::move(old_owner),
-                                value);
+                                           block,
+                                           std::move(old_owner),
+                                           value);
 
     ASSERT_TRUE(op_opt);
 
@@ -148,7 +148,7 @@ TEST(OperationTest, CreationOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
+    forge::core::UMEntry expected1{key1, forge::core::UMEntryValue{value1}};
 
     auto created_metadata = createUMEntryCreationOpMetadata(std::move(expected1));
 
@@ -171,7 +171,7 @@ TEST(OperationTest, RenewalOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
+    forge::core::UMEntry expected1{key1, forge::core::UMEntryValue{value1}};
 
     auto created_metadata = createUMEntryRenewalOpMetadata(std::move(expected1));
 
@@ -194,7 +194,7 @@ TEST(OperationTest, OwnershipTransferOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
+    forge::core::UMEntry expected1{key1, forge::core::UMEntryValue{value1}};
 
     auto created_metadata = createUMEntryOwnershipTransferOpMetadata(std::move(expected1));
 
@@ -218,7 +218,7 @@ TEST(OperationTest, UpdateOpMetadataCreation)
         (std::byte)0xdd};
 
     auto created_metadata = createUMEntryUpdateOpMetadata(std::move(key1),
-                                                        std::move(value1));
+                                                          std::move(value1));
 
     EXPECT_EQ(created_metadata, expected_metadata);
 }
@@ -239,7 +239,7 @@ TEST(OperationTest, DeletionOpMetadataCreation)
         (std::byte)0xcc,
         (std::byte)0xdd};
 
-    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
+    forge::core::UMEntry expected1{key1, forge::core::UMEntryValue{value1}};
 
     auto created_metadata = createUMEntryDeletionOpMetadata(std::move(expected1));
 

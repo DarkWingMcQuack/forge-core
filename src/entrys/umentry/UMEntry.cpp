@@ -66,6 +66,18 @@ auto UMEntry::getValue()
     return value_;
 }
 
+auto UMEntry::operator==(const UMEntry& rhs) const
+    -> bool
+{
+    return key_ == rhs.key_
+        && value_ == rhs.value_;
+}
+auto UMEntry::operator!=(const UMEntry& rhs) const
+    -> bool
+{
+    return !(*this == rhs);
+}
+
 
 auto forge::core::parseUMValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UMEntryValue>

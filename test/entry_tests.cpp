@@ -256,7 +256,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv4)
         (std::byte)0x00,
         (std::byte)0x00,
         (std::byte)0x00};
-    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
+    forge::core::UMEntry expected1{key1, forge::core::UMEntryValue{value1}};
 
     ASSERT_TRUE(entry_opt1);
     EXPECT_EQ(entry_opt1.getValue(), expected1);
@@ -275,7 +275,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv4)
         (std::byte)0xcc,
         (std::byte)0xdd};
     std::vector key2{(std::byte)0xaa};
-    std::pair expected2{key2, forge::core::UMEntryValue{value2}};
+    forge::core::UMEntry expected2{key2, forge::core::UMEntryValue{value2}};
 
     ASSERT_TRUE(entry_opt2);
     EXPECT_EQ(entry_opt2.getValue(), expected2);
@@ -311,7 +311,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv6)
         (std::byte)0x10,
         (std::byte)0x10,
         (std::byte)0x10};
-    std::pair expected1{key1, forge::core::UMEntryValue{value1}};
+    forge::core::UMEntry expected1{key1, forge::core::UMEntryValue{value1}};
 
     ASSERT_TRUE(entry_opt1);
     EXPECT_EQ(entry_opt1.getValue(), expected1);
@@ -340,7 +340,7 @@ TEST(UMEntryTest, UMEntryParsingValidIpv6)
         (std::byte)0x99,
         (std::byte)0x00};
 
-    std::pair expected2{key1, forge::core::UMEntryValue{value2}};
+    forge::core::UMEntry expected2{key1, forge::core::UMEntryValue{value2}};
 
     ASSERT_TRUE(entry_opt2);
     EXPECT_EQ(entry_opt2.getValue(), expected2);

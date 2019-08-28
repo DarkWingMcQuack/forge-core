@@ -65,6 +65,11 @@ public:
     auto getValue()
         -> UMEntryValue&;
 
+    auto operator==(const UMEntry& rhs) const
+        -> bool;
+    auto operator!=(const UMEntry& rhs) const
+        -> bool;
+
 private:
     EntryKey key_;
     UMEntryValue value_;
