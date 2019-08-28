@@ -1,8 +1,9 @@
 #pragma once
 
-#include "core/Transaction.hpp"
 #include <core/Coin.hpp>
+#include <core/Transaction.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
+#include <entrys/Entry.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <functional>
 #include <lookup/UMEntryLookup.hpp>
@@ -35,6 +36,9 @@ public:
 
     auto lookupUniqueValue(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
+
+    auto lookup(const core::EntryKey& key) const
+        -> utilxx::Opt<core::Entry>;
 
     auto lookupOwner(const core::EntryKey& key) const
         -> utilxx::Opt<std::reference_wrapper<const std::string>>;

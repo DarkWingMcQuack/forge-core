@@ -109,6 +109,28 @@ auto LookupManager::lookupUniqueValue(const core::EntryKey& key) const
     return unique_entry_lookup_.lookup(key);
 }
 
+
+auto LookupManager::lookup(const core::EntryKey& key) const
+    -> utilxx::Opt<core::Entry>
+{
+    if(auto um_value = lookupUMValue(key);
+       um_value) {
+        auto value = um_value.getValue().get();
+        return core::Entry{
+            core::UMEntry{key,
+                          std::move(value)}};
+    }
+    if(auto unique_value = lookupUniqueValue(key);
+       unique_value) {
+        auto value = unique_value.getValue().get();
+        return core::Entry{
+            core::UniqueEntry{key,
+                              std::move(value)}};
+    }
+
+    return std::nullopt;
+}
+
 auto LookupManager::lookupOwner(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
