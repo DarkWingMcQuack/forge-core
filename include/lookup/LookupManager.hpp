@@ -58,6 +58,9 @@ public:
     auto getUniqueEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::UniqueEntry>;
 
+    auto getEntrysOfOwner(const std::string& owner) const
+        -> std::vector<core::Entry>;
+
     auto getCoin() const
         -> core::Coin;
 

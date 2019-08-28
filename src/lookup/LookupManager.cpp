@@ -1,9 +1,11 @@
+#include <algorithm>
 #include <core/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <fmt/core.h>
 #include <functional>
 #include <g3log/g3log.hpp>
+#include <iterator>
 #include <lookup/LookupManager.hpp>
 #include <lookup/UMEntryLookup.hpp>
 #include <utilxx/Opt.hpp>
@@ -309,6 +311,31 @@ auto LookupManager::getUniqueEntrysOfOwner(const std::string& owner) const
 {
     std::shared_lock lock{rw_mtx_};
     return unique_entry_lookup_.getUniqueEntrysOfOwner(owner);
+}
+
+auto LookupManager::getEntrysOfOwner(const std::string& owner) const
+    -> std::vector<core::Entry>
+{
+    auto unique = getUniqueEntrysOfOwner(owner);
+    auto um = getUMEntrysOfOwner(owner);
+
+    std::vector<core::Entry> entrys;
+
+    std::transform(std::make_move_iterator(std::begin(unique)),
+                   std::make_move_iterator(std::end(unique)),
+                   std::back_inserter(entrys),
+                   [](auto&& entry) {
+                       return core::Entry{std::move(entry)};
+                   });
+
+    std::transform(std::make_move_iterator(std::begin(um)),
+                   std::make_move_iterator(std::end(um)),
+                   std::back_inserter(entrys),
+                   [](auto&& entry) {
+                       return core::Entry{std::move(entry)};
+                   });
+
+    return entrys;
 }
 
 
