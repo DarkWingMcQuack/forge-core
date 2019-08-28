@@ -615,7 +615,7 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.payToUMEntryOwner(std::move(key_vec),
+    auto res = wallet_.payToEntryOwner(std::move(key_vec),
                                          amount);
 
     if(!res) {
