@@ -128,6 +128,42 @@ auto LookupOnlyServer::lookupumvalue(bool isstring, const std::string& key)
     return umentryValueToJson(res.getValue().get());
 }
 
+auto LookupOnlyServer::lookupuniquevalue(bool isstring, const std::string& key)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(key),
+                       std::cend(key),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(key);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto res = lookup_.lookupUniqueValue(key_vec);
+
+    if(!res) {
+        auto error_msg = fmt::format("no entrys with key {} found",
+                                     key);
+        throw JsonRpcException{std::move(error_msg)};
+    }
+
+    return uniqueEntryValueToJson(res.getValue().get());
+}
+
 auto LookupOnlyServer::lookupowner(bool isstring, const std::string& key)
     -> std::string
 {
@@ -235,6 +271,62 @@ auto LookupOnlyServer::getlastvalidblockheight()
 }
 
 auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = lookup_.getUMEntrysOfOwner(owner);
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return umentryToJson(std::move(entry));
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto LookupOnlyServer::lookupuniqueentrysof(const std::string& owner)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = lookup_.getUniqueEntrysOfOwner(owner);
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto&& entry) {
+                                          return uniqueEntryToJson(std::move(entry));
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto&& init, auto&& entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto LookupOnlyServer::lookupuniquemodifiableentrysof(const std::string& owner)
     -> Json::Value
 {
     if(indexing_.load()) {

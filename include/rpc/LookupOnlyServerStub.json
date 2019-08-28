@@ -21,6 +21,17 @@
         }
     },
     {
+        "name" : "lookupuniquevalue",
+        "params" : {
+            "key" : "somestring", //string
+            "isstring" : true //if string is interpreted as string or as bytevec
+        },
+        "returns" : {
+            "type" : "ipv6",
+            "value" : "somebytevec"
+        }
+    },
+    {
         "name" : "lookupowner",
         "params" : {
             "key" : "somestring", //string
@@ -46,6 +57,42 @@
     },
     {
         "name" : "lookupallentrysof",
+        "params" : {
+            "owner" : "someowner"
+        },
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "lookupuniqueentrysof",
+        "params" : {
+            "owner" : "someowner"
+        },
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "lookupuniquemodifiableentrysof",
         "params" : {
             "owner" : "someowner"
         },

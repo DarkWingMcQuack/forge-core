@@ -47,6 +47,17 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                Json::Value lookupuniquevalue(bool isstring, const std::string& key) 
+                {
+                    Json::Value p;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    Json::Value result = this->CallMethod("lookupuniquevalue",p);
+                    if (result.isObject())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
                 std::string lookupowner(bool isstring, const std::string& key) 
                 {
                     Json::Value p;
@@ -94,6 +105,26 @@ namespace forge {
                     Json::Value p;
                     p["owner"] = owner;
                     Json::Value result = this->CallMethod("lookupallentrysof",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value lookupuniqueentrysof(const std::string& owner) 
+                {
+                    Json::Value p;
+                    p["owner"] = owner;
+                    Json::Value result = this->CallMethod("lookupuniqueentrysof",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value lookupuniquemodifiableentrysof(const std::string& owner) 
+                {
+                    Json::Value p;
+                    p["owner"] = owner;
+                    Json::Value result = this->CallMethod("lookupuniquemodifiableentrysof",p);
                     if (result.isArray())
                         return result;
                     else

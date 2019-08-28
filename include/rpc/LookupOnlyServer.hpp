@@ -28,6 +28,9 @@ public:
     virtual auto lookupumvalue(bool isstring, const std::string& key)
         -> Json::Value override;
 
+    virtual auto lookupuniquevalue(bool isstring, const std::string& key)
+        -> Json::Value override;
+
     virtual auto lookupowner(bool isstring, const std::string& key)
         -> std::string override;
 
@@ -41,6 +44,12 @@ public:
         -> int override;
 
     virtual auto lookupallentrysof(const std::string& owner)
+        -> Json::Value override;
+
+    virtual auto lookupuniqueentrysof(const std::string& owner)
+        -> Json::Value override;
+
+    virtual auto lookupuniquemodifiableentrysof(const std::string& owner)
         -> Json::Value override;
 
     auto hasShutdownRequest() const

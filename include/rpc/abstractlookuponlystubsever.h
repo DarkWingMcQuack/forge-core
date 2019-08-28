@@ -8,71 +8,88 @@
 #include <jsonrpccpp/server.h>
 
 namespace forge {
-namespace rpc {
-class AbstractLookupOnlyStubSever : public jsonrpc::AbstractServer<AbstractLookupOnlyStubSever>
-{
-public:
-    AbstractLookupOnlyStubSever(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2)
-        : jsonrpc::AbstractServer<AbstractLookupOnlyStubSever>(conn, type)
-    {
-        this->bindAndAddMethod(jsonrpc::Procedure("updatelookup", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, NULL), &forge::rpc::AbstractLookupOnlyStubSever::updatelookupI);
-        this->bindAndAddNotification(jsonrpc::Procedure("shutdown", jsonrpc::PARAMS_BY_NAME, NULL), &forge::rpc::AbstractLookupOnlyStubSever::shutdownI);
-        this->bindAndAddNotification(jsonrpc::Procedure("rebuildlookup", jsonrpc::PARAMS_BY_NAME, NULL), &forge::rpc::AbstractLookupOnlyStubSever::rebuildlookupI);
-        this->bindAndAddMethod(jsonrpc::Procedure("lookupumvalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring", jsonrpc::JSON_BOOLEAN, "key", jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupumvalueI);
-        this->bindAndAddMethod(jsonrpc::Procedure("lookupowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring", jsonrpc::JSON_BOOLEAN, "key", jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupownerI);
-        this->bindAndAddMethod(jsonrpc::Procedure("lookupactivationblock", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER, "isstring", jsonrpc::JSON_BOOLEAN, "key", jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupactivationblockI);
-        this->bindAndAddMethod(jsonrpc::Procedure("checkvalidity", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, NULL), &forge::rpc::AbstractLookupOnlyStubSever::checkvalidityI);
-        this->bindAndAddMethod(jsonrpc::Procedure("getlastvalidblockheight", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER, NULL), &forge::rpc::AbstractLookupOnlyStubSever::getlastvalidblockheightI);
-        this->bindAndAddMethod(jsonrpc::Procedure("lookupallentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner", jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupallentrysofI);
-    }
+    namespace rpc {
+        class AbstractLookupOnlyStubSever : public jsonrpc::AbstractServer<AbstractLookupOnlyStubSever>
+        {
+            public:
+                AbstractLookupOnlyStubSever(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<AbstractLookupOnlyStubSever>(conn, type)
+                {
+                    this->bindAndAddMethod(jsonrpc::Procedure("updatelookup", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN,  NULL), &forge::rpc::AbstractLookupOnlyStubSever::updatelookupI);
+                    this->bindAndAddNotification(jsonrpc::Procedure("shutdown", jsonrpc::PARAMS_BY_NAME,  NULL), &forge::rpc::AbstractLookupOnlyStubSever::shutdownI);
+                    this->bindAndAddNotification(jsonrpc::Procedure("rebuildlookup", jsonrpc::PARAMS_BY_NAME,  NULL), &forge::rpc::AbstractLookupOnlyStubSever::rebuildlookupI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupumvalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupumvalueI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniquevalue", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_OBJECT, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupuniquevalueI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupownerI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupactivationblock", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER, "isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupactivationblockI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("checkvalidity", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN,  NULL), &forge::rpc::AbstractLookupOnlyStubSever::checkvalidityI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getlastvalidblockheight", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_INTEGER,  NULL), &forge::rpc::AbstractLookupOnlyStubSever::getlastvalidblockheightI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupallentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupallentrysofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniqueentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupuniqueentrysofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("lookupuniquemodifiableentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupuniquemodifiableentrysofI);
+                }
 
-    inline virtual void updatelookupI(const Json::Value & /*request*/, Json::Value &response)
-    {
-        response = this->updatelookup();
-    }
-    inline virtual void shutdownI(const Json::Value & /*request*/)
-    {
-        this->shutdown();
-    }
-    inline virtual void rebuildlookupI(const Json::Value & /*request*/)
-    {
-        this->rebuildlookup();
-    }
-    inline virtual void lookupumvalueI(const Json::Value &request, Json::Value &response)
-    {
-        response = this->lookupumvalue(request["isstring"].asBool(), request["key"].asString());
-    }
-    inline virtual void lookupownerI(const Json::Value &request, Json::Value &response)
-    {
-        response = this->lookupowner(request["isstring"].asBool(), request["key"].asString());
-    }
-    inline virtual void lookupactivationblockI(const Json::Value &request, Json::Value &response)
-    {
-        response = this->lookupactivationblock(request["isstring"].asBool(), request["key"].asString());
-    }
-    inline virtual void checkvalidityI(const Json::Value & /*request*/, Json::Value &response)
-    {
-        response = this->checkvalidity();
-    }
-    inline virtual void getlastvalidblockheightI(const Json::Value & /*request*/, Json::Value &response)
-    {
-        response = this->getlastvalidblockheight();
-    }
-    inline virtual void lookupallentrysofI(const Json::Value &request, Json::Value &response)
-    {
-        response = this->lookupallentrysof(request["owner"].asString());
-    }
-    virtual bool updatelookup() = 0;
-    virtual void shutdown() = 0;
-    virtual void rebuildlookup() = 0;
-    virtual Json::Value lookupumvalue(bool isstring, const std::string &key) = 0;
-    virtual std::string lookupowner(bool isstring, const std::string &key) = 0;
-    virtual int lookupactivationblock(bool isstring, const std::string &key) = 0;
-    virtual bool checkvalidity() = 0;
-    virtual int getlastvalidblockheight() = 0;
-    virtual Json::Value lookupallentrysof(const std::string &owner) = 0;
-};
+                inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->updatelookup();
+                }
+                inline virtual void shutdownI(const Json::Value &/*request*/)
+                {
+                    this->shutdown();
+                }
+                inline virtual void rebuildlookupI(const Json::Value &/*request*/)
+                {
+                    this->rebuildlookup();
+                }
+                inline virtual void lookupumvalueI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupumvalue(request["isstring"].asBool(), request["key"].asString());
+                }
+                inline virtual void lookupuniquevalueI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniquevalue(request["isstring"].asBool(), request["key"].asString());
+                }
+                inline virtual void lookupownerI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupowner(request["isstring"].asBool(), request["key"].asString());
+                }
+                inline virtual void lookupactivationblockI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupactivationblock(request["isstring"].asBool(), request["key"].asString());
+                }
+                inline virtual void checkvalidityI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->checkvalidity();
+                }
+                inline virtual void getlastvalidblockheightI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getlastvalidblockheight();
+                }
+                inline virtual void lookupallentrysofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupallentrysof(request["owner"].asString());
+                }
+                inline virtual void lookupuniqueentrysofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniqueentrysof(request["owner"].asString());
+                }
+                inline virtual void lookupuniquemodifiableentrysofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->lookupuniquemodifiableentrysof(request["owner"].asString());
+                }
+                virtual bool updatelookup() = 0;
+                virtual void shutdown() = 0;
+                virtual void rebuildlookup() = 0;
+                virtual Json::Value lookupumvalue(bool isstring, const std::string& key) = 0;
+                virtual Json::Value lookupuniquevalue(bool isstring, const std::string& key) = 0;
+                virtual std::string lookupowner(bool isstring, const std::string& key) = 0;
+                virtual int lookupactivationblock(bool isstring, const std::string& key) = 0;
+                virtual bool checkvalidity() = 0;
+                virtual int getlastvalidblockheight() = 0;
+                virtual Json::Value lookupallentrysof(const std::string& owner) = 0;
+                virtual Json::Value lookupuniqueentrysof(const std::string& owner) = 0;
+                virtual Json::Value lookupuniquemodifiableentrysof(const std::string& owner) = 0;
+        };
 
+    }
 }
-} // namespace forge::rpc
 #endif //JSONRPC_CPP_STUB_FORGE_RPC_ABSTRACTLOOKUPONLYSTUBSEVER_H_
