@@ -1,6 +1,7 @@
 #pragma once
 
 #include <daemon/WriteOnlyDaemonBase.hpp>
+#include <entrys/Entry.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <lookup/LookupManager.hpp>
@@ -40,7 +41,7 @@ public:
                           std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
-    //renews the lifetime of a given key-value pair on the blockchain
+    //renews the lifetime of a given entry pair on the blockchain
     //the burn_value will be burned in the OP_RETURN tx
     //coins will be transfered to the owner address which then will be used
     //for the OP_RETURN transaction
@@ -49,12 +50,12 @@ public:
     //given parameters the renewal is valid and will be executed
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto renewUMEntry(core::EntryKey key,
-                      std::int64_t burn_amount)
+    auto renewEntry(core::EntryKey key,
+                    std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
 
-    //updates the value of a given entry-key
+    //updates the value of a given umentry
     //to perform this operation the wallet needs to be the owner of the
     //entry on the blockchain and needs to have more than the burn_amount
     //in coins
@@ -69,7 +70,7 @@ public:
         -> utilxx::Result<std::string, WalletError>;
 
 
-    //deletes an UMEntry
+    //deletes an Entry
     //to perform this operation the wallet needs to be the owner of the
     //entry on the blockchain and needs to have more than the burn_amount
     //in coins
@@ -78,8 +79,8 @@ public:
     //if so the operation is executed and a updateing TX is created
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
-    auto deleteUMEntry(core::EntryKey key,
-                       std::int64_t burn_amount)
+    auto deleteEntry(core::EntryKey key,
+                     std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
     //transferes the ownership of a given entry to another address
@@ -103,7 +104,7 @@ public:
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
     auto payToEntryOwner(core::EntryKey key,
-                           std::int64_t amount)
+                         std::int64_t amount)
         -> utilxx::Result<std::string, WalletError>;
 
 private:
@@ -112,8 +113,8 @@ private:
                                     std::string>,
                           WalletError>;
 
-    auto createUniqueEntryOwnerPairFromKey(core::EntryKey key)
-        -> utilxx::Result<std::pair<core::UniqueEntry,
+    auto createEntryOwnerPairFromKey(core::EntryKey key)
+        -> utilxx::Result<std::pair<core::Entry,
                                     std::string>,
                           WalletError>;
 

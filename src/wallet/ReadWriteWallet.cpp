@@ -1,4 +1,7 @@
+#include "entrys/Entry.hpp"
+#include "entrys/uentry/UniqueEntryDeletionOp.hpp"
 #include <core/Coin.hpp>
+#include <entrys/EntryOperation.hpp>
 #include <entrys/umentry/UMEntryCreationOp.hpp>
 #include <entrys/umentry/UMEntryRenewalOp.hpp>
 #include <fmt/core.h>
@@ -101,12 +104,12 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::renewUMEntry(core::EntryKey key,
+auto ReadWriteWallet::renewEntry(core::EntryKey key,
                                    std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //create an entry and get the owner
-    return createUMEntryOwnerPairFromKey(std::move(key))
+    return createEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto&& entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -115,7 +118,7 @@ auto ReadWriteWallet::renewUMEntry(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = toHexString(entry.getKey());
+                auto entry_str = core::entryToJson(entry).asString();
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -124,8 +127,8 @@ auto ReadWriteWallet::renewUMEntry(core::EntryKey key,
                 return WalletError{std::move(error)};
             }
 
-            auto metadata =
-                createUMEntryRenewalOpMetadata(std::move(entry));
+            auto metadata = core::createRenewalOpMetadata(entry);
+            // createUMEntryRenewalOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -211,12 +214,12 @@ auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::deleteUMEntry(core::EntryKey key,
+auto ReadWriteWallet::deleteEntry(core::EntryKey key,
                                     std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
     //create an entry and get the owner
-    return createUMEntryOwnerPairFromKey(std::move(key))
+    return createEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto&& entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -225,7 +228,7 @@ auto ReadWriteWallet::deleteUMEntry(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = toHexString(entry.getKey());
+                auto entry_str = core::entryToJson(entry).asString();
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -234,8 +237,8 @@ auto ReadWriteWallet::deleteUMEntry(core::EntryKey key,
                 return WalletError{std::move(error)};
             }
 
-            auto metadata =
-                createUMEntryDeletionOpMetadata(std::move(entry));
+            auto metadata = core::createDeletionOpMetadata(entry);
+            // createUMEntryDeletionOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -273,7 +276,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
                                         std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
-    return createUMEntryOwnerPairFromKey(std::move(key))
+    return createEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto&& entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -282,7 +285,7 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = toHexString(entry.getKey());
+                auto entry_str = core::entryToJson(entry).asString();
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -291,8 +294,8 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
                 return WalletError{std::move(error)};
             }
 
-            auto metadata =
-                createUMEntryOwnershipTransferOpMetadata(std::move(entry));
+            auto metadata = createOwnershipTransferOpMetadata(entry);
+            // createUMEntryOwnershipTransferOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -383,14 +386,14 @@ auto ReadWriteWallet::createUMEntryOwnerPairFromKey(core::EntryKey key)
 }
 
 
-auto ReadWriteWallet::createUniqueEntryOwnerPairFromKey(core::EntryKey key)
-    -> utilxx::Result<std::pair<core::UniqueEntry,
+auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
+    -> utilxx::Result<std::pair<core::Entry,
                                 std::string>,
                       WalletError>
 {
-    auto value_opt = lookup_->lookupUniqueValue(key);
+    auto entry_opt = lookup_->lookup(key);
     auto owner_opt = lookup_->lookupOwner(key);
-    auto lookup_opt = utilxx::combine(std::move(value_opt),
+    auto lookup_opt = utilxx::combine(std::move(entry_opt),
                                       std::move(owner_opt));
     if(!lookup_opt) {
         auto error =
@@ -399,11 +402,7 @@ auto ReadWriteWallet::createUniqueEntryOwnerPairFromKey(core::EntryKey key)
         return WalletError{std::move(error)};
     }
 
-    auto value = lookup_opt.getValue().first.get();
-
-    auto entry = UniqueEntry{std::move(key),
-                             std::move(value)};
-
+    auto entry = lookup_opt.getValue().first;
     auto owner = lookup_opt.getValue().second.get();
 
     return std::pair{std::move(entry),

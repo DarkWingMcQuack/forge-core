@@ -478,8 +478,8 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.renewUMEntry(std::move(key_vec),
-                                    burnvalue);
+    auto res = wallet_.renewEntry(std::move(key_vec),
+                                  burnvalue);
 
     if(!res) {
         auto error_msg = res.getError().what();
@@ -549,7 +549,7 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
 
     auto key_vec = std::move(key_vec_opt.getValue());
 
-    auto res = wallet_.deleteUMEntry(std::move(key_vec),
+    auto res = wallet_.deleteEntry(std::move(key_vec),
                                      burnvalue);
 
     if(!res) {
@@ -616,7 +616,7 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
     auto key_vec = std::move(key_vec_opt.getValue());
 
     auto res = wallet_.payToEntryOwner(std::move(key_vec),
-                                         amount);
+                                       amount);
 
     if(!res) {
         auto error_msg = res.getError().what();
