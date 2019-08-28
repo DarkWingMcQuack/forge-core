@@ -60,6 +60,9 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryDeletionOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryRenewalOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/uentry/UniqueEntryOwnershipTransferOp.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/token/UtilityToken.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/token/UtilityTokenOperation.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/token/UtilityTokenCreationOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
@@ -101,6 +104,9 @@ target_sources(forge-src
   src/entrys/uentry/UniqueEntryDeletionOp.cpp
   src/entrys/uentry/UniqueEntryRenewalOp.cpp
   src/entrys/uentry/UniqueEntryOwnershipTransferOp.cpp
+  src/entrys/token/UtilityToken.cpp
+  src/entrys/token/UtilityTokenOperation.cpp
+  src/entrys/token/UtilityTokenCreationOp.cpp
   src/core/Block.cpp
   src/core/Coin.cpp
   src/daemon/ReadOnlyDaemonBase.cpp
