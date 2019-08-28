@@ -18,6 +18,8 @@ auto addGetLastValidBlockHeight(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
     -> void;
 auto addLookupUMValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
+auto addLookupUniqueValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
 auto addLookupOwner(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 auto addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)

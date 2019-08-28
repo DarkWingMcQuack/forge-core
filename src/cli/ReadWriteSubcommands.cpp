@@ -152,12 +152,58 @@ auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
                      "If not given, then a new address will be generated");
 }
 
+auto forge::cli::addCreateUniqueEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto createnewentry_opt =
+        app
+            .get_subcommand("uniqueentry")
+            ->add_subcommand("create",
+                             "creates a new uniqueentry")
+            ->callback([&] {
+                ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
+                RESPONSE = client.createnewuniqueentry(OWNER, BURN_VALUE, IS_STRING, KEY, ENTRY_VALUE);
+            });
+
+    createnewentry_opt
+        ->add_option("--key",
+                     KEY,
+                     "the key of which the value will be looked up")
+        ->required();
+
+    createnewentry_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+
+    createnewentry_opt
+        ->add_option("--value",
+                     ENTRY_VALUE_STR,
+                     "value the entry holds, expected to be a json object "
+                     "with valid \"type\" and \"value\" fields. "
+                     "If not given, the entry will hold \"none\" as value");
+
+    createnewentry_opt
+        ->add_option("--burn-value",
+                     BURN_VALUE,
+                     "number of coins which will be burned")
+        ->required();
+
+    createnewentry_opt
+        ->add_option("--address",
+                     OWNER,
+                     "optional address which will be used as owner of the new entry, "
+                     "be sure the used wallet ownes the private key to this address. "
+                     "If not given, then a new address will be generated");
+}
+
 auto forge::cli::addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
     auto renewentry_opt =
-        app.add_subcommand("renewentry",
-                           "renews the given entry for another period")
+        app.get_subcommand("entry")
+            ->add_subcommand("renew",
+                             "renews the given entry for another period")
             ->callback([&] {
                 RESPONSE = client.renewentry(BURN_VALUE, IS_STRING, KEY);
             });
@@ -184,8 +230,9 @@ auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
     -> void
 {
     auto deleteentry_opt =
-        app.add_subcommand("deleteentry",
-                           "deletes the given entry for another period")
+        app.get_subcommand("entry")
+            ->add_subcommand("delete",
+                             "deletes the given entry for another period")
             ->callback([&] {
                 RESPONSE = client.deleteentry(BURN_VALUE, IS_STRING, KEY);
             });
@@ -250,8 +297,9 @@ auto forge::cli::addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWallet
     -> void
 {
     auto transferownership_opt =
-        app.add_subcommand("transferownership",
-                           "updates an entry to map to a new value")
+        app.get_subcommand("entry")
+            ->add_subcommand("transferownership",
+                             "updates an entry to map to a new value")
             ->callback([&] {
                 ENTRY_VALUE = checkAndTransformValueString(ENTRY_VALUE_STR);
                 RESPONSE = client.transferownership(BURN_VALUE, IS_STRING, KEY, OWNER);
@@ -312,8 +360,13 @@ auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCli
 auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
+    app.add_subcommand("entry",
+                       "subcommand to handle all operations "
+                       "which can be executed independend of the type of the entry");
+
     addCreateUMEntry(app, client);
     addUpdateUMEntry(app, client);
+    addCreateUniqueEntry(app, client);
     addRenewEntry(app, client);
     addDeleteEntry(app, client);
     addTransferOwnership(app, client);

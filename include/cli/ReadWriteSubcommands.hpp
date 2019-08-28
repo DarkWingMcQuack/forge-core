@@ -9,10 +9,13 @@ namespace forge::cli {
 auto addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
-auto addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addCreateUniqueEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+
+auto addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
 auto addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)

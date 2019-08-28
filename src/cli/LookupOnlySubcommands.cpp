@@ -13,12 +13,16 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
     app.add_subcommand("umentry",
                        "subcommand for handling unique modifiable entrys");
 
+    app.add_subcommand("uniqueentry",
+                       "subcommand for handling unique modifiable entrys");
+
     addShutdown(app, client);
     addUpdateLookup(app, client);
     addRebuildLookup(app, client);
     addCheckValidity(app, client);
     addGetLastValidBlockHeight(app, client);
     addLookupUMValue(app, client);
+    addLookupUniqueValue(app, client);
     addLookupOwner(app, client);
     addLookupActivationBlock(app, client);
     addLookupAllEntrysOf(app, client);
@@ -88,6 +92,29 @@ auto forge::cli::addLookupUMValue(CLI::App& app, forge::rpc::ReadWriteWalletStub
                              "looks up the value of a given byte vector/string")
             ->callback([&] {
                 RESPONSE = client.lookupumvalue(IS_STRING, KEY);
+            });
+
+    lookupumvalue_opt
+        ->add_option("--key",
+                     KEY,
+                     "the key of which the value will be looked up")
+        ->required();
+
+    lookupumvalue_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given key will be interpreted as string and not as byte vector");
+}
+
+auto forge::cli::addLookupUniqueValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto lookupumvalue_opt =
+        app.get_subcommand("uniqueentry")
+            ->add_subcommand("lookupvalue",
+                             "looks up the value of a given byte vector/string")
+            ->callback([&] {
+                RESPONSE = client.lookupuniquevalue(IS_STRING, KEY);
             });
 
     lookupumvalue_opt
