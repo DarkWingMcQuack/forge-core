@@ -79,7 +79,7 @@ auto UniqueEntryRenewalOp::getOwner()
 auto forge::core::createUniqueEntryRenewalOpMetadata(UniqueEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::uniqueEntryToRawData(entry);
+    auto data = entry.toRawData();
     auto flag = forge::core::UNIQUE_ENTRY_RENEWAL_FLAG;
 
     data.insert(std::begin(data), flag);

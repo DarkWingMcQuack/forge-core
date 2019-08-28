@@ -27,13 +27,10 @@ class UniqueEntry
 public:
     UniqueEntry(EntryKey, UniqueEntryValue);
 
-    auto extractValueFlag()
-        -> std::byte;
-
-    auto toRawData()
+    auto toRawData() const
         -> std::vector<std::byte>;
 
-    auto toJson()
+    auto toJson() const
         -> Json::Value;
 
     auto getKey() const
@@ -66,16 +63,9 @@ auto extractUniqueValueFlag(const UniqueEntryValue& value)
 auto uniqueEntryValueToRawData(const UniqueEntryValue& value)
     -> std::vector<std::byte>;
 
-auto uniqueEntryToRawData(const UniqueEntry& entry)
-    -> std::vector<std::byte>;
-
 auto jsonToUniqueEntryValue(Json::Value&& value)
     -> utilxx::Opt<UniqueEntryValue>;
 
 auto uniqueEntryValueToJson(UniqueEntryValue value)
     -> Json::Value;
-
-auto uniqueEntryToJson(UniqueEntry value)
-    -> Json::Value;
-
 } // namespace forge::core

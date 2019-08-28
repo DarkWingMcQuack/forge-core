@@ -79,7 +79,7 @@ auto UniqueEntryDeletionOp::getOwner()
 auto forge::core::createUniqueEntryDeletionOpMetadata(UniqueEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::uniqueEntryToRawData(entry);
+    auto data = entry.toRawData();
     auto flag = forge::core::UNIQUE_ENTRY_DELETION_FLAG;
 
     data.insert(std::begin(data), flag);

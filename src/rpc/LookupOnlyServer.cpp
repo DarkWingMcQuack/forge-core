@@ -311,7 +311,7 @@ auto LookupOnlyServer::lookupuniqueentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return uniqueEntryToJson(std::move(entry));
+										  return entry.toJson();
                                       });
 
     auto ret_json =

@@ -23,22 +23,36 @@ UniqueEntry::UniqueEntry(EntryKey key, UniqueEntryValue value)
     : key_(std::move(key)),
       value_(std::move(value)) {}
 
-auto UniqueEntry::extractValueFlag()
-    -> std::byte
-{
-    //TODO
-}
-
-auto UniqueEntry::toRawData()
+auto UniqueEntry::toRawData() const
     -> std::vector<std::byte>
 {
-    //TODO
+    auto key_data = std::move(getKey());
+    auto value_data = uniqueEntryValueToRawData(getValue());
+    auto value_flag = extractValueFlag(getValue());
+
+    value_data.insert(std::begin(value_data),
+                      value_flag);
+
+    value_data.insert(std::end(value_data),
+                      std::begin(key_data),
+                      std::end(key_data));
+
+    return value_data;
 }
 
-auto UniqueEntry::toJson()
+auto UniqueEntry::toJson() const
     -> Json::Value
 {
-    //TODO
+    Json::Value ret_json;
+    ret_json["entry_type"] = "unique entry";
+    ret_json["key"] = forge::core::toHexString(getKey());
+
+    auto trash_json = forge::core::uniqueEntryValueToJson(getValue());
+
+    ret_json["type"] = std::move(trash_json["type"]);
+    ret_json["value"] = std::move(trash_json["value"]);
+
+    return ret_json;
 }
 
 auto UniqueEntry::getKey() const
@@ -134,23 +148,6 @@ auto forge::core::uniqueEntryValueToRawData(const UniqueEntryValue& value)
     return umEntryValueToRawData(value);
 }
 
-auto forge::core::uniqueEntryToRawData(const UniqueEntry& entry)
-    -> std::vector<std::byte>
-{
-    auto key_data = std::move(entry.getKey());
-    auto value_data = uniqueEntryValueToRawData(entry.getValue());
-    auto value_flag = extractValueFlag(entry.getValue());
-
-    value_data.insert(std::begin(value_data),
-                      value_flag);
-
-    value_data.insert(std::end(value_data),
-                      std::begin(key_data),
-                      std::end(key_data));
-
-    return value_data;
-}
-
 auto forge::core::jsonToUniqueEntryValue(Json::Value&& value)
     -> utilxx::Opt<UniqueEntryValue>
 {
@@ -168,20 +165,4 @@ auto forge::core::uniqueEntryValueToJson(UniqueEntryValue value)
     -> Json::Value
 {
     return umentryValueToJson(std::move(value));
-}
-
-auto forge::core::uniqueEntryToJson(UniqueEntry value)
-    -> Json::Value
-
-{
-    Json::Value ret_json;
-    ret_json["entry_type"] = "unique entry";
-    ret_json["key"] = forge::core::toHexString(value.getKey());
-
-    auto trash_json = forge::core::uniqueEntryValueToJson(value.getValue());
-
-    ret_json["type"] = std::move(trash_json["type"]);
-    ret_json["value"] = std::move(trash_json["value"]);
-
-    return ret_json;
 }

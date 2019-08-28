@@ -94,7 +94,7 @@ auto UniqueEntryOwnershipTransferOp::getValue() const
 auto forge::core::createUniqueEntryOwnershipTransferOpMetadata(UniqueEntry&& entry)
     -> std::vector<std::byte>
 {
-    auto data = forge::core::uniqueEntryToRawData(entry);
+    auto data = entry.toRawData();
     auto flag = forge::core::UNIQUE_ENTRY_OWNERSHIP_TRANSFER_FLAG;
 
     data.insert(std::begin(data), flag);
