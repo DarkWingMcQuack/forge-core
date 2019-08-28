@@ -429,34 +429,6 @@ auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
         });
 }
 
-auto ReadWriteWallet::createUMEntryOwnerPairFromKey(core::EntryKey key)
-    -> utilxx::Result<std::pair<core::UMEntry,
-                                std::string>,
-                      WalletError>
-{
-    auto value_opt = lookup_->lookupUMValue(key);
-    auto owner_opt = lookup_->lookupOwner(key);
-    auto lookup_opt = utilxx::combine(std::move(value_opt),
-                                      std::move(owner_opt));
-    if(!lookup_opt) {
-        auto error =
-            fmt::format("unable to lookup the entry key: {}",
-                        toHexString(key));
-        return WalletError{std::move(error)};
-    }
-
-    auto value = lookup_opt.getValue().first.get();
-
-    auto entry = UMEntry{std::move(key),
-                         std::move(value)};
-
-    auto owner = lookup_opt.getValue().second.get();
-
-    return std::pair{std::move(entry),
-                     std::move(owner)};
-}
-
-
 auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
     -> utilxx::Result<std::pair<core::Entry,
                                 std::string>,

@@ -130,10 +130,6 @@ public:
         -> utilxx::Result<std::string, WalletError>;
 
 private:
-    auto createUMEntryOwnerPairFromKey(core::EntryKey key)
-        -> utilxx::Result<std::pair<core::UMEntry,
-                                    std::string>,
-                          WalletError>;
 
     auto createEntryOwnerPairFromKey(core::EntryKey key)
         -> utilxx::Result<std::pair<core::Entry,
