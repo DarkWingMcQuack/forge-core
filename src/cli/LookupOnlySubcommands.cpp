@@ -177,8 +177,9 @@ auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWallet
     -> void
 {
     auto lookupallentrysof_opt =
-        app.add_subcommand("lookupallentrysof",
-                           "returns a vector of all entrys the given owner currently owns")
+        app.get_subcommand("lookup")
+            ->add_subcommand("allentrysof",
+                             "returns a vector of all entrys the given owner currently owns")
             ->callback([&] {
                 RESPONSE = client.lookupallentrysof(OWNER);
             });

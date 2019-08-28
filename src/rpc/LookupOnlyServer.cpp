@@ -1,3 +1,4 @@
+#include "entrys/Entry.hpp"
 #include <chrono>
 #include <fmt/core.h>
 #include <fmt/format.h>
@@ -277,13 +278,13 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
         throw JsonRpcException{"Server is indexing"};
     }
 
-    auto entrys = lookup_.getUMEntrysOfOwner(owner);
+    auto entrys = lookup_.getEntrysOfOwner(owner);
 
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-                                          return entry.toJson();
+                                          return core::entryToJson(std::move(entry));
                                       });
 
     auto ret_json =
@@ -311,7 +312,7 @@ auto LookupOnlyServer::lookupuniqueentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto&& entry) {
-										  return entry.toJson();
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
