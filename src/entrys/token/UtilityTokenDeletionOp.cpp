@@ -33,7 +33,7 @@ auto UtilityTokenDeletionOp::getUtilityToken()
     return token_;
 }
 
-auto UtilityTokenDeletionOp::getAmount()
+auto UtilityTokenDeletionOp::getAmount() const
     -> std::uint64_t
 {
     return amount_;

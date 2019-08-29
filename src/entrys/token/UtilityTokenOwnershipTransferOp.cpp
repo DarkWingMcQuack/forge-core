@@ -35,7 +35,7 @@ auto UtilityTokenOwnershipTransferOp::getUtilityToken()
     return token_;
 }
 
-auto UtilityTokenOwnershipTransferOp::getAmount()
+auto UtilityTokenOwnershipTransferOp::getAmount() const
     -> std::uint64_t
 {
     return amount_;

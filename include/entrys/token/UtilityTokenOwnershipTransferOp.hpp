@@ -20,7 +20,7 @@ public:
     auto getUtilityToken()
         -> UtilityToken&;
 
-    auto getAmount()
+    auto getAmount() const
         -> std::uint64_t;
 
     auto getSender() const
