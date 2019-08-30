@@ -11,7 +11,7 @@ constexpr static inline auto TOKEN_TYPE_INDEX = 3;
 //index of the fag identifying the operation type
 constexpr static inline auto OPERATION_FLAG_INDEX = 4;
 
-//index of the flag identifying the type of value for mutable entry types
+//index of the flag identifying the type of value for mutable and immutable entry types
 constexpr static inline auto ENTRY_VALUE_FLAG_INDEX = 5;
 
 //mask which every forge operation needs to start with to be identified as such
