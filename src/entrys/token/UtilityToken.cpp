@@ -11,6 +11,7 @@
 
 using forge::core::UtilityToken;
 using forge::core::UTILITY_TOKEN_IDENTIFICATION_FLAG;
+using forge::core::UTILITY_TOKEN_ID_START_INDEX;
 using forge::core::TOKEN_TYPE_INDEX;
 
 UtilityToken::UtilityToken(EntryKey id)
@@ -57,7 +58,7 @@ auto parseUtilityToken(const std::vector<std::byte>& metadata)
         return std::nullopt;
     }
 
-    std::vector id(std::cbegin(metadata) + 13,
+    std::vector id(std::cbegin(metadata) + UTILITY_TOKEN_ID_START_INDEX,
                    std::cend(metadata));
 
     return UtilityToken{std::move(id)};

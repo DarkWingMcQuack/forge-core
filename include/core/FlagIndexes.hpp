@@ -14,6 +14,9 @@ constexpr static inline auto OPERATION_FLAG_INDEX = 4;
 //index of the flag identifying the type of value for mutable and immutable entry types
 constexpr static inline auto ENTRY_VALUE_FLAG_INDEX = 5;
 
+//index of the were the id of a utility token starts
+constexpr static inline auto UTILITY_TOKEN_ID_START_INDEX = 13;
+
 //mask which every forge operation needs to start with to be identified as such
 constexpr static inline auto FORGE_IDENTIFIER_MASK =
     std::array{static_cast<std::byte>(0xC6),
