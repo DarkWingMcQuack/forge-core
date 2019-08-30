@@ -13,7 +13,8 @@ public:
                                     std::uint64_t amount,
                                     std::string sender,
                                     std::string reciever,
-                                    std::int64_t block);
+                                    std::int64_t block,
+                                    std::int64_t burn_value);
 
     auto getUtilityToken() const
         -> const UtilityToken&;
@@ -22,6 +23,9 @@ public:
 
     auto getAmount() const
         -> std::uint64_t;
+
+    auto getBurnValue() const
+        -> std::int64_t;
 
     auto getSender() const
         -> const std::string&;
@@ -42,6 +46,7 @@ private:
     std::string sender_;
     std::string reciever_;
     std::int64_t block_;
+    std::int64_t burn_value_;
 };
 
 auto createUtilityTokenOwnershipTransferOpMetadata(UtilityToken&& entry,

@@ -14,11 +14,13 @@ using forge::core::UtilityTokenDeletionOp;
 UtilityTokenDeletionOp::UtilityTokenDeletionOp(UtilityToken token,
                                                std::uint64_t amount,
                                                std::string creator,
-                                               std::int64_t block)
+                                               std::int64_t block,
+                                               std::int64_t burn_value)
     : token_(std::move(token)),
       amount_(amount),
       creator_(std::move(creator)),
-      block_(block) {}
+      block_(block),
+      burn_value_(burn_value) {}
 
 
 auto UtilityTokenDeletionOp::getUtilityToken() const
@@ -37,6 +39,11 @@ auto UtilityTokenDeletionOp::getAmount() const
     -> std::uint64_t
 {
     return amount_;
+}
+auto UtilityTokenDeletionOp::getBurnValue() const
+    -> std::int64_t
+{
+    return burn_value_;
 }
 
 auto UtilityTokenDeletionOp::getCreator() const

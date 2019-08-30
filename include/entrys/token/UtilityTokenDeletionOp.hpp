@@ -12,7 +12,8 @@ public:
     UtilityTokenDeletionOp(UtilityToken token,
                            std::uint64_t amount,
                            std::string creator,
-                           std::int64_t block);
+                           std::int64_t block,
+                           std::int64_t burn_value);
 
     auto getUtilityToken() const
         -> const UtilityToken&;
@@ -21,6 +22,9 @@ public:
 
     auto getAmount() const
         -> std::uint64_t;
+
+    auto getBurnValue() const
+        -> std::int64_t;
 
     auto getCreator() const
         -> const std::string&;
@@ -35,6 +39,7 @@ private:
     std::uint64_t amount_;
     std::string creator_;
     std::int64_t block_;
+    std::int64_t burn_value_;
 };
 
 auto createUtilityTokenDeletionOpMetadata(UtilityToken&& entry,

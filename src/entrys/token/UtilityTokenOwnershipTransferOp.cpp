@@ -15,12 +15,14 @@ UtilityTokenOwnershipTransferOp::UtilityTokenOwnershipTransferOp(UtilityToken to
                                                                  std::uint64_t amount,
                                                                  std::string sender,
                                                                  std::string reciever,
-                                                                 std::int64_t block)
+                                                                 std::int64_t block,
+                                                                 std::int64_t burn_value)
     : token_(std::move(token)),
       amount_(amount),
       sender_(std::move(sender)),
       reciever_(std::move(reciever)),
-      block_(block) {}
+      block_(block),
+      burn_value_(burn_value) {}
 
 
 auto UtilityTokenOwnershipTransferOp::getUtilityToken() const
@@ -39,6 +41,12 @@ auto UtilityTokenOwnershipTransferOp::getAmount() const
     -> std::uint64_t
 {
     return amount_;
+}
+
+auto UtilityTokenOwnershipTransferOp::getBurnValue() const
+    -> std::int64_t
+{
+    return burn_value_;
 }
 
 auto UtilityTokenOwnershipTransferOp::getSender() const

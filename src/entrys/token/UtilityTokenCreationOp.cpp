@@ -14,11 +14,13 @@ using forge::core::UtilityTokenCreationOp;
 UtilityTokenCreationOp::UtilityTokenCreationOp(UtilityToken token,
                                                std::uint64_t amount,
                                                std::string creator,
-                                               std::int64_t block)
+                                               std::int64_t block,
+                                               std::int64_t burn_value)
     : token_(std::move(token)),
       amount_(amount),
       creator_(std::move(creator)),
-      block_(block) {}
+      block_(block),
+      burn_value_(burn_value) {}
 
 
 auto UtilityTokenCreationOp::getUtilityToken() const
@@ -37,6 +39,12 @@ auto UtilityTokenCreationOp::getAmount() const
     -> std::uint64_t
 {
     return amount_;
+}
+
+auto UtilityTokenCreationOp::getBurnValue() const
+    -> std::int64_t
+{
+    return burn_value_;
 }
 
 auto UtilityTokenCreationOp::getCreator() const
