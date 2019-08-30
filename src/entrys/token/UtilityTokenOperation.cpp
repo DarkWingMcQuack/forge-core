@@ -259,3 +259,28 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
             }
         });
 }
+
+
+auto forge::core::toMetadata(UtilityTokenOperation&& op)
+    -> std::vector<std::byte>
+{
+    return std::visit(
+        utilxx::overload{
+            [](UtilityTokenCreationOp&& creation) {
+                return createUtilityTokenCreationOpMetadata(
+                    std::move(creation.getUtilityToken()),
+                    creation.getAmount());
+            },
+            [](UtilityTokenDeletionOp&& creation) {
+                return createUtilityTokenDeletionOpMetadata(
+                    std::move(creation.getUtilityToken()),
+                    creation.getAmount());
+            },
+            [](UtilityTokenOwnershipTransferOp&& creation) {
+                return createUtilityTokenOwnershipTransferOpMetadata(
+                    std::move(creation.getUtilityToken()),
+                    creation.getAmount());
+            },
+        },
+        std::move(op));
+}

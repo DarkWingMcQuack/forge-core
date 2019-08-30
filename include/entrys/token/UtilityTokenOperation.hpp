@@ -62,4 +62,7 @@ auto parseMetadataToUtilityTokenOp(const std::vector<std::byte>& metadata,
                                    utilxx::Opt<std::string>&& new_owner = std::nullopt)
     -> utilxx::Opt<UtilityTokenOperation>;
 
+auto toMetadata(UtilityTokenOperation&& op)
+    -> std::vector<std::byte>;
+
 } // namespace forge::core
