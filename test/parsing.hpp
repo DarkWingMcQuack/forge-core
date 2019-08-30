@@ -28,7 +28,7 @@ inline auto parseString(const std::string& str)
     Json::Value json;
     std::string errors;
 
-    bool parsingSuccessful = reader->parse(
+    reader->parse(
         str.c_str(),
         str.c_str() + str.size(),
         &json,
