@@ -1,10 +1,7 @@
-#include "core/FlagIndexes.hpp"
-#include "entrys/token/UtilityTokenCreationOp.hpp"
-#include "entrys/token/UtilityTokenDeletionOp.hpp"
-#include "entrys/token/UtilityTokenOwnershipTransferOp.hpp"
 #include "g3log/g3log.hpp"
 #include "utilxx/Overload.hpp"
 #include <array>
+#include <core/FlagIndexes.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <cstdint>
@@ -12,7 +9,11 @@
 #include <daemon/DaemonError.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/token/UtilityToken.hpp>
+#include <entrys/token/UtilityTokenCreationOp.hpp>
+#include <entrys/token/UtilityTokenDeletionOp.hpp>
 #include <entrys/token/UtilityTokenOperation.hpp>
+#include <entrys/token/UtilityTokenOwnershipTransferOp.hpp>
+#include <fmt/core.h>
 #include <json/value.h>
 #include <utilxx/Opt.hpp>
 #include <variant>
@@ -196,26 +197,6 @@ auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
 }
 
 
-namespace {
-template<class To, class From>
-// clang-format off
-typename std::enable_if<
-    (sizeof(To) == sizeof(From)) &&
-    std::is_trivially_copyable<From>::value &&
-    std::is_trivial<To>::value,
-    // this implementation requires that To is trivially default constructible
-    To>::type
-// clang-format on
-// constexpr support needs compiler magic
-bit_cast(const From& src) noexcept
-{
-    To dst;
-    std::memcpy(&dst, &src, sizeof(To));
-    return dst;
-}
-
-} // namespace
-
 auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& metadata,
                                                 std::int64_t block,
                                                 std::string&& owner,
@@ -230,17 +211,16 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
     //3 byte identifier
     //1 byte token type
     //1 byte operation flag
-    std::array amount_array{
-        metadata[5],
-        metadata[6],
-        metadata[7],
-        metadata[8],
-        metadata[9],
-        metadata[10],
-        metadata[11],
-        metadata[12],
-    };
-    auto amount = bit_cast<std::uint64_t>(amount_array);
+    std::uint64_t amount =
+        (static_cast<std::uint64_t>(metadata[5]) << 56)
+        | (static_cast<std::uint64_t>(metadata[6]) << 48)
+        | (static_cast<std::uint64_t>(metadata[7]) << 40)
+        | (static_cast<std::uint64_t>(metadata[8]) << 32)
+        | (static_cast<std::uint64_t>(metadata[9]) << 24)
+        | (static_cast<std::uint64_t>(metadata[10]) << 16)
+        | (static_cast<std::uint64_t>(metadata[11]) << 8)
+        | (static_cast<std::uint64_t>(metadata[12]));
+
 
     return parseUtilityToken(metadata)
         .flatMap([&](auto&& entry)

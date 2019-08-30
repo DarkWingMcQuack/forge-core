@@ -63,31 +63,20 @@ auto UtilityTokenDeletionOp::getBlock() const
     return block_;
 }
 
-namespace {
-template<class To, class From>
-// clang-format off
-typename std::enable_if<
-    (sizeof(To) == sizeof(From)) &&
-    std::is_trivially_copyable<From>::value &&
-    std::is_trivial<To>::value,
-    // this implementation requires that To is trivially default constructible
-    To>::type
-// clang-format on
-// constexpr support needs compiler magic
-bit_cast(const From& src) noexcept
-{
-    To dst;
-    std::memcpy(&dst, &src, sizeof(To));
-    return dst;
-}
-
-} // namespace
-
 auto forge::core::createUtilityTokenDeletionOpMetadata(UtilityToken&& entry,
                                                        std::uint64_t amount)
     -> std::vector<std::byte>
 {
-    auto amount_data = bit_cast<std::array<std::byte, 8>>(amount);
+    std::array amount_data{
+        static_cast<std::byte>((amount & 0xff000000) >> 56),
+        static_cast<std::byte>((amount & 0xff000000) >> 48),
+        static_cast<std::byte>((amount & 0xff000000) >> 40),
+        static_cast<std::byte>((amount & 0xff000000) >> 32),
+        static_cast<std::byte>((amount & 0xff000000) >> 24),
+        static_cast<std::byte>((amount & 0x00ff0000) >> 16),
+        static_cast<std::byte>((amount & 0x0000ff00) >> 8),
+        static_cast<std::byte>(amount & 0x000000ff)};
+
     auto entry_data = std::move(entry.getId());
 
     std::vector ret_vec{
