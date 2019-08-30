@@ -1,7 +1,6 @@
 #include "entrys/token/UtilityTokenCreationOp.hpp"
 #include <core/Transaction.hpp>
 #include <entrys/token/UtilityTokenOperation.hpp>
-#include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <variant>
 
