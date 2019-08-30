@@ -1,10 +1,9 @@
 #include <core/Transaction.hpp>
 #include <entrys/token/UtilityToken.hpp>
-#include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <iostream>
 
-TEST(UtilityTokenTest, UtilityTokenParseing)
+TEST(UtilityTokenTest, UtilityTokenValidParsing)
 {
     auto data1 = forge::core::stringToByteVec(
                      "ffffff" //mask
@@ -37,13 +36,30 @@ TEST(UtilityTokenTest, UtilityTokenParseing)
 
     ASSERT_TRUE(token_opt2);
     EXPECT_EQ(token_opt2.getValue().getId(), expected2);
+}
 
-    auto data3 = forge::core::stringToByteVec(
+TEST(UtilityTokenTest, UtilityTokenInvalidParsing)
+{
+    //TO LITTLE BYTES
+    auto data1 = forge::core::stringToByteVec(
                      "ffffff" //mask
                      "03" //token type
                      "ff" //operation
                      "0000000000000000")
                      .getValue();
-    auto token_opt3 = forge::core::parseUtilityToken(data3);
-    ASSERT_FALSE(token_opt3);
+    auto token_opt1 = forge::core::parseUtilityToken(data1);
+    ASSERT_FALSE(token_opt1);
+
+    //WRONG TOKEN TYPE FLAG
+    auto data2 = forge::core::stringToByteVec(
+                     "ffffff" //mask
+                     "01" //token type
+                     "ff" //operation
+                     "0000000000000000" //amount
+                     "AA")
+                     .getValue();
+
+    auto token_opt2 = forge::core::parseUtilityToken(data2);
+
+    ASSERT_FALSE(token_opt2);
 }
