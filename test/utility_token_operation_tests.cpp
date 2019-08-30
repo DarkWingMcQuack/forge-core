@@ -1,6 +1,7 @@
 #include "entrys/token/UtilityTokenCreationOp.hpp"
 #include <core/Transaction.hpp>
 #include <entrys/token/UtilityTokenOperation.hpp>
+#include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <variant>
 
@@ -14,7 +15,7 @@ TEST(UtilityTokenOperationTest, UtilityTokenCreationOpParsingValid)
                         "c6dc75" //forge identifier
                         "03" //token type
                         "01" //operation flag
-                        "0000000000000011" // amount 3
+                        "0000000000000003" // amount 3
                         "deadbeef") //identifier
                         .getValue();
 
@@ -39,11 +40,31 @@ TEST(UtilityTokenOperationTest, UtilityTokenCreationOpParsingValid)
     EXPECT_EQ(creation.getUtilityToken().getId(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBurnValue(), 10);
     EXPECT_EQ(creation.getBlock(), 1000);
+    EXPECT_EQ(creation.getAmount(), 3);
 
     auto data = createUtilityTokenCreationOpMetadata(std::move(creation.getUtilityToken()),
                                                      creation.getAmount());
 
-    EXPECT_EQ(data, stringToByteVec("c6dc7503010000000000000011deadbeef").getValue());
+    EXPECT_EQ(data, stringToByteVec("c6dc7503010000000000000003deadbeef").getValue());
+}
+
+TEST(UtilityTokenOperationTest, UtilityTokenCreationOpMetadataCreation)
+{
+    UtilityTokenCreationOp op{UtilityToken{std::vector{(std::byte)0xAA}},
+                              2730,
+                              "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                              10000,
+                              10};
+
+    auto data = createUtilityTokenCreationOpMetadata(std::move(op.getUtilityToken()),
+                                                     op.getAmount());
+
+    EXPECT_EQ(data, stringToByteVec("c6dc75" //forge identifier
+                                    "03" //token type
+                                    "01" //operation flag
+                                    "0000000000000aaa" // amount 2730
+                                    "AA")
+                        .getValue()); //identifier
 }
 
 TEST(UtilityTokenOperationTest, UtilityTokenCreationOpParsingInvalid)
