@@ -36,5 +36,8 @@ private:
     EntryKey id_;
 };
 
+auto parseUtilityToken(const std::vector<std::byte>& metadata)
+    -> utilxx::Opt<UtilityToken>;
+
 
 } // namespace forge::core

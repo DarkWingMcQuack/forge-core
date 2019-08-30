@@ -6,6 +6,9 @@
 #include <cstdint>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/token/UtilityToken.hpp>
+#include <entrys/token/UtilityTokenCreationOp.hpp>
+#include <entrys/token/UtilityTokenDeletionOp.hpp>
+#include <entrys/token/UtilityTokenOwnershipTransferOp.hpp>
 #include <json/value.h>
 #include <utilxx/Opt.hpp>
 #include <variant>
@@ -18,7 +21,9 @@ constexpr inline auto UTILITY_TOKEN_OWNERSHIP_TRANSFER_FLAG = static_cast<std::b
 constexpr inline auto UTILITY_TOKEN_DELETION_FLAG     = static_cast<std::byte>(0b00000100);
 // clang-format on
 
-using UtilityTokenOperation = std::variant<>;
+using UtilityTokenOperation = std::variant<UtilityTokenCreationOp,
+                                           UtilityTokenDeletionOp,
+                                           UtilityTokenOwnershipTransferOp>;
 
 auto getUtilitToken(const UtilityTokenOperation& op)
     -> const UtilityToken&;
