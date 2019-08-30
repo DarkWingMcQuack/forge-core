@@ -273,7 +273,7 @@ auto LookupManager::lookupIsValid() const
             auto starting_block =
                 getStartingBlock(daemon_->getCoin());
 
-            return block_hashes_.size()
+            return static_cast<std::int64_t>(block_hashes_.size())
                 == last_valid_block - starting_block;
         });
 }

@@ -132,7 +132,8 @@ auto ReadOnlyOdinDaemon::resolveTxIn(TxIn vin) const
     return getTransaction(std::move(txid))
         .flatMap([&](auto&& tx)
                      -> utilxx::Result<TxOut, DaemonError> {
-            if(tx.getOutputs().size() <= vin.getVoutIndex()) {
+            if(static_cast<std::int64_t>(tx.getOutputs().size())
+               <= vin.getVoutIndex()) {
                 auto what = fmt::format("unable to get output #{} of transaction {}",
                                         index,
                                         tx.getTxid());
@@ -281,33 +282,34 @@ auto forge::daemon::odin::processGetUnspentResponse(Json::Value&& response,
 
     std::vector<Unspent> ret_vec;
 
-    utilxx::transform_if(std::make_move_iterator(std::begin(response)),
-                         std::make_move_iterator(std::end(response)),
-                         std::back_inserter(ret_vec),
-                         [](auto&& unspent_json) {
-                             auto value = unspent_json["amount"].asDouble()
-                                 * 100000000.;
-                             return Unspent{static_cast<std::int64_t>(value),
-                                            unspent_json["vout"].asInt64(),
-                                            unspent_json["confirmations"].asInt64(),
-                                            unspent_json["address"].asString(),
-                                            unspent_json["txid"].asString()};
-                         },
-                         [](auto&& unspent_json) {
-                             return unspent_json.isMember("txid")
-                                 && unspent_json.isMember("confirmations")
-                                 && unspent_json.isMember("spendable")
-                                 && unspent_json.isMember("amount")
-                                 && unspent_json.isMember("address")
-                                 && unspent_json.isMember("vout")
-                                 && unspent_json["txid"].isString()
-                                 && unspent_json["confirmations"].isNumeric()
-                                 && unspent_json["spendable"].isBool()
-                                 && unspent_json["amount"].isNumeric()
-                                 && unspent_json["address"].isString()
-                                 && unspent_json["vout"].isNumeric()
-                                 && unspent_json["spendable"].asBool();
-                         });
+    utilxx::transform_if(
+        std::make_move_iterator(std::begin(response)),
+        std::make_move_iterator(std::end(response)),
+        std::back_inserter(ret_vec),
+        [](auto&& unspent_json) {
+            auto value = unspent_json["amount"].asDouble()
+                * 100000000.;
+            return Unspent{static_cast<std::int64_t>(value),
+                           unspent_json["vout"].asInt64(),
+                           unspent_json["confirmations"].asInt64(),
+                           unspent_json["address"].asString(),
+                           unspent_json["txid"].asString()};
+        },
+        [](auto&& unspent_json) {
+            return unspent_json.isMember("txid")
+                && unspent_json.isMember("confirmations")
+                && unspent_json.isMember("spendable")
+                && unspent_json.isMember("amount")
+                && unspent_json.isMember("address")
+                && unspent_json.isMember("vout")
+                && unspent_json["txid"].isString()
+                && unspent_json["confirmations"].isNumeric()
+                && unspent_json["spendable"].isBool()
+                && unspent_json["amount"].isNumeric()
+                && unspent_json["address"].isString()
+                && unspent_json["vout"].isNumeric()
+                && unspent_json["spendable"].asBool();
+        });
 
     return std::move(ret_vec);
 }
