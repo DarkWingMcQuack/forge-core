@@ -10,6 +10,7 @@ add_executable(unit_tests
   utility_token_tests.cpp
   entry_lookup_tests.cpp
   umentry_operation_tests.cpp
+  utility_token_operation_tests.cpp
   read_only_odin_tests.cpp
   read_write_odin_tests.cpp)
 
