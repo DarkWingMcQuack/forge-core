@@ -1,4 +1,5 @@
 #include <array>
+#include <bits/stdint-intn.h>
 #include <core/FlagIndexes.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
@@ -253,7 +254,7 @@ auto Transaction::getNumberOfOutputs() const
 auto Transaction::getValueOfOutput(std::int64_t index) const
     -> utilxx::Opt<std::int64_t>
 {
-    if(outputs_.size() < index) {
+    if(static_cast<std::int64_t>(outputs_.size()) < index) {
         return std::nullopt;
     }
 
@@ -450,7 +451,7 @@ auto forge::core::stringToByteVec(const std::string& str)
 
     std::vector<std::byte> data;
 
-    for(int i = 0; i < str.length(); i += 2) {
+    for(size_t i = 0; i < str.length(); i += 2) {
         auto byteString = str.substr(i, 2);
         auto byte = (std::byte)std::strtol(byteString.c_str(), NULL, 16);
         data.push_back(byte);
