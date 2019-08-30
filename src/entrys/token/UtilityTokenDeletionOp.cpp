@@ -91,8 +91,8 @@ auto forge::core::createUtilityTokenDeletionOpMetadata(UtilityToken&& entry,
     auto entry_data = std::move(entry.getId());
 
     std::vector ret_vec{
-        forge::core::UTILITY_TOKEN_DELETION_FLAG,
-        forge::core::UTILITY_TOKEN_IDENTIFICATION_FLAG};
+        forge::core::UTILITY_TOKEN_IDENTIFICATION_FLAG,
+        forge::core::UTILITY_TOKEN_DELETION_FLAG};
 
     std::copy(std::cbegin(amount_data),
               std::cend(amount_data),
