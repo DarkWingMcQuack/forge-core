@@ -257,7 +257,7 @@ TEST(TransactionTest, ExtractMetadataValid)
     EXPECT_EQ(fourth_valid.getValue(), fourth_expected);
 }
 
-TEST(TransactionTest, ExtractMetadataInalid)
+TEST(TransactionTest, ExtractMetadataInvalid)
 {
     //doesnt start with 6a
     auto first_invalid = extractMetadata("a109a924fb7a90f305881fb9c8c5bd024673456af12e3651c27668a6b79707ad");
