@@ -102,11 +102,13 @@ auto forge::core::parseUMValue(const std::vector<std::byte>& data)
     }
 
     if(data[ENTRY_VALUE_FLAG_INDEX] == BYTE_ARRAY_VALUE_FLAG
-       && data.size() > ENTRY_VALUE_FLAG_INDEX + 2) {
+       && static_cast<std::int64_t>(data.size())
+           > ENTRY_VALUE_FLAG_INDEX + 2) {
         auto value_length = static_cast<std::int64_t>(data[5]);
 
         //check the bounds
-        if(ENTRY_VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
+        if(ENTRY_VALUE_FLAG_INDEX + 2 + value_length
+           > static_cast<std::int64_t>(data.size())) {
             return std::nullopt;
         }
 
@@ -157,7 +159,8 @@ auto forge::core::parseUMKey(const std::vector<std::byte>& data)
         auto value_length = static_cast<std::int64_t>(data[ENTRY_VALUE_FLAG_INDEX + 1]);
 
         //check the bounds
-        if(ENTRY_VALUE_FLAG_INDEX + 2 + value_length > data.size()) {
+        if(ENTRY_VALUE_FLAG_INDEX + 2 + value_length
+           > static_cast<std::int64_t>(data.size())) {
             return std::nullopt;
         }
 
