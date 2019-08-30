@@ -75,6 +75,7 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/UMEntryLookup.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/lookup/UtilityTokenLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/UniqueEntryLookup.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupManager.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/env/LoggingSetup.hpp
@@ -119,6 +120,7 @@ target_sources(forge-src
   src/daemon/odin/ReadWriteOdinDaemon.cpp
   src/core/Transaction.cpp
   src/lookup/UMEntryLookup.cpp
+  src/lookup/UtilityTokenLookup.cpp
   src/lookup/UniqueEntryLookup.cpp
   src/lookup/LookupManager.cpp
   src/env/LoggingSetup.cpp
