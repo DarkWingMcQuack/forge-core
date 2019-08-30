@@ -14,13 +14,18 @@
 #include <unordered_map>
 
 using forge::lookup::UtilityTokenLookup;
+using forge::core::UtilityToken;
+using forge::core::UtilityTokenOperation;
+using forge::core::UtilityTokenCreationOp;
+using forge::core::UtilityTokenDeletionOp;
+using forge::core::UtilityTokenOwnershipTransferOp;
 
 
 UtilityTokenLookup::UtilityTokenLookup(std::int64_t start_block)
     : block_height_(start_block),
       start_block_(start_block) {}
 
-auto UtilityTokenLookup::executeOperations(std::vector<core::UtilityTokenOperation>&& ops)
+auto UtilityTokenLookup::executeOperations(std::vector<UtilityTokenOperation>&& ops)
     -> void
 {
     for(auto&& op : ops) {
@@ -67,16 +72,16 @@ auto UtilityTokenLookup::clear()
 }
 
 auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
-    -> std::vector<std::pair<core::UtilityToken,
+    -> std::vector<std::pair<UtilityToken,
                              std::uint64_t>>
 {
-    std::vector<std::pair<core::UtilityToken,
+    std::vector<std::pair<UtilityToken,
                           std::uint64_t>>
         ret_vec;
     for(const auto& [token, accounts] : utility_account_lookup_) {
         for(const auto& [creditor, credit] : accounts) {
             if(creditor == owner) {
-                auto data_opt = core::stringToByteVec(token);
+			  auto data_opt = forge::core::stringToByteVec(token);
                 if(!data_opt) {
                     LOG(WARNING) << "unable to convert utility token id"
                                  << token
@@ -84,7 +89,7 @@ auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
                     continue;
                 }
                 auto data = std::move(data_opt.getValue());
-                core::UtilityToken utility_token{std::move(data)};
+                UtilityToken utility_token{std::move(data)};
 
                 ret_vec.emplace_back(std::move(utility_token),
                                      credit);
@@ -95,13 +100,13 @@ auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
     return ret_vec;
 }
 
-auto UtilityTokenLookup::operator()(core::UtilityTokenCreationOp&& op)
+auto UtilityTokenLookup::operator()(UtilityTokenCreationOp&& op)
     -> void
 {
     auto creator = std::move(op.getCreator());
     auto amount = op.getAmount();
     auto raw_id = op.getUtilityToken().getId();
-    auto id = core::toHexString(raw_id);
+    auto id = forge::core::toHexString(raw_id);
 
     UtilityTokenAccounts account;
     account.emplace(std::move(creator),
@@ -111,14 +116,14 @@ auto UtilityTokenLookup::operator()(core::UtilityTokenCreationOp&& op)
                                     std::move(account));
 }
 
-auto UtilityTokenLookup::operator()(core::UtilityTokenOwnershipTransferOp&& op)
+auto UtilityTokenLookup::operator()(UtilityTokenOwnershipTransferOp&& op)
     -> void
 {
     auto sender = std::move(op.getSender());
     auto reciever = std::move(op.getReciever());
     auto amount = std::move(op.getAmount());
     auto raw_id = std::move(op.getUtilityToken().getId());
-    auto id = core::toHexString(raw_id);
+    auto id = forge::core::toHexString(raw_id);
 
     auto& credit = utility_account_lookup_[id][sender];
     if(credit - amount == 0) {
@@ -136,13 +141,13 @@ auto UtilityTokenLookup::operator()(core::UtilityTokenOwnershipTransferOp&& op)
     }
 }
 
-auto UtilityTokenLookup::operator()(core::UtilityTokenDeletionOp&& op)
+auto UtilityTokenLookup::operator()(UtilityTokenDeletionOp&& op)
     -> void
 {
     auto creator = std::move(op.getCreator());
     auto amount = std::move(op.getAmount());
     auto raw_id = std::move(op.getUtilityToken().getId());
-    auto id = core::toHexString(raw_id);
+    auto id = forge::core::toHexString(raw_id);
 
     auto& credit = utility_account_lookup_[id][creator];
     if(credit - amount == 0) {
@@ -156,11 +161,11 @@ auto UtilityTokenLookup::operator()(core::UtilityTokenDeletionOp&& op)
     }
 }
 
-auto UtilityTokenLookup::filterNonRelevantOperations(std::vector<core::UtilityTokenOperation>&& ops) const
-    -> std::vector<core::UtilityTokenOperation>
+auto UtilityTokenLookup::filterNonRelevantOperations(std::vector<UtilityTokenOperation>&& ops) const
+    -> std::vector<UtilityTokenOperation>
 {
     auto grouped = groupOperations(std::move(ops));
-    std::vector<core::UtilityTokenOperation> relevant_ops;
+    std::vector<UtilityTokenOperation> relevant_ops;
 
     for(auto&& [id, operations] : grouped) {
         auto rel_ops = filterOperationsPerToken(id,
@@ -174,23 +179,23 @@ auto UtilityTokenLookup::filterNonRelevantOperations(std::vector<core::UtilityTo
 }
 
 auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
-                                                  std::vector<core::UtilityTokenOperation>&& ops) const
-    -> std::vector<core::UtilityTokenOperation>
+                                                  std::vector<UtilityTokenOperation>&& ops) const
+    -> std::vector<UtilityTokenOperation>
 {
-    std::vector<core::UtilityTokenCreationOp> creations;
-    std::vector<core::UtilityTokenDeletionOp> deletions;
-    std::vector<core::UtilityTokenOwnershipTransferOp> ownership_transfers;
+    std::vector<UtilityTokenCreationOp> creations;
+    std::vector<UtilityTokenDeletionOp> deletions;
+    std::vector<UtilityTokenOwnershipTransferOp> ownership_transfers;
 
     for(auto&& op : ops) {
         std::visit(
             utilxx::overload{
-                [&](core::UtilityTokenCreationOp&& creation) {
+                [&](UtilityTokenCreationOp&& creation) {
                     creations.emplace_back(std::move(creation));
                 },
-                [&](core::UtilityTokenDeletionOp&& deletion) {
+                [&](UtilityTokenDeletionOp&& deletion) {
                     deletions.emplace_back(std::move(deletion));
                 },
-                [&](core::UtilityTokenOwnershipTransferOp&& transfer) {
+                [&](UtilityTokenOwnershipTransferOp&& transfer) {
                     ownership_transfers.emplace_back(std::move(transfer));
                 }},
             std::move(op));
@@ -212,7 +217,7 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
         if(iter == std::cend(creations)) {
             return {};
         } else {
-            return std::vector<core::UtilityTokenOperation>{std::move(*iter)};
+            return std::vector<UtilityTokenOperation>{std::move(*iter)};
         }
     }
 
@@ -261,7 +266,7 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                            }),
             std::end(deletions));
 
-    std::vector<core::UtilityTokenOperation> ret_ops;
+    std::vector<UtilityTokenOperation> ret_ops;
 
     std::move(std::begin(ownership_transfers),
               std::end(ownership_transfers),
@@ -273,26 +278,26 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     return ret_ops;
 }
 
-auto UtilityTokenLookup::groupOperations(std::vector<core::UtilityTokenOperation>&& ops) const
+auto UtilityTokenLookup::groupOperations(std::vector<UtilityTokenOperation>&& ops) const
     -> std::unordered_map<std::string,
-                          std::vector<core::UtilityTokenOperation>>
+                          std::vector<UtilityTokenOperation>>
 {
     std::unordered_map<std::string,
-                       std::vector<core::UtilityTokenOperation>>
+                       std::vector<UtilityTokenOperation>>
         operations;
 
     for(auto&& op : ops) {
         std::visit(
             [&](auto&& operation) {
                 const auto& token_id = operation.getUtilityToken().getId();
-                auto id_str = core::toHexString(token_id);
+                auto id_str = forge::core::toHexString(token_id);
                 auto iter = operations.find(id_str);
                 if(iter != operations.end()) {
                     iter
                         ->second
                         .emplace_back(std::move(operation));
                 } else {
-                    core::UtilityTokenOperation op{std::move(operation)};
+                    UtilityTokenOperation op{std::move(operation)};
                     operations.emplace(std::move(id_str),
                                        std::vector{std::move(op)});
                 }
@@ -309,4 +314,3 @@ auto UtilityTokenLookup::checkIfTokenExists(const std::string& token_id) const
     return utility_account_lookup_.find(token_id)
         != utility_account_lookup_.end();
 }
-
