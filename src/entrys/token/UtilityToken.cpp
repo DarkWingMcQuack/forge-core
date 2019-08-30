@@ -41,7 +41,7 @@ auto UtilityToken::operator!=(const UtilityToken& rhs) const
     return id_ != rhs.id_;
 }
 
-auto parseUtilityToken(const std::vector<std::byte>& metadata)
+auto forge::core::parseUtilityToken(const std::vector<std::byte>& metadata)
     -> utilxx::Opt<UtilityToken>
 {
     //3 bytes mask
