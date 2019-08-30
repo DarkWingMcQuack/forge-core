@@ -9,7 +9,7 @@ add_executable(unit_tests
   entry_tests.cpp
   utility_token_tests.cpp
   entry_lookup_tests.cpp
-  operation_tests.cpp
+  umentry_operation_tests.cpp
   read_only_odin_tests.cpp
   read_write_odin_tests.cpp)
 

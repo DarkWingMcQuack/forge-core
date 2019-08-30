@@ -5,7 +5,7 @@
 using namespace std::string_literals;
 using namespace forge::core;
 
-TEST(OperationTest, UMEntryCreationOpParsingValid)
+TEST(UMEntryOperationTest, UMEntryCreationOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010101aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
@@ -35,7 +35,7 @@ TEST(OperationTest, UMEntryCreationOpParsingValid)
     EXPECT_EQ(data, stringToByteVec("c6dc75010101aabbccdddeadbeef").getValue());
 }
 
-TEST(OperationTest, UMEntryRenewalOpParsingValid)
+TEST(UMEntryOperationTest, UMEntryRenewalOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010201aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
@@ -64,7 +64,7 @@ TEST(OperationTest, UMEntryRenewalOpParsingValid)
     EXPECT_EQ(data, stringToByteVec("c6dc75010201aabbccdddeadbeef").getValue());
 }
 
-TEST(OperationTest, OwnershipTransferOpParsingValid)
+TEST(UMEntryOperationTest, OwnershipTransferOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010401aabbccdddeadbeef").getValue();
     std::int64_t block = 1000;
@@ -96,7 +96,7 @@ TEST(OperationTest, OwnershipTransferOpParsingValid)
     EXPECT_EQ(data, stringToByteVec("c6dc75010401aabbccdddeadbeef").getValue());
 }
 
-TEST(OperationTest, UMEntryUpdateOpParsingValid)
+TEST(UMEntryOperationTest, UMEntryUpdateOpParsingValid)
 {
     auto metadata = extractMetadata("6a00c6dc75010801ffffffffdeadbeef").getValue();
     std::int64_t block = 1000;
@@ -132,7 +132,7 @@ TEST(OperationTest, UMEntryUpdateOpParsingValid)
     EXPECT_EQ(data, stringToByteVec("c6dc75010801ffffffffdeadbeef").getValue());
 }
 
-TEST(OperationTest, CreationOpMetadataCreation)
+TEST(UMEntryOperationTest, CreationOpMetadataCreation)
 {
     auto expected_metadata = extractMetadata("6a00c6dc75010101aabbccdddeadbeef").getValue();
 
@@ -155,7 +155,7 @@ TEST(OperationTest, CreationOpMetadataCreation)
     EXPECT_EQ(created_metadata, expected_metadata);
 }
 
-TEST(OperationTest, RenewalOpMetadataCreation)
+TEST(UMEntryOperationTest, RenewalOpMetadataCreation)
 {
     auto expected_metadata = extractMetadata("6a00c6dc75010201aabbccdddeadbeef").getValue();
 
@@ -178,7 +178,7 @@ TEST(OperationTest, RenewalOpMetadataCreation)
     EXPECT_EQ(created_metadata, expected_metadata);
 }
 
-TEST(OperationTest, OwnershipTransferOpMetadataCreation)
+TEST(UMEntryOperationTest, OwnershipTransferOpMetadataCreation)
 {
     auto expected_metadata = extractMetadata("6a00c6dc75010401aabbccdddeadbeef").getValue();
 
@@ -201,7 +201,7 @@ TEST(OperationTest, OwnershipTransferOpMetadataCreation)
     EXPECT_EQ(created_metadata, expected_metadata);
 }
 
-TEST(OperationTest, UpdateOpMetadataCreation)
+TEST(UMEntryOperationTest, UpdateOpMetadataCreation)
 {
     auto expected_metadata = extractMetadata("6a00c6dc75010801aabbccdddeadbeef").getValue();
 
@@ -223,7 +223,7 @@ TEST(OperationTest, UpdateOpMetadataCreation)
     EXPECT_EQ(created_metadata, expected_metadata);
 }
 
-TEST(OperationTest, DeletionOpMetadataCreation)
+TEST(UMEntryOperationTest, DeletionOpMetadataCreation)
 {
     auto expected_metadata = extractMetadata("6a00c6dc75011001aabbccdddeadbeef").getValue();
 
