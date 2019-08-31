@@ -7,7 +7,6 @@
 #include <rpc/readwritewalletstubclient.h>
 
 using forge::core::stringToByteVec;
-using forge::core::stringToASCIIByteVec;
 
 
 namespace {

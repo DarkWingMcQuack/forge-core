@@ -10,12 +10,12 @@ struct ColorCoutSink
     // Linux xterm color
     // http://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
 
-    enum FG_Color { YELLOW = 33,
+    enum FgColor { YELLOW = 33,
                     RED = 31,
                     GREEN = 32,
                     WHITE = 97 };
 
-    FG_Color GetColor(const LEVELS level) const
+    FgColor getColor(const LEVELS level) const
     {
         if(level.value == WARNING.value) {
             return YELLOW;
@@ -30,14 +30,14 @@ struct ColorCoutSink
         return WHITE;
     }
 
-    void ReceiveLogMessage(g3::LogMessageMover logUMEntry)
+    void receiveLogMessage(g3::LogMessageMover log_um_entry)
     {
-        auto level = logUMEntry.get()._level;
-        auto color = GetColor(level);
+        auto level = log_um_entry.get()._level;
+        auto color = getColor(level);
 
         fmt::print("\033[{}m{}\033[m",
                    color,
-                   logUMEntry.get().toString());
+                   log_um_entry.get().toString());
     }
 };
 
@@ -59,8 +59,8 @@ auto forge::env::initConsoleLogger()
 {
     static auto worker = g3::LogWorker::createLogWorker();
 
-    auto sinkHandle = worker->addSink(std::make_unique<ColorCoutSink>(),
-                                      &ColorCoutSink::ReceiveLogMessage);
+    auto sink_handle = worker->addSink(std::make_unique<ColorCoutSink>(),
+                                      &ColorCoutSink::receiveLogMessage);
     // logger is initialized
     g3::initializeLogging(worker.get());
 }

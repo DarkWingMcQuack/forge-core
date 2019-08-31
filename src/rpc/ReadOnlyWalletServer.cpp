@@ -14,16 +14,12 @@
 
 using forge::rpc::ReadOnlyWalletServer;
 using forge::core::getBlockTimeInSeconds;
-using forge::core::UMEntry;
 using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
-using forge::core::NoneValue;
 using forge::wallet::ReadOnlyWallet;
-using jsonrpc::PARAMS_BY_NAME;
-using jsonrpc::Procedure;
 using jsonrpc::JsonRpcException;
 
 ReadOnlyWalletServer::ReadOnlyWalletServer(jsonrpc::AbstractServerConnector& connector,

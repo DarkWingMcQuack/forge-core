@@ -20,7 +20,7 @@ auto parseEntry(const std::vector<std::byte>& data)
 auto entryToRawData(const Entry& entry)
     -> std::vector<std::byte>;
 
-auto entryToJson(Entry value)
+auto entryToJson(Entry entry)
     -> Json::Value;
 
 } // namespace forge::core

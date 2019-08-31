@@ -14,16 +14,12 @@
 
 using forge::rpc::ReadWriteWalletServer;
 using forge::core::getBlockTimeInSeconds;
-using forge::core::UMEntry;
 using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
 using forge::core::ByteArray;
-using forge::core::NoneValue;
 using forge::wallet::ReadWriteWallet;
-using jsonrpc::PARAMS_BY_NAME;
-using jsonrpc::Procedure;
 using jsonrpc::JsonRpcException;
 
 ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
@@ -107,9 +103,9 @@ auto ReadWriteWalletServer::lookupumvalue(bool isstring, const std::string& key)
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -141,9 +137,9 @@ auto ReadWriteWalletServer::lookupuniquevalue(bool isstring, const std::string& 
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -175,9 +171,9 @@ auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -208,9 +204,9 @@ auto ReadWriteWalletServer::lookupactivationblock(bool isstring, const std::stri
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -535,9 +531,9 @@ auto ReadWriteWalletServer::createnewumentry(const std::string& address,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -560,7 +556,7 @@ auto ReadWriteWalletServer::createnewumentry(const std::string& address,
 
         return res.getValue();
 
-    } else {
+    } 
         auto address_copy = address;
         auto res = wallet_.createNewUMEntry(std::move(key_vec),
                                             std::move(entry_value),
@@ -573,7 +569,7 @@ auto ReadWriteWalletServer::createnewumentry(const std::string& address,
         }
 
         return res.getValue();
-    }
+    
 }
 
 
@@ -594,9 +590,9 @@ auto ReadWriteWalletServer::updateumentry(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -636,9 +632,9 @@ auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -661,7 +657,7 @@ auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
 
         return res.getValue();
 
-    } else {
+    } 
         auto address_copy = address;
         auto res = wallet_.createNewUniqueEntry(std::move(key_vec),
                                                 std::move(entry_value),
@@ -674,7 +670,7 @@ auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
         }
 
         return res.getValue();
-    }
+    
 }
 
 auto ReadWriteWalletServer::renewentry(int burnvalue,
@@ -687,9 +683,9 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -718,9 +714,9 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -750,9 +746,9 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -784,9 +780,9 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } else {
+            } 
                 return forge::core::stringToByteVec(key);
-            }
+            
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};

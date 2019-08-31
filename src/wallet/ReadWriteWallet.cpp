@@ -96,7 +96,7 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
                                      std::move(metadata));
                 });
         })
-        .onValue([&](auto&&) {
+        .onValue([&](auto&& /*unused*/) {
             addNewOwnedAddress(std::move(address));
         })
         .mapError([](auto&& error) {
@@ -219,7 +219,7 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
                                      std::move(metadata));
                 });
         })
-        .onValue([&](auto&&) {
+        .onValue([&](auto&& /*unused*/) {
             addNewOwnedAddress(std::move(address));
         })
         .mapError([](auto&& error) {

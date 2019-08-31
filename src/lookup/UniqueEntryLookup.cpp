@@ -8,8 +8,6 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using utilxx::Result;
-using utilxx::traverse;
 using utilxx::Opt;
 using forge::core::UniqueEntryOperation;
 using forge::core::getValue;
@@ -20,7 +18,6 @@ using forge::core::UniqueEntryCreationOp;
 using forge::core::UniqueEntryOwnershipTransferOp;
 using forge::core::UniqueEntryRenewalOp;
 using forge::core::UniqueEntryDeletionOp;
-using forge::lookup::LookupError;
 using forge::lookup::UniqueEntryLookup;
 
 
@@ -151,7 +148,7 @@ auto UniqueEntryLookup::removeUniqueEntrysOlderThan(std::int64_t diff)
     -> void
 {
     auto iter = lookup_map_.begin();
-    auto endIter = lookup_map_.end();
+    auto end_iter = lookup_map_.end();
 
     auto predicate = [this, &diff](auto&& map_iter) {
         auto activation_block = std::get<2>(map_iter->second);
@@ -159,7 +156,7 @@ auto UniqueEntryLookup::removeUniqueEntrysOlderThan(std::int64_t diff)
     };
 
     //uhhhggg
-    for(; iter != endIter;) {
+    for(; iter != end_iter;) {
         if(predicate(iter)) {
             lookup_map_.erase(iter++);
         } else {

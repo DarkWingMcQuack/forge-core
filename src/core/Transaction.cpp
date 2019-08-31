@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <json/value.h>
 #include <sstream>
+#include <utility>
 #include <utilxx/Opt.hpp>
 #include <vector>
 
@@ -16,9 +17,6 @@ using forge::core::TxIn;
 using forge::core::TxOut;
 using forge::core::Unspent;
 using forge::core::Transaction;
-using forge::daemon::ReadOnlyDaemonBase;
-using forge::daemon::DaemonError;
-using utilxx::Result;
 using utilxx::Opt;
 using utilxx::traverse;
 using forge::core::FORGE_IDENTIFIER_MASK;
@@ -95,11 +93,11 @@ auto TxOut::numberOfAddresses() const
 auto TxOut::isOpReturnOutput() const
     -> bool
 {
-    static const auto OP_RETURN_CODE = "6a"s;
+    static const auto op_return_code = "6a"s;
 
     //check if hex starts with OP_RETURN_CODE
-    return std::equal(std::cbegin(OP_RETURN_CODE),
-                      std::cend(OP_RETURN_CODE),
+    return std::equal(std::cbegin(op_return_code),
+                      std::cend(op_return_code),
                       std::begin(hex_));
 }
 
@@ -270,8 +268,8 @@ Unspent::Unspent(std::int64_t value,
     : value_(value),
       vout_idx_(vout_idx),
       confirmations_(confirmations),
-      address_(address),
-      txid_(txid) {}
+      address_(std::move(address)),
+      txid_(std::move(txid)) {}
 
 auto Unspent::getValue() const
     -> std::int64_t
@@ -452,8 +450,8 @@ auto forge::core::stringToByteVec(const std::string& str)
     std::vector<std::byte> data;
 
     for(size_t i = 0; i < str.length(); i += 2) {
-        auto byteString = str.substr(i, 2);
-        auto byte = (std::byte)std::strtol(byteString.c_str(), NULL, 16);
+        auto byte_string = str.substr(i, 2);
+        auto byte = static_cast<std::byte>(std::strtol(byte_string.c_str(), nullptr, 16));
         data.push_back(byte);
     }
 

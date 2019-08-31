@@ -54,7 +54,7 @@ public:
     auto getBlockHeight() const
         -> std::int64_t;
 
-    auto removeUniqueEntrysOlderThan(std::int64_t blocks)
+    auto removeUniqueEntrysOlderThan(std::int64_t diff)
         -> void;
 
     auto isCurrentlyValid(const core::UniqueEntryOperation& op) const

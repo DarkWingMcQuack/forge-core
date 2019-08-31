@@ -201,12 +201,12 @@ auto forge::env::parseConfigFile(const std::string& config_path)
     auto mode = [&]() {
         if(mode_str == "lookup")
             return forge::env::Mode::LookupOnly;
-        else if(mode_str == "readonly")
+        if(mode_str == "readonly")
             return forge::env::Mode::ReadOnly;
         else if(mode_str == "readwrite")
             return forge::env::Mode::ReadWrite;
         else {
-            fmt::print("invalid value for \"server.mode\", should be \"lookup\", \"readonly\" or \"readwrite\"");
+            fmt::print(R"(invalid value for "server.mode", should be "lookup", "readonly" or "readwrite")");
             std::exit(-1);
         }
     }();

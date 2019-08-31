@@ -13,7 +13,6 @@
 #include <utilxx/Result.hpp>
 
 using forge::lookup::LookupManager;
-using forge::lookup::UMEntryLookup;
 using forge::lookup::LookupError;
 using forge::core::EntryKey;
 using forge::core::UMEntryValue;
@@ -27,8 +26,8 @@ using forge::daemon::ReadOnlyDaemonBase;
 
 LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
     : daemon_(std::move(daemon)),
-      um_entry_lookup_(getStartingBlock(daemon_->getCoin())),
-      block_hashes_() {}
+      um_entry_lookup_(getStartingBlock(daemon_->getCoin()))
+      {}
 
 auto LookupManager::updateLookup()
     -> utilxx::Result<bool, ManagerError>

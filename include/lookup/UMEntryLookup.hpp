@@ -54,7 +54,7 @@ public:
     auto getBlockHeight() const
         -> std::int64_t;
 
-    auto removeUMEntrysOlderThan(std::int64_t blocks)
+    auto removeUMEntrysOlderThan(std::int64_t diff)
         -> void;
 
     auto isCurrentlyValid(const core::UMEntryOperation& op) const

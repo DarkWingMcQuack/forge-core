@@ -6,7 +6,6 @@
 #include <wallet/ReadOnlyWallet.hpp>
 
 using forge::lookup::LookupManager;
-using forge::lookup::LookupError;
 using forge::wallet::ReadOnlyWallet;
 using forge::core::UMEntry;
 

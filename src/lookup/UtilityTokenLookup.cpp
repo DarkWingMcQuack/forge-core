@@ -216,9 +216,9 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
 
         if(iter == std::cend(creations)) {
             return {};
-        } else {
+        } 
             return std::vector<UtilityTokenOperation>{std::move(*iter)};
-        }
+        
     }
 
     //collect how much users have spend within all the transactions
