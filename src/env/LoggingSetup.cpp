@@ -15,7 +15,8 @@ struct ColorCoutSink
                     GREEN = 32,
                     WHITE = 97 };
 
-    FgColor getColor(const LEVELS level) const
+    auto getColor(const LEVELS level) const
+	  -> FgColor
     {
         if(level.value == WARNING.value) {
             return YELLOW;
