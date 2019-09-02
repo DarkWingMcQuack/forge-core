@@ -259,7 +259,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenDeletionOpExecutionTest)
         "c6dc75" //forge identifier
         "03" //token type
         "04" //operation flag
-        "0000000000000003" // amount 3
+        "0000000000000002" // amount 3
         "deadbeef",
         100,
         "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
@@ -277,5 +277,14 @@ TEST(UtilityTokenLookupTest, UtilityTokenDeletionOpExecutionTest)
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                               "deadbeef");
     EXPECT_EQ(available1,
-              0);
+              1);
+
+
+	//TRY TO DELETE MORE THAN AVAILABLE
+    lookup.executeOperations({deletion_op1});
+
+    available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                              "deadbeef");
+    EXPECT_EQ(available1,
+              1);
 }
