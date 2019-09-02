@@ -109,3 +109,111 @@ TEST(UtilityTokenLookupTest, UtilityTokenCreationOpCompetitorExecutionTest)
     ASSERT_EQ(available3,
               0);
 }
+
+TEST(UtilityTokenLookupTest, UtilityTokenTransferOpExecutionTest)
+{
+    UtilityTokenLookup lookup;
+
+    auto creation_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "01" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10);
+
+
+    auto transfer_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "02" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10,
+        "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z"s);
+
+    lookup.executeOperations({creation_op1});
+
+    auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                                   "deadbeef");
+    EXPECT_EQ(available1,
+              3);
+
+    lookup.executeOperations({transfer_op1});
+
+    available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                              "deadbeef");
+    EXPECT_EQ(available1,
+              0);
+
+    auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
+                                                   "deadbeef");
+    EXPECT_EQ(available2,
+              3);
+}
+
+TEST(UtilityTokenLookupTest, UtilityTokenTransferOverpayTest)
+{
+    UtilityTokenLookup lookup;
+
+    auto creation_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "01" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10);
+
+
+    auto transfer_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "02" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10,
+        "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z"s);
+
+    auto transfer_op2 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "02" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        11,
+        "oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP"s);
+
+    lookup.executeOperations({creation_op1});
+
+    auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                                   "deadbeef");
+    EXPECT_EQ(available1,
+              3);
+
+    lookup.executeOperations({transfer_op1, transfer_op2});
+
+    available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                              "deadbeef");
+    ASSERT_EQ(available1,
+              3);
+
+    auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
+                                                   "deadbeef");
+    ASSERT_EQ(available2,
+              0);
+
+    auto available3 = lookup.getAvailableBalanceOf("oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP",
+                                                   "deadbeef");
+    ASSERT_EQ(available3,
+              0);
+}
