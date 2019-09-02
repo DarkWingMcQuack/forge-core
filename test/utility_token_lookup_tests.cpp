@@ -280,11 +280,67 @@ TEST(UtilityTokenLookupTest, UtilityTokenDeletionOpExecutionTest)
               1);
 
 
-	//TRY TO DELETE MORE THAN AVAILABLE
+    //TRY TO DELETE MORE THAN AVAILABLE
     lookup.executeOperations({deletion_op1});
 
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                               "deadbeef");
     EXPECT_EQ(available1,
               1);
+}
+
+
+TEST(UtilityTokenLookupTest, UtilityTokenDoubleCreationTest)
+{
+    UtilityTokenLookup lookup;
+
+    auto creation_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "01" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10);
+
+    auto creation_op2 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "01" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
+        11);
+
+    lookup.executeOperations({creation_op1});
+
+    auto available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                                  "deadbeef");
+
+    EXPECT_EQ(available,
+              3);
+
+    lookup.executeOperations({creation_op1});
+
+    available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                             "deadbeef");
+
+    EXPECT_EQ(available,
+              3);
+
+    lookup.executeOperations({creation_op2});
+
+    available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                             "deadbeef");
+
+    auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
+                                             "deadbeef");
+
+    EXPECT_EQ(available2,
+              0);
+
+    EXPECT_EQ(available,
+              3);
 }
