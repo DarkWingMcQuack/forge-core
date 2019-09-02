@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <boost/type_traits/is_destructible.hpp>
 #include <cstdint>
-#include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <iterator>
 #include <lookup/UtilityTokenLookup.hpp>
@@ -128,9 +127,6 @@ auto UtilityTokenLookup::operator()(UtilityTokenOwnershipTransferOp&& op)
     auto id = forge::core::toHexString(raw_id);
 
     auto& credit = utility_account_lookup_[id][sender];
-    fmt::print("credit: {}, used amount: {} , rest: {}\n", credit,
-               amount,
-               credit - amount);
     if(credit - amount == 0) {
         utility_account_lookup_[id].erase(sender);
     } else {
