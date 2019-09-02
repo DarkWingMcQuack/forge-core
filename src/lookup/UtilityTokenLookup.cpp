@@ -28,7 +28,8 @@ UtilityTokenLookup::UtilityTokenLookup(std::int64_t start_block)
 auto UtilityTokenLookup::executeOperations(std::vector<UtilityTokenOperation>&& ops)
     -> void
 {
-    for(auto&& op : ops) {
+    auto filtered = filterNonRelevantOperations(std::move(ops));
+    for(auto&& op : filtered) {
         std::visit(*this,
                    std::move(op));
     }
@@ -81,7 +82,7 @@ auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
     for(const auto& [token, accounts] : utility_account_lookup_) {
         for(const auto& [creditor, credit] : accounts) {
             if(creditor == owner) {
-			  auto data_opt = forge::core::stringToByteVec(token);
+                auto data_opt = forge::core::stringToByteVec(token);
                 if(!data_opt) {
                     LOG(WARNING) << "unable to convert utility token id"
                                  << token
@@ -207,18 +208,19 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
         deletions.clear();
         ownership_transfers.clear();
 
+
         //return the creation op with the highest burn value
-        auto iter = std::max_element(std::cbegin(creations),
-                                     std::cend(creations),
-                                     [](const auto& lhs, const auto& rhs) {
-                                         return lhs.getBurnValue() < rhs.getBurnValue();
-                                     });
+        auto iter =
+            std::max_element(std::cbegin(creations),
+                             std::cend(creations),
+                             [](const auto& lhs, const auto& rhs) {
+                                 return lhs.getBurnValue() < rhs.getBurnValue();
+                             });
 
         if(iter == std::cend(creations)) {
             return {};
-        } 
-            return std::vector<UtilityTokenOperation>{std::move(*iter)};
-        
+        }
+        return std::vector<UtilityTokenOperation>{std::move(*iter)};
     }
 
     //collect how much users have spend within all the transactions
