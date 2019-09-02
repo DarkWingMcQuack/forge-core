@@ -47,7 +47,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenCreationOpExecutionTest)
     auto available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                                   "deadbeef");
 
-    ASSERT_EQ(available,
+    EXPECT_EQ(available,
               3);
 }
 
@@ -84,10 +84,10 @@ TEST(UtilityTokenLookupTest, UtilityTokenCreationOpCompetitorExecutionTest)
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
                                                    "deadbeef");
 
-    ASSERT_EQ(available1,
+    EXPECT_EQ(available1,
               0);
 
-    ASSERT_EQ(available2,
+    EXPECT_EQ(available2,
               3);
 
 
@@ -106,7 +106,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenCreationOpCompetitorExecutionTest)
     auto available3 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                                    "deadbeef");
 
-    ASSERT_EQ(available3,
+    EXPECT_EQ(available3,
               0);
 }
 
@@ -136,6 +136,17 @@ TEST(UtilityTokenLookupTest, UtilityTokenTransferOpExecutionTest)
         10,
         "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z"s);
 
+    auto transfer_op2 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "02" //operation flag
+        "0000000000000003" // amount 3
+        "deadbeef",
+        100,
+        "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
+        10,
+        "oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP"s);
+
     lookup.executeOperations({creation_op1});
 
     auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
@@ -153,6 +164,18 @@ TEST(UtilityTokenLookupTest, UtilityTokenTransferOpExecutionTest)
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
                                                    "deadbeef");
     EXPECT_EQ(available2,
+              3);
+
+    lookup.executeOperations({transfer_op2});
+
+    available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
+                                              "deadbeef");
+    EXPECT_EQ(available2,
+              0);
+
+    auto available3 = lookup.getAvailableBalanceOf("oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP",
+                                                   "deadbeef");
+    EXPECT_EQ(available3,
               3);
 }
 
@@ -204,16 +227,16 @@ TEST(UtilityTokenLookupTest, UtilityTokenTransferOverpayTest)
 
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                               "deadbeef");
-    ASSERT_EQ(available1,
+    EXPECT_EQ(available1,
               3);
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
                                                    "deadbeef");
-    ASSERT_EQ(available2,
+    EXPECT_EQ(available2,
               0);
 
     auto available3 = lookup.getAvailableBalanceOf("oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP",
                                                    "deadbeef");
-    ASSERT_EQ(available3,
+    EXPECT_EQ(available3,
               0);
 }
