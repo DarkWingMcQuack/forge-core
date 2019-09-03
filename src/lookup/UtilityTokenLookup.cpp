@@ -12,6 +12,7 @@
 #include <iterator>
 #include <limits>
 #include <lookup/UtilityTokenLookup.hpp>
+#include <numeric>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -102,6 +103,31 @@ auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
 
     return ret_vec;
 }
+
+auto UtilityTokenLookup::getNumberOfTokens() const
+    -> std::int64_t
+{
+    return utility_account_lookup_.size();
+}
+
+auto UtilityTokenLookup::getSupplyOfToken(std::string_view token) const
+    -> std::uint64_t
+{
+    auto iter = utility_account_lookup_.find(token.data());
+    if(iter == std::end(utility_account_lookup_)) {
+        return 0;
+    }
+
+    const auto& token_accs = iter->second;
+
+    return std::accumulate(std::cbegin(token_accs),
+                           std::cend(token_accs),
+                           0,
+                           [](auto init, const auto& acc) {
+                               return init + acc.second;
+                           });
+}
+
 
 auto UtilityTokenLookup::operator()(UtilityTokenCreationOp&& op)
     -> void

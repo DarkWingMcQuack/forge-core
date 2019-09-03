@@ -42,6 +42,12 @@ public:
             std::pair<core::UtilityToken,
                       std::uint64_t>>;
 
+    auto getNumberOfTokens() const
+        -> std::int64_t;
+
+    auto getSupplyOfToken(std::string_view token) const
+        -> std::uint64_t;
+
     //execute Creation Operation
     auto operator()(core::UtilityTokenCreationOp&& op)
         -> void;
