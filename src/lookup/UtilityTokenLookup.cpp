@@ -207,21 +207,6 @@ auto UtilityTokenLookup::filterNonRelevantOperations(std::vector<UtilityTokenOpe
     return relevant_ops;
 }
 
-auto UtilityTokenLookup::filterZeroSupplyCreations(std::vector<UtilityTokenCreationOp>&& ops) const
-    -> std::vector<UtilityTokenCreationOp>
-{
-    ops.erase(
-        std::remove_if(std::begin(ops),
-                       std::end(ops),
-                       [](const auto& creations) {
-                           return creations.getAmount() == 0;
-                       }),
-        std::end(ops));
-
-    return std::move(ops);
-}
-
-
 auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                                                   std::vector<UtilityTokenOperation>&& ops) const
     -> std::vector<UtilityTokenOperation>
@@ -234,13 +219,19 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
         std::visit(
             utilxx::overload{
                 [&](UtilityTokenCreationOp&& creation) {
-                    creations.emplace_back(std::move(creation));
+                    if(creation.getAmount() != 0) {
+                        creations.emplace_back(std::move(creation));
+                    }
                 },
                 [&](UtilityTokenDeletionOp&& deletion) {
-                    deletions.emplace_back(std::move(deletion));
+                    if(deletion.getAmount() != 0) {
+                        deletions.emplace_back(std::move(deletion));
+                    }
                 },
                 [&](UtilityTokenOwnershipTransferOp&& transfer) {
-                    ownership_transfers.emplace_back(std::move(transfer));
+                    if(transfer.getAmount() != 0) {
+                        ownership_transfers.emplace_back(std::move(transfer));
+                    }
                 }},
             std::move(op));
     }
@@ -253,8 +244,6 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     } else {
         deletions.clear();
         ownership_transfers.clear();
-
-        creations = filterZeroSupplyCreations(std::move(creations));
 
         //return the creation op with the highest burn value
         auto iter =

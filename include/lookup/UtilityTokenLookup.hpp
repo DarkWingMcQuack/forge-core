@@ -76,9 +76,6 @@ private:
                                   std::vector<core::UtilityTokenOperation>&& ops) const
         -> std::vector<core::UtilityTokenOperation>;
 
-    auto filterZeroSupplyCreations(std::vector<core::UtilityTokenCreationOp>&& ops) const
-        -> std::vector<core::UtilityTokenCreationOp>;
-
     //returns true if a token with a given id exists, false otherwise
     auto checkIfTokenExists(const std::string& token_id) const
         -> bool;
