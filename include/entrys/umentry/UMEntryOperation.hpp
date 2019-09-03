@@ -51,7 +51,7 @@ auto getOwner(UMEntryOperation &&)
 //extracts burn value with which the given operation was
 //burned onto the chain
 auto getValue(const UMEntryOperation&)
-    -> const std::int64_t;
+    -> std::int64_t;
 
 //extracts the operation flag which specifys which operation it is
 auto extractOperationFlag(const UMEntryOperation&)

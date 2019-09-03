@@ -150,7 +150,7 @@ auto UniqueEntryLookup::removeUniqueEntrysOlderThan(std::int64_t diff)
     auto iter = lookup_map_.begin();
     auto end_iter = lookup_map_.end();
 
-    auto predicate = [this, &diff](auto&& map_iter) {
+    auto predicate = [this, &diff](auto map_iter) {
         auto activation_block = std::get<2>(map_iter->second);
         return activation_block + diff < block_height_;
     };
@@ -188,7 +188,7 @@ auto UniqueEntryLookup::isCurrentlyValid(const UniqueEntryOperation& op) const
     //we return true if the owner of op is the actual owner
     //of the entry currently in the lookup map
     return lookupOwner(op_key)
-        .map([&op](auto&& looked_up_owner) {
+        .map([&op](auto looked_up_owner) {
             const auto& op_owner = std::visit(
                 [](const auto& op)
                     -> const std::string& {
@@ -208,7 +208,7 @@ auto UniqueEntryLookup::filterNonRelevantOperations(std::vector<UniqueEntryOpera
     ops.erase(
         std::remove_if(std::begin(ops),
                        std::end(ops),
-                       [this](auto&& op) {
+                       [this](const auto& op) {
                            return !isCurrentlyValid(op);
                        }),
         ops.end());
@@ -241,7 +241,7 @@ auto UniqueEntryLookup::filterNonRelevantOperations(std::vector<UniqueEntryOpera
         auto max_iter =
             std::max_element(std::begin(operations),
                              std::end(operations),
-                             [](auto&& lhs, auto&& rhs) {
+                             [](const auto& lhs, const auto& rhs) {
                                  auto lhs_value = getValue(lhs);
                                  auto rhs_value = getValue(rhs);
 
@@ -308,7 +308,7 @@ auto UniqueEntryLookup::operator()(UniqueEntryRenewalOp&& op)
     lookupUniqueEntry(key)
         .onValue([&new_block,
                   &value,
-                  &owner](auto&& pair) {
+                  &owner](auto pair) {
             auto [looked_value_ref,
                   looked_owner_ref,
                   looked_block_ref] = std::move(pair);
@@ -333,7 +333,7 @@ auto UniqueEntryLookup::operator()(UniqueEntryOwnershipTransferOp&& op)
     lookupUniqueEntry(key)
         .onValue([&new_owner,
                   &old_owner,
-                  &value](auto&& entry) {
+                  &value](auto entry) {
             auto [looked_value_ref,
                   looked_owner_ref,
                   _] = std::move(entry);
@@ -358,7 +358,7 @@ auto UniqueEntryLookup::operator()(UniqueEntryDeletionOp&& op)
         .onValue([&value,
                   &owner,
                   &key,
-                  this](auto&& pair) {
+                  this](auto pair) {
             auto [looked_value_ref,
                   looked_owner_ref,
                   _] = std::move(pair);

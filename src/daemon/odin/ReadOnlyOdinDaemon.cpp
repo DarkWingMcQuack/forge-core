@@ -56,12 +56,13 @@ auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
 {
     return Try<jsonrpc::JsonRpcException>(
                [this](const auto& command,
-                      auto&& params) {
-                   return client_.CallMethod(command, std::move(params));
+                      auto params) {
+                   return client_.CallMethod(command,
+											 std::move(params));
                },
                command,
                std::move(params))
-        .mapError([&](auto&& error) {
+        .mapError([&](auto error) {
             LOG(WARNING) << command << " failed";
             return DaemonError{error.what()};
         });
@@ -73,7 +74,7 @@ auto ReadOnlyOdinDaemon::getBlockCount() const
     static const auto command = "getblockcount"s;
 
     return sendcommand(command, {})
-        .flatMap([](auto&& json) {
+        .flatMap([](auto json) {
             return odin::processGetBlockCountResponse(std::move(json),
                                                       {});
         });
@@ -87,8 +88,8 @@ auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
     Json::Value param;
     param.append(index);
 
-    return sendcommand(command, std::move(param))
-        .flatMap([&](auto&& json) {
+    return sendcommand(command, param)
+        .flatMap([&](auto json) {
             return odin::processGetBlockHashResponse(std::move(json),
                                                      param);
         });
@@ -104,8 +105,8 @@ auto ReadOnlyOdinDaemon::getBlock(std::string hash) const
     param.append(hash);
 
     //send command
-    return sendcommand(command, std::move(param))
-        .flatMap([&](auto&& json) {
+    return sendcommand(command, param)
+        .flatMap([&](auto json) {
             return odin::processGetBlockResponse(std::move(json),
                                                  param);
         });
@@ -115,10 +116,10 @@ auto ReadOnlyOdinDaemon::getNewestBlock() const
     -> Result<Block, DaemonError>
 {
     return getBlockCount()
-        .flatMap([this](auto&& height) {
+        .flatMap([this](auto height) {
             return getBlockHash(height);
         })
-        .flatMap([this](auto&& hash) {
+        .flatMap([this](auto hash) {
             return getBlock(std::move(hash));
         });
 }
@@ -130,7 +131,7 @@ auto ReadOnlyOdinDaemon::resolveTxIn(TxIn vin) const
     auto txid = std::move(vin.getTxid());
 
     return getTransaction(std::move(txid))
-        .flatMap([&](auto&& tx)
+        .flatMap([&](auto tx)
                      -> utilxx::Result<TxOut, DaemonError> {
             if(static_cast<std::int64_t>(tx.getOutputs().size())
                <= vin.getVoutIndex()) {
@@ -154,7 +155,7 @@ auto ReadOnlyOdinDaemon::getTransaction(std::string txid) const
     params.append(1);
 
     return sendcommand(command, params)
-        .flatMap([&](auto&& json) {
+        .flatMap([&](auto json) {
             return odin::processGetTransactionResponse(std::move(json),
                                                        params);
         });
@@ -170,8 +171,8 @@ auto ReadOnlyOdinDaemon::getUnspent() const
     params.append(getMaturity(getCoin()));
     params.append(99999999);
 
-    return sendcommand(command, std::move(params))
-        .flatMap([&](auto&& json) {
+    return sendcommand(command, params)
+        .flatMap([&](auto json) {
             return odin::processGetUnspentResponse(std::move(json),
                                                    params);
         });
@@ -183,7 +184,7 @@ auto ReadOnlyOdinDaemon::getOutputValue(std::string txid,
 {
     auto txid_copy = txid;
     return getTransaction(std::move(txid))
-        .flatMap([&](auto&& tx)
+        .flatMap([&](auto tx)
                      -> utilxx::Result<std::int64_t, DaemonError> {
             if(auto value_opt = tx.getValueOfOutput(index);
                value_opt) {
@@ -206,7 +207,7 @@ auto ReadOnlyOdinDaemon::getAddresses() const
     static const auto command = "listaddressgroupings";
 
     return sendcommand(command, {})
-        .flatMap([&](auto&& json) {
+        .flatMap([&](auto json) {
             return odin::processGetAddressesResponse(std::move(json));
         });
 }
@@ -286,7 +287,7 @@ auto forge::daemon::odin::processGetUnspentResponse(Json::Value&& response,
         std::make_move_iterator(std::begin(response)),
         std::make_move_iterator(std::end(response)),
         std::back_inserter(ret_vec),
-        [](auto&& unspent_json) {
+        [](auto unspent_json) {
             auto value = unspent_json["amount"].asDouble()
                 * 100000000.;
             return Unspent{static_cast<std::int64_t>(value),
@@ -295,7 +296,7 @@ auto forge::daemon::odin::processGetUnspentResponse(Json::Value&& response,
                            unspent_json["address"].asString(),
                            unspent_json["txid"].asString()};
         },
-        [](auto&& unspent_json) {
+        [](auto unspent_json) {
             return unspent_json.isMember("txid")
                 && unspent_json.isMember("confirmations")
                 && unspent_json.isMember("spendable")

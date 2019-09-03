@@ -26,10 +26,10 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string txid_input,
                          std::move(metadata),
                          burn_value,
                          std::move(outputs))
-        .flatMap([this](auto&& raw_tx) {
+        .flatMap([this](auto raw_tx) {
             return signRawTx(std::move(raw_tx));
         })
-        .flatMap([this](auto&& signed_tx) {
+        .flatMap([this](auto signed_tx) {
             return sendRawTx(std::move(signed_tx));
         });
 }

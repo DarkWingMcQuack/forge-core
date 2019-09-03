@@ -43,7 +43,7 @@ auto forge::core::getUtilityToken(UtilityTokenOperation&& op)
     -> UtilityToken
 {
     return std::visit(
-        [](auto&& op) {
+        [](auto op) {
             return op.getUtilityToken();
         },
         std::move(op));
@@ -84,7 +84,7 @@ auto forge::core::getCreator(UtilityTokenOperation&& op)
             [](UtilityTokenOwnershipTransferOp&& owner) {
                 return owner.getSender();
             },
-            [](auto&& owner) {
+            [](auto owner) {
                 return owner.getCreator();
             }},
         std::move(op));
@@ -139,7 +139,7 @@ auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
     //for ownership transfer
     auto new_owner_opt =
         tx.getFirstNonOpReturnOutput()
-            .flatMap([](auto&& ref)
+            .flatMap([](auto ref)
                          -> utilxx::Opt<std::string> {
                 //we only care about outputs with exactly one
                 //address
@@ -176,7 +176,7 @@ auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
     LOG(DEBUG) << "resoving vin from " << vin.getTxid();
     return daemon
         ->resolveTxIn(std::move(vin))
-        .flatMap([&](auto&& resolvedVin) {
+        .flatMap([&](auto resolvedVin) {
             //we can only have one input address
             if(resolvedVin.getAddresses().size() != 1) {
                 return ResultType{std::nullopt};
@@ -223,7 +223,7 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
 
 
     return parseUtilityToken(metadata)
-        .flatMap([&](auto&& entry)
+        .flatMap([&](auto entry)
                      -> utilxx::Opt<UtilityTokenOperation> {
             switch(metadata[OPERATION_FLAG_INDEX]) {
 
@@ -237,7 +237,7 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
 
             case UTILITY_TOKEN_OWNERSHIP_TRANSFER_FLAG:
                 return new_owner_opt
-                    .map([&](auto&& new_owner) {
+                    .map([&](auto new_owner) {
                         return UtilityTokenOperation{
                             UtilityTokenOwnershipTransferOp{std::move(entry),
                                                             amount,

@@ -211,7 +211,7 @@ auto forge::core::parseUMEntry(const std::vector<std::byte>& data)
 
     return combine(std::move(key_opt),
                    std::move(value_opt))
-        .map([](auto&& pair) {
+        .map([](auto pair) {
             return UMEntry{std::move(pair.first),
                            std::move(pair.second)};
         });

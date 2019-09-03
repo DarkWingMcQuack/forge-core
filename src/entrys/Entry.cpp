@@ -14,13 +14,13 @@ auto forge::core::parseEntry(const std::vector<std::byte>& data)
     auto um_entry_opt = parseUMEntry(data);
     if(um_entry_opt) {
         return um_entry_opt
-            .map([](auto&& entry) {
-                return Entry{entry};
+            .map([](auto entry) {
+                return Entry{std::move(entry)};
             });
     }
 
     return parseUniqueEntry(data)
-        .map([](auto&& entry) {
+        .map([](auto entry) {
             return Entry{std::move(entry)};
         });
 }

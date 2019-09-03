@@ -76,8 +76,8 @@ auto forge::core::buildBlock(Json::Value&& json)
         std::transform(std::cbegin(json["tx"]),
                        std::cend(json["tx"]),
                        std::back_inserter(transactions),
-                       [](auto&& json) {
-                           return std::move(json.asString());
+                       [](auto json) {
+                           return json.asString();
                        });
 
 

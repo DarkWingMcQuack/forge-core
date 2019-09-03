@@ -385,7 +385,7 @@ auto UtilityTokenLookup::groupOperations(std::vector<UtilityTokenOperation>&& op
 
     for(auto&& op : ops) {
         std::visit(
-            [&](auto&& operation) {
+            [&](auto operation) {
                 const auto& token_id = operation.getUtilityToken().getId();
                 auto id_str = forge::core::toHexString(token_id);
                 auto iter = operations.find(id_str);

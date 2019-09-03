@@ -2,7 +2,6 @@
 Checks: "-*,\
 bugprone-*,\
 -bugprone-lambda-function-name,\
--bugprone-move-forwarding-reference,\
 # clang-analyzer-*,\
 google-readability-casting,\
 cppcoreguidelines-avoid-goto,\

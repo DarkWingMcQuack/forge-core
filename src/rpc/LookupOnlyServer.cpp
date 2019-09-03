@@ -279,7 +279,7 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return core::entryToJson(std::move(entry));
                                       });
 
@@ -287,7 +287,7 @@ auto LookupOnlyServer::lookupallentrysof(const std::string& owner)
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -307,7 +307,7 @@ auto LookupOnlyServer::lookupuniqueentrysof(const std::string& owner)
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -315,7 +315,7 @@ auto LookupOnlyServer::lookupuniqueentrysof(const std::string& owner)
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -335,7 +335,7 @@ auto LookupOnlyServer::lookupuniquemodifiableentrysof(const std::string& owner)
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -343,7 +343,7 @@ auto LookupOnlyServer::lookupuniquemodifiableentrysof(const std::string& owner)
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });

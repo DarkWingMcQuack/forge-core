@@ -40,7 +40,7 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string input_txid,
                                             std::move(outputs));
 
     return sendcommand(command, std::move(params))
-        .flatMap([](auto&& json) {
+        .flatMap([](auto json) {
             return odin::processGenerateRawTxResponse(std::move(json));
         });
 }
@@ -96,7 +96,7 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte> tx) const
     params.append(toHexString(tx));
 
     return sendcommand(command, std::move(params))
-        .flatMap([](auto&& json) {
+        .flatMap([](auto json) {
             return odin::processSignRawTxResponse(std::move(json));
         });
 }
@@ -112,7 +112,7 @@ auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte> tx) const
     params.append(true);
 
     return sendcommand(command, std::move(params))
-        .flatMap([](auto&& json)
+        .flatMap([](auto json)
                      -> Result<std::string, DaemonError> {
             if(json.isString()) {
                 return json.asString();
@@ -128,7 +128,7 @@ auto ReadWriteOdinDaemon::generateNewAddress() const
     static const auto command = "getnewaddress"s;
 
     return sendcommand(command, {})
-        .flatMap([](auto&& json) {
+        .flatMap([](auto json) {
             return odin::processGenerateNewAddressResponse(std::move(json));
         });
 }
@@ -142,7 +142,7 @@ auto ReadWriteOdinDaemon::decodeTxidOfRawTx(const std::vector<std::byte>& tx) co
     params.append(toHexString(tx));
 
     return sendcommand(command, std::move(params))
-        .flatMap([](auto&& json) {
+        .flatMap([](auto json) {
             return odin::processDecodeTxidOfRawTxResponse(std::move(json));
         });
 }
@@ -153,12 +153,12 @@ auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
 {
     auto fees = getDefaultTxFee(getCoin());
     return getUnspent()
-        .flatMap([&](auto&& unspents)
+        .flatMap([&](auto unspents)
                      -> utilxx::Result<std::string, DaemonError> {
             auto iter =
                 std::find_if(std::cbegin(unspents),
                              std::cend(unspents),
-                             [amount, fees](auto&& elem) {
+                             [amount, fees](const auto& elem) {
                                  return elem.getValue() >= amount + fees;
                              });
             if(iter == std::cend(unspents)) {
@@ -186,7 +186,7 @@ auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
 
             //if not, generate an new address and use it as output
             return generateNewAddress()
-                .flatMap([&](auto&& exchange_adrs) {
+                .flatMap([&](auto exchange_adrs) {
                     return writeTxToBlockchain(std::move(txid),
                                                vout,
                                                std::move(metadata),
@@ -204,7 +204,7 @@ auto ReadWriteOdinDaemon::burnAmount(std::string txid,
     -> utilxx::Result<std::string, DaemonError>
 {
     return getOutputValue(txid, index)
-        .flatMap([&](auto&& output_value)
+        .flatMap([&](auto output_value)
                      -> Result<std::string, DaemonError> {
             auto fee = getDefaultTxFee(getCoin());
             //if the output value is less than the requested amount + fee return an error
@@ -274,7 +274,7 @@ auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
 
 
     return sendcommand(command, std::move(params))
-        .flatMap([&](auto&& json) {
+        .flatMap([&](auto json) {
             return odin::processSendToAddressResponse(std::move(json),
                                                       address);
         });
@@ -294,7 +294,7 @@ auto ReadWriteOdinDaemon::getVOutIdxByAmountAndAddress(std::string txid,
 
 
     return sendcommand(command, std::move(params))
-        .flatMap([&](auto&& json) {
+        .flatMap([&](auto json) {
             return odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json),
                                                                      amount,
                                                                      std::move(address));

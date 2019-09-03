@@ -37,7 +37,7 @@ auto LookupManager::updateLookup()
     const auto maturity = getMaturity(daemon_->getCoin());
 
     return daemon_->getBlockCount()
-        .mapError([](auto&& error) {
+        .mapError([](auto error) {
             return ManagerError{std::move(error)};
         })
         .flatMap([&](auto actual_height)
@@ -56,15 +56,15 @@ auto LookupManager::updateLookup()
                 auto res =
                     //get block hash
                     daemon_->getBlockHash(++lookup_block_height_)
-                        .flatMap([&](auto&& block_hash) {
+                        .flatMap([&](auto block_hash) {
                             //get block
                             return daemon_->getBlock(std::move(block_hash));
                         })
-                        .mapError([](auto&& error) {
+                        .mapError([](auto error) {
                             return ManagerError{std::move(error)};
                         })
                         //process the block
-                        .flatMap([&](auto&& block) {
+                        .flatMap([&](auto block) {
                             return processBlock(std::move(block));
                         });
 
@@ -237,10 +237,10 @@ auto LookupManager::processBlock(core::Block&& block)
     auto txs_res =
         traverse(
             std::move(block.getTxids()),
-            [this](auto&& txid) {
+            [this](auto txid) {
                 return daemon_
                     ->getTransaction(std::move(txid))
-                    .mapError([](auto&& error) {
+                    .mapError([](auto error) {
                         return ManagerError{std::move(error)};
                     });
             });
@@ -268,7 +268,7 @@ auto LookupManager::lookupIsValid() const
     -> utilxx::Result<bool, daemon::DaemonError>
 {
     return getLastValidBlockHeight()
-        .map([this](auto&& last_valid_block) {
+        .map([this](auto last_valid_block) {
             auto starting_block =
                 getStartingBlock(daemon_->getCoin());
 
@@ -323,14 +323,14 @@ auto LookupManager::getEntrysOfOwner(const std::string& owner) const
     std::transform(std::make_move_iterator(std::begin(unique)),
                    std::make_move_iterator(std::end(unique)),
                    std::back_inserter(entrys),
-                   [](auto&& entry) {
+                   [](auto entry) {
                        return core::Entry{std::move(entry)};
                    });
 
     std::transform(std::make_move_iterator(std::begin(um)),
                    std::make_move_iterator(std::end(um)),
                    std::back_inserter(entrys),
-                   [](auto&& entry) {
+                   [](auto entry) {
                        return core::Entry{std::move(entry)};
                    });
 

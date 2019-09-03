@@ -84,9 +84,9 @@ auto forge::core::parseUniqueValue(const std::vector<std::byte>& data)
     -> utilxx::Opt<UniqueEntryValue>
 {
     return parseUMValue(data)
-        .map([](auto&& um_value) {
+        .map([](auto um_value) {
             return std::visit(
-                [](auto&& value) {
+                [](auto value) {
                     return UniqueEntryValue{std::move(value)};
                 },
                 std::move(um_value));
@@ -123,7 +123,7 @@ auto forge::core::parseUniqueEntry(const std::vector<std::byte>& data)
 
     return combine(std::move(key_opt),
                    std::move(value_opt))
-        .map([](auto&& pair) {
+        .map([](auto pair) {
             return UniqueEntry{std::move(pair.first),
                                std::move(pair.second)};
         });
@@ -152,9 +152,9 @@ auto forge::core::jsonToUniqueEntryValue(Json::Value&& value)
     -> utilxx::Opt<UniqueEntryValue>
 {
     return jsonToUMEntryValue(std::move(value))
-        .map([](auto&& um_value) {
+        .map([](auto um_value) {
             return std::visit(
-                [](auto&& entry_value) {
+                [](auto entry_value) {
                     return UniqueEntryValue{std::move(entry_value)};
                 },
                 std::move(um_value));

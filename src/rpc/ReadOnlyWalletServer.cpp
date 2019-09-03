@@ -245,7 +245,7 @@ auto ReadOnlyWalletServer::lookupallentrysof(const std::string& owner)
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -253,7 +253,7 @@ auto ReadOnlyWalletServer::lookupallentrysof(const std::string& owner)
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -273,7 +273,7 @@ auto ReadOnlyWalletServer::lookupuniqueentrysof(const std::string& owner)
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
 										  return entry.toJson();
                                       });
 
@@ -281,7 +281,7 @@ auto ReadOnlyWalletServer::lookupuniqueentrysof(const std::string& owner)
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -301,7 +301,7 @@ auto ReadOnlyWalletServer::lookupuniquemodifiableentrysof(const std::string& own
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -309,7 +309,7 @@ auto ReadOnlyWalletServer::lookupuniquemodifiableentrysof(const std::string& own
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -385,7 +385,7 @@ auto ReadOnlyWalletServer::getownedumentrys()
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -393,7 +393,7 @@ auto ReadOnlyWalletServer::getownedumentrys()
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -413,7 +413,7 @@ auto ReadOnlyWalletServer::getwatchonlyumentrys()
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -421,7 +421,7 @@ auto ReadOnlyWalletServer::getwatchonlyumentrys()
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -441,7 +441,7 @@ auto ReadOnlyWalletServer::getallwatchedumentrys()
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
                                           return entry.toJson();
                                       });
 
@@ -449,7 +449,7 @@ auto ReadOnlyWalletServer::getallwatchedumentrys()
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -469,7 +469,7 @@ auto ReadOnlyWalletServer::getowneduniqueentrys()
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
 										  return entry.toJson();
                                       });
 
@@ -477,7 +477,7 @@ auto ReadOnlyWalletServer::getowneduniqueentrys()
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -497,7 +497,7 @@ auto ReadOnlyWalletServer::getwatchonlyuniqueentrys()
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
 										  return entry.toJson();
                                       });
 
@@ -505,7 +505,7 @@ auto ReadOnlyWalletServer::getwatchonlyuniqueentrys()
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -525,7 +525,7 @@ auto ReadOnlyWalletServer::getallwatcheduniqueentrys()
     auto json_entrys =
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
-                                      [](auto&& entry) {
+                                      [](auto entry) {
 										  return entry.toJson();
                                       });
 
@@ -533,7 +533,7 @@ auto ReadOnlyWalletServer::getallwatcheduniqueentrys()
         std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
                         std::make_move_iterator(std::end(json_entrys)),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, auto&& entry) {
+                        [](auto init, auto entry) {
                             init.append(std::move(entry));
                             return init;
                         });
@@ -549,7 +549,7 @@ auto ReadOnlyWalletServer::getwatchedaddresses()
         std::accumulate(std::begin(addresses),
                         std::end(addresses),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, const auto& entry) {
+                        [](auto init, const auto& entry) {
                             init.append(entry);
                             return init;
                         });
@@ -564,7 +564,7 @@ auto ReadOnlyWalletServer::getownedaddresses()
         std::accumulate(std::begin(addresses),
                         std::end(addresses),
                         Json::Value{Json::ValueType::arrayValue},
-                        [](auto&& init, const auto& entry) {
+                        [](auto init, const auto& entry) {
                             init.append(entry);
                             return init;
                         });

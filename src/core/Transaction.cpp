@@ -149,7 +149,7 @@ auto Transaction::hasOpReturnOutput() const
 {
     return std::any_of(std::cbegin(outputs_),
                        std::end(outputs_),
-                       [](auto&& out) {
+                       [](const auto& out) {
                            return out.isOpReturnOutput();
                        });
 }
@@ -159,13 +159,13 @@ auto Transaction::hasExactlyOneOpReturnOutput() const
 {
     auto forward_iter = std::find_if(std::cbegin(outputs_),
                                      std::cend(outputs_),
-                                     [](auto&& out) {
+                                     [](const auto& out) {
                                          return out.isOpReturnOutput();
                                      });
 
     auto backward_iter = std::find_if(std::crbegin(outputs_),
                                       std::crend(outputs_),
-                                      [](auto&& out) {
+                                      [](const auto& out) {
                                           return out.isOpReturnOutput();
                                       });
 
@@ -180,7 +180,7 @@ auto Transaction::getFirstOpReturnOutput() const
 
     auto iter = std::find_if(std::cbegin(outputs_),
                              std::cend(outputs_),
-                             [](auto&& out) {
+                             [](const auto& out) {
                                  return out.isOpReturnOutput();
                              });
 
@@ -196,7 +196,7 @@ auto Transaction::getFirstOpReturnOutput()
 
     auto iter = std::find_if(std::begin(outputs_),
                              std::end(outputs_),
-                             [](auto&& out) {
+                             [](const auto& out) {
                                  return out.isOpReturnOutput();
                              });
 
@@ -212,7 +212,7 @@ auto Transaction::getFirstNonOpReturnOutput() const
 
     auto iter = std::find_if(std::cbegin(outputs_),
                              std::cend(outputs_),
-                             [](auto&& out) {
+                             [](const auto& out) {
                                  return !out.isOpReturnOutput();
                              });
 
@@ -228,7 +228,7 @@ auto Transaction::getFirstNonOpReturnOutput()
 
     auto iter = std::find_if(std::begin(outputs_),
                              std::end(outputs_),
-                             [](auto&& out) {
+                             [](const auto& out) {
                                  return !out.isOpReturnOutput();
                              });
 
@@ -346,14 +346,14 @@ auto forge::core::buildTxOut(Json::Value&& json)
 
 
         auto json_vec = std::move(json["scriptPubKey"]["addresses"]);
-        auto hex = std::move(json["scriptPubKey"]["hex"].asString());
+        auto hex = json["scriptPubKey"]["hex"].asString();
         auto value = json["value"].asDouble();
 
         std::vector<std::string> addresses;
         std::transform(std::cbegin(json_vec),
                        std::cend(json_vec),
                        std::back_inserter(addresses),
-                       [](auto&& value) {
+                       [](auto value) {
                            return std::move(value.asString());
                        });
 
@@ -377,14 +377,14 @@ auto forge::core::buildTransaction(Json::Value&& json)
             return std::nullopt;
         }
 
-        auto txid = std::move(json["txid"].asString());
+        auto txid = json["txid"].asString();
         auto vin = std::move(json["vin"]);
         auto vout = std::move(json["vout"]);
 
         auto inputs =
             traverse(std::vector<Json::Value>(vin.begin(),
                                               vin.end()),
-                     [](auto&& input) {
+                     [](auto input) {
                          return buildTxIn(std::move(input));
                      })
                 .valueOr(std::vector<TxIn>{});
@@ -392,14 +392,14 @@ auto forge::core::buildTransaction(Json::Value&& json)
         auto outputs_opt =
             traverse(std::vector<Json::Value>(vout.begin(),
                                               vout.end()),
-                     [](auto&& output) {
+                     [](auto output) {
                          return buildTxOut(std::move(output));
                      });
 
 
         return outputs_opt
             .map([&txid,
-                  &inputs](auto&& outputs) {
+                  &inputs](auto outputs) {
                 return Transaction{std::move(inputs),
                                    std::move(outputs),
                                    std::move(txid)};

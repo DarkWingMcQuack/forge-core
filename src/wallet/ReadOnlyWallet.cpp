@@ -16,7 +16,7 @@ ReadOnlyWallet::ReadOnlyWallet(std::unique_ptr<lookup::LookupManager>&& lookup)
     lookup_
         ->getDaemon()
         .getAddresses()
-        .onValue([this](auto&& addresses) {
+        .onValue([this](auto addresses) {
             for(auto&& addr : addresses) {
                 this->addNewOwnedAddress(std::move(addr));
             }

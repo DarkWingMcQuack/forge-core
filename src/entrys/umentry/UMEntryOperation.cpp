@@ -36,10 +36,10 @@ auto forge::core::getEntryKey(UMEntryOperation&& operation)
     -> EntryKey
 {
     return std::visit(
-        [](auto&& op) {
+        [](auto op) {
             return std::move(op.getEntryKey());
         },
-        operation);
+        std::move(operation));
 }
 
 auto forge::core::getUMEntry(const UMEntryOperation& operation)
@@ -57,10 +57,10 @@ auto forge::core::getUMEntry(UMEntryOperation&& operation)
     -> UMEntry
 {
     return std::visit(
-        [](auto&& op) {
+        [](auto op) {
             return std::move(op.getUMEntry());
         },
-        operation);
+        std::move(operation));
 }
 
 auto forge::core::getOwner(const UMEntryOperation& operation)
@@ -78,17 +78,17 @@ auto forge::core::getOwner(UMEntryOperation&& operation)
     -> std::string
 {
     return std::visit(
-        [](auto&& op) {
+        [](auto op) {
             return std::move(op.getOwner());
         },
-        operation);
+        std::move(operation));
 }
 
 auto forge::core::getValue(const UMEntryOperation& operation)
-    -> const std::int64_t
+    -> std::int64_t
 {
     return std::visit(
-        [](auto&& op) {
+        [](const auto& op) {
             return op.getValue();
         },
         operation);
@@ -122,7 +122,7 @@ auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadat
     }
 
     return parseUMEntry(metadata)
-        .flatMap([&](auto&& entry)
+        .flatMap([&](auto entry)
                      -> utilxx::Opt<UMEntryOperation> {
             switch(static_cast<std::byte>(metadata[OPERATION_FLAG_INDEX])) {
 
@@ -142,7 +142,7 @@ auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadat
 
             case UMENTRY_OWNERSHIP_TRANSFER_FLAG:
                 return new_owner_opt
-                    .map([&](auto&& new_owner) {
+                    .map([&](auto new_owner) {
                         return UMEntryOperation{
                             UMEntryOwnershipTransferOp{std::move(entry),
                                                        std::move(owner),
@@ -199,7 +199,7 @@ auto forge::core::parseTransactionToUMEntry(Transaction tx,
     //for ownership transfer
     auto new_owner_opt =
         tx.getFirstNonOpReturnOutput()
-            .flatMap([](auto&& ref)
+            .flatMap([](auto ref)
                          -> Opt<std::string> {
                 //we only care about outputs with exactly one
                 //address
@@ -236,7 +236,7 @@ auto forge::core::parseTransactionToUMEntry(Transaction tx,
     LOG(DEBUG) << "resoving vin from " << vin.getTxid();
     return daemon
         ->resolveTxIn(std::move(vin))
-        .flatMap([&](auto&& resolvedVin) {
+        .flatMap([&](auto resolvedVin) {
             //we can only have one input address
             if(resolvedVin.getAddresses().size() != 1) {
                 return ResultType{std::nullopt};
