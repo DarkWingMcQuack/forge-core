@@ -94,4 +94,10 @@ private:
     std::int64_t start_block_;
 };
 
+//returns true if the addition of the two given integers would overfow,
+//false if not
+auto isSaveAddition(std::uint64_t first,
+                    std::uint64_t second)
+    -> bool;
+
 } // namespace forge::lookup

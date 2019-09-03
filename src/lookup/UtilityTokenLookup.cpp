@@ -10,8 +10,10 @@
 #include <cstdint>
 #include <g3log/g3log.hpp>
 #include <iterator>
+#include <limits>
 #include <lookup/UtilityTokenLookup.hpp>
 #include <unordered_map>
+#include <unordered_set>
 
 using forge::lookup::UtilityTokenLookup;
 using forge::core::UtilityToken;
@@ -179,6 +181,7 @@ auto UtilityTokenLookup::filterNonRelevantOperations(std::vector<UtilityTokenOpe
     return relevant_ops;
 }
 
+
 auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                                                   std::vector<UtilityTokenOperation>&& ops) const
     -> std::vector<UtilityTokenOperation>
@@ -202,12 +205,14 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
             std::move(op));
     }
 
+    //creations are only valid if the token does not already exist
+    //on the other hand deletions and transfers are only valid
+    //it the token already exists
     if(checkIfTokenExists(token_id)) {
         creations.clear();
     } else {
         deletions.clear();
         ownership_transfers.clear();
-
 
         //return the creation op with the highest burn value
         auto iter =
@@ -220,7 +225,8 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
         if(iter == std::cend(creations)) {
             return {};
         }
-        return std::vector<UtilityTokenOperation>{std::move(*iter)};
+
+        return {std::move(*iter)};
     }
 
     //collect how much users have spend within all the transactions
@@ -228,34 +234,77 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                        std::uint64_t>
         used_balance;
 
+    //overflow set contains all creators who have overflown
+    //a std::uint64_t with their expenses
+    std::unordered_set<std::string_view>
+        is_overflow;
+
+    //fill overflown set and used_balance for all deletions
     for(const auto& op : deletions) {
-        auto iter = used_balance.find(op.getCreator());
-        if(iter != used_balance.end()) {
-            iter->second += op.getAmount();
+        const auto& creator = op.getCreator();
+        auto new_added = op.getAmount();
+
+        if(auto iter = used_balance.find(creator);
+           iter != used_balance.end()) {
+            auto& current = iter->second;
+
+            //if an overflow occurs then we add
+            // the creator to the overflow set
+            if(!isSaveAddition(current, new_added)) {
+                is_overflow.insert(creator);
+            }
+
+            current += new_added;
+
         } else {
-            used_balance.emplace(op.getCreator(),
-                                 op.getAmount());
+            used_balance.emplace(creator,
+                                 new_added);
         }
     }
 
+    //fill overflown set and used_balance for all token transfers
     for(const auto& op : ownership_transfers) {
-        auto iter = used_balance.find(op.getSender());
-        if(iter != used_balance.end()) {
-            iter->second += op.getAmount();
+
+        const auto& sender = op.getSender();
+        auto new_added = op.getAmount();
+
+        if(auto iter = used_balance.find(sender);
+           iter != used_balance.end()) {
+            auto& current = iter->second;
+
+            //if an overflow occurs then we add
+            // the creator to the overflow set
+            if(!isSaveAddition(current, new_added)) {
+                is_overflow.insert(sender);
+            }
+
+            current += new_added;
+
         } else {
-            used_balance.emplace(op.getSender(),
-                                 op.getAmount());
+            used_balance.emplace(sender,
+                                 new_added);
         }
     }
 
     //erase all operations from users
     //which have spend more than they have in total
+    //or have overflown a std::uint64_t
     ownership_transfers
         .erase(
             std::remove_if(std::begin(ownership_transfers),
                            std::end(ownership_transfers),
                            [&](const auto& creat) {
                                const auto& sender = creat.getSender();
+
+                               //if the transaction is created by a sender
+                               //who has overflown a std::uint64_t in this block
+                               //delete its fuckin transaction
+                               if(is_overflow.find(sender) != is_overflow.end()) {
+                                   return true;
+                               }
+
+                               //otherwise check if he has enought credit to
+                               //perform all of his transactions
                                auto used = used_balance[sender];
                                auto available = getAvailableBalanceOf(sender,
                                                                       token_id);
@@ -270,6 +319,16 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                            std::end(deletions),
                            [&](const auto& creat) {
                                const auto& creator = creat.getCreator();
+
+                               //if the deletion is created by an owner
+                               //who has overflown a std::uint64_t in this block
+                               //delete its fuckin transaction
+                               if(is_overflow.find(creator) != is_overflow.end()) {
+                                   return true;
+                               }
+
+                               //otherwise check if he has enought credit to
+                               //perform all of his transactions
                                auto used = used_balance[creator];
                                auto available = getAvailableBalanceOf(creator,
                                                                       token_id);
@@ -325,4 +384,15 @@ auto UtilityTokenLookup::checkIfTokenExists(const std::string& token_id) const
 {
     return utility_account_lookup_.find(token_id)
         != utility_account_lookup_.end();
+}
+
+
+auto forge::lookup::isSaveAddition(std::uint64_t first,
+                                   std::uint64_t second)
+    -> bool
+
+{
+    return std::numeric_limits<std::uint64_t>::max()
+        - second
+        < first;
 }
