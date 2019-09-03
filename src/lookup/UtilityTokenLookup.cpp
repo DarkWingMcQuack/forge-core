@@ -6,8 +6,8 @@
 #include "entrys/token/UtilityTokenOwnershipTransferOp.hpp"
 #include "utilxx/Overload.hpp"
 #include <algorithm>
-#include <boost/type_traits/is_destructible.hpp>
 #include <cstdint>
+#include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <iterator>
 #include <limits>
@@ -394,5 +394,5 @@ auto forge::lookup::isSaveAddition(std::uint64_t first,
 {
     return std::numeric_limits<std::uint64_t>::max()
         - second
-        < first;
+        >= first;
 }
