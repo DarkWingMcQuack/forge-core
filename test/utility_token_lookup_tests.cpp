@@ -28,7 +28,7 @@ auto createOp(const std::string& op,
 }
 } // namespace
 
-TEST(UtilityTokenLookupTest, UtilityTokenCreationOpExecutionTest)
+TEST(UtilityTokenLookupTest, CreationOpExecutionTest)
 {
     UtilityTokenLookup lookup;
 
@@ -51,7 +51,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenCreationOpExecutionTest)
               3);
 }
 
-TEST(UtilityTokenLookupTest, UtilityTokenCreationOpCompetitorExecutionTest)
+TEST(UtilityTokenLookupTest, CreationOpCompetitorExecutionTest)
 {
     UtilityTokenLookup lookup;
 
@@ -110,7 +110,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenCreationOpCompetitorExecutionTest)
               0);
 }
 
-TEST(UtilityTokenLookupTest, UtilityTokenTransferOpExecutionTest)
+TEST(UtilityTokenLookupTest, TransferOpExecutionTest)
 {
     UtilityTokenLookup lookup;
 
@@ -179,7 +179,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenTransferOpExecutionTest)
               3);
 }
 
-TEST(UtilityTokenLookupTest, UtilityTokenTransferOverpayTest)
+TEST(UtilityTokenLookupTest, TransferOverpayTest)
 {
     UtilityTokenLookup lookup;
 
@@ -241,7 +241,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenTransferOverpayTest)
               0);
 }
 
-TEST(UtilityTokenLookupTest, UtilityTokenDeletionOpExecutionTest)
+TEST(UtilityTokenLookupTest, DeletionOpExecutionTest)
 {
     UtilityTokenLookup lookup;
 
@@ -290,7 +290,7 @@ TEST(UtilityTokenLookupTest, UtilityTokenDeletionOpExecutionTest)
 }
 
 
-TEST(UtilityTokenLookupTest, UtilityTokenDoubleCreationTest)
+TEST(UtilityTokenLookupTest, DoubleCreationTest)
 {
     UtilityTokenLookup lookup;
 
@@ -336,11 +336,56 @@ TEST(UtilityTokenLookupTest, UtilityTokenDoubleCreationTest)
                                              "deadbeef");
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
-                                             "deadbeef");
+                                                   "deadbeef");
 
     EXPECT_EQ(available2,
               0);
 
     EXPECT_EQ(available,
               3);
+}
+
+TEST(UtilityTokenLookupTest, OverflowTest)
+{
+    UtilityTokenLookup lookup;
+
+    auto creation_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "01" //operation flag
+        "FF00000000000000" // amount
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10);
+
+    auto deletion_op1 = createOp(
+        "c6dc75" //forge identifier
+        "03" //token type
+        "04" //operation flag
+        "FF00000000000000" // amount 3
+        "deadbeef",
+        100,
+        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+        10);
+
+    lookup.executeOperations({creation_op1});
+
+    auto available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                                  "deadbeef");
+
+    EXPECT_EQ(available,
+              0xFF00000000000000);
+
+    //the amount of those ops combined overflow the total amount
+    //such that the overflown value is less than the available amount
+    //and should be doable if the overflow is not detected
+    lookup.executeOperations({deletion_op1,
+                              deletion_op1});
+
+    available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
+                                             "deadbeef");
+
+    EXPECT_EQ(available,
+              0xFF00000000000000);
 }
