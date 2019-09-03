@@ -207,6 +207,20 @@ auto UtilityTokenLookup::filterNonRelevantOperations(std::vector<UtilityTokenOpe
     return relevant_ops;
 }
 
+auto UtilityTokenLookup::filterZeroSupplyCreations(std::vector<UtilityTokenCreationOp>&& ops) const
+    -> std::vector<UtilityTokenCreationOp>
+{
+    ops.erase(
+        std::remove_if(std::begin(ops),
+                       std::end(ops),
+                       [](const auto& creations) {
+                           return creations.getAmount() == 0;
+                       }),
+        std::end(ops));
+
+    return std::move(ops);
+}
+
 
 auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                                                   std::vector<UtilityTokenOperation>&& ops) const
@@ -239,6 +253,8 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     } else {
         deletions.clear();
         ownership_transfers.clear();
+
+        creations = filterZeroSupplyCreations(std::move(creations));
 
         //return the creation op with the highest burn value
         auto iter =
