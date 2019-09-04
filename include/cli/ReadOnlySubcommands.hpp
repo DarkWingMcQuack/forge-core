@@ -30,6 +30,12 @@ auto addGetWatchedOnlyUniqueEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient
     -> void;
 auto addGetAllWatchedUniqueEntrys(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;
+auto addGetOwnedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void;
+auto addGetWatchedOnlyUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void;
+auto addGetAllWatchedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void;
 
 auto addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
     -> void;

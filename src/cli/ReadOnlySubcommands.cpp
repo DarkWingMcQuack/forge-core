@@ -18,6 +18,9 @@ auto forge::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubC
     addGetAllWatchedUniqueEntrys(app, client);
     addGetWatchedAddresses(app, client);
     addGetOwnedAddresses(app, client);
+    addGetOwnedUtilityTokens(app, client);
+    addGetWatchedOnlyUtilityTokens(app, client);
+    addGetAllWatchedUtilityTokens(app, client);
 }
 
 auto forge::cli::addAddWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
@@ -154,4 +157,38 @@ auto forge::cli::addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& 
         })
         ->add_option("--address", OWNER)
         ->required();
+}
+
+
+auto forge::cli::addGetOwnedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    app
+        .get_subcommand("utilitytoken")
+        ->add_subcommand("getallwatchedtokens",
+                         "returns a list of all utility tokens the wallet observes")
+        ->callback([&] {
+            RESPONSE = client.getallwatchedutilitytokens();
+        });
+}
+auto forge::cli::addGetWatchedOnlyUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    app
+        .get_subcommand("utilitytoken")
+        ->add_subcommand("getallwatchedonlytokens",
+                         "returns a list of all tokens the wallet observes but does not own")
+        ->callback([&] {
+            RESPONSE = client.getallwatchedutilitytokens();
+        });
+}
+auto forge::cli::addGetAllWatchedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    app.get_subcommand("utilitytoken")
+        ->add_subcommand("getallownedtokens",
+                         "returns a list of all entrys the wallet ownes")
+        ->callback([&] {
+            RESPONSE = client.getownedutilitytokens();
+        });
 }
