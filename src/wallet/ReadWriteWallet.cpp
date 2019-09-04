@@ -30,9 +30,7 @@ using forge::core::toHexString;
 using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::createUMEntryCreationOpMetadata;
-using forge::core::createUMEntryRenewalOpMetadata;
 using forge::core::createUMEntryUpdateOpMetadata;
-using forge::core::createUMEntryDeletionOpMetadata;
 using utilxx::Result;
 
 ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
@@ -288,7 +286,6 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey key,
             }
 
             auto metadata = core::createDeletionOpMetadata(std::move(entry));
-            // createUMEntryDeletionOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),
@@ -408,7 +405,6 @@ auto ReadWriteWallet::getUtilityTokenSendVector(const std::string& token,
                       std::uint64_t>>,
         WalletError>
 {
-
     std::vector<std::pair<std::string, //address
                           std::uint64_t>> //used for this transaction
         owned_token_balances;

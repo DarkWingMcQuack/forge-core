@@ -192,7 +192,7 @@ private:
               std::vector<std::byte> metadata)
         -> utilxx::Result<std::string, WalletError>;
 
-    auto burn(const std::string& address,
+    auto burn(const std::string& owner,
               const std::string& new_owner,
               std::int64_t burn_amount,
               std::vector<std::byte> metadata)
