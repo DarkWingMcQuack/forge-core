@@ -2,6 +2,7 @@
 
 #include <core/Coin.hpp>
 #include <core/Transaction.hpp>
+#include <cstdint>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/Entry.hpp>
 #include <entrys/token/UtilityToken.hpp>
@@ -53,6 +54,10 @@ public:
 
     auto getLastValidBlockHeight() const
         -> utilxx::Result<int64_t, daemon::DaemonError>;
+
+    auto getUtilityTokenCreditOf(const std::string& owner,
+                                 const std::string& token) const
+        -> std::uint64_t;
 
     auto getUMEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::UMEntry>;

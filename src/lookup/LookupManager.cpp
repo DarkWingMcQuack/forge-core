@@ -356,6 +356,15 @@ auto LookupManager::getUtilityTokensOfOwner(const std::string& owner) const
     return utility_token_lookup_.getUtilityTokensOfOwner(owner);
 }
 
+auto LookupManager::getUtilityTokenCreditOf(const std::string& owner,
+                                            const std::string& token) const
+    -> std::uint64_t
+{
+    std::shared_lock lock{rw_mtx_};
+    return utility_token_lookup_.getAvailableBalanceOf(owner,
+                                                       token);
+}
+
 auto LookupManager::getEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::Entry>
 {
