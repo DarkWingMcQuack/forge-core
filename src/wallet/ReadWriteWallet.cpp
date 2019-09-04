@@ -444,7 +444,6 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
             }
 
             auto metadata = createOwnershipTransferOpMetadata(std::move(entry));
-            // createUMEntryOwnershipTransferOpMetadata(std::move(entry));
 
             //return metadata and the owner
             return std::pair{std::move(metadata),

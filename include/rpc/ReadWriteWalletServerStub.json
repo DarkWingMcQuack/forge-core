@@ -279,5 +279,94 @@
             "amount" : 10
         },
         "returns" : "sometxid"
+    },
+    {
+        "name" : "getbalanceof",
+        "params" : {
+            "owner" : "someowner",
+            "token" : "sometoken",
+            "isstring" : true
+        },
+        "returns" : "someamount"
+    },
+    {
+        "name" : "getutilitytokensof",
+        "params" : {
+            "owner" : "someowner"
+        },
+        "returns" : [
+            {
+                "id" : "somebytevec",
+                "amount" : "someamount"
+            },
+            {
+                "id" : "somebytevec",
+                "amount" : "someamount"
+            }
+        ]
+    },
+    {
+        "name" : "getsupplyofutilitytoken",
+        "params" : {
+            "token" : "someid",
+            "isstring" : true
+        },
+        "returns" : "someamount"
+    },
+    {
+        "name" : "getownedutilitytokens",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getwatchonlyutilitytokens",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "getallwatchedutilitytokens",
+        "returns" : [
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            },
+            {
+                "key" : "somebytevec",
+                "type" : "valuetype",
+                "value" : "somebytevec"
+            }
+        ]
+    },
+    {
+        "name" : "createnewutilitytoken",
+        "params" : {
+            "key" : "somekey",
+            "isstring" : true,
+            "supply" : "somesupply_str",
+            "address" : "someaddress",
+            "burnvalue" : 10
+        },
+        "returns" : "sometxid"
     }
 ]

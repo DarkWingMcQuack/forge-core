@@ -46,6 +46,18 @@ public:
     virtual auto lookupallentrysof(const std::string& owner)
         -> Json::Value override;
 
+    virtual auto getutilitytokensof(const std::string& owner)
+        -> Json::Value override;
+
+    virtual auto getbalanceof(bool isstring,
+                              const std::string& owner,
+                              const std::string& token)
+        -> std::string override;
+
+    virtual auto getsupplyofutilitytoken(bool isstring,
+                                         const std::string& token)
+        -> std::string override;
+
     virtual auto addwatchonlyaddress(const std::string& address)
         -> void override;
     virtual auto deletewatchonlyaddress(const std::string& address)
@@ -70,6 +82,12 @@ public:
         -> Json::Value override;
     virtual auto ownesaddress(const std::string& address)
         -> bool override;
+    virtual auto getownedutilitytokens()
+        -> Json::Value override;
+    virtual auto getwatchonlyutilitytokens()
+        -> Json::Value override;
+    virtual auto getallwatchedutilitytokens()
+        -> Json::Value override;
 
     virtual auto createnewumentry(const std::string& address,
                                   int burnvalue,
@@ -89,6 +107,13 @@ public:
                                       bool is_string,
                                       const std::string& key,
                                       const Json::Value& value)
+        -> std::string override;
+
+    virtual auto createnewutilitytoken(const std::string& address,
+                                       int burnvalue,
+                                       bool is_string,
+                                       const std::string& key,
+                                       const std::string& supply_str)
         -> std::string override;
 
     virtual auto renewentry(int burnvalue,

@@ -43,6 +43,13 @@ namespace forge {
                     this->bindAndAddMethod(jsonrpc::Procedure("deleteentry", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::deleteentryI);
                     this->bindAndAddMethod(jsonrpc::Procedure("transferownership", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"newowner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::transferownershipI);
                     this->bindAndAddMethod(jsonrpc::Procedure("paytoentryowner", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "amount",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::paytoentryownerI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getbalanceof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"owner",jsonrpc::JSON_STRING,"token",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getbalanceofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getutilitytokensof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getutilitytokensofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getsupplyofutilitytoken", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"token",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getsupplyofutilitytokenI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getownedutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getownedutilitytokensI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getwatchonlyutilitytokensI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getallwatchedutilitytokensI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("createnewutilitytoken", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"supply",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::createnewutilitytokenI);
                 }
 
                 inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
@@ -161,6 +168,34 @@ namespace forge {
                 {
                     response = this->paytoentryowner(request["amount"].asInt(), request["isstring"].asBool(), request["key"].asString());
                 }
+                inline virtual void getbalanceofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getbalanceof(request["isstring"].asBool(), request["owner"].asString(), request["token"].asString());
+                }
+                inline virtual void getutilitytokensofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getutilitytokensof(request["owner"].asString());
+                }
+                inline virtual void getsupplyofutilitytokenI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getsupplyofutilitytoken(request["isstring"].asBool(), request["token"].asString());
+                }
+                inline virtual void getownedutilitytokensI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getownedutilitytokens();
+                }
+                inline virtual void getwatchonlyutilitytokensI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getwatchonlyutilitytokens();
+                }
+                inline virtual void getallwatchedutilitytokensI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getallwatchedutilitytokens();
+                }
+                inline virtual void createnewutilitytokenI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->createnewutilitytoken(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["supply"].asString());
+                }
                 virtual bool updatelookup() = 0;
                 virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
@@ -190,6 +225,13 @@ namespace forge {
                 virtual std::string deleteentry(int burnvalue, bool isstring, const std::string& key) = 0;
                 virtual std::string transferownership(int burnvalue, bool isstring, const std::string& key, const std::string& newowner) = 0;
                 virtual std::string paytoentryowner(int amount, bool isstring, const std::string& key) = 0;
+                virtual std::string getbalanceof(bool isstring, const std::string& owner, const std::string& token) = 0;
+                virtual Json::Value getutilitytokensof(const std::string& owner) = 0;
+                virtual std::string getsupplyofutilitytoken(bool isstring, const std::string& token) = 0;
+                virtual Json::Value getownedutilitytokens() = 0;
+                virtual Json::Value getwatchonlyutilitytokens() = 0;
+                virtual Json::Value getallwatchedutilitytokens() = 0;
+                virtual std::string createnewutilitytoken(const std::string& address, int burnvalue, bool isstring, const std::string& key, const std::string& supply) = 0;
         };
 
     }

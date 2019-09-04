@@ -1,3 +1,4 @@
+#include "core/Transaction.hpp"
 #include <chrono>
 #include <fmt/core.h>
 #include <fmt/format.h>
@@ -103,9 +104,8 @@ auto ReadWriteWalletServer::lookupumvalue(bool isstring, const std::string& key)
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -137,9 +137,8 @@ auto ReadWriteWalletServer::lookupuniquevalue(bool isstring, const std::string& 
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -171,9 +170,8 @@ auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -204,9 +202,8 @@ auto ReadWriteWalletServer::lookupactivationblock(bool isstring, const std::stri
             if(isstring) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -531,9 +528,8 @@ auto ReadWriteWalletServer::createnewumentry(const std::string& address,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -555,21 +551,19 @@ auto ReadWriteWalletServer::createnewumentry(const std::string& address,
         }
 
         return res.getValue();
+    }
+    auto address_copy = address;
+    auto res = wallet_.createNewUMEntry(std::move(key_vec),
+                                        std::move(entry_value),
+                                        std::move(address_copy),
+                                        burnvalue);
 
-    } 
-        auto address_copy = address;
-        auto res = wallet_.createNewUMEntry(std::move(key_vec),
-                                            std::move(entry_value),
-                                            std::move(address_copy),
-                                            burnvalue);
+    if(!res) {
+        auto error_msg = res.getError().what();
+        throw JsonRpcException{std::move(error_msg)};
+    }
 
-        if(!res) {
-            auto error_msg = res.getError().what();
-            throw JsonRpcException{std::move(error_msg)};
-        }
-
-        return res.getValue();
-    
+    return res.getValue();
 }
 
 
@@ -590,9 +584,8 @@ auto ReadWriteWalletServer::updateumentry(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -632,9 +625,8 @@ auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
 
     if(!key_vec_opt.hasValue()) {
@@ -656,21 +648,19 @@ auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
         }
 
         return res.getValue();
+    }
+    auto address_copy = address;
+    auto res = wallet_.createNewUniqueEntry(std::move(key_vec),
+                                            std::move(entry_value),
+                                            std::move(address_copy),
+                                            burnvalue);
 
-    } 
-        auto address_copy = address;
-        auto res = wallet_.createNewUniqueEntry(std::move(key_vec),
-                                                std::move(entry_value),
-                                                std::move(address_copy),
-                                                burnvalue);
+    if(!res) {
+        auto error_msg = res.getError().what();
+        throw JsonRpcException{std::move(error_msg)};
+    }
 
-        if(!res) {
-            auto error_msg = res.getError().what();
-            throw JsonRpcException{std::move(error_msg)};
-        }
-
-        return res.getValue();
-    
+    return res.getValue();
 }
 
 auto ReadWriteWalletServer::renewentry(int burnvalue,
@@ -683,9 +673,8 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -714,9 +703,8 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -746,9 +734,8 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -780,9 +767,8 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
             if(is_string) {
                 auto byte_vec = forge::core::stringToASCIIByteVec(key);
                 return utilxx::Opt{byte_vec};
-            } 
-                return forge::core::stringToByteVec(key);
-            
+            }
+            return forge::core::stringToByteVec(key);
         }();
     if(!key_vec_opt.hasValue()) {
         throw JsonRpcException{"unable to decode key"};
@@ -792,6 +778,235 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
 
     auto res = wallet_.payToEntryOwner(std::move(key_vec),
                                        amount);
+
+    if(!res) {
+        auto error_msg = res.getError().what();
+        throw JsonRpcException{std::move(error_msg)};
+    }
+
+    return res.getValue();
+}
+
+auto ReadWriteWalletServer::getownedutilitytokens()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getOwnedUtilityTokens();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto init, auto entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getwatchonlyutilitytokens()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getWatchOnlyUtilityTokens();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto init, auto entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getallwatchedutilitytokens()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getAllWatchedUtilityTokens();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto init, auto entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getutilitytokensof(const std::string& owner)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto tokens = lookup_.getUtilityTokensOfOwner(owner);
+
+    auto json_entrys =
+        utilxx::transform_into_vector(
+            std::make_move_iterator(std::begin(tokens)),
+            std::make_move_iterator(std::end(tokens)),
+            [](auto entry) {
+                return entry.toJson();
+            });
+
+    auto ret_json =
+        std::accumulate(
+            std::make_move_iterator(std::begin(json_entrys)),
+            std::make_move_iterator(std::end(json_entrys)),
+            Json::Value{Json::ValueType::arrayValue},
+            [](auto init, auto entry) {
+                init.append(std::move(entry));
+                return init;
+            });
+    return ret_json;
+}
+
+auto ReadWriteWalletServer::getbalanceof(bool isstring,
+                                         const std::string& owner,
+                                         const std::string& token)
+    -> std::string
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(token),
+                       std::cend(token),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(token);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto balance =
+        lookup_.getUtilityTokenCreditOf(owner,
+                                        core::toHexString(key_vec));
+
+    return fmt::format("{}", balance);
+}
+
+auto ReadWriteWalletServer::getsupplyofutilitytoken(bool isstring,
+                                                    const std::string& token)
+    -> std::string
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(token),
+                       std::cend(token),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(token);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto supply = lookup_.getSupplyOfToken(core::toHexString(key_vec));
+
+    return fmt::format("{}", supply);
+}
+
+auto ReadWriteWalletServer::createnewutilitytoken(const std::string& address,
+                                                  int burnvalue,
+                                                  bool is_string,
+                                                  const std::string& id,
+                                                  const std::string& supply_str)
+    -> std::string
+{
+    auto supply = std::stoull(supply_str);
+
+    auto id_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = forge::core::stringToASCIIByteVec(id);
+                return utilxx::Opt{byte_vec};
+            }
+            return forge::core::stringToByteVec(id);
+        }();
+
+    if(!id_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
+    }
+
+    auto id_vec = std::move(id_vec_opt.getValue());
+
+    if(address.empty()) {
+        auto res = wallet_.createNewUtilityToken(std::move(id_vec),
+                                                 supply,
+                                                 burnvalue);
+
+
+        if(!res) {
+            auto error_msg = res.getError().what();
+            throw JsonRpcException{std::move(error_msg)};
+        }
+
+        return res.getValue();
+    }
+    auto address_copy = address;
+    auto res = wallet_.createNewUtilityToken(std::move(id_vec),
+                                             supply,
+                                             std::move(address_copy),
+                                             burnvalue);
 
     if(!res) {
         auto error_msg = res.getError().what();
