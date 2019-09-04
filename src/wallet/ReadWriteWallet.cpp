@@ -1,5 +1,6 @@
 #include "entrys/Entry.hpp"
 #include "entrys/uentry/UniqueEntryDeletionOp.hpp"
+#include "utilxx/Opt.hpp"
 #include <core/Coin.hpp>
 #include <entrys/EntryOperation.hpp>
 #include <entrys/umentry/UMEntryCreationOp.hpp>
@@ -234,7 +235,7 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
     -> utilxx::Result<std::string, WalletError>
 {
     //create an entry and get the owner
-    return createEntryOwnerPairFromKey(std::move(key))
+    return createRenewableEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto entry_owner_pair)
                      -> Result<std::pair<std::vector<std::byte>,
                                          std::string>,
@@ -243,7 +244,11 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
             auto [entry, owner] = std::move(entry_owner_pair);
 
             if(!ownesAddress(owner)) {
-                auto entry_str = core::entryToJson(entry).asString();
+                auto entry_str = std::visit(
+                    [](const auto& en) {
+                        return core::entryToJson(en).asString();
+                    },
+                    entry);
                 auto error = fmt::format(
                     "it seems that you aren't the owner of "
                     "entry {} which is currently owned by {}",
@@ -436,6 +441,47 @@ auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
                       WalletError>
 {
     auto entry_opt = lookup_->lookup(key);
+    auto owner_opt = lookup_->lookupOwner(key);
+    auto lookup_opt = utilxx::combine(std::move(entry_opt),
+                                      std::move(owner_opt));
+    if(!lookup_opt) {
+        auto error =
+            fmt::format("unable to lookup the entry key: {}",
+                        toHexString(key));
+        return WalletError{std::move(error)};
+    }
+
+    auto entry = lookup_opt.getValue().first;
+    auto owner = lookup_opt.getValue().second.get();
+
+    return std::pair{std::move(entry),
+                     std::move(owner)};
+}
+
+auto ReadWriteWallet::createRenewableEntryOwnerPairFromKey(core::EntryKey key)
+    -> utilxx::Result<std::pair<core::RenewableEntry,
+                                std::string>,
+                      WalletError>
+{
+    auto entry_opt = [&]()
+        -> utilxx::Opt<core::RenewableEntry> {
+        if(auto um_entry_opt = lookup_->lookupUMValue(key);
+           um_entry_opt) {
+            return core::RenewableEntry{
+                UMEntry(std::move(key),
+                        um_entry_opt.getValue().get())};
+        }
+
+        if(auto unique_entry_opt = lookup_->lookupUniqueValue(key);
+           unique_entry_opt) {
+            return core::RenewableEntry{
+                UniqueEntry(std::move(key),
+                            unique_entry_opt.getValue().get())};
+        }
+
+        return std::nullopt;
+    }();
+
     auto owner_opt = lookup_->lookupOwner(key);
     auto lookup_opt = utilxx::combine(std::move(entry_opt),
                                       std::move(owner_opt));

@@ -28,7 +28,7 @@ auto forge::core::createOwnershipTransferOpMetadata(Entry&& entry)
         std::move(entry));
 }
 
-auto forge::core::createRenewalOpMetadata(Entry&& entry)
+auto forge::core::createRenewalOpMetadata(RenewableEntry&& entry)
     -> std::vector<std::byte>
 {
     return std::visit(
@@ -38,10 +38,6 @@ auto forge::core::createRenewalOpMetadata(Entry&& entry)
             },
             [](UniqueEntry&& unique) {
                 return createUniqueEntryRenewalOpMetadata(std::move(unique));
-            },
-            [](UtilityToken&& /*unused*/) {
-                LOG(WARNING) << "attemted to create a renewal operation for utility tokens";
-                return std::vector<std::byte>{}; // this should never happen since tokens dont have a renewal op
             }},
         std::move(entry));
 }

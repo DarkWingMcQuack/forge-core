@@ -16,6 +16,9 @@ using Entry = std::variant<UniqueEntry,
                            UMEntry,
                            UtilityToken>;
 
+using RenewableEntry = std::variant<UniqueEntry,
+                                    UMEntry>;
+
 auto parseEntry(const std::vector<std::byte>& data)
     -> utilxx::Opt<Entry>;
 

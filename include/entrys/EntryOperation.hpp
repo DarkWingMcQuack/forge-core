@@ -17,7 +17,7 @@ namespace forge::core {
 auto createOwnershipTransferOpMetadata(Entry&& entry)
     -> std::vector<std::byte>;
 
-auto createRenewalOpMetadata(Entry&& entry)
+auto createRenewalOpMetadata(RenewableEntry&& entry)
     -> std::vector<std::byte>;
 
 auto createDeletionOpMetadata(Entry&& entry)
