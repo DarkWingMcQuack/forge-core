@@ -39,9 +39,7 @@ public:
 
     //returns a pairs (token, balance) for all tokens an owner owns
     auto getUtilityTokensOfOwner(std::string_view owner) const
-        -> std::vector<
-            std::pair<core::UtilityToken,
-                      std::uint64_t>>;
+        -> std::vector<core::UtilityToken>;
 
     auto getNumberOfTokens() const
         -> std::int64_t;

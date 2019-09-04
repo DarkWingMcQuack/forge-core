@@ -208,23 +208,11 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
         return std::nullopt;
     }
 
-    //3 byte identifier
-    //1 byte token type
-    //1 byte operation flag
-    std::uint64_t amount =
-        (static_cast<std::uint64_t>(metadata[5]) << 56)
-        | (static_cast<std::uint64_t>(metadata[6]) << 48)
-        | (static_cast<std::uint64_t>(metadata[7]) << 40)
-        | (static_cast<std::uint64_t>(metadata[8]) << 32)
-        | (static_cast<std::uint64_t>(metadata[9]) << 24)
-        | (static_cast<std::uint64_t>(metadata[10]) << 16)
-        | (static_cast<std::uint64_t>(metadata[11]) << 8)
-        | (static_cast<std::uint64_t>(metadata[12]));
-
-
     return parseUtilityToken(metadata)
         .flatMap([&](auto entry)
                      -> utilxx::Opt<UtilityTokenOperation> {
+            auto amount = entry.getAttachedAmount();
+
             switch(metadata[OPERATION_FLAG_INDEX]) {
 
             case UTILITY_TOKEN_CREATION_FLAG:
@@ -268,18 +256,15 @@ auto forge::core::toMetadata(UtilityTokenOperation&& op)
         utilxx::overload{
             [](UtilityTokenCreationOp&& creation) {
                 return createUtilityTokenCreationOpMetadata(
-                    std::move(creation.getUtilityToken()),
-                    creation.getAmount());
+                    std::move(creation.getUtilityToken()));
             },
             [](UtilityTokenDeletionOp&& creation) {
                 return createUtilityTokenDeletionOpMetadata(
-                    std::move(creation.getUtilityToken()),
-                    creation.getAmount());
+                    std::move(creation.getUtilityToken()));
             },
             [](UtilityTokenOwnershipTransferOp&& creation) {
                 return createUtilityTokenOwnershipTransferOpMetadata(
-                    std::move(creation.getUtilityToken()),
-                    creation.getAmount());
+                    std::move(creation.getUtilityToken()));
             },
         },
         std::move(op));

@@ -20,12 +20,22 @@ using EntryKey = std::vector<std::byte>;
 class UtilityToken
 {
 public:
-    UtilityToken(EntryKey id);
+    UtilityToken(EntryKey id,
+                 std::uint64_t attached_amount);
 
     auto getId() const
         -> const EntryKey&;
     auto getId()
         -> EntryKey&;
+
+    auto getAttachedAmount() const
+        -> std::uint64_t;
+
+    auto toRawData() const
+        -> std::vector<std::byte>;
+
+    auto toJson() const
+        -> Json::Value;
 
     auto operator==(const UtilityToken& rhs) const
         -> bool;
@@ -34,6 +44,7 @@ public:
 
 private:
     EntryKey id_;
+    std::uint64_t attached_amount_;
 };
 
 auto parseUtilityToken(const std::vector<std::byte>& metadata)

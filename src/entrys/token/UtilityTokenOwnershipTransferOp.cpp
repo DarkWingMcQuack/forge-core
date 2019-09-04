@@ -77,10 +77,11 @@ auto UtilityTokenOwnershipTransferOp::getBlock() const
     return block_;
 }
 
-auto forge::core::createUtilityTokenOwnershipTransferOpMetadata(UtilityToken&& entry,
-                                                                std::uint64_t amount)
+auto forge::core::createUtilityTokenOwnershipTransferOpMetadata(UtilityToken&& entry)
     -> std::vector<std::byte>
 {
+    auto amount = entry.getAttachedAmount();
+
     std::array amount_data{
         static_cast<std::byte>((amount & 0xff000000) >> 56),
         static_cast<std::byte>((amount & 0xff000000) >> 48),

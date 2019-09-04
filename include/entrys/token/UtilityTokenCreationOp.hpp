@@ -42,8 +42,7 @@ private:
     std::int64_t burn_value_;
 };
 
-auto createUtilityTokenCreationOpMetadata(UtilityToken&& entry,
-                                          std::uint64_t)
+auto createUtilityTokenCreationOpMetadata(UtilityToken&& entry)
     -> std::vector<std::byte>;
 
 } // namespace forge::core

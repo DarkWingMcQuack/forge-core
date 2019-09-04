@@ -41,22 +41,21 @@ TEST(UtilityTokenOperationTest, UtilityTokenCreationOpParsingValid)
     EXPECT_EQ(creation.getBlock(), 1000);
     EXPECT_EQ(creation.getAmount(), 3);
 
-    auto data = createUtilityTokenCreationOpMetadata(std::move(creation.getUtilityToken()),
-                                                     creation.getAmount());
+    auto data = createUtilityTokenCreationOpMetadata(std::move(creation.getUtilityToken()));
 
     EXPECT_EQ(data, stringToByteVec("c6dc7503010000000000000003deadbeef").getValue());
 }
 
 TEST(UtilityTokenOperationTest, UtilityTokenCreationOpMetadataCreation)
 {
-    UtilityTokenCreationOp op{UtilityToken{std::vector{(std::byte)0xAA}},
+    UtilityTokenCreationOp op{UtilityToken{std::vector{(std::byte)0xAA},
+                                           2730},
                               2730,
                               "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                               10000,
                               10};
 
-    auto data = createUtilityTokenCreationOpMetadata(std::move(op.getUtilityToken()),
-                                                     op.getAmount());
+    auto data = createUtilityTokenCreationOpMetadata(std::move(op.getUtilityToken()));
 
     EXPECT_EQ(data, stringToByteVec("c6dc75" //forge identifier
                                     "03" //token type
@@ -158,22 +157,21 @@ TEST(UtilityTokenOperationTest, UtilityTokenDeletionOpParsingValid)
     EXPECT_EQ(creation.getBlock(), 1000);
     EXPECT_EQ(creation.getAmount(), 3);
 
-    auto data = createUtilityTokenDeletionOpMetadata(std::move(creation.getUtilityToken()),
-                                                     creation.getAmount());
+    auto data = createUtilityTokenDeletionOpMetadata(std::move(creation.getUtilityToken()));
 
     EXPECT_EQ(data, stringToByteVec("c6dc7503040000000000000003deadbeef").getValue());
 }
 
 TEST(UtilityTokenOperationTest, UtilityTokenDeletionOpMetadataCreation)
 {
-    UtilityTokenDeletionOp op{UtilityToken{std::vector{(std::byte)0xAA}},
+    UtilityTokenDeletionOp op{UtilityToken{std::vector{(std::byte)0xAA},
+                                           2730},
                               2730,
                               "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                               10000,
                               10};
 
-    auto data = createUtilityTokenDeletionOpMetadata(std::move(op.getUtilityToken()),
-                                                     op.getAmount());
+    auto data = createUtilityTokenDeletionOpMetadata(std::move(op.getUtilityToken()));
 
     EXPECT_EQ(data, stringToByteVec("c6dc75" //forge identifier
                                     "03" //token type
@@ -278,23 +276,22 @@ TEST(UtilityTokenOperationTest, UtilityTokenOwnershipTransferOpParsingValid)
     EXPECT_EQ(creation.getBlock(), 1000);
     EXPECT_EQ(creation.getAmount(), 3);
 
-    auto data = createUtilityTokenOwnershipTransferOpMetadata(std::move(creation.getUtilityToken()),
-                                                              creation.getAmount());
+    auto data = createUtilityTokenOwnershipTransferOpMetadata(std::move(creation.getUtilityToken()));
 
     EXPECT_EQ(data, stringToByteVec("c6dc7503020000000000000003deadbeef").getValue());
 }
 
 TEST(UtilityTokenOperationTest, UtilityTokenOwnershipTransferOpMetadataCreation)
 {
-    UtilityTokenOwnershipTransferOp op{UtilityToken{std::vector{(std::byte)0xAA}},
+    UtilityTokenOwnershipTransferOp op{UtilityToken{std::vector{(std::byte)0xAA},
+                                                    2730},
                                        2730,
                                        "oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                        "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
                                        10000,
                                        10};
 
-    auto data = createUtilityTokenOwnershipTransferOpMetadata(std::move(op.getUtilityToken()),
-                                                              op.getAmount());
+    auto data = createUtilityTokenOwnershipTransferOpMetadata(std::move(op.getUtilityToken()));
 
     EXPECT_EQ(data, stringToByteVec("c6dc75" //forge identifier
                                     "03" //token type
@@ -342,7 +339,7 @@ TEST(UtilityTokenOperationTest, UtilityTokenOwnershipTransferOpParsingInvalid)
                                                         block,
                                                         std::move(owner),
                                                         burn_value,
-														new_owner);
+                                                        new_owner);
 
     ASSERT_TRUE(op_opt);
     ASSERT_FALSE(std::holds_alternative<UtilityTokenOwnershipTransferOp>(op_opt.getValue()));
@@ -361,7 +358,7 @@ TEST(UtilityTokenOperationTest, UtilityTokenOwnershipTransferOpParsingInvalid)
                                                         block,
                                                         std::move(owner),
                                                         burn_value,
-														new_owner);
+                                                        new_owner);
 
     ASSERT_FALSE(op_opt);
 }

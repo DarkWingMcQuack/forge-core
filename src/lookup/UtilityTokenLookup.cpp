@@ -76,12 +76,10 @@ auto UtilityTokenLookup::clear()
 }
 
 auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
-    -> std::vector<std::pair<UtilityToken,
-                             std::uint64_t>>
+    -> std::vector<UtilityToken>
 {
-    std::vector<std::pair<UtilityToken,
-                          std::uint64_t>>
-        ret_vec;
+    std::vector<UtilityToken> ret_vec;
+
     for(const auto& [token, accounts] : utility_account_lookup_) {
         for(const auto& [creditor, credit] : accounts) {
             if(creditor == owner) {
@@ -93,10 +91,10 @@ auto UtilityTokenLookup::getUtilityTokensOfOwner(std::string_view owner) const
                     continue;
                 }
                 auto data = std::move(data_opt.getValue());
-                UtilityToken utility_token{std::move(data)};
+                UtilityToken utility_token{std::move(data),
+                                           credit};
 
-                ret_vec.emplace_back(std::move(utility_token),
-                                     credit);
+                ret_vec.emplace_back(std::move(utility_token));
             }
         }
     }
