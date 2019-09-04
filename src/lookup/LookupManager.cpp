@@ -361,6 +361,7 @@ auto LookupManager::getEntrysOfOwner(const std::string& owner) const
 {
     auto unique = getUniqueEntrysOfOwner(owner);
     auto um = getUMEntrysOfOwner(owner);
+    auto tokens = getUtilityTokensOfOwner(owner);
 
     std::vector<core::Entry> entrys;
 
@@ -373,6 +374,13 @@ auto LookupManager::getEntrysOfOwner(const std::string& owner) const
 
     std::transform(std::make_move_iterator(std::begin(um)),
                    std::make_move_iterator(std::end(um)),
+                   std::back_inserter(entrys),
+                   [](auto entry) {
+                       return core::Entry{std::move(entry)};
+                   });
+
+    std::transform(std::make_move_iterator(std::begin(tokens)),
+                   std::make_move_iterator(std::end(tokens)),
                    std::back_inserter(entrys),
                    [](auto entry) {
                        return core::Entry{std::move(entry)};
