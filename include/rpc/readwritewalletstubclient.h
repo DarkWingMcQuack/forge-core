@@ -385,6 +385,33 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                Json::Value sendutilitytokens(const std::string& amount, int burnvalue, bool isstring, const std::string& key, const std::string& recipient) 
+                {
+                    Json::Value p;
+                    p["amount"] = amount;
+                    p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    p["recipient"] = recipient;
+                    Json::Value result = this->CallMethod("sendutilitytokens",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value burnutilitytokens(const std::string& amount, int burnvalue, bool isstring, const std::string& key) 
+                {
+                    Json::Value p;
+                    p["amount"] = amount;
+                    p["burnvalue"] = burnvalue;
+                    p["isstring"] = isstring;
+                    p["key"] = key;
+                    Json::Value result = this->CallMethod("burnutilitytokens",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
         };
 
     }

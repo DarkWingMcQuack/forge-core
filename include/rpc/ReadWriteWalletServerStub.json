@@ -368,5 +368,34 @@
             "burnvalue" : 10
         },
         "returns" : "sometxid"
+    },
+    {
+        "name" : "sendutilitytokens",
+        "params" : {
+            "key" : "somekey",
+            "isstring" : true,
+            "recipient" : "someaddress",
+            "amount" : "someamount",
+            "burnvalue" : 10
+        },
+        "returns" : [
+            "sometxid",
+            "sometxid",
+            "sometxid"
+        ]
+    },
+    {
+        "name" : "burnutilitytokens",
+        "params" : {
+            "key" : "somekey",
+            "isstring" : true,
+            "amount" : "someamount",
+            "burnvalue" : 10
+        },
+        "returns" : [
+            "sometxid",
+            "sometxid",
+            "sometxid"
+        ]
     }
 ]

@@ -356,6 +356,126 @@ auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
+auto forge::cli::addTransferUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto transferownership_opt =
+        app.get_subcommand("utilitytoken")
+            ->add_subcommand("transfer",
+                             "transfers a given amount of tokens to a new owner")
+            ->callback([&] {
+                RESPONSE = client.sendutilitytokens(AMOUNT,
+                                                    BURN_VALUE,
+                                                    IS_STRING,
+                                                    KEY,
+                                                    OWNER);
+            });
+
+    transferownership_opt
+        ->add_option("--token-id",
+                     KEY,
+                     "the token-id of the token which will be send")
+        ->required();
+
+    transferownership_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given token-id will be interpreted as string and not as byte vector");
+
+    transferownership_opt
+        ->add_option("--burn-value",
+                     BURN_VALUE,
+                     "number of coins which will be burned")
+        ->required();
+
+    transferownership_opt
+        ->add_option("--amount",
+                     AMOUNT,
+                     "number of utility tokens which will be send")
+        ->required();
+
+    transferownership_opt
+        ->add_option("--new-owner",
+                     OWNER,
+                     "the address to which the utility tokens will be send")
+        ->required();
+}
+
+auto forge::cli::addDeleteUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto delete_opt =
+        app.get_subcommand("utilitytoken")
+            ->add_subcommand("burn",
+                             "burns a given amount of tokens")
+            ->callback([&] {
+                RESPONSE = client.burnutilitytokens(AMOUNT, BURN_VALUE, IS_STRING, KEY);
+            });
+
+    delete_opt
+        ->add_option("--token-id",
+                     KEY,
+                     "the token-id of the token which will be burned")
+        ->required();
+
+    delete_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given token-id will be interpreted as string and not as byte vector");
+
+    delete_opt
+        ->add_option("--burn-value",
+                     BURN_VALUE,
+                     "number of coins which will be burned")
+        ->required();
+
+    delete_opt
+        ->add_option("--amount",
+                     AMOUNT,
+                     "number of utility tokens which will be send")
+        ->required();
+}
+
+auto forge::cli::addCreateUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto create_opt =
+        app.get_subcommand("utilitytoken")
+            ->add_subcommand("create",
+                             "creates a new type of utility token")
+            ->callback([&] {
+                RESPONSE = client.createnewutilitytoken(OWNER, BURN_VALUE, IS_STRING, KEY, AMOUNT);
+            });
+
+    create_opt
+        ->add_option("--token-id",
+                     KEY,
+                     "the token-id of the token which will be burned")
+        ->required();
+
+    create_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given token-id will be interpreted as string and not as byte vector");
+
+    create_opt
+        ->add_option("--burn-value",
+                     BURN_VALUE,
+                     "number of coins which will be burned")
+        ->required();
+
+    create_opt
+        ->add_option("--amount",
+                     AMOUNT,
+                     "number of utility tokens which will be send")
+        ->required();
+
+    create_opt
+        ->add_option("--address",
+                     OWNER,
+                     "addres which will be the owner of all the newly created tokens, if not set a new address will be generated");
+}
+
 auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void
 {
@@ -370,4 +490,7 @@ auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWal
     addDeleteEntry(app, client);
     addTransferOwnership(app, client);
     addPayToEntry(app, client);
+    addTransferUtilityToken(app, client);
+    addDeleteUtilityToken(app, client);
+    addCreateUtilityToken(app, client);
 }

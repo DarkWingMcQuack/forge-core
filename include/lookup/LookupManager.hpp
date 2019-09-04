@@ -11,6 +11,7 @@
 #include <lookup/UMEntryLookup.hpp>
 #include <lookup/UniqueEntryLookup.hpp>
 #include <lookup/UtilityTokenLookup.hpp>
+#include <set>
 #include <shared_mutex>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>

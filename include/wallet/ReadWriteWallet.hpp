@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Coin.hpp"
 #include <daemon/WriteOnlyDaemonBase.hpp>
 #include <entrys/Entry.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>
@@ -142,6 +143,19 @@ public:
                            std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
+    auto transferUtilityTokens(core::EntryKey id,
+                               std::string new_owner,
+                               std::uint64_t amount,
+                               std::int64_t burn_amount)
+        -> utilxx::Result<std::vector<std::string>,
+                          WalletError>;
+
+    auto deleteUtilityTokens(core::EntryKey id,
+                             std::uint64_t amount,
+                             std::int64_t burn_amount)
+        -> utilxx::Result<std::vector<std::string>,
+                          WalletError>;
+
     //looks up the owner of a given entry
     //then transfers the given number of coins to the
     //owner of the entry
@@ -162,6 +176,27 @@ private:
         -> utilxx::Result<std::pair<core::RenewableEntry,
                                     std::string>,
                           WalletError>;
+    //returns a vector of pairs (string, int) where the string is the address
+    //and the int is the amount of the token to be send from the address to
+    //be able to send desired_amount in total
+    auto getUtilityTokenSendVector(const std::string& token,
+                                   std::uint64_t desired_amount)
+        -> utilxx::Result<
+            std::vector<
+                std::pair<std::string,
+                          std::uint64_t>>,
+            WalletError>;
+
+    auto burn(const std::string& address,
+              std::int64_t burn_amount,
+              std::vector<std::byte> metadata)
+        -> utilxx::Result<std::string, WalletError>;
+
+    auto burn(const std::string& address,
+              const std::string& new_owner,
+              std::int64_t burn_amount,
+              std::vector<std::byte> metadata)
+        -> utilxx::Result<std::string, WalletError>;
 
 private:
     std::unique_ptr<daemon::WriteOnlyDaemonBase> daemon_;

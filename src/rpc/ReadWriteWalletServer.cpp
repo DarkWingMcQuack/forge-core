@@ -972,6 +972,10 @@ auto ReadWriteWalletServer::createnewutilitytoken(const std::string& address,
                                                   const std::string& supply_str)
     -> std::string
 {
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
     auto supply = std::stoull(supply_str);
 
     auto id_vec_opt =
@@ -1014,6 +1018,88 @@ auto ReadWriteWalletServer::createnewutilitytoken(const std::string& address,
     }
 
     return res.getValue();
+}
+
+auto ReadWriteWalletServer::sendutilitytokens(const std::string& amount_str,
+                                              int burnvalue,
+                                              bool is_string,
+                                              const std::string& token,
+                                              const std::string& newowner)
+    -> Json::Value
+{
+    auto amount = std::stoull(amount_str);
+
+    auto token_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = forge::core::stringToASCIIByteVec(token);
+                return utilxx::Opt{byte_vec};
+            }
+            return forge::core::stringToByteVec(token);
+        }();
+
+    if(!token_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
+    }
+
+    auto res = wallet_.transferUtilityTokens(token_vec_opt.getValue(),
+                                             newowner,
+                                             amount,
+                                             burnvalue);
+    if(!res) {
+        throw JsonRpcException(res.getError().what());
+    }
+
+    auto txids = res.getValue();
+
+    return std::accumulate(
+        std::make_move_iterator(std::begin(txids)),
+        std::make_move_iterator(std::end(txids)),
+        Json::Value{Json::ValueType::arrayValue},
+        [](auto init, auto entry) {
+            init.append(std::move(entry));
+            return init;
+        });
+}
+
+auto ReadWriteWalletServer::burnutilitytokens(const std::string& amount_str,
+                                              int burnvalue,
+                                              bool is_string,
+                                              const std::string& token)
+    -> Json::Value
+{
+    auto amount = std::stoull(amount_str);
+
+    auto token_vec_opt =
+        [&] {
+            if(is_string) {
+                auto byte_vec = forge::core::stringToASCIIByteVec(token);
+                return utilxx::Opt{byte_vec};
+            }
+            return forge::core::stringToByteVec(token);
+        }();
+
+    if(!token_vec_opt.hasValue()) {
+        throw JsonRpcException{"unable to decode key"};
+    }
+
+    auto res = wallet_.deleteUtilityTokens(token_vec_opt.getValue(),
+                                           amount,
+                                           burnvalue);
+    if(!res) {
+        throw JsonRpcException(res.getError().what());
+    }
+
+    auto txids = res.getValue();
+
+    return std::accumulate(
+        std::make_move_iterator(std::begin(txids)),
+        std::make_move_iterator(std::end(txids)),
+        Json::Value{Json::ValueType::arrayValue},
+        [](auto init, auto entry) {
+            init.append(std::move(entry));
+            return init;
+        });
 }
 
 auto ReadWriteWalletServer::hasShutdownRequest() const

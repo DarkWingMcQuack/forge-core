@@ -50,6 +50,8 @@ namespace forge {
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getwatchonlyutilitytokensI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadWriteWalletStubSever::getallwatchedutilitytokensI);
                     this->bindAndAddMethod(jsonrpc::Procedure("createnewutilitytoken", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "address",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"supply",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::createnewutilitytokenI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("sendutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "amount",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING,"recipient",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::sendutilitytokensI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("burnutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "amount",jsonrpc::JSON_STRING,"burnvalue",jsonrpc::JSON_INTEGER,"isstring",jsonrpc::JSON_BOOLEAN,"key",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadWriteWalletStubSever::burnutilitytokensI);
                 }
 
                 inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
@@ -196,6 +198,14 @@ namespace forge {
                 {
                     response = this->createnewutilitytoken(request["address"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["supply"].asString());
                 }
+                inline virtual void sendutilitytokensI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->sendutilitytokens(request["amount"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString(), request["recipient"].asString());
+                }
+                inline virtual void burnutilitytokensI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->burnutilitytokens(request["amount"].asString(), request["burnvalue"].asInt(), request["isstring"].asBool(), request["key"].asString());
+                }
                 virtual bool updatelookup() = 0;
                 virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
@@ -232,6 +242,8 @@ namespace forge {
                 virtual Json::Value getwatchonlyutilitytokens() = 0;
                 virtual Json::Value getallwatchedutilitytokens() = 0;
                 virtual std::string createnewutilitytoken(const std::string& address, int burnvalue, bool isstring, const std::string& key, const std::string& supply) = 0;
+                virtual Json::Value sendutilitytokens(const std::string& amount, int burnvalue, bool isstring, const std::string& key, const std::string& recipient) = 0;
+                virtual Json::Value burnutilitytokens(const std::string& amount, int burnvalue, bool isstring, const std::string& key) = 0;
         };
 
     }

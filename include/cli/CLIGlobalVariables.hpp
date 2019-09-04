@@ -19,6 +19,8 @@ inline Json::Value ENTRY_VALUE = Json::nullValue;
 
 inline int BURN_VALUE = 0;
 
+inline std::string AMOUNT = "0";
+
 inline Json::Value RESPONSE;
 
 } // namespace forge::cli

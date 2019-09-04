@@ -24,6 +24,15 @@ auto addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client
 auto addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 
+auto addTransferUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+
+auto addDeleteUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+
+auto addCreateUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+
 auto addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
 

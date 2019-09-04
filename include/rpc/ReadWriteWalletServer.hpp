@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <json/value.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
 #include <rpc/abstractreadwritewalletstubsever.h>
@@ -112,7 +113,7 @@ public:
     virtual auto createnewutilitytoken(const std::string& address,
                                        int burnvalue,
                                        bool is_string,
-                                       const std::string& key,
+                                       const std::string& id,
                                        const std::string& supply_str)
         -> std::string override;
 
@@ -132,6 +133,19 @@ public:
                                    const std::string& key,
                                    const std::string& newowner)
         -> std::string override;
+
+    virtual auto sendutilitytokens(const std::string& amount_str,
+                                   int burnvalue,
+                                   bool is_string,
+                                   const std::string& token,
+                                   const std::string& newowner)
+        -> Json::Value override;
+
+    virtual auto burnutilitytokens(const std::string& amount_str,
+                                   int burnvalue,
+                                   bool is_string,
+                                   const std::string& token)
+        -> Json::Value override;
 
     virtual auto paytoentryowner(int amount,
                                  bool is_string,

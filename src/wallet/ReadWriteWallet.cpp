@@ -1,4 +1,6 @@
+#include "core/Transaction.hpp"
 #include "entrys/Entry.hpp"
+#include "entrys/token/UtilityTokenOwnershipTransferOp.hpp"
 #include "entrys/uentry/UniqueEntryDeletionOp.hpp"
 #include "utilxx/Opt.hpp"
 #include <core/Coin.hpp>
@@ -10,6 +12,7 @@
 #include <lookup/LookupManager.hpp>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
@@ -81,29 +84,9 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
     auto metadata =
         createUMEntryCreationOpMetadata(std::move(entry));
 
-    return daemon_
-        //send the needed amount to the address
-        ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                        address)
-        .flatMap([&](auto txid) {
-            //write the metadata to the blockchain
-            return daemon_
-                ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                               address)
-                .flatMap([&](auto vout_idx) {
-                    return daemon_
-                        ->burnOutput(std::move(txid),
-                                     vout_idx,
-                                     std::move(metadata));
-                });
-        })
-        .onValue([&](auto /*unused*/) {
-            addNewOwnedAddress(std::move(address));
-        })
-        .mapError([](auto error) {
-            return WalletError{std::move(error.what())};
-        });
+    return burn(address,
+                burn_amount,
+                metadata);
 }
 
 auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
@@ -136,26 +119,9 @@ auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
     auto metadata = createUMEntryUpdateOpMetadata(std::move(key),
                                                   std::move(new_value));
 
-    return daemon_
-        //move enought funds to the owner address
-        ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                        std::move(owner))
-        .flatMap([&](auto txid) {
-            return daemon_
-                ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                               owner_opt.getValue().get())
-                .flatMap([&](auto vout_idx) {
-                    //burn the output with the metadata
-                    return daemon_
-                        ->burnOutput(std::move(txid),
-                                     vout_idx,
-                                     std::move(metadata));
-                });
-        })
-        .mapError([](auto error) {
-            return WalletError{std::move(error.what())};
-        });
+    return burn(owner,
+                burn_amount,
+                metadata);
 }
 
 auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
@@ -223,32 +189,9 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
     auto metadata =
         createUniqueEntryCreationOpMetadata(std::move(entry));
 
-    auto default_fee = getDefaultTxFee(getLookup().getCoin());
-
-    return daemon_
-        //send the needed amount to the address
-        ->sendToAddress(burn_amount + default_fee,
-                        address)
-        .flatMap([&](auto txid) {
-            //write the metadata to the blockchain
-            return daemon_
-                ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount
-                                                   + default_fee,
-                                               address)
-                .flatMap([&](auto vout_idx) {
-                    return daemon_
-                        ->burnOutput(std::move(txid),
-                                     vout_idx,
-                                     std::move(metadata));
-                });
-        })
-        .onValue([&](auto /*unused*/) {
-            addNewOwnedAddress(std::move(address));
-        })
-        .mapError([](auto error) {
-            return WalletError{std::move(error.what())};
-        });
+    return burn(address,
+                burn_amount,
+                metadata);
 }
 
 
@@ -274,32 +217,9 @@ auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
     auto metadata =
         createUtilityTokenCreationOpMetadata(std::move(entry));
 
-    auto default_fee = getDefaultTxFee(getLookup().getCoin());
-
-    return daemon_
-        //send the needed amount to the address
-        ->sendToAddress(burn_amount + default_fee,
-                        address)
-        .flatMap([&](auto txid) {
-            //write the metadata to the blockchain
-            return daemon_
-                ->getVOutIdxByAmountAndAddress(txid,
-                                               burn_amount
-                                                   + default_fee,
-                                               address)
-                .flatMap([&](auto vout_idx) {
-                    return daemon_
-                        ->burnOutput(std::move(txid),
-                                     vout_idx,
-                                     std::move(metadata));
-                });
-        })
-        .onValue([&](auto /*unused*/) {
-            addNewOwnedAddress(std::move(address));
-        })
-        .mapError([](auto error) {
-            return WalletError{std::move(error.what())};
-        });
+    return burn(address,
+                burn_amount,
+                metadata);
 }
 
 auto ReadWriteWallet::renewEntry(core::EntryKey key,
@@ -338,28 +258,9 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
         .flatMap([&](auto pair) {
             //extract metadata and owner
             auto [metadata, owner] = std::move(pair);
-
-
-            //send burn amount + fee to the owner address
-            return daemon_
-                ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                owner)
-                .flatMap([&](auto txid) {
-                    //burn the output with the metadata
-                    return daemon_
-                        ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                                       std::move(owner))
-                        .flatMap([&](auto vout_idx) {
-                            return daemon_
-                                ->burnOutput(std::move(txid),
-                                             vout_idx,
-                                             std::move(metadata));
-                        });
-                })
-                .mapError([](auto error) {
-                    return WalletError{std::move(error.what())};
-                });
+            return burn(owner,
+                        burn_amount,
+                        metadata);
         });
 }
 
@@ -396,27 +297,9 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey key,
         .flatMap([&](auto pair) {
             //extract metadata and owner
             auto [metadata, owner] = std::move(pair);
-
-            //send burn amount + fee to the owner address
-            return daemon_
-                ->sendToAddress(burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                owner)
-                .flatMap([&](auto txid) {
-                    return daemon_
-                        ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount + getDefaultTxFee(getLookup().getCoin()),
-                                                       owner)
-                        .flatMap([&](auto vout_idx) {
-                            //burn the output with the metadata
-                            return daemon_
-                                ->burnOutput(std::move(txid),
-                                             vout_idx,
-                                             std::move(metadata));
-                        });
-                })
-                .mapError([](auto&& error) {
-                    return WalletError{std::move(error.what())};
-                });
+            return burn(owner,
+                        burn_amount,
+                        metadata);
         });
 }
 
@@ -452,35 +335,110 @@ auto ReadWriteWallet::transferOwnership(core::EntryKey key,
         .flatMap([&](auto pair) {
             //extract metadata and owner
             auto [metadata, owner] = std::move(pair);
-            auto coin = getLookup().getCoin();
-
-            //send burn amount + fee to the owner address
-            return daemon_
-                //send +minTxAmount because this will be send to the new owner address
-                ->sendToAddress(burn_amount
-                                    + getMinimumTxAmount(coin)
-                                    + getDefaultTxFee(getLookup().getCoin()),
-                                owner)
-                .flatMap([&](auto txid) {
-                    return daemon_
-                        ->getVOutIdxByAmountAndAddress(txid,
-                                                       burn_amount
-                                                           + getMinimumTxAmount(coin)
-                                                           + getDefaultTxFee(getLookup().getCoin()),
-                                                       std::move(owner))
-                        .flatMap([&](auto vout_idx) {
-                            return daemon_
-                                ->burnAmount(std::move(txid),
-                                             vout_idx,
-                                             burn_amount,
-                                             std::move(metadata),
-                                             std::move(new_owner));
-                        });
-                })
-                .mapError([](auto error) {
-                    return WalletError{std::move(error.what())};
-                });
+            return burn(owner,
+                        new_owner,
+                        burn_amount,
+                        metadata);
         });
+}
+
+auto ReadWriteWallet::transferUtilityTokens(core::EntryKey id,
+                                            std::string new_owner,
+                                            std::uint64_t amount,
+                                            std::int64_t burn_amount)
+    -> utilxx::Result<std::vector<std::string>,
+                      WalletError>
+{
+    auto token_str = toHexString(id);
+    auto send_list_res = getUtilityTokenSendVector(token_str,
+                                                   amount);
+
+    if(!send_list_res) {
+        return send_list_res.getError();
+    }
+    auto send_list = std::move(send_list_res.getValue());
+
+    return utilxx::traverse(
+        std::move(send_list),
+        [&](auto triple) {
+            auto [address, used] = std::move(triple);
+            UtilityToken token{id, used};
+            auto metadata =
+                createUtilityTokenOwnershipTransferOpMetadata(std::move(token));
+            return burn(address,
+                        new_owner,
+                        burn_amount,
+                        std::move(metadata));
+        });
+}
+
+auto ReadWriteWallet::deleteUtilityTokens(core::EntryKey id,
+                                          std::uint64_t amount,
+                                          std::int64_t burn_amount)
+    -> utilxx::Result<std::vector<std::string>,
+                      WalletError>
+{
+    auto token_str = toHexString(id);
+    auto send_list_res = getUtilityTokenSendVector(token_str,
+                                                   amount);
+
+    if(!send_list_res) {
+        return send_list_res.getError();
+    }
+    auto send_list = std::move(send_list_res.getValue());
+
+    return utilxx::traverse(
+        std::move(send_list),
+        [&](auto triple) {
+            auto [address, used] = std::move(triple);
+            UtilityToken token{id, used};
+            auto metadata =
+                createUtilityTokenDeletionOpMetadata(std::move(token));
+            return burn(address,
+                        burn_amount,
+                        std::move(metadata));
+        });
+}
+
+auto ReadWriteWallet::getUtilityTokenSendVector(const std::string& token,
+                                                std::uint64_t desired_amount)
+    -> utilxx::Result<
+        std::vector<
+            std::pair<std::string,
+                      std::uint64_t>>,
+        WalletError>
+{
+
+    std::vector<std::pair<std::string, //address
+                          std::uint64_t>> //used for this transaction
+        owned_token_balances;
+
+    std::uint64_t covered{0};
+    for(auto&& address : owned_addresses_) {
+        auto balance = lookup_->getUtilityTokenCreditOf(address,
+                                                        token);
+
+        if(balance != 0) {
+            auto used = std::min(balance, desired_amount - covered);
+            owned_token_balances.emplace_back(address,
+                                              used);
+        }
+
+        if(covered == desired_amount) {
+            break;
+        }
+    }
+
+    if(covered != desired_amount) {
+        auto error =
+            fmt::format("insufficient funds of token {}, needed: {}, available: {}",
+                        token,
+                        desired_amount,
+                        covered);
+        return WalletError{std::move(error)};
+    }
+
+    return owned_token_balances;
 }
 
 auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
@@ -568,4 +526,72 @@ auto ReadWriteWallet::createRenewableEntryOwnerPairFromKey(core::EntryKey key)
 
     return std::pair{std::move(entry),
                      std::move(owner)};
+}
+
+auto ReadWriteWallet::burn(const std::string& address,
+                           std::int64_t burn_amount,
+                           std::vector<std::byte> metadata)
+    -> utilxx::Result<std::string, WalletError>
+{
+    return daemon_
+        //send the needed amount to the address
+        ->sendToAddress(burn_amount
+                            + getDefaultTxFee(getLookup()
+                                                  .getCoin()),
+                        address)
+        .flatMap([&](auto txid) {
+            //write the metadata to the blockchain
+            return daemon_
+                ->getVOutIdxByAmountAndAddress(txid,
+                                               burn_amount
+                                                   + getDefaultTxFee(getLookup().getCoin()),
+                                               address)
+                .flatMap([&](auto vout_idx) {
+                    return daemon_
+                        ->burnOutput(std::move(txid),
+                                     vout_idx,
+                                     std::move(metadata));
+                });
+        })
+        .onValue([&](auto /*unused*/) {
+            addNewOwnedAddress(std::move(address));
+        })
+        .mapError([](auto error) {
+            return WalletError{std::move(error.what())};
+        });
+}
+
+auto ReadWriteWallet::burn(const std::string& owner,
+                           const std::string& new_owner,
+                           std::int64_t burn_amount,
+                           std::vector<std::byte> metadata)
+    -> utilxx::Result<std::string, WalletError>
+{
+    auto coin = getLookup().getCoin();
+
+    return daemon_
+        //send +minTxAmount because this will be send to the new owner address
+        ->sendToAddress(burn_amount
+                            + getMinimumTxAmount(coin)
+                            + getDefaultTxFee(coin),
+                        owner)
+        .flatMap([&](auto txid) {
+            return daemon_
+                ->getVOutIdxByAmountAndAddress(txid,
+                                               burn_amount
+                                                   + getMinimumTxAmount(coin)
+                                                   + getDefaultTxFee(coin),
+                                               std::move(owner))
+                .flatMap([&](auto vout_idx) {
+                    return daemon_
+                        ->burnAmount(std::move(txid),
+                                     vout_idx,
+                                     burn_amount,
+                                     std::move(metadata),
+                                     std::move(new_owner));
+                });
+        })
+        .mapError([](auto error) {
+            return WalletError{std::move(error.what())};
+        });
 }
