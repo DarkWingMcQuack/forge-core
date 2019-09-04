@@ -26,6 +26,9 @@ namespace forge {
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupallentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupallentrysofI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupuniqueentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupuniqueentrysofI);
                     this->bindAndAddMethod(jsonrpc::Procedure("lookupuniquemodifiableentrysof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::lookupuniquemodifiableentrysofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getbalanceof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"owner",jsonrpc::JSON_STRING,"token",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::getbalanceofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getutilitytokensof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::getutilitytokensofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getsupplyofutilitytoken", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"token",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractLookupOnlyStubSever::getsupplyofutilitytokenI);
                 }
 
                 inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
@@ -76,6 +79,18 @@ namespace forge {
                 {
                     response = this->lookupuniquemodifiableentrysof(request["owner"].asString());
                 }
+                inline virtual void getbalanceofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getbalanceof(request["isstring"].asBool(), request["owner"].asString(), request["token"].asString());
+                }
+                inline virtual void getutilitytokensofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getutilitytokensof(request["owner"].asString());
+                }
+                inline virtual void getsupplyofutilitytokenI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getsupplyofutilitytoken(request["isstring"].asBool(), request["token"].asString());
+                }
                 virtual bool updatelookup() = 0;
                 virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
@@ -88,6 +103,9 @@ namespace forge {
                 virtual Json::Value lookupallentrysof(const std::string& owner) = 0;
                 virtual Json::Value lookupuniqueentrysof(const std::string& owner) = 0;
                 virtual Json::Value lookupuniquemodifiableentrysof(const std::string& owner) = 0;
+                virtual std::string getbalanceof(bool isstring, const std::string& owner, const std::string& token) = 0;
+                virtual Json::Value getutilitytokensof(const std::string& owner) = 0;
+                virtual std::string getsupplyofutilitytoken(bool isstring, const std::string& token) = 0;
         };
 
     }

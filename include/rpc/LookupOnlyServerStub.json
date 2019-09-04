@@ -108,5 +108,38 @@
                 "value" : "somebytevec"
             }
         ]
+    },
+    {
+        "name" : "getbalanceof",
+        "params" : {
+            "owner" : "someowner",
+            "token" : "sometoken",
+            "isstring" : true
+        },
+        "returns" : "someamount"
+    },
+    {
+        "name" : "getutilitytokensof",
+        "params" : {
+            "owner" : "someowner"
+        },
+        "returns" : [
+            {
+                "id" : "somebytevec",
+                "amount" : "someamount"
+            },
+            {
+                "id" : "somebytevec",
+                "amount" : "someamount"
+            }
+        ]
+    },
+    {
+        "name" : "getsupplyofutilitytoken",
+        "params" : {
+            "token" : "someid",
+            "isstring" : true
+        },
+        "returns" : "someamount"
     }
 ]

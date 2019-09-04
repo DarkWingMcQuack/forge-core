@@ -52,6 +52,18 @@ public:
     virtual auto lookupuniquemodifiableentrysof(const std::string& owner)
         -> Json::Value override;
 
+    virtual auto getutilitytokensof(const std::string& owner)
+        -> Json::Value override;
+
+    virtual auto getbalanceof(bool isstring,
+                              const std::string& owner,
+                              const std::string& token)
+        -> std::string override;
+
+    virtual auto getsupplyofutilitytoken(bool isstring,
+                                         const std::string& token)
+        -> std::string override;
+
     auto hasShutdownRequest() const
         -> bool;
 

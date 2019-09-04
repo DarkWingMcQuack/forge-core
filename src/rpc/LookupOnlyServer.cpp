@@ -1,7 +1,9 @@
+#include "core/Transaction.hpp"
 #include "entrys/Entry.hpp"
 #include <chrono>
 #include <fmt/core.h>
 #include <fmt/format.h>
+#include <json/value.h>
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
@@ -349,6 +351,100 @@ auto LookupOnlyServer::lookupuniquemodifiableentrysof(const std::string& owner)
                         });
 
     return ret_json;
+}
+
+auto LookupOnlyServer::getutilitytokensof(const std::string& owner)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto tokens = lookup_.getUtilityTokensOfOwner(owner);
+
+    auto json_entrys =
+        utilxx::transform_into_vector(
+            std::make_move_iterator(std::begin(tokens)),
+            std::make_move_iterator(std::end(tokens)),
+            [](auto entry) {
+                return entry.toJson();
+            });
+
+    auto ret_json =
+        std::accumulate(
+            std::make_move_iterator(std::begin(json_entrys)),
+            std::make_move_iterator(std::end(json_entrys)),
+            Json::Value{Json::ValueType::arrayValue},
+            [](auto init, auto entry) {
+                init.append(std::move(entry));
+                return init;
+            });
+    return ret_json;
+}
+
+auto LookupOnlyServer::getbalanceof(bool isstring,
+                                    const std::string& owner,
+                                    const std::string& token)
+    -> std::string
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(token),
+                       std::cend(token),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(token);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto balance =
+        lookup_.getUtilityTokenCreditOf(owner,
+                                        core::toHexString(key_vec));
+
+    return fmt::format("{}", balance);
+}
+
+auto LookupOnlyServer::getsupplyofutilitytoken(bool isstring,
+                                               const std::string& token)
+    -> std::string
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(token),
+                       std::cend(token),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(token);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto supply = lookup_.getSupplyOfToken(core::toHexString(key_vec));
+
+    return fmt::format("{}", supply);
 }
 
 
