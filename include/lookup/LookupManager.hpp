@@ -4,10 +4,12 @@
 #include <core/Transaction.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/Entry.hpp>
+#include <entrys/token/UtilityToken.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <functional>
 #include <lookup/UMEntryLookup.hpp>
 #include <lookup/UniqueEntryLookup.hpp>
+#include <lookup/UtilityTokenLookup.hpp>
 #include <shared_mutex>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
@@ -58,6 +60,9 @@ public:
     auto getUniqueEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::UniqueEntry>;
 
+    auto getUtilityTokensOfOwner(const std::string& owner) const
+        -> std::vector<core::UtilityToken>;
+
     auto getEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::Entry>;
 
@@ -74,9 +79,11 @@ private:
     auto processUMEntrys(const std::vector<core::Transaction>& txs,
                          std::int64_t block_height)
         -> void;
-
     auto processUniqueEntrys(const std::vector<core::Transaction>& txs,
                              std::int64_t block_height)
+        -> void;
+    auto processUtilityTokens(const std::vector<core::Transaction>& txs,
+                              std::int64_t block_height)
         -> void;
 
 private:
@@ -85,6 +92,7 @@ private:
     mutable std::shared_mutex rw_mtx_;
     UMEntryLookup um_entry_lookup_;
     UniqueEntryLookup unique_entry_lookup_;
+    UtilityTokenLookup utility_token_lookup_;
     std::int64_t lookup_block_height_;
     std::vector<std::string> block_hashes_;
 };

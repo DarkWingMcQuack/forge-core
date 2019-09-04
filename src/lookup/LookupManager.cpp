@@ -1,3 +1,5 @@
+#include "entrys/token/UtilityToken.hpp"
+#include "entrys/token/UtilityTokenOperation.hpp"
 #include <algorithm>
 #include <core/Coin.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
@@ -27,7 +29,7 @@ using forge::daemon::ReadOnlyDaemonBase;
 LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
     : daemon_(std::move(daemon)),
       um_entry_lookup_(getStartingBlock(daemon_->getCoin()))
-      {}
+{}
 
 auto LookupManager::updateLookup()
     -> utilxx::Result<bool, ManagerError>
@@ -227,6 +229,40 @@ auto LookupManager::processUniqueEntrys(const std::vector<core::Transaction>& tx
     unique_entry_lookup_.executeOperations(std::move(ops));
 }
 
+auto LookupManager::processUtilityTokens(const std::vector<core::Transaction>& txs,
+                                         std::int64_t block_height)
+    -> void
+{
+    //vector of all forge ops in the block
+    std::vector<core::UtilityTokenOperation> ops;
+    //exract all forge ops from the txs
+    for(const auto& tx : txs) {
+        const auto& txid = tx.getTxid();
+
+        auto op_res = core::parseTransactionToUtilityTokenOp(tx,
+                                                             block_height,
+                                                             daemon_.get());
+        //if we dont get an opt, but an error we log it
+        if(!op_res) {
+            LOG(WARNING) << op_res.getError().what();
+            continue;
+        }
+
+        LOG_IF(DEBUG, op_res.getValue().hasValue())
+            << "found unique immutable entry operation "
+            << txid;
+
+        //check if the operation was parsed, and if
+        //we add it to the std::vector<UMEntryOperation> vec
+        if(auto op_opt = std::move(op_res.getValue());
+           op_opt) {
+            ops.push_back(std::move(op_opt.getValue()));
+        }
+    }
+
+    utility_token_lookup_.executeOperations(std::move(ops));
+}
+
 auto LookupManager::processBlock(core::Block&& block)
     -> utilxx::Result<void, ManagerError>
 {
@@ -257,6 +293,7 @@ auto LookupManager::processBlock(core::Block&& block)
     //execute all the operations on the entrys
     processUMEntrys(transactions, block_height);
     processUniqueEntrys(transactions, block_height);
+    processUtilityTokens(transactions, block_height);
 
     //add blockhash to the processed blocks
     block_hashes_.push_back(std::move(block_hash));
@@ -310,6 +347,13 @@ auto LookupManager::getUniqueEntrysOfOwner(const std::string& owner) const
 {
     std::shared_lock lock{rw_mtx_};
     return unique_entry_lookup_.getUniqueEntrysOfOwner(owner);
+}
+
+auto LookupManager::getUtilityTokensOfOwner(const std::string& owner) const
+    -> std::vector<core::UtilityToken>
+{
+    std::shared_lock lock{rw_mtx_};
+    return utility_token_lookup_.getUtilityTokensOfOwner(owner);
 }
 
 auto LookupManager::getEntrysOfOwner(const std::string& owner) const
