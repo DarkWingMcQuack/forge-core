@@ -14,7 +14,9 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
                        "subcommand for handling unique modifiable entrys");
 
     app.add_subcommand("uniqueentry",
-                       "subcommand for handling unique modifiable entrys");
+                       "subcommand for handling unique unmodifiable entrys");
+    app.add_subcommand("utilitytoken",
+                       "subcommand for handling utility token");
 
     addShutdown(app, client);
     addUpdateLookup(app, client);
@@ -26,6 +28,8 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
     addLookupOwner(app, client);
     addLookupActivationBlock(app, client);
     addLookupAllEntrysOf(app, client);
+    addGetUtilityTokenBalanceOf(app, client);
+    addGetSupplyOfUtilityToken(app, client);
 }
 
 auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
@@ -189,4 +193,56 @@ auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWallet
                      OWNER,
                      "owner address of which all the entrys will be looked up")
         ->required();
+}
+
+auto forge::cli::addGetUtilityTokenBalanceOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto getbalance_opt =
+        app.get_subcommand("utilitytoken")
+            ->add_subcommand("getbalance",
+                             "returns the balance of a user of a given utility token")
+            ->callback([&] {
+                RESPONSE = client.getbalanceof(IS_STRING, OWNER, KEY);
+            });
+
+    getbalance_opt
+        ->add_option("--owner",
+                     OWNER,
+                     "the address of the owner")
+        ->required();
+
+    getbalance_opt
+        ->add_option("--token-id",
+                     KEY,
+                     "the id of the utility token")
+        ->required();
+
+    getbalance_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given id will be interpreted as string and not as byte vector");
+}
+
+auto forge::cli::addGetSupplyOfUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void
+{
+    auto supply_opt =
+        app.get_subcommand("utilitytoken")
+            ->add_subcommand("getsupply",
+                             "returns the total supply of a utility token")
+            ->callback([&] {
+                RESPONSE = client.getsupplyofutilitytoken(IS_STRING, KEY);
+            });
+
+    supply_opt
+        ->add_option("--token-id",
+                     KEY,
+                     "the id of the utility token")
+        ->required();
+
+    supply_opt
+        ->add_flag("--isstring",
+                   IS_STRING,
+                   "if set, the given token id will be interpreted as string and not as byte vector");
 }

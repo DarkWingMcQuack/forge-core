@@ -26,6 +26,10 @@ auto addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWalletStubClie
     -> void;
 auto addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
+auto addGetUtilityTokenBalanceOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
+auto addGetSupplyOfUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+    -> void;
 
 auto addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
     -> void;
