@@ -40,6 +40,15 @@ public:
     auto getAllWatchedUniqueEntrys() const
         -> std::vector<core::UniqueEntry>;
 
+    auto getOwnedUtilityTokens() const
+        -> std::vector<core::UtilityToken>;
+
+    auto getWatchOnlyUtilityTokens() const
+        -> std::vector<core::UtilityToken>;
+
+    auto getAllWatchedUtilityTokens() const
+        -> std::vector<core::UtilityToken>;
+
     auto getWatchedAddresses() const
         -> const std::set<std::string>&;
 

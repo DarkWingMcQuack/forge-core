@@ -238,6 +238,69 @@ namespace forge {
                     else
                         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
                 }
+                std::string getbalanceof(bool isstring, const std::string& owner, const std::string& token) 
+                {
+                    Json::Value p;
+                    p["isstring"] = isstring;
+                    p["owner"] = owner;
+                    p["token"] = token;
+                    Json::Value result = this->CallMethod("getbalanceof",p);
+                    if (result.isString())
+                        return result.asString();
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getutilitytokensof(const std::string& owner) 
+                {
+                    Json::Value p;
+                    p["owner"] = owner;
+                    Json::Value result = this->CallMethod("getutilitytokensof",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                std::string getsupplyofutilitytoken(bool isstring, const std::string& token) 
+                {
+                    Json::Value p;
+                    p["isstring"] = isstring;
+                    p["token"] = token;
+                    Json::Value result = this->CallMethod("getsupplyofutilitytoken",p);
+                    if (result.isString())
+                        return result.asString();
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getownedutilitytokens() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getownedutilitytokens",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getwatchonlyutilitytokens() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getwatchonlyutilitytokens",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
+                Json::Value getallwatchedutilitytokens() 
+                {
+                    Json::Value p;
+                    p = Json::nullValue;
+                    Json::Value result = this->CallMethod("getallwatchedutilitytokens",p);
+                    if (result.isArray())
+                        return result;
+                    else
+                        throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());
+                }
         };
 
     }

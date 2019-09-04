@@ -52,6 +52,18 @@ public:
     virtual auto lookupuniquemodifiableentrysof(const std::string& owner)
         -> Json::Value override;
 
+    virtual auto getutilitytokensof(const std::string& owner)
+        -> Json::Value override;
+
+    virtual auto getbalanceof(bool isstring,
+                              const std::string& owner,
+                              const std::string& token)
+        -> std::string override;
+
+    virtual auto getsupplyofutilitytoken(bool isstring,
+                                         const std::string& token)
+        -> std::string override;
+
     virtual auto addwatchonlyaddress(const std::string& address)
         -> void override;
     virtual auto deletewatchonlyaddress(const std::string& address)
@@ -76,6 +88,12 @@ public:
         -> Json::Value override;
     virtual auto ownesaddress(const std::string& address)
         -> bool override;
+    virtual auto getownedutilitytokens()
+        -> Json::Value override;
+    virtual auto getwatchonlyutilitytokens()
+        -> Json::Value override;
+    virtual auto getallwatchedutilitytokens()
+        -> Json::Value override;
 
     auto hasShutdownRequest() const
         -> bool;

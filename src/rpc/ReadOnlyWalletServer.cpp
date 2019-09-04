@@ -274,7 +274,7 @@ auto ReadOnlyWalletServer::lookupuniqueentrysof(const std::string& owner)
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
-										  return entry.toJson();
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -470,7 +470,7 @@ auto ReadOnlyWalletServer::getowneduniqueentrys()
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
-										  return entry.toJson();
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -498,7 +498,7 @@ auto ReadOnlyWalletServer::getwatchonlyuniqueentrys()
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
-										  return entry.toJson();
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -526,7 +526,7 @@ auto ReadOnlyWalletServer::getallwatcheduniqueentrys()
         utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
-										  return entry.toJson();
+                                          return entry.toJson();
                                       });
 
     auto ret_json =
@@ -540,6 +540,185 @@ auto ReadOnlyWalletServer::getallwatcheduniqueentrys()
 
     return ret_json;
 }
+
+auto ReadOnlyWalletServer::getownedutilitytokens()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getOwnedUtilityTokens();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto init, auto entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getwatchonlyutilitytokens()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getWatchOnlyUtilityTokens();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto init, auto entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getallwatchedutilitytokens()
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto entrys = wallet_.getAllWatchedUtilityTokens();
+
+    auto json_entrys =
+        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+                                      std::make_move_iterator(std::end(entrys)),
+                                      [](auto entry) {
+                                          return entry.toJson();
+                                      });
+
+    auto ret_json =
+        std::accumulate(std::make_move_iterator(std::begin(json_entrys)),
+                        std::make_move_iterator(std::end(json_entrys)),
+                        Json::Value{Json::ValueType::arrayValue},
+                        [](auto init, auto entry) {
+                            init.append(std::move(entry));
+                            return init;
+                        });
+
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getutilitytokensof(const std::string& owner)
+    -> Json::Value
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    auto tokens = lookup_.getUtilityTokensOfOwner(owner);
+
+    auto json_entrys =
+        utilxx::transform_into_vector(
+            std::make_move_iterator(std::begin(tokens)),
+            std::make_move_iterator(std::end(tokens)),
+            [](auto entry) {
+                return entry.toJson();
+            });
+
+    auto ret_json =
+        std::accumulate(
+            std::make_move_iterator(std::begin(json_entrys)),
+            std::make_move_iterator(std::end(json_entrys)),
+            Json::Value{Json::ValueType::arrayValue},
+            [](auto init, auto entry) {
+                init.append(std::move(entry));
+                return init;
+            });
+    return ret_json;
+}
+
+auto ReadOnlyWalletServer::getbalanceof(bool isstring,
+                                        const std::string& owner,
+                                        const std::string& token)
+    -> std::string
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(token),
+                       std::cend(token),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(token);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto balance =
+        lookup_.getUtilityTokenCreditOf(owner,
+                                        core::toHexString(key_vec));
+
+    return fmt::format("{}", balance);
+}
+
+auto ReadOnlyWalletServer::getsupplyofutilitytoken(bool isstring,
+                                                   const std::string& token)
+    -> std::string
+{
+    if(indexing_.load()) {
+        throw JsonRpcException{"Server is indexing"};
+    }
+
+    EntryKey key_vec;
+
+    if(isstring) {
+        std::transform(std::cbegin(token),
+                       std::cend(token),
+                       std::back_inserter(key_vec),
+                       [](auto c) {
+                           return static_cast<std::byte>(c);
+                       });
+    } else {
+        auto vec_opt = core::stringToByteVec(token);
+        if(!vec_opt) {
+            throw JsonRpcException{"could not convert given bytestring into vector of byte"};
+        }
+
+        key_vec = std::move(vec_opt.getValue());
+    }
+
+    auto supply = lookup_.getSupplyOfToken(core::toHexString(key_vec));
+
+    return fmt::format("{}", supply);
+}
+
 
 auto ReadOnlyWalletServer::getwatchedaddresses()
     -> Json::Value

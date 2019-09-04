@@ -38,6 +38,12 @@ namespace forge {
                     this->bindAndAddMethod(jsonrpc::Procedure("getwatchedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getwatchedaddressesI);
                     this->bindAndAddMethod(jsonrpc::Procedure("ownesaddress", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_BOOLEAN, "address",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::ownesaddressI);
                     this->bindAndAddMethod(jsonrpc::Procedure("getownedaddresses", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getownedaddressesI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getbalanceof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"owner",jsonrpc::JSON_STRING,"token",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getbalanceofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getutilitytokensof", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY, "owner",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getutilitytokensofI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getsupplyofutilitytoken", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "isstring",jsonrpc::JSON_BOOLEAN,"token",jsonrpc::JSON_STRING, NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getsupplyofutilitytokenI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getownedutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getownedutilitytokensI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getwatchonlyutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getwatchonlyutilitytokensI);
+                    this->bindAndAddMethod(jsonrpc::Procedure("getallwatchedutilitytokens", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_ARRAY,  NULL), &forge::rpc::AbstractReadOnlyWalletStubSever::getallwatchedutilitytokensI);
                 }
 
                 inline virtual void updatelookupI(const Json::Value &/*request*/, Json::Value &response)
@@ -136,6 +142,30 @@ namespace forge {
                 {
                     response = this->getownedaddresses();
                 }
+                inline virtual void getbalanceofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getbalanceof(request["isstring"].asBool(), request["owner"].asString(), request["token"].asString());
+                }
+                inline virtual void getutilitytokensofI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getutilitytokensof(request["owner"].asString());
+                }
+                inline virtual void getsupplyofutilitytokenI(const Json::Value &request, Json::Value &response)
+                {
+                    response = this->getsupplyofutilitytoken(request["isstring"].asBool(), request["token"].asString());
+                }
+                inline virtual void getownedutilitytokensI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getownedutilitytokens();
+                }
+                inline virtual void getwatchonlyutilitytokensI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getwatchonlyutilitytokens();
+                }
+                inline virtual void getallwatchedutilitytokensI(const Json::Value &/*request*/, Json::Value &response)
+                {
+                    response = this->getallwatchedutilitytokens();
+                }
                 virtual bool updatelookup() = 0;
                 virtual void shutdown() = 0;
                 virtual void rebuildlookup() = 0;
@@ -160,6 +190,12 @@ namespace forge {
                 virtual Json::Value getwatchedaddresses() = 0;
                 virtual bool ownesaddress(const std::string& address) = 0;
                 virtual Json::Value getownedaddresses() = 0;
+                virtual std::string getbalanceof(bool isstring, const std::string& owner, const std::string& token) = 0;
+                virtual Json::Value getutilitytokensof(const std::string& owner) = 0;
+                virtual std::string getsupplyofutilitytoken(bool isstring, const std::string& token) = 0;
+                virtual Json::Value getownedutilitytokens() = 0;
+                virtual Json::Value getwatchonlyutilitytokens() = 0;
+                virtual Json::Value getallwatchedutilitytokens() = 0;
         };
 
     }
