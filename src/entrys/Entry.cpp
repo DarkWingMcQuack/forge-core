@@ -19,7 +19,15 @@ auto forge::core::parseEntry(const std::vector<std::byte>& data)
             });
     }
 
-    return parseUniqueEntry(data)
+    auto unique_entry_opt = parseUniqueEntry(data);
+    if(unique_entry_opt) {
+        return unique_entry_opt
+            .map([](auto entry) {
+                return Entry{std::move(entry)};
+            });
+    }
+
+    return parseUtilityToken(data)
         .map([](auto entry) {
             return Entry{std::move(entry)};
         });
@@ -29,26 +37,18 @@ auto forge::core::entryToRawData(const Entry& entry)
     -> std::vector<std::byte>
 {
     return std::visit(
-        utilxx::overload{
-            [](const UMEntry& um) {
-                return um.toRawData();
-            },
-            [](const UniqueEntry& unique) {
-                return unique.toRawData();
-            }},
+        [](const auto& en) {
+            return en.toRawData();
+        },
         entry);
 }
 
-auto forge::core::entryToJson(Entry entry)
+auto forge::core::entryToJson(const Entry& entry)
     -> Json::Value
 {
     return std::visit(
-        utilxx::overload{
-            [](const UMEntry& um) {
-                return um.toJson();
-            },
-            [](const UniqueEntry& unique) {
-                return unique.toJson();
-            }},
+        [](const auto& en) {
+            return en.toJson();
+        },
         entry);
 }
