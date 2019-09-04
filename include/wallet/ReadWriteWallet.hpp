@@ -79,6 +79,29 @@ public:
                               std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
+    //creates a new utility token on the blockchain
+    //using any output of the dameonwallet
+    //coins will be send to a new address and this output
+    //will be used to create the OP_RETURN transaction
+    //on success, the txid of the burn is returned
+    //on error a WalletError is returned
+    auto createNewUtilityToken(core::EntryKey id,
+                               std::uint64_t supply,
+                               std::int64_t burn_amount)
+        -> utilxx::Result<std::string, WalletError>;
+
+    //creates a new utility token on the blockchain
+    //using the given address as owner of the entry
+    //funds will be trnasfered to this address to be able to
+    //do the burn with the given value
+    //on success, the txid of the burn is returned
+    //on error a WalletError is returned
+    auto createNewUtilityToken(core::EntryKey id,
+                               std::uint64_t supply,
+                               std::string address,
+                               std::int64_t burn_amount)
+        -> utilxx::Result<std::string, WalletError>;
+
     //renews the lifetime of a given entry pair on the blockchain
     //the burn_value will be burned in the OP_RETURN tx
     //coins will be transfered to the owner address which then will be used

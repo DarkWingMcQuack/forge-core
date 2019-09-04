@@ -19,6 +19,7 @@ using forge::wallet::ReadOnlyWallet;
 using forge::wallet::ReadWriteWallet;
 using forge::wallet::WalletError;
 using forge::core::UMEntry;
+using forge::core::UtilityToken;
 using forge::core::UniqueEntry;
 using forge::core::getDefaultTxFee;
 using forge::core::getMinimumTxAmount;
@@ -178,6 +179,28 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
         });
 }
 
+
+auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
+                                            std::uint64_t supply,
+                                            std::int64_t burn_amount)
+    -> utilxx::Result<std::string, WalletError>
+{
+    return daemon_
+        ->generateNewAddress() //generate new address
+        .mapError([](auto error) {
+            return WalletError{std::move(error.what())};
+        })
+        .onValue([this](auto address) {
+            addNewOwnedAddress(std::move(address));
+        })
+        .flatMap([&](auto address) {
+            return createNewUtilityToken(std::move(id),
+                                         supply,
+                                         std::move(address),
+                                         burn_amount);
+        });
+}
+
 auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
                                            core::UMEntryValue value,
                                            std::string address,
@@ -229,6 +252,55 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
 }
 
 
+auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
+                                            std::uint64_t supply,
+                                            std::string address,
+                                            std::int64_t burn_amount)
+    -> utilxx::Result<std::string, WalletError>
+{
+    //create entry
+    auto entry = UtilityToken{std::move(id),
+                              std::move(supply)};
+
+    if(!ownesAddress(address)) {
+        auto error = fmt::format(
+            "it seems that you aren't the owner of "
+            "the address {}",
+            address);
+        return WalletError{std::move(error)};
+    }
+
+    //create metadata
+    auto metadata =
+        createUtilityTokenCreationOpMetadata(std::move(entry));
+
+    auto default_fee = getDefaultTxFee(getLookup().getCoin());
+
+    return daemon_
+        //send the needed amount to the address
+        ->sendToAddress(burn_amount + default_fee,
+                        address)
+        .flatMap([&](auto txid) {
+            //write the metadata to the blockchain
+            return daemon_
+                ->getVOutIdxByAmountAndAddress(txid,
+                                               burn_amount
+                                                   + default_fee,
+                                               address)
+                .flatMap([&](auto vout_idx) {
+                    return daemon_
+                        ->burnOutput(std::move(txid),
+                                     vout_idx,
+                                     std::move(metadata));
+                });
+        })
+        .onValue([&](auto /*unused*/) {
+            addNewOwnedAddress(std::move(address));
+        })
+        .mapError([](auto error) {
+            return WalletError{std::move(error.what())};
+        });
+}
 
 auto ReadWriteWallet::renewEntry(core::EntryKey key,
                                  std::int64_t burn_amount)
