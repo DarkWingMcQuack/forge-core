@@ -372,6 +372,13 @@ auto LookupManager::getSupplyOfToken(const std::string& token) const
     return utility_token_lookup_.getSupplyOfToken(token);
 }
 
+auto LookupManager::getNumberOfExisitingTokens() const
+    -> std::int64_t
+{
+    std::shared_lock lock{rw_mtx_};
+    return utility_token_lookup_.getNumberOfTokens();
+}
+
 auto LookupManager::getEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::Entry>
 {

@@ -62,6 +62,9 @@ public:
     auto getSupplyOfToken(const std::string& token) const
         -> std::uint64_t;
 
+    auto getNumberOfExisitingTokens() const
+        -> std::int64_t;
+
     auto getUMEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::UMEntry>;
 
