@@ -49,12 +49,12 @@ auto UtilityTokenOwnershipTransferOp::getBurnValue() const
     return burn_value_;
 }
 
-auto UtilityTokenOwnershipTransferOp::getSender() const
+auto UtilityTokenOwnershipTransferOp::getCreator() const
     -> const std::string&
 {
     return sender_;
 }
-auto UtilityTokenOwnershipTransferOp::getSender()
+auto UtilityTokenOwnershipTransferOp::getCreator()
     -> std::string&
 {
     return sender_;

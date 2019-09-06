@@ -27,9 +27,9 @@ public:
     auto getBurnValue() const
         -> std::int64_t;
 
-    auto getSender() const
+    auto getCreator() const
         -> const std::string&;
-    auto getSender()
+    auto getCreator()
         -> std::string&;
 
     auto getReciever() const

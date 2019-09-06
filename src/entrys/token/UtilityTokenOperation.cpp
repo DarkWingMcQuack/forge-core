@@ -66,7 +66,7 @@ auto forge::core::getCreator(const UtilityTokenOperation& op)
         utilxx::overload{
             [](const UtilityTokenOwnershipTransferOp& owner)
                 -> decltype(auto) {
-                return owner.getSender();
+                return owner.getCreator();
             },
             [](const auto& owner)
                 -> decltype(auto) {
@@ -82,7 +82,7 @@ auto forge::core::getCreator(UtilityTokenOperation&& op)
     return std::visit(
         utilxx::overload{
             [](UtilityTokenOwnershipTransferOp&& owner) {
-                return owner.getSender();
+                return owner.getCreator();
             },
             [](auto owner) {
                 return owner.getCreator();

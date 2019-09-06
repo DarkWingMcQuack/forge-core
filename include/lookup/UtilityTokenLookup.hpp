@@ -79,7 +79,12 @@ private:
         -> bool;
 
     //groups the transactions according to which token they refer
-    auto groupOperations(std::vector<core::UtilityTokenOperation>&& ops) const
+    auto groupOperationsByToken(std::vector<core::UtilityTokenOperation>&& ops) const
+        -> std::unordered_map<std::string,
+                              std::vector<
+                                  core::UtilityTokenOperation>>;
+
+    auto groupOperationsByCreator(std::vector<core::UtilityTokenOperation>&& ops) const
         -> std::unordered_map<std::string,
                               std::vector<
                                   core::UtilityTokenOperation>>;

@@ -269,7 +269,7 @@ TEST(UtilityTokenOperationTest, UtilityTokenOwnershipTransferOpParsingValid)
 
     auto creation = std::get<UtilityTokenOwnershipTransferOp>(op);
 
-    EXPECT_EQ(creation.getSender(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
+    EXPECT_EQ(creation.getCreator(), "oLupzckPUYtGydsBisL86zcwsBweJm1dSM");
     EXPECT_EQ(creation.getReciever(), "oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z");
     EXPECT_EQ(creation.getUtilityToken().getId(), stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(creation.getBurnValue(), 10);
