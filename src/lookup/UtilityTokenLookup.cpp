@@ -291,6 +291,13 @@ auto UtilityTokenLookup::extractRelevantOperations(const std::string& creator,
     std::uint64_t used{0};
     auto available_balance = getAvailableBalanceOf(creator, token);
 
+    //loop through the priority sorted operations
+    //and add them to the operations which will be executed
+    //IF:
+    //1. sender has enought credit to execute the operation
+    //2. the operation does not overflow the used amount of token
+    //if one of those two things happen the valid operations until
+    //one of those events happend will be returned
     for(auto&& op : ops) {
         auto new_added = std::visit(
             [](const auto& operation) {
@@ -298,14 +305,19 @@ auto UtilityTokenLookup::extractRelevantOperations(const std::string& creator,
             },
             op);
 
-        //if a user trys to overflow his used amount no
-        //operation of him will be executed in this block
+        //if a user trys to overflow his used amount
+        //the operation which will overflow the amount
+        //will be ignored and only the operations
+        //until the overflow occurs will be executed
         if(!isSaveAddition(used, new_added)) {
-            return {};
+            return ret_vec;
         }
-
+        //otherwise check if the the user has enough credit to perform
+        //the operation and if so add it to the return vector
         used += new_added;
 
+        //if the sender does not have enough balance stop the loop and
+        //dont add mor operations
         if(used > available_balance) {
             break;
         }

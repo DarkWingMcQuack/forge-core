@@ -377,9 +377,9 @@ TEST(UtilityTokenLookupTest, OverflowTest)
     EXPECT_EQ(available,
               0xFF00000000000000);
 
-    //the amount of those ops combined overflow the total amount
-    //such that the overflown value is less than the available amount
-    //and should be doable if the overflow is not detected
+    //the second operation would overflow the
+    //total amout of used tokens
+    //thats why only the first operation should be executed
     lookup.executeOperations({deletion_op1,
                               deletion_op1});
 
@@ -387,5 +387,5 @@ TEST(UtilityTokenLookupTest, OverflowTest)
                                              "deadbeef");
 
     EXPECT_EQ(available,
-              0xFF00000000000000);
+              0);
 }
