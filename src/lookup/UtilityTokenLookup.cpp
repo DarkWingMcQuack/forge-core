@@ -397,9 +397,9 @@ auto UtilityTokenLookup::groupOperationsByToken(std::vector<UtilityTokenOperatio
                         ->second
                         .emplace_back(std::move(operation));
                 } else {
-                    UtilityTokenOperation op{std::move(operation)};
+                    UtilityTokenOperation tmp_op{std::move(operation)};
                     operations.emplace(std::move(id_str),
-                                       std::vector{std::move(op)});
+                                       std::vector{std::move(tmp_op)});
                 }
             },
             std::move(op));
@@ -419,17 +419,16 @@ auto UtilityTokenLookup::groupOperationsByCreator(std::vector<core::UtilityToken
     for(auto&& op : ops) {
         std::visit(
             [&](auto operation) {
-                const auto& token_id = operation.getUtilityToken().getId();
-                auto id_str = forge::core::toHexString(token_id);
-                auto iter = operations.find(id_str);
+                const auto& creator = operation.getCreator();
+                auto iter = operations.find(creator);
                 if(iter != operations.end()) {
                     iter
                         ->second
                         .emplace_back(std::move(operation));
                 } else {
-                    UtilityTokenOperation op{std::move(operation)};
-                    operations.emplace(std::move(id_str),
-                                       std::vector{std::move(op)});
+                    UtilityTokenOperation tmp_op{std::move(operation)};
+                    operations.emplace(creator,
+                                       std::vector{std::move(tmp_op)});
                 }
             },
             std::move(op));
