@@ -209,8 +209,6 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     -> std::vector<UtilityTokenOperation>
 {
     std::vector<UtilityTokenCreationOp> creations;
-    std::vector<UtilityTokenDeletionOp> deletions;
-    std::vector<UtilityTokenOwnershipTransferOp> ownership_transfers;
     std::vector<UtilityTokenOperation> changing_ops;
 
     for(auto&& op : ops) {
@@ -235,15 +233,14 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     if(checkIfTokenExists(token_id)) {
         creations.clear();
     } else {
-        changing_ops.clear();
-
         //return the creation op with the highest burn value
         auto iter =
-            std::max_element(std::cbegin(creations),
-                             std::cend(creations),
-                             [](const auto& lhs, const auto& rhs) {
-                                 return lhs.getBurnValue() < rhs.getBurnValue();
-                             });
+            std::max_element(
+                std::cbegin(creations),
+                std::cend(creations),
+                [](const auto& lhs, const auto& rhs) {
+                    return lhs.getBurnValue() < rhs.getBurnValue();
+                });
 
         if(iter == std::cend(creations)) {
             return {};
@@ -252,8 +249,8 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
         return {std::move(*iter)};
     }
 
+    //group operations by creator
     auto grouped = groupOperationsByCreator(std::move(changing_ops));
-    changing_ops.clear();
 
     std::vector<UtilityTokenOperation> ret_ops;
     for(auto&& [creator, operations] : grouped) {
