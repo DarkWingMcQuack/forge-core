@@ -89,6 +89,14 @@ private:
                               std::vector<
                                   core::UtilityTokenOperation>>;
 
+    //extracts the relevant operations for a user based on his balance
+    //it is assumed that all operations are transfers or deletions
+    //and that all operations have the same creator
+    auto extractRelevantOperations(const std::string& creator,
+                                   const std::string& token,
+                                   std::vector<core::UtilityTokenOperation>&& ops) const
+        -> std::vector<core::UtilityTokenOperation>;
+
 
 
 private:

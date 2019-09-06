@@ -7,7 +7,6 @@
 #include "utilxx/Overload.hpp"
 #include <algorithm>
 #include <cstdint>
-#include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <iterator>
 #include <limits>
@@ -212,6 +211,7 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     std::vector<UtilityTokenCreationOp> creations;
     std::vector<UtilityTokenDeletionOp> deletions;
     std::vector<UtilityTokenOwnershipTransferOp> ownership_transfers;
+    std::vector<UtilityTokenOperation> changing_ops;
 
     for(auto&& op : ops) {
         std::visit(
@@ -221,14 +221,9 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
                         creations.emplace_back(std::move(creation));
                     }
                 },
-                [&](UtilityTokenDeletionOp&& deletion) {
-                    if(deletion.getAmount() != 0) {
-                        deletions.emplace_back(std::move(deletion));
-                    }
-                },
-                [&](UtilityTokenOwnershipTransferOp&& transfer) {
-                    if(transfer.getAmount() != 0) {
-                        ownership_transfers.emplace_back(std::move(transfer));
+                [&](auto change) {
+                    if(change.getAmount() != 0) {
+                        changing_ops.emplace_back(std::move(change));
                     }
                 }},
             std::move(op));
@@ -240,8 +235,7 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
     if(checkIfTokenExists(token_id)) {
         creations.clear();
     } else {
-        deletions.clear();
-        ownership_transfers.clear();
+        changing_ops.clear();
 
         //return the creation op with the highest burn value
         auto iter =
@@ -258,125 +252,70 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::string& token_id,
         return {std::move(*iter)};
     }
 
-    //collect how much users have spend within all the transactions
-    std::unordered_map<std::string_view,
-                       std::uint64_t>
-        used_balance;
-
-    //overflow set contains all creators who have overflown
-    //a std::uint64_t with their expenses
-    std::unordered_set<std::string_view>
-        is_overflow;
-
-    //fill overflown set and used_balance for all deletions
-    for(const auto& op : deletions) {
-        const auto& creator = op.getCreator();
-        auto new_added = op.getAmount();
-
-        if(auto iter = used_balance.find(creator);
-           iter != used_balance.end()) {
-            auto& current = iter->second;
-
-            //if an overflow occurs then we add
-            // the creator to the overflow set
-            if(!isSaveAddition(current, new_added)) {
-                is_overflow.insert(creator);
-            }
-
-            current += new_added;
-
-        } else {
-            used_balance.emplace(creator,
-                                 new_added);
-        }
-    }
-
-    //fill overflown set and used_balance for all token transfers
-    for(const auto& op : ownership_transfers) {
-
-        const auto& sender = op.getCreator();
-        auto new_added = op.getAmount();
-
-        if(auto iter = used_balance.find(sender);
-           iter != used_balance.end()) {
-            auto& current = iter->second;
-
-            //if an overflow occurs then we add
-            // the creator to the overflow set
-            if(!isSaveAddition(current, new_added)) {
-                is_overflow.insert(sender);
-            }
-
-            current += new_added;
-
-        } else {
-            used_balance.emplace(sender,
-                                 new_added);
-        }
-    }
-
-    //erase all operations from users
-    //which have spend more than they have in total
-    //or have overflown a std::uint64_t
-    ownership_transfers
-        .erase(
-            std::remove_if(std::begin(ownership_transfers),
-                           std::end(ownership_transfers),
-                           [&](const auto& creat) {
-                               const auto& sender = creat.getCreator();
-
-                               //if the transaction is created by a sender
-                               //who has overflown a std::uint64_t in this block
-                               //delete its fuckin transaction
-                               if(is_overflow.find(sender) != is_overflow.end()) {
-                                   return true;
-                               }
-
-                               //otherwise check if he has enought credit to
-                               //perform all of his transactions
-                               auto used = used_balance[sender];
-                               auto available = getAvailableBalanceOf(sender,
-                                                                      token_id);
-
-                               return used > available;
-                           }),
-            std::end(ownership_transfers));
-
-    deletions
-        .erase(
-            std::remove_if(std::begin(deletions),
-                           std::end(deletions),
-                           [&](const auto& creat) {
-                               const auto& creator = creat.getCreator();
-
-                               //if the deletion is created by an owner
-                               //who has overflown a std::uint64_t in this block
-                               //delete its fuckin transaction
-                               if(is_overflow.find(creator) != is_overflow.end()) {
-                                   return true;
-                               }
-
-                               //otherwise check if he has enought credit to
-                               //perform all of his transactions
-                               auto used = used_balance[creator];
-                               auto available = getAvailableBalanceOf(creator,
-                                                                      token_id);
-
-                               return used > available;
-                           }),
-            std::end(deletions));
+    auto grouped = groupOperationsByCreator(std::move(changing_ops));
+    changing_ops.clear();
 
     std::vector<UtilityTokenOperation> ret_ops;
-
-    std::move(std::begin(ownership_transfers),
-              std::end(ownership_transfers),
-              std::back_inserter(ret_ops));
-    std::move(std::begin(deletions),
-              std::end(deletions),
-              std::back_inserter(ret_ops));
+    for(auto&& [creator, operations] : grouped) {
+        auto valid_ops =
+            extractRelevantOperations(creator,
+                                      token_id,
+                                      std::move(operations));
+        std::move(std::begin(valid_ops),
+                  std::end(valid_ops),
+                  std::back_inserter(ret_ops));
+    }
 
     return ret_ops;
 }
+
+auto UtilityTokenLookup::extractRelevantOperations(const std::string& creator,
+                                                   const std::string& token,
+                                                   std::vector<core::UtilityTokenOperation>&& ops) const
+    -> std::vector<core::UtilityTokenOperation>
+{
+    //sort by burn value
+    //the operations with the highes burnvalue have the highest prioritys
+    std::sort(std::begin(ops),
+              std::end(ops),
+              [](const auto& lhs_v, const auto& rhs_v) {
+                  return std::visit(
+                      [](const auto& lhs, const auto& rhs) {
+                          return lhs.getBurnValue() > rhs.getBurnValue();
+                      },
+                      lhs_v,
+                      rhs_v);
+              });
+
+    std::vector<UtilityTokenOperation> ret_vec;
+    std::uint64_t used{0};
+    auto available_balance = getAvailableBalanceOf(creator, token);
+
+    for(auto&& op : ops) {
+        auto new_added = std::visit(
+            [](const auto& operation) {
+                return operation.getAmount();
+            },
+            op);
+
+        //if a user trys to overflow his used amount no
+        //operation of him will be executed in this block
+        if(!isSaveAddition(used, new_added)) {
+            return {};
+        }
+
+        used += new_added;
+
+        if(used > available_balance) {
+            break;
+        }
+
+        ret_vec.emplace_back(std::move(op));
+    }
+
+    return ret_vec;
+}
+
 
 auto UtilityTokenLookup::groupOperationsByToken(std::vector<UtilityTokenOperation>&& ops) const
     -> std::unordered_map<std::string,
@@ -426,8 +365,9 @@ auto UtilityTokenLookup::groupOperationsByCreator(std::vector<core::UtilityToken
                         ->second
                         .emplace_back(std::move(operation));
                 } else {
+                    auto creator_copy = creator;
                     UtilityTokenOperation tmp_op{std::move(operation)};
-                    operations.emplace(creator,
+                    operations.emplace(creator_copy,
                                        std::vector{std::move(tmp_op)});
                 }
             },

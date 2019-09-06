@@ -228,7 +228,7 @@ TEST(UtilityTokenLookupTest, TransferOverpayTest)
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
                                               "deadbeef");
     EXPECT_EQ(available1,
-              3);
+              0);
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
                                                    "deadbeef");
@@ -238,7 +238,7 @@ TEST(UtilityTokenLookupTest, TransferOverpayTest)
     auto available3 = lookup.getAvailableBalanceOf("oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP",
                                                    "deadbeef");
     EXPECT_EQ(available3,
-              0);
+              3);
 }
 
 TEST(UtilityTokenLookupTest, DeletionOpExecutionTest)
