@@ -1,3 +1,4 @@
+#include "core/Transaction.hpp"
 #include "entrys/token/UtilityToken.hpp"
 #include "entrys/token/UtilityTokenOperation.hpp"
 #include <algorithm>
@@ -410,6 +411,17 @@ auto LookupManager::getEntrysOfOwner(const std::string& owner) const
                    });
 
     return entrys;
+}
+
+auto LookupManager::isReserverdEntryKey(const std::vector<std::byte>& key) const
+    -> bool
+{
+    auto unique_opt = unique_entry_lookup_.lookup(key);
+    auto um_opt = um_entry_lookup_.lookup(key);
+    auto token_id = core::toHexString(key);
+    auto utility_token_opt = utility_token_lookup_.getSupplyOfToken(token_id);
+
+    return unique_opt || um_opt || utility_token_opt;
 }
 
 

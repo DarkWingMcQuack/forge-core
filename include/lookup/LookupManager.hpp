@@ -78,6 +78,11 @@ public:
     auto getEntrysOfOwner(const std::string& owner) const
         -> std::vector<core::Entry>;
 
+    //checks if a given key is already used as any entry key
+    //or if it is free to be used  for any entry
+    auto isReserverdEntryKey(const std::vector<std::byte>& key) const
+        -> bool;
+
     auto getCoin() const
         -> core::Coin;
 
