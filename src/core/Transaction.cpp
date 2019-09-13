@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
+#include <iomanip>
 #include <json/value.h>
 #include <sstream>
 #include <utility>
