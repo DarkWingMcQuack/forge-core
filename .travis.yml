@@ -5,7 +5,7 @@ compiler:
   - clang
 
 before_install:
-  - sudo apt-get install -y libmicrohttpd openssl
+  - sudo apt-get install -y libmicrohttpd12 openssl
 
 before_script:
   - mkdir build
