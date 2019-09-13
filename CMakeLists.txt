@@ -184,6 +184,7 @@ target_link_libraries(forged LINK_PUBLIC
   forge-src
   fmt
   jsonrpc::server
+  jsoncpp
   ${CMAKE_THREAD_LIBS_INIT})
 
 # make headers available in forge-cli.cpp
@@ -196,6 +197,8 @@ target_include_directories(forge-cli PUBLIC
 target_link_libraries(forge-cli LINK_PUBLIC
   forge-src
   fmt
+  jsoncpp
+  jsonrpc::client
   ${CMAKE_THREAD_LIBS_INIT})
 
 

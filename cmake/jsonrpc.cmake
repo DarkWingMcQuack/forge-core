@@ -48,9 +48,9 @@ endif()
 
 ExternalProject_Add(jsonrpc-project
   PREFIX deps/jsonrpc
-  DOWNLOAD_NAME json-cpp-rpc-1.1.0.tar.gz
+  DOWNLOAD_NAME json-cpp-rpc-1.2.0.tar.gz
   DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
-  URL https://github.com/cinemast/libjson-rpc-cpp/archive/v1.1.0.tar.gz
+  URL https://github.com/cinemast/libjson-rpc-cpp/archive/v1.2.0.tar.gz
   # On Windows it tries to install this dir. Create it to prevent failure.
   PATCH_COMMAND cmake -E make_directory <SOURCE_DIR>/win32-deps/include
   CMAKE_ARGS ${CMAKE_ARGS}

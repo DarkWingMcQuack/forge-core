@@ -16,9 +16,9 @@ endif()
 
 ExternalProject_Add(jsoncpp-project
   PREFIX deps/jsoncpp
-  DOWNLOAD_NAME jsoncpp-1.8.4.tar.gz
+  DOWNLOAD_NAME jsoncpp-1.9.1.tar.gz
   DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
-  URL https://github.com/open-source-parsers/jsoncpp/archive/1.8.4.tar.gz
+  URL https://github.com/open-source-parsers/jsoncpp/archive/1.9.1.tar.gz
   CMAKE_COMMAND ${JSONCPP_CMAKE_COMMAND}
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
   -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
