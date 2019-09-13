@@ -30,20 +30,11 @@ matrix:
         - CXX=g++-8
         - CC=gcc-8
 
-    - compiler: gcc
-      addons:
-        apt:
-          packages:
-            - g++-9
-      env:
-        - CXX=g++-9
-        - CC=gcc-9
-
     - compiler: clang
       addons:
         apt:
           sources:
-            - llvm-toolchain-bionic
+            - llvm-toolchain-bionic-8
           packages:
             - clang-8
       env:
@@ -54,7 +45,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-bionic
+            - llvm-toolchain-bionic-9
           packages:
             - clang-9
       env:
