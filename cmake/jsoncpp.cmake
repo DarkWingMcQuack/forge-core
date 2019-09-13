@@ -28,6 +28,7 @@ ExternalProject_Add(jsoncpp-project
   -DJSONCPP_WITH_TESTS=Off
   -DJSONCPP_WITH_PKGCONFIG_SUPPORT=Off
   -DCMAKE_CXX_FLAGS=${JSONCCP_EXTRA_FLAGS}
+  PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/patches/json-cpp-1.9.1.patch
   # Overwrite build and install commands to force Release build on MSVC.
   BUILD_COMMAND cmake --build <BINARY_DIR> --config Release
   INSTALL_COMMAND cmake --build <BINARY_DIR> --config Release --target install

@@ -1,0 +1,13 @@
+--- /src/lib_json/json_value.cpp	2019-07-11 23:38:06.000000000 +0200
++++ /src/lib_json/json_value.cpp	2019-09-13 16:30:01.490713266 +0200
+@@ -111,8 +111,8 @@
+ static inline bool InRange(double d, T min, U max) {
+   // The casts can lose precision, but we are looking only for
+   // an approximate range. Might fail on edge cases though. ~cdunn
+-  // return d >= static_cast<double>(min) && d <= static_cast<double>(max);
+-  return d >= min && d <= max;
++  return d >= static_cast<double>(min) && d <= static_cast<double>(max);
++  //return d >= min && d <= max;
+ }
+ #else  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
+ static inline double integerToDouble(Json::UInt64 value) {
