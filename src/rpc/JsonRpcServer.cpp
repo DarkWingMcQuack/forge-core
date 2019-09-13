@@ -7,6 +7,7 @@
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
+#include <mutex>
 #include <numeric>
 #include <rpc/JsonRpcServer.hpp>
 #include <thread>
@@ -1051,21 +1052,29 @@ auto JsonRpcServer::startUpdaterThread()
     -> void
 {
     updater_ =
-        std::thread{[this]() {
+        std::thread{[this] {
             auto& lookup = getLookup();
 
             auto blocktime = getBlockTimeInSeconds(lookup.getCoin());
             std::chrono::seconds sleeptime{blocktime / 2};
+            std::mutex mtx;
 
             while(!should_shutdown_.load()) {
 
                 indexing_.store(true);
                 lookup.updateLookup();
                 indexing_.store(false);
-
-                std::this_thread::sleep_for(sleeptime);
+                std::unique_lock lock{mtx};
+                shutdown_requested_.wait_for(lock, sleeptime);
             }
         }};
+}
+
+JsonRpcServer::~JsonRpcServer()
+{
+    should_shutdown_ = true;
+    shutdown_requested_.notify_all();
+    updater_.join();
 }
 
 

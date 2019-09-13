@@ -14,7 +14,6 @@
 namespace forge::rpc {
 
 class JsonRpcServer : public AbstractReadWriteWalletStubSever
-
 {
 public:
     JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
@@ -28,6 +27,8 @@ public:
     JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
                   jsonrpc::serverVersion_t type,
                   lookup::LookupManager&& lookup);
+
+    virtual ~JsonRpcServer();
 
     virtual auto updatelookup()
         -> bool override;
@@ -197,6 +198,7 @@ private:
     std::atomic_bool should_shutdown_{false};
     std::atomic_bool indexing_{false};
     std::thread updater_;
+    std::condition_variable shutdown_requested_;
 };
 
 auto waitForShutdown(const JsonRpcServer& server)
