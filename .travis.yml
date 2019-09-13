@@ -34,7 +34,7 @@ matrix:
       addons:
         apt:
           packages:
-            - g++-9
+            - gcc-9
       env:
         - CXX=g++-9
         - CC=gcc-9
