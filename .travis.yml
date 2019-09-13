@@ -20,8 +20,7 @@ matrix:
 			- libmicrohttpd-dev
 			- openssl
 			- g++-8
-	  env:
-		- CXX=g++-8
+	  env: CXX=g++-8
 
 	- compiler: gcc
 	  addons:
@@ -32,8 +31,7 @@ matrix:
 			- libmicrohttpd-dev
 			- openssl
 			- g++-9
-	  env:
-		- CXX=g++-9
+	  env: CXX=g++-9
 
 	- compiler: clang
 	  addons:
@@ -45,8 +43,7 @@ matrix:
 			- libmicrohttpd-dev
 			- openssl
 			- clang-8
-	  env:
-		- CXX=clang++-8
+	  env: CXX=clang++-8
 
 	- compiler: clang
 	  addons:
@@ -58,5 +55,4 @@ matrix:
 			- libmicrohttpd-dev
 			- openssl
 			- clang-9
-	  env:
-		- CXX=clang++-9
+	  env: CXX=clang++-9
