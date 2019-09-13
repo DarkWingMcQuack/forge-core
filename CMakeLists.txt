@@ -42,8 +42,8 @@ include(cmake/ccache.cmake)
 # needed for multithreading
 find_package(Threads)
 
-add_library(forge-src "")
-target_sources(forge-src
+add_library(forge "")
+target_sources(forge
   PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/Entry.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/EntryOperation.hpp
@@ -132,7 +132,7 @@ target_sources(forge-src
   )
 
 # make headers available
-target_include_directories(forge-src PUBLIC
+target_include_directories(forge PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${UTILXX_INCLUDE_DIR}
   ${CPPTOML_INCLUDE_DIR}
@@ -144,7 +144,7 @@ target_include_directories(forge-src PUBLIC
   jsoncpp)
 
 #link against libarys
-target_link_libraries(forge-src LINK_PUBLIC
+target_link_libraries(forge LINK_PUBLIC
   fmt
   jsonrpc::client
   jsonrpc::server
@@ -163,14 +163,14 @@ add_executable(forge-cli
 
 
 #make sure everything is build in the right order
-add_dependencies(forge-src fmt-project)
-add_dependencies(forge-src jsonrpc-project)
-add_dependencies(forge-src g3logger-project)
-add_dependencies(forge-src CLI11-project)
-add_dependencies(forge-src utilxx-project)
-add_dependencies(forge-src cpptoml-project)
-add_dependencies(forged forge-src)
-add_dependencies(forge-cli forge-src)
+add_dependencies(forge fmt-project)
+add_dependencies(forge jsonrpc-project)
+add_dependencies(forge g3logger-project)
+add_dependencies(forge CLI11-project)
+add_dependencies(forge utilxx-project)
+add_dependencies(forge cpptoml-project)
+add_dependencies(forged forge)
+add_dependencies(forge-cli forge)
 
 
 # make headers available in forged.cpp
@@ -181,7 +181,7 @@ target_include_directories(forged PUBLIC
 
 #link forged.cpp against fmt and thread lib
 target_link_libraries(forged LINK_PUBLIC
-  forge-src
+  forge
   fmt
   jsonrpc::server
   jsoncpp
@@ -195,7 +195,7 @@ target_include_directories(forge-cli PUBLIC
 
 #link forge-cli.cpp against fmt and thread lib
 target_link_libraries(forge-cli LINK_PUBLIC
-  forge-src
+  forge
   fmt
   jsoncpp
   jsonrpc::client
