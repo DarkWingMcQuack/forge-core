@@ -9,11 +9,13 @@
 
 namespace forge::lookup {
 
+class LookupManager;
+
 class UniqueEntryLookup final
 {
 public:
-    UniqueEntryLookup(std::int64_t start_block);
-    UniqueEntryLookup();
+    UniqueEntryLookup(const LookupManager* const manager,
+                      std::int64_t start_block = 0);
 
     auto executeOperations(std::vector<core::UniqueEntryOperation>&& ops)
         -> void;
@@ -87,6 +89,7 @@ private:
                                         std::string, //owner
                                         std::int64_t>>; //block
     MapType lookup_map_;
+    const LookupManager* const manager_;
     std::int64_t block_height_;
     std::int64_t start_block_;
 };

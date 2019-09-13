@@ -1,3 +1,4 @@
+#include "lookup/LookupManager.hpp"
 #include <algorithm>
 #include <core/Transaction.hpp>
 #include <cstdint>
@@ -23,8 +24,10 @@ using forge::core::UtilityTokenDeletionOp;
 using forge::core::UtilityTokenOwnershipTransferOp;
 
 
-UtilityTokenLookup::UtilityTokenLookup(std::int64_t start_block)
-    : block_height_(start_block),
+UtilityTokenLookup::UtilityTokenLookup(const LookupManager* const manager,
+                                       std::int64_t start_block)
+    : manager_(manager),
+      block_height_(start_block),
       start_block_(start_block) {}
 
 auto UtilityTokenLookup::executeOperations(std::vector<UtilityTokenOperation>&& ops)
@@ -219,7 +222,8 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::vector<std::byte>& 
     //creations are only valid if the token does not already exist
     //on the other hand deletions and transfers are only valid
     //it the token already exists
-    if(checkIfTokenExists(token_id)) {
+    if(checkIfTokenExists(token_id)
+	   || (manager_ != nullptr && manager_->isReserverdEntryKey(token_id))) {
         creations.clear();
     } else {
         //return the creation op with the highest burn value

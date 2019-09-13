@@ -29,7 +29,9 @@ using forge::daemon::ReadOnlyDaemonBase;
 
 LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
     : daemon_(std::move(daemon)),
-      um_entry_lookup_(getStartingBlock(daemon_->getCoin()))
+      um_entry_lookup_(this, getStartingBlock(daemon_->getCoin())),
+      unique_entry_lookup_(this, getStartingBlock(daemon_->getCoin())),
+      utility_token_lookup_(this, core::getStartingBlock(daemon_->getCoin()))
 {}
 
 auto LookupManager::updateLookup()

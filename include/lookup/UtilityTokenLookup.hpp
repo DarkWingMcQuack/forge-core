@@ -15,10 +15,12 @@
 
 namespace forge::lookup {
 
+class LookupManager;
+
 class UtilityTokenLookup final
 {
 public:
-    UtilityTokenLookup(std::int64_t start_block = 0);
+    UtilityTokenLookup(const LookupManager* const manager, std::int64_t start_block = 0);
 
     //filters out operations which would be illegal and then executes them
     auto executeOperations(std::vector<core::UtilityTokenOperation>&& ops)
@@ -109,6 +111,7 @@ private:
              UtilityTokenAccounts> //token accounts
         utility_account_lookup_;
 
+    const LookupManager* const manager_;
     std::int64_t block_height_;
     std::int64_t start_block_;
 };

@@ -40,7 +40,7 @@ TEST(UMEntryLookupTest, BasicUMEntryCreationTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              9)};
-    UMEntryLookup lookup{0};
+    UMEntryLookup lookup{nullptr, 0};
 
     lookup.executeOperations(std::move(ops));
 
@@ -111,7 +111,7 @@ TEST(UMEntryLookupTest, BasicUMEntryDeletionTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              10)};
-    UMEntryLookup lookup{0};
+    UMEntryLookup lookup{nullptr, 0};
 
     lookup.executeOperations(std::move(ops));
 
@@ -149,7 +149,7 @@ TEST(UMEntryLookupTest, BasicUMEntryUpdateTest)
                              "oMaZKaWWyu6Zqrs5ck3DXgFbMEre7Jo58W",
                              10,
                              10)};
-    UMEntryLookup lookup{0};
+    UMEntryLookup lookup{nullptr, 0};
 
     lookup.executeOperations(std::move(ops));
 

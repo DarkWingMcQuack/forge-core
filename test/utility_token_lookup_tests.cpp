@@ -30,7 +30,7 @@ auto createOp(const std::string& op,
 
 TEST(UtilityTokenLookupTest, CreationOpExecutionTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier
@@ -53,7 +53,7 @@ TEST(UtilityTokenLookupTest, CreationOpExecutionTest)
 
 TEST(UtilityTokenLookupTest, CreationOpCompetitorExecutionTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier
@@ -112,7 +112,7 @@ TEST(UtilityTokenLookupTest, CreationOpCompetitorExecutionTest)
 
 TEST(UtilityTokenLookupTest, TransferOpExecutionTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier
@@ -181,7 +181,7 @@ TEST(UtilityTokenLookupTest, TransferOpExecutionTest)
 
 TEST(UtilityTokenLookupTest, TransferOverpayTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier
@@ -243,7 +243,7 @@ TEST(UtilityTokenLookupTest, TransferOverpayTest)
 
 TEST(UtilityTokenLookupTest, DeletionOpExecutionTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier
@@ -292,7 +292,7 @@ TEST(UtilityTokenLookupTest, DeletionOpExecutionTest)
 
 TEST(UtilityTokenLookupTest, DoubleCreationTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier
@@ -347,7 +347,7 @@ TEST(UtilityTokenLookupTest, DoubleCreationTest)
 
 TEST(UtilityTokenLookupTest, OverflowTest)
 {
-    UtilityTokenLookup lookup;
+    UtilityTokenLookup lookup{nullptr, 0};
 
     auto creation_op1 = createOp(
         "c6dc75" //forge identifier

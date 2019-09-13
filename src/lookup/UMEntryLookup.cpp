@@ -2,6 +2,7 @@
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <functional>
 #include <g3log/g3log.hpp>
+#include <lookup/LookupManager.hpp>
 #include <lookup/UMEntryLookup.hpp>
 #include <unordered_map>
 #include <utilxx/Algorithm.hpp>
@@ -22,12 +23,12 @@ using forge::core::UMEntryDeletionOp;
 using forge::lookup::UMEntryLookup;
 
 
-UMEntryLookup::UMEntryLookup(std::int64_t start_block)
-    : block_height_(start_block),
+UMEntryLookup::UMEntryLookup(const LookupManager* const manager,
+                             std::int64_t start_block)
+    : manager_(manager),
+      block_height_(start_block),
       start_block_(start_block){};
 
-UMEntryLookup::UMEntryLookup()
-    : block_height_(0){};
 
 auto UMEntryLookup::executeOperations(std::vector<UMEntryOperation>&& ops)
     -> void
@@ -179,9 +180,15 @@ auto UMEntryLookup::isCurrentlyValid(const UMEntryOperation& op) const
 
     const auto iter = lookup_map_.find(op_key);
 
-    //if an entry with key_op does not exist
+    //if an entry with key_op does not exist and does not exist in the manager
     //then the op musst be an entry creation
     if(iter == lookup_map_.end()) {
+        if(manager_ != nullptr) {
+            if(!manager_->isReserverdEntryKey(op_key)) {
+                return std::holds_alternative<UMEntryCreationOp>(op);
+            }
+            return false;
+        }
         return std::holds_alternative<UMEntryCreationOp>(op);
     }
 
