@@ -325,7 +325,7 @@ auto UtilityTokenLookup::groupOperationsByToken(std::vector<UtilityTokenOperatio
 
     for(auto&& op : ops) {
         std::visit(
-            [&](auto operation) {
+            [&](const auto& operation) {
                 const auto& token_id = operation.getUtilityToken().getId();
                 auto iter = operations.find(token_id);
                 if(iter != operations.end()) {
@@ -333,10 +333,9 @@ auto UtilityTokenLookup::groupOperationsByToken(std::vector<UtilityTokenOperatio
                         ->second
                         .emplace_back(std::move(operation));
                 } else {
-                    UtilityTokenOperation tmp_op{std::move(operation)};
-                    auto id_tmp = token_id;
-                    operations.emplace(std::move(token_id),
-                                       std::vector{std::move(tmp_op)});
+                    std::vector<UtilityTokenOperation> tmp_op{std::move(operation)};
+                    operations.emplace(token_id,
+                                       tmp_op);
                 }
             },
             std::move(op));
@@ -355,7 +354,7 @@ auto UtilityTokenLookup::groupOperationsByCreator(std::vector<core::UtilityToken
 
     for(auto&& op : ops) {
         std::visit(
-            [&](auto operation) {
+            [&](const auto& operation) {
                 const auto& creator = operation.getCreator();
                 auto iter = operations.find(creator);
                 if(iter != operations.end()) {
