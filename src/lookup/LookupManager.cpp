@@ -1,11 +1,11 @@
-#include "core/Transaction.hpp"
-#include "entrys/token/UtilityToken.hpp"
-#include "entrys/token/UtilityTokenOperation.hpp"
 #include <algorithm>
 #include <core/Coin.hpp>
+#include <core/Transaction.hpp>
 #include <daemon/ReadOnlyDaemonBase.hpp>
+#include <entrys/token/UtilityToken.hpp>
+#include <entrys/token/UtilityTokenOperation.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <functional>
 #include <g3log/g3log.hpp>
 #include <iterator>
@@ -362,7 +362,6 @@ auto LookupManager::getUtilityTokenCreditOf(const std::string& owner,
     -> std::uint64_t
 {
     std::shared_lock lock{*rw_mtx_};
-    fmt::print("bla {}\n", token.empty());
     return utility_token_lookup_.getAvailableBalanceOf(owner,
                                                        token);
 }

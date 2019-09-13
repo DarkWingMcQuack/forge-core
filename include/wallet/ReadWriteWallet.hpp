@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Coin.hpp"
+#include <core/Coin.hpp>
 #include <daemon/WriteOnlyDaemonBase.hpp>
 #include <entrys/Entry.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>

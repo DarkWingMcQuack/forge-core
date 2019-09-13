@@ -1,5 +1,5 @@
-#include "entrys/token/UtilityTokenCreationOp.hpp"
 #include <core/Transaction.hpp>
+#include <entrys/token/UtilityTokenCreationOp.hpp>
 #include <entrys/token/UtilityTokenOperation.hpp>
 #include <gtest/gtest.h>
 #include <variant>

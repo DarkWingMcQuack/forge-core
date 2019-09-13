@@ -1,9 +1,9 @@
 #pragma once
 
-#include "entrys/token/UtilityTokenCreationOp.hpp"
 #include <core/Coin.hpp>
 #include <cstddef>
 #include <cstdint>
+#include <entrys/token/UtilityTokenCreationOp.hpp>
 #include <entrys/token/UtilityTokenOperation.hpp>
 #include <lookup/LookupError.hpp>
 #include <map>

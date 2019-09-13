@@ -1,14 +1,14 @@
 #pragma once
 
-#include "entrys/token/UtilityToken.hpp"
-#include "wallet/ReadOnlyWallet.hpp"
 #include <atomic>
+#include <entrys/token/UtilityToken.hpp>
 #include <json/value.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
 #include <rpc/abstractreadwritewalletstubsever.h>
 #include <thread>
 #include <variant>
+#include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
 
 namespace forge::rpc {

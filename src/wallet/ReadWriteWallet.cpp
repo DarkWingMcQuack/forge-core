@@ -1,10 +1,9 @@
-#include "core/Transaction.hpp"
-#include "entrys/Entry.hpp"
-#include "entrys/token/UtilityTokenOwnershipTransferOp.hpp"
-#include "entrys/uentry/UniqueEntryDeletionOp.hpp"
-#include "utilxx/Opt.hpp"
 #include <core/Coin.hpp>
+#include <core/Transaction.hpp>
+#include <entrys/Entry.hpp>
 #include <entrys/EntryOperation.hpp>
+#include <entrys/token/UtilityTokenOwnershipTransferOp.hpp>
+#include <entrys/uentry/UniqueEntryDeletionOp.hpp>
 #include <entrys/umentry/UMEntryCreationOp.hpp>
 #include <entrys/umentry/UMEntryRenewalOp.hpp>
 #include <fmt/core.h>
@@ -13,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <utilxx/Opt.hpp>
 #include <vector>
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>

@@ -1,10 +1,10 @@
 
-#include "entrys/token/UtilityToken.hpp"
-#include "core/FlagIndexes.hpp"
-#include "core/Transaction.hpp"
 #include <array>
+#include <core/FlagIndexes.hpp>
+#include <core/Transaction.hpp>
 #include <cstddef>
 #include <cstdint>
+#include <entrys/token/UtilityToken.hpp>
 #include <iterator>
 #include <json/value.h>
 #include <utilxx/Opt.hpp>
