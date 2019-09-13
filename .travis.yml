@@ -2,8 +2,11 @@ language: cpp
 
 dist: bionic
 
+compiler:
+  - gcc
+
 before_install:
-  - sudo apt-get install -y openssl libmicrohttpd-dev
+  - sudo apt-get install -y libmicrohttpd-dev openssl
 
 before_script:
   - mkdir build
@@ -21,8 +24,8 @@ matrix:
 			- ubuntu-toolchain-r-test
 		  packages:
 			- g++-8
-	  env: 
-	    - CXX=g++-8
+	  env:
+		- CXX=g++-8
 
 	- compiler: gcc
 	  addons:
@@ -32,7 +35,7 @@ matrix:
 		  packages:
 			- g++-9
 	  env:
-	    - CXX=g++-9
+		- CXX=g++-9
 
 	- compiler: clang
 	  addons:
@@ -42,8 +45,8 @@ matrix:
 			- llvm-toolchain-bionic
 		  packages:
 			- clang-8
-	  env: 
-	    - CXX=clang++-8
+	  env:
+		- CXX=clang++-8
 
 	- compiler: clang
 	  addons:
@@ -54,4 +57,4 @@ matrix:
 		  packages:
 			- clang-9
 	  env:
-	    - CXX=clang++-9
+		- CXX=clang++-9
