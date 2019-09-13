@@ -1,3 +1,4 @@
+#include "rpc/jsonrpcstubclient.h"
 #include <CLI/CLI.hpp>
 #include <chrono>
 #include <cli/CLIGlobalVariables.hpp>
@@ -16,7 +17,7 @@
 #include <json/value.h>
 #include <json/writer.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
-#include <rpc/readwritewalletstubclient.h>
+#include <rpc/jsonrpcstubclient.h>
 #include <thread>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
@@ -28,7 +29,7 @@ using forge::cli::addReadOnlySubcommands;
 using forge::cli::addReadWriteSubcommands;
 using forge::cli::RESPONSE;
 using forge::env::parseConfigFile;
-using forge::rpc::ReadWriteWalletStubClient;
+using forge::rpc::JsonRpcStubClient;
 using jsonrpc::HttpClient;
 using jsonrpc::JSONRPC_CLIENT_V2;
 using jsonrpc::JsonRpcException;
@@ -51,7 +52,7 @@ auto main(int argc, char* argv[]) -> int
     auto params = parseConfigFile(default_forge_dir);
     auto port = params.getRpcPort();
     HttpClient httpclient("http://localhost:" + std::to_string(port));
-    ReadWriteWalletStubClient client{httpclient, JSONRPC_CLIENT_V2};
+    JsonRpcStubClient client{httpclient, JSONRPC_CLIENT_V2};
 
     app.require_subcommand();
 

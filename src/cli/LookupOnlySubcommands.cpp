@@ -1,10 +1,10 @@
 #include <CLI/CLI.hpp>
 #include <cli/CLIGlobalVariables.hpp>
 #include <cli/LookupOnlySubcommands.hpp>
-#include <rpc/readwritewalletstubclient.h>
+#include <rpc/jsonrpcstubclient.h>
 
 
-auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("lookup",
@@ -32,7 +32,7 @@ auto forge::cli::addLookupOnlySubcommands(CLI::App& app, forge::rpc::ReadWriteWa
     addGetSupplyOfUtilityToken(app, client);
 }
 
-auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addShutdown(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app
@@ -43,7 +43,7 @@ auto forge::cli::addShutdown(CLI::App& app, forge::rpc::ReadWriteWalletStubClien
         });
 }
 
-auto forge::cli::addUpdateLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addUpdateLookup(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("lookup")
@@ -54,7 +54,7 @@ auto forge::cli::addUpdateLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubC
         });
 }
 
-auto forge::cli::addRebuildLookup(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addRebuildLookup(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("lookup")
@@ -65,7 +65,7 @@ auto forge::cli::addRebuildLookup(CLI::App& app, forge::rpc::ReadWriteWalletStub
         });
 }
 
-auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("lookup")
@@ -76,7 +76,7 @@ auto forge::cli::addCheckValidity(CLI::App& app, forge::rpc::ReadWriteWalletStub
         });
 }
 
-auto forge::cli::addGetLastValidBlockHeight(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetLastValidBlockHeight(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("lookup")
@@ -87,7 +87,7 @@ auto forge::cli::addGetLastValidBlockHeight(CLI::App& app, forge::rpc::ReadWrite
         });
 }
 
-auto forge::cli::addLookupUMValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupUMValue(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto lookupumvalue_opt =
@@ -110,7 +110,7 @@ auto forge::cli::addLookupUMValue(CLI::App& app, forge::rpc::ReadWriteWalletStub
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto forge::cli::addLookupUniqueValue(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupUniqueValue(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto lookupumvalue_opt =
@@ -133,7 +133,7 @@ auto forge::cli::addLookupUniqueValue(CLI::App& app, forge::rpc::ReadWriteWallet
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto forge::cli::addLookupOwner(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupOwner(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto lookupowner_opt =
@@ -155,7 +155,7 @@ auto forge::cli::addLookupOwner(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto forge::cli::addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupActivationBlock(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto lookupactivationblock_opt =
@@ -177,7 +177,7 @@ auto forge::cli::addLookupActivationBlock(CLI::App& app, forge::rpc::ReadWriteWa
                    "if set, the given key will be interpreted as string and not as byte vector");
 }
 
-auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto lookupallentrysof_opt =
@@ -195,7 +195,7 @@ auto forge::cli::addLookupAllEntrysOf(CLI::App& app, forge::rpc::ReadWriteWallet
         ->required();
 }
 
-auto forge::cli::addGetUtilityTokenBalanceOf(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetUtilityTokenBalanceOf(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto getbalance_opt =
@@ -224,7 +224,7 @@ auto forge::cli::addGetUtilityTokenBalanceOf(CLI::App& app, forge::rpc::ReadWrit
                    "if set, the given id will be interpreted as string and not as byte vector");
 }
 
-auto forge::cli::addGetSupplyOfUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetSupplyOfUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto supply_opt =

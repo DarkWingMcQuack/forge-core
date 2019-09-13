@@ -32,7 +32,7 @@ using jsonrpc::JsonRpcException;
 JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
                              jsonrpc::serverVersion_t type,
                              wallet::ReadWriteWallet&& wallet)
-    : AbstractReadWriteWalletStubSever(connector, type),
+    : AbstractJsonRpcStubSever(connector, type),
       logic_(std::move(wallet))
 {
     startUpdaterThread();
@@ -41,7 +41,7 @@ JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
 JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
                              jsonrpc::serverVersion_t type,
                              wallet::ReadOnlyWallet&& wallet)
-    : AbstractReadWriteWalletStubSever(connector, type),
+    : AbstractJsonRpcStubSever(connector, type),
       logic_(std::move(wallet))
 {
     startUpdaterThread();
@@ -50,7 +50,7 @@ JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
 JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
                              jsonrpc::serverVersion_t type,
                              lookup::LookupManager&& lookup)
-    : AbstractReadWriteWalletStubSever(connector, type),
+    : AbstractJsonRpcStubSever(connector, type),
       logic_(std::move(lookup))
 {
     startUpdaterThread();

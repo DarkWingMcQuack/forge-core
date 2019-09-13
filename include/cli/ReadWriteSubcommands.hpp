@@ -2,41 +2,41 @@
 
 #include <CLI/CLI.hpp>
 #include <cli/CLIGlobalVariables.hpp>
-#include <rpc/readwritewalletstubclient.h>
+#include <rpc/jsonrpcstubclient.h>
 
 namespace forge::cli {
 
-auto addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addCreateUMEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addUpdateUMEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addCreateUniqueEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addCreateUniqueEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addRenewEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addDeleteEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addTransferOwnership(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addTransferUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addTransferUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addDeleteUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addDeleteUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addCreateUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addCreateUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addPayToEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
-auto addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto addReadWriteSubcommands(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void;
 
 

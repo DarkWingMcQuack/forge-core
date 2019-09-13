@@ -5,7 +5,7 @@
 #include <json/value.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
-#include <rpc/abstractreadwritewalletstubsever.h>
+#include <rpc/abstractjsonrpcstubserver.h>
 #include <thread>
 #include <variant>
 #include <wallet/ReadOnlyWallet.hpp>
@@ -13,7 +13,7 @@
 
 namespace forge::rpc {
 
-class JsonRpcServer : public AbstractReadWriteWalletStubSever
+class JsonRpcServer : public AbstractJsonRpcStubSever
 {
 public:
     JsonRpcServer(jsonrpc::AbstractServerConnector& connector,

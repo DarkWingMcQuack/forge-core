@@ -4,7 +4,7 @@
 #include <core/Transaction.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <fmt/core.h>
-#include <rpc/readwritewalletstubclient.h>
+#include <rpc/jsonrpcstubclient.h>
 
 using forge::core::stringToByteVec;
 
@@ -106,7 +106,7 @@ auto checkAndTransformValueString(const std::string& str)
 
 } // namespace
 
-auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto createnewentry_opt =
@@ -151,7 +151,7 @@ auto forge::cli::addCreateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
                      "If not given, then a new address will be generated");
 }
 
-auto forge::cli::addCreateUniqueEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addCreateUniqueEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto createnewentry_opt =
@@ -196,7 +196,7 @@ auto forge::cli::addCreateUniqueEntry(CLI::App& app, forge::rpc::ReadWriteWallet
                      "If not given, then a new address will be generated");
 }
 
-auto forge::cli::addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addRenewEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto renewentry_opt =
@@ -225,7 +225,7 @@ auto forge::cli::addRenewEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
-auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto deleteentry_opt =
@@ -254,7 +254,7 @@ auto forge::cli::addDeleteEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCl
         ->required();
 }
 
-auto forge::cli::addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addUpdateUMEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto updateentry_opt =
@@ -292,7 +292,7 @@ auto forge::cli::addUpdateUMEntry(CLI::App& app, forge::rpc::ReadWriteWalletStub
         ->required();
 }
 
-auto forge::cli::addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addTransferOwnership(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto transferownership_opt =
@@ -328,7 +328,7 @@ auto forge::cli::addTransferOwnership(CLI::App& app, forge::rpc::ReadWriteWallet
         ->required();
 }
 
-auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto createnewentry_opt =
@@ -356,7 +356,7 @@ auto forge::cli::addPayToEntry(CLI::App& app, forge::rpc::ReadWriteWalletStubCli
         ->required();
 }
 
-auto forge::cli::addTransferUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addTransferUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto transferownership_opt =
@@ -401,7 +401,7 @@ auto forge::cli::addTransferUtilityToken(CLI::App& app, forge::rpc::ReadWriteWal
         ->required();
 }
 
-auto forge::cli::addDeleteUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addDeleteUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto delete_opt =
@@ -436,7 +436,7 @@ auto forge::cli::addDeleteUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalle
         ->required();
 }
 
-auto forge::cli::addCreateUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addCreateUtilityToken(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     auto create_opt =
@@ -476,7 +476,7 @@ auto forge::cli::addCreateUtilityToken(CLI::App& app, forge::rpc::ReadWriteWalle
                      "addres which will be the owner of all the newly created tokens, if not set a new address will be generated");
 }
 
-auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addReadWriteSubcommands(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("entry",

@@ -1,10 +1,10 @@
 #include <CLI/CLI.hpp>
 #include <cli/CLIGlobalVariables.hpp>
 #include <cli/ReadOnlySubcommands.hpp>
-#include <rpc/readwritewalletstubclient.h>
+#include <rpc/jsonrpcstubclient.h>
 
 
-auto forge::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addReadOnlySubcommands(CLI::App& app, rpc::JsonRpcStubClient& client)
     -> void
 {
     addAddWatchOnlyAddress(app, client);
@@ -23,7 +23,7 @@ auto forge::cli::addReadOnlySubcommands(CLI::App& app, rpc::ReadWriteWalletStubC
     addGetAllWatchedUtilityTokens(app, client);
 }
 
-auto forge::cli::addAddWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addAddWatchOnlyAddress(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("addwatchonlyaddress",
@@ -35,7 +35,7 @@ auto forge::cli::addAddWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteWall
         ->required();
 }
 
-auto forge::cli::addDeleteWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addDeleteWatchOnlyAddress(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("deletewatchonlyaddress",
@@ -47,7 +47,7 @@ auto forge::cli::addDeleteWatchOnlyAddress(CLI::App& app, forge::rpc::ReadWriteW
         ->required();
 }
 
-auto forge::cli::addAddNewOwnedAddress(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addAddNewOwnedAddress(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("addnewownedaddress",
@@ -59,7 +59,7 @@ auto forge::cli::addAddNewOwnedAddress(CLI::App& app, forge::rpc::ReadWriteWalle
         ->required();
 }
 
-auto forge::cli::addGetOwnedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedUMEntrys(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("umentry")
@@ -70,7 +70,7 @@ auto forge::cli::addGetOwnedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletS
         });
 }
 
-auto forge::cli::addGetWatchedOnlyUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedOnlyUMEntrys(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("umentry")
@@ -81,7 +81,7 @@ auto forge::cli::addGetWatchedOnlyUMEntrys(CLI::App& app, forge::rpc::ReadWriteW
         });
 }
 
-auto forge::cli::addGetAllWatchedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetAllWatchedUMEntrys(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app
@@ -93,7 +93,7 @@ auto forge::cli::addGetAllWatchedUMEntrys(CLI::App& app, forge::rpc::ReadWriteWa
         });
 }
 
-auto forge::cli::addGetOwnedUniqueEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedUniqueEntrys(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("uniqueentry")
@@ -104,7 +104,7 @@ auto forge::cli::addGetOwnedUniqueEntrys(CLI::App& app, forge::rpc::ReadWriteWal
         });
 }
 
-auto forge::cli::addGetWatchedOnlyUniqueEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedOnlyUniqueEntrys(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("uniqueentry")
@@ -115,7 +115,7 @@ auto forge::cli::addGetWatchedOnlyUniqueEntrys(CLI::App& app, forge::rpc::ReadWr
         });
 }
 
-auto forge::cli::addGetAllWatchedUniqueEntrys(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetAllWatchedUniqueEntrys(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app
@@ -127,7 +127,7 @@ auto forge::cli::addGetAllWatchedUniqueEntrys(CLI::App& app, forge::rpc::ReadWri
         });
 }
 
-auto forge::cli::addGetWatchedAddresses(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedAddresses(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("getwatchedaddresses",
@@ -137,7 +137,7 @@ auto forge::cli::addGetWatchedAddresses(CLI::App& app, forge::rpc::ReadWriteWall
         });
 }
 
-auto forge::cli::addGetOwnedAddresses(CLI::App& app, forge::rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedAddresses(CLI::App& app, forge::rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("getownedaddresses",
@@ -147,7 +147,7 @@ auto forge::cli::addGetOwnedAddresses(CLI::App& app, forge::rpc::ReadWriteWallet
         });
 }
 
-auto forge::cli::addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addOwnesAddress(CLI::App& app, rpc::JsonRpcStubClient& client)
     -> void
 {
     app.add_subcommand("ownesaddress",
@@ -160,7 +160,7 @@ auto forge::cli::addOwnesAddress(CLI::App& app, rpc::ReadWriteWalletStubClient& 
 }
 
 
-auto forge::cli::addGetOwnedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetOwnedUtilityTokens(CLI::App& app, rpc::JsonRpcStubClient& client)
     -> void
 {
     app
@@ -171,7 +171,7 @@ auto forge::cli::addGetOwnedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStu
             RESPONSE = client.getallwatchedutilitytokens();
         });
 }
-auto forge::cli::addGetWatchedOnlyUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetWatchedOnlyUtilityTokens(CLI::App& app, rpc::JsonRpcStubClient& client)
     -> void
 {
     app
@@ -182,7 +182,7 @@ auto forge::cli::addGetWatchedOnlyUtilityTokens(CLI::App& app, rpc::ReadWriteWal
             RESPONSE = client.getallwatchedutilitytokens();
         });
 }
-auto forge::cli::addGetAllWatchedUtilityTokens(CLI::App& app, rpc::ReadWriteWalletStubClient& client)
+auto forge::cli::addGetAllWatchedUtilityTokens(CLI::App& app, rpc::JsonRpcStubClient& client)
     -> void
 {
     app.get_subcommand("utilitytoken")
