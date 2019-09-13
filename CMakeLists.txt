@@ -4,6 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 #get options
 include(cmake/options.cmake)
+include(cmake/linker.cmake)
 
 if(USE_CLANG)
   SET(CMAKE_C_COMPILER    "clang")
