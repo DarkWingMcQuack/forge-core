@@ -528,18 +528,19 @@ auto ReadWriteWallet::burn(const std::string& address,
                            std::vector<std::byte> metadata)
     -> utilxx::Result<std::string, WalletError>
 {
+    auto default_fee = getDefaultTxFee(getLookup().getCoin());
+
     return daemon_
         //send the needed amount to the address
         ->sendToAddress(burn_amount
-                            + getDefaultTxFee(getLookup()
-                                                  .getCoin()),
+                            + default_fee,
                         address)
         .flatMap([&](auto txid) {
             //write the metadata to the blockchain
             return daemon_
                 ->getVOutIdxByAmountAndAddress(txid,
                                                burn_amount
-                                                   + getDefaultTxFee(getLookup().getCoin()),
+                                                   + default_fee,
                                                address)
                 .flatMap([&](auto vout_idx) {
                     return daemon_
