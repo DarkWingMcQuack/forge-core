@@ -29,14 +29,10 @@
 #include <wallet/ReadWriteWallet.hpp>
 
 using forge::lookup::LookupManager;
-using forge::daemon::ReadOnlyDaemonBase;
 using forge::daemon::make_readonly_daemon;
 using forge::daemon::make_writing_daemon;
 using forge::wallet::ReadWriteWallet;
 using forge::wallet::ReadOnlyWallet;
-using forge::core::stringToByteVec;
-using forge::core::toHexString;
-using forge::core::Coin;
 using forge::env::initConsoleLogger;
 using forge::env::initFileLogger;
 using forge::env::parseOptions;
