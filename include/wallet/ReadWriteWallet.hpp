@@ -190,11 +190,17 @@ private:
                           std::uint64_t>>,
             WalletError>;
 
+    //burns a given *burn_amout* from a given *address* while
+    //writeing the given *metadata* into the OP_RETURN transaction
     auto burn(const std::string& address,
               std::int64_t burn_amount,
               std::vector<std::byte> metadata)
         -> utilxx::Result<std::string, WalletError>;
 
+    //burns a given *burn_amout* from a given *address* while
+    //writeing the given *metadata* into the OP_RETURN transaction
+    //while another output *new_owner* recieves a super small amount
+    //of coins as well
     auto burn(const std::string& owner,
               const std::string& new_owner,
               std::int64_t burn_amount,
