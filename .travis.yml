@@ -30,11 +30,22 @@ matrix:
         - CXX=g++-8
         - CC=gcc-8
 
+    - compiler: gcc
+      addons:
+        apt:
+          packages:
+            - g++-9
+      env:
+        - CXX=g++-9
+        - CC=gcc-9
+
     - compiler: clang
       addons:
         apt:
           sources:
-            - llvm-toolchain-8
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - clang-8
             - g++-8
@@ -54,4 +65,4 @@ matrix:
             - g++-8
       env:
         - CXX=clang++-9
-        - C=clang-9
+        - CC=clang-9
