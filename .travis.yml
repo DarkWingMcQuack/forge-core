@@ -34,7 +34,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-bionic-8
+            - llvm-toolchain-8
           packages:
             - clang-8
       env:
@@ -45,7 +45,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-bionic-9
+            - llvm-toolchain-9
           packages:
             - clang-9
       env:
