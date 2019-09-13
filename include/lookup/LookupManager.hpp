@@ -28,6 +28,7 @@ class LookupManager final
 {
 public:
     LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon);
+    LookupManager(LookupManager&&) = default;
 
     auto updateLookup()
         -> utilxx::Result<bool, ManagerError>;
@@ -106,7 +107,7 @@ private:
 private:
     std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
 
-    mutable std::shared_mutex rw_mtx_;
+    std::unique_ptr<std::shared_mutex> rw_mtx_;
     UMEntryLookup um_entry_lookup_;
     UniqueEntryLookup unique_entry_lookup_;
     UtilityTokenLookup utility_token_lookup_;

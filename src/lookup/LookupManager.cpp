@@ -36,7 +36,7 @@ auto LookupManager::updateLookup()
     -> utilxx::Result<bool, ManagerError>
 {
     //aquire writer lock
-    std::unique_lock lock{rw_mtx_};
+    std::unique_lock lock{*rw_mtx_};
     const auto maturity = getMaturity(daemon_->getCoin());
 
     return daemon_->getBlockCount()
@@ -86,7 +86,7 @@ auto LookupManager::updateLookup()
 auto LookupManager::rebuildLookup()
     -> utilxx::Result<void, ManagerError>
 {
-    std::unique_lock lock{rw_mtx_};
+    std::unique_lock lock{*rw_mtx_};
     um_entry_lookup_.clear();
     unique_entry_lookup_.clear();
     lock.unlock();
@@ -102,14 +102,14 @@ auto LookupManager::rebuildLookup()
 auto LookupManager::lookupUMValue(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return um_entry_lookup_.lookup(key);
 }
 
 auto LookupManager::lookupUniqueValue(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return unique_entry_lookup_.lookup(key);
 }
 
@@ -138,7 +138,7 @@ auto LookupManager::lookup(const core::EntryKey& key) const
 auto LookupManager::lookupOwner(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::string>>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     auto um_owner_opt = um_entry_lookup_.lookupOwner(key);
 
     if(um_owner_opt) {
@@ -151,7 +151,7 @@ auto LookupManager::lookupOwner(const core::EntryKey& key) const
 auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
     -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
 
     auto um_block_op = um_entry_lookup_.lookupActivationBlock(key);
     if(um_block_op) {
@@ -320,7 +320,7 @@ auto LookupManager::getLastValidBlockHeight() const
 {
     auto starting_block = getStartingBlock(daemon_->getCoin());
 
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     for(auto&& hash : block_hashes_) {
         if(auto res = daemon_->getBlockHash(++starting_block);
            res) {
@@ -338,7 +338,7 @@ auto LookupManager::getLastValidBlockHeight() const
 auto LookupManager::getUMEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::UMEntry>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return um_entry_lookup_.getUMEntrysOfOwner(owner);
 }
 
@@ -346,14 +346,14 @@ auto LookupManager::getUMEntrysOfOwner(const std::string& owner) const
 auto LookupManager::getUniqueEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::UniqueEntry>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return unique_entry_lookup_.getUniqueEntrysOfOwner(owner);
 }
 
 auto LookupManager::getUtilityTokensOfOwner(const std::string& owner) const
     -> std::vector<core::UtilityToken>
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return utility_token_lookup_.getUtilityTokensOfOwner(owner);
 }
 
@@ -361,7 +361,7 @@ auto LookupManager::getUtilityTokenCreditOf(const std::string& owner,
                                             const std::vector<std::byte>& token) const
     -> std::uint64_t
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     fmt::print("bla {}\n", token.empty());
     return utility_token_lookup_.getAvailableBalanceOf(owner,
                                                        token);
@@ -370,14 +370,14 @@ auto LookupManager::getUtilityTokenCreditOf(const std::string& owner,
 auto LookupManager::getSupplyOfToken(const std::vector<std::byte>& token) const
     -> std::uint64_t
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return utility_token_lookup_.getSupplyOfToken(token);
 }
 
 auto LookupManager::getNumberOfExisitingTokens() const
     -> std::int64_t
 {
-    std::shared_lock lock{rw_mtx_};
+    std::shared_lock lock{*rw_mtx_};
     return utility_token_lookup_.getNumberOfTokens();
 }
 
