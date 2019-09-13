@@ -1,9 +1,10 @@
 #include <CLI/CLI.hpp>
+#include <CLI/Validators.hpp>
 #include <cpptoml.h>
 #include <env/ProgramOptions.hpp>
 //TODO:I am currently using gcc 7.3 use the <filesystem> header once
 // my system switches to gcc 8
-#include <experimental/filesystem>
+#include <filesystem>
 
 #include <fmt/core.h>
 #include <fstream>
@@ -129,7 +130,7 @@ auto forge::env::parseOptions(int argc, char* argv[])
     -> ProgramOptions
 {
     using namespace std::string_literals;
-    namespace fs = std::experimental::filesystem;
+    namespace fs = std::filesystem;
 
     static const auto default_forge_dir = getenv("HOME") + "/.forge"s;
 
@@ -143,9 +144,11 @@ auto forge::env::parseOptions(int argc, char* argv[])
     app.add_flag("-l,--log",
                  log_to_console,
                  "if set, logging will be displayed on the terminal");
+
     app.add_option("-w,--workdir",
                    config_path,
-                   "path to the workingfolder of forge");
+                   "path to the workingfolder of forge")
+        ->check(CLI::ExistingPath);
     try {
         app.parse(argc, argv);
     } catch(const CLI::ParseError& e) {
@@ -177,7 +180,7 @@ auto forge::env::parseOptions(int argc, char* argv[])
 auto forge::env::parseConfigFile(const std::string& config_path)
     -> ProgramOptions
 {
-    namespace fs = std::experimental::filesystem;
+    namespace fs = std::filesystem;
 
     auto config = cpptoml::parse_file(config_path + "/forge.conf");
     auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
@@ -203,7 +206,7 @@ auto forge::env::parseConfigFile(const std::string& config_path)
             return forge::env::Mode::LookupOnly;
         if(mode_str == "readonly")
             return forge::env::Mode::ReadOnly;
-        else if(mode_str == "readwrite")
+        if(mode_str == "readwrite")
             return forge::env::Mode::ReadWrite;
         else {
             fmt::print(R"(invalid value for "server.mode", should be "lookup", "readonly" or "readwrite")");
