@@ -1,11 +1,9 @@
 #include <array>
-#include <bits/stdint-intn.h>
 #include <core/FlagIndexes.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <fmt/core.h>
-#include <iomanip>
 #include <json/value.h>
 #include <sstream>
 #include <utility>
