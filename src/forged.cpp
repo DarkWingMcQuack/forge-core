@@ -203,7 +203,8 @@ auto main(int argc, char* argv[]) -> int
     //we need to first daemonize because of
     //https://github.com/KjellKod/g3log/issues/151
     if(params.shouldDaemonize()) {
-        fmt::print("Starting forge daemon, listening on port {}\n", params.getRpcPort());
+        fmt::print("Starting forge daemon, listening on port {}\n",
+                   params.getRpcPort());
         daemonize();
     }
 

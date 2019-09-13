@@ -2,10 +2,7 @@
 #include <CLI/Validators.hpp>
 #include <cpptoml.h>
 #include <env/ProgramOptions.hpp>
-//TODO:I am currently using gcc 7.3 use the <filesystem> header once
-// my system switches to gcc 8
 #include <filesystem>
-
 #include <fmt/core.h>
 #include <fstream>
 #include <g3log/g3log.hpp>
@@ -124,7 +121,6 @@ auto ProgramOptions::getNumberOfThreads() const
 {
     return number_of_threads_;
 }
-
 
 auto forge::env::parseOptions(int argc, char* argv[])
     -> ProgramOptions
