@@ -11,6 +11,8 @@
 #include <iterator>
 #include <lookup/LookupManager.hpp>
 #include <lookup/UMEntryLookup.hpp>
+#include <memory>
+#include <shared_mutex>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Overload.hpp>
 #include <utilxx/Result.hpp>
@@ -29,6 +31,7 @@ using forge::daemon::ReadOnlyDaemonBase;
 
 LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
     : daemon_(std::move(daemon)),
+      rw_mtx_(std::make_unique<std::shared_mutex>()),
       um_entry_lookup_(this, getStartingBlock(daemon_->getCoin())),
       unique_entry_lookup_(this, getStartingBlock(daemon_->getCoin())),
       utility_token_lookup_(this, core::getStartingBlock(daemon_->getCoin()))
