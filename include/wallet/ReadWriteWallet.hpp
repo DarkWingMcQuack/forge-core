@@ -143,6 +143,7 @@ public:
                            std::int64_t burn_amount)
         -> utilxx::Result<std::string, WalletError>;
 
+    //transfers a given *amount* of utility tokens to a *new_owner*
     auto transferUtilityTokens(core::EntryKey id,
                                std::string new_owner,
                                std::uint64_t amount,
@@ -150,6 +151,8 @@ public:
         -> utilxx::Result<std::vector<std::string>,
                           WalletError>;
 
+    //delete/burns a given *amount* of utility tokens if they
+    //are owned by the wallet
     auto deleteUtilityTokens(core::EntryKey id,
                              std::uint64_t amount,
                              std::int64_t burn_amount)
