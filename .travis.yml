@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get update -qq
 
 before_install:
-  - sudo apt-get install -y libmicrohttpd-dev openssl
+  - sudo apt-get install -y libmicrohttpd-dev libgcrypt20-dev openssl
 
 before_script:
   - mkdir build
