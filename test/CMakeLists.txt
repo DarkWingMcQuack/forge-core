@@ -17,7 +17,7 @@ add_executable(unit_tests
 
 target_link_libraries(unit_tests LINK_PUBLIC
   gtest
-  forge-src
+  forge
   )
 
 target_include_directories(
