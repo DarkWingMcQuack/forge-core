@@ -179,7 +179,7 @@ private:
     //returns a vector of pairs (string, int) where the string is the address
     //and the int is the amount of the token to be send from the address to
     //be able to send desired_amount in total
-    auto getUtilityTokenSendVector(const std::string& token,
+    auto getUtilityTokenSendVector(const std::vector<std::byte>& token,
                                    std::uint64_t desired_amount)
         -> utilxx::Result<
             std::vector<

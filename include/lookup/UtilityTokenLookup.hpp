@@ -2,6 +2,7 @@
 
 #include "entrys/token/UtilityTokenCreationOp.hpp"
 #include <core/Coin.hpp>
+#include <cstddef>
 #include <cstdint>
 #include <entrys/token/UtilityTokenOperation.hpp>
 #include <lookup/LookupError.hpp>
@@ -10,6 +11,7 @@
 #include <unordered_map>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
+#include <vector>
 
 namespace forge::lookup {
 
@@ -30,7 +32,7 @@ public:
 
     //returns available balance of the token for a owner
     auto getAvailableBalanceOf(const std::string& owner,
-                               const std::string& token) const
+                               const std::vector<std::byte>& token) const
         -> std::uint64_t;
 
     //resets the lookup
@@ -44,7 +46,7 @@ public:
     auto getNumberOfTokens() const
         -> std::int64_t;
 
-    auto getSupplyOfToken(std::string_view token) const
+    auto getSupplyOfToken(const std::vector<std::byte>& token) const
         -> std::uint64_t;
 
     //execute Creation Operation
@@ -70,19 +72,18 @@ private:
     //transfers/deletions of tokens which do nit exist
     //or transfers/deletions which would spend more than
     //the sender ownes
-    auto filterOperationsPerToken(const std::string& token_id,
+    auto filterOperationsPerToken(const std::vector<std::byte>& token_id,
                                   std::vector<core::UtilityTokenOperation>&& ops) const
         -> std::vector<core::UtilityTokenOperation>;
 
     //returns true if a token with a given id exists, false otherwise
-    auto checkIfTokenExists(const std::string& token_id) const
+    auto checkIfTokenExists(const std::vector<std::byte>& token_id) const
         -> bool;
 
     //groups the transactions according to which token they refer
     auto groupOperationsByToken(std::vector<core::UtilityTokenOperation>&& ops) const
-        -> std::unordered_map<std::string,
-                              std::vector<
-                                  core::UtilityTokenOperation>>;
+        -> std::map<std::vector<std::byte>,
+                    std::vector<core::UtilityTokenOperation>>;
 
     auto groupOperationsByCreator(std::vector<core::UtilityTokenOperation>&& ops) const
         -> std::unordered_map<std::string,
@@ -93,7 +94,7 @@ private:
     //it is assumed that all operations are transfers or deletions
     //and that all operations have the same creator
     auto extractRelevantOperations(const std::string& creator,
-                                   const std::string& token,
+                                   const std::vector<std::byte>& token,
                                    std::vector<core::UtilityTokenOperation>&& ops) const
         -> std::vector<core::UtilityTokenOperation>;
 
@@ -104,8 +105,8 @@ private:
         std::unordered_map<std::string, //owner
                            std::uint64_t>; //number of owned tokens
 
-    std::unordered_map<std::string, // token id
-                       UtilityTokenAccounts> //token accounts
+    std::map<std::vector<std::byte>, // token id
+             UtilityTokenAccounts> //token accounts
         utility_account_lookup_;
 
     std::int64_t block_height_;

@@ -57,10 +57,10 @@ public:
         -> utilxx::Result<int64_t, daemon::DaemonError>;
 
     auto getUtilityTokenCreditOf(const std::string& owner,
-                                 const std::string& token) const
+                                 const std::vector<std::byte>& token) const
         -> std::uint64_t;
 
-    auto getSupplyOfToken(const std::string& token) const
+    auto getSupplyOfToken(const std::vector<std::byte>& token) const
         -> std::uint64_t;
 
     auto getNumberOfExisitingTokens() const

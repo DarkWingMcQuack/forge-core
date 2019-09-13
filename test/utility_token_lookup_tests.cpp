@@ -45,7 +45,7 @@ TEST(UtilityTokenLookupTest, CreationOpExecutionTest)
     lookup.executeOperations({creation_op1});
 
     auto available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                  "deadbeef");
+                                                  stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available,
               3);
@@ -79,10 +79,10 @@ TEST(UtilityTokenLookupTest, CreationOpCompetitorExecutionTest)
                               creation_op2});
 
     auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available1,
               0);
@@ -104,7 +104,7 @@ TEST(UtilityTokenLookupTest, CreationOpCompetitorExecutionTest)
     lookup.executeOperations({creation_op3});
 
     auto available3 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available3,
               0);
@@ -150,31 +150,31 @@ TEST(UtilityTokenLookupTest, TransferOpExecutionTest)
     lookup.executeOperations({creation_op1});
 
     auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               3);
 
     lookup.executeOperations({transfer_op1});
 
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                              "deadbeef");
+                                              stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               0);
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available2,
               3);
 
     lookup.executeOperations({transfer_op2});
 
     available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
-                                              "deadbeef");
+                                              stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available2,
               0);
 
     auto available3 = lookup.getAvailableBalanceOf("oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available3,
               3);
 }
@@ -219,24 +219,24 @@ TEST(UtilityTokenLookupTest, TransferOverpayTest)
     lookup.executeOperations({creation_op1});
 
     auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               3);
 
     lookup.executeOperations({transfer_op1, transfer_op2});
 
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                              "deadbeef");
+                                              stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               0);
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available2,
               0);
 
     auto available3 = lookup.getAvailableBalanceOf("oP9UPtBMngCMNfr7pDPA3vBnfMQEWFL1cP",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available3,
               3);
 }
@@ -268,14 +268,14 @@ TEST(UtilityTokenLookupTest, DeletionOpExecutionTest)
     lookup.executeOperations({creation_op1});
 
     auto available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               3);
 
     lookup.executeOperations({deletion_op1});
 
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                              "deadbeef");
+                                              stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               1);
 
@@ -284,7 +284,7 @@ TEST(UtilityTokenLookupTest, DeletionOpExecutionTest)
     lookup.executeOperations({deletion_op1});
 
     available1 = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                              "deadbeef");
+                                              stringToByteVec("deadbeef").getValue());
     EXPECT_EQ(available1,
               1);
 }
@@ -317,7 +317,7 @@ TEST(UtilityTokenLookupTest, DoubleCreationTest)
     lookup.executeOperations({creation_op1});
 
     auto available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                  "deadbeef");
+                                                  stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available,
               3);
@@ -325,7 +325,7 @@ TEST(UtilityTokenLookupTest, DoubleCreationTest)
     lookup.executeOperations({creation_op1});
 
     available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                             "deadbeef");
+                                             stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available,
               3);
@@ -333,10 +333,10 @@ TEST(UtilityTokenLookupTest, DoubleCreationTest)
     lookup.executeOperations({creation_op2});
 
     available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                             "deadbeef");
+                                             stringToByteVec("deadbeef").getValue());
 
     auto available2 = lookup.getAvailableBalanceOf("oHe5FSnZxgs81dyiot1FuSJNuc1mYWYd1Z",
-                                                   "deadbeef");
+                                                   stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available2,
               0);
@@ -372,7 +372,7 @@ TEST(UtilityTokenLookupTest, OverflowTest)
     lookup.executeOperations({creation_op1});
 
     auto available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                                  "deadbeef");
+                                                  stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available,
               0xFF00000000000000);
@@ -384,7 +384,7 @@ TEST(UtilityTokenLookupTest, OverflowTest)
                               deletion_op1});
 
     available = lookup.getAvailableBalanceOf("oLupzckPUYtGydsBisL86zcwsBweJm1dSM",
-                                             "deadbeef");
+                                             stringToByteVec("deadbeef").getValue());
 
     EXPECT_EQ(available,
               0);

@@ -1,16 +1,22 @@
 #pragma once
 
+#include "rpc/ReadOnlyWalletServer.hpp"
+#include "entrys/token/UtilityToken.hpp"
+#include "wallet/ReadOnlyWallet.hpp"
 #include <atomic>
 #include <json/value.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
+#include <rpc/ReadOnlyWalletServer.hpp>
 #include <rpc/abstractreadwritewalletstubsever.h>
 #include <thread>
+#include <variant>
 #include <wallet/ReadWriteWallet.hpp>
 
 namespace forge::rpc {
 
-class ReadWriteWalletServer : public AbstractReadWriteWalletStubSever
+class ReadWriteWalletServer : public AbstractReadWriteWalletStubSever //,
+                              // public ReadOnlyWalletServer
 {
 public:
     ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
@@ -156,8 +162,29 @@ public:
         -> bool;
 
 private:
-    wallet::ReadWriteWallet wallet_;
-    lookup::LookupManager& lookup_;
+    auto getLookup()
+        -> lookup::LookupManager&;
+
+    auto getReadOnlyWallet()
+        -> wallet::ReadOnlyWallet&;
+
+    auto getReadWriteWallet()
+        -> wallet::ReadWriteWallet&;
+
+    auto getMode() const
+        -> std::string;
+
+  auto extractEntryKey(bool isstring,
+					   const std::string& key_str)
+	-> core::EntryKey;
+
+private:
+    // wallet::ReadWriteWallet wallet_;
+    std::variant<wallet::ReadWriteWallet,
+                 wallet::ReadOnlyWallet,
+                 lookup::LookupManager>
+        logic_;
+    // lookup::LookupManager& lookup_;
     std::atomic_bool should_shutdown_{false};
     std::atomic_bool indexing_{false};
     std::thread updater_;

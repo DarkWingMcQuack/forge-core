@@ -358,15 +358,16 @@ auto LookupManager::getUtilityTokensOfOwner(const std::string& owner) const
 }
 
 auto LookupManager::getUtilityTokenCreditOf(const std::string& owner,
-                                            const std::string& token) const
+                                            const std::vector<std::byte>& token) const
     -> std::uint64_t
 {
     std::shared_lock lock{rw_mtx_};
+    fmt::print("bla {}\n", token.empty());
     return utility_token_lookup_.getAvailableBalanceOf(owner,
                                                        token);
 }
 
-auto LookupManager::getSupplyOfToken(const std::string& token) const
+auto LookupManager::getSupplyOfToken(const std::vector<std::byte>& token) const
     -> std::uint64_t
 {
     std::shared_lock lock{rw_mtx_};
@@ -418,8 +419,7 @@ auto LookupManager::isReserverdEntryKey(const std::vector<std::byte>& key) const
 {
     auto unique_opt = unique_entry_lookup_.lookup(key);
     auto um_opt = um_entry_lookup_.lookup(key);
-    auto token_id = core::toHexString(key);
-    auto utility_token_opt = utility_token_lookup_.getSupplyOfToken(token_id);
+    auto utility_token_opt = utility_token_lookup_.getSupplyOfToken(key);
 
     return unique_opt || um_opt || utility_token_opt;
 }

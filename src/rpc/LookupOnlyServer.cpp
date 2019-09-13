@@ -411,7 +411,7 @@ auto LookupOnlyServer::getbalanceof(bool isstring,
 
     auto balance =
         lookup_.getUtilityTokenCreditOf(owner,
-                                        core::toHexString(key_vec));
+                                        key_vec);
 
     return fmt::format("{}", balance);
 }
@@ -442,7 +442,7 @@ auto LookupOnlyServer::getsupplyofutilitytoken(bool isstring,
         key_vec = std::move(vec_opt.getValue());
     }
 
-    auto supply = lookup_.getSupplyOfToken(core::toHexString(key_vec));
+    auto supply = lookup_.getSupplyOfToken(key_vec);
 
     return fmt::format("{}", supply);
 }

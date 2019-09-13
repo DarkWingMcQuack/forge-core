@@ -346,8 +346,7 @@ auto ReadWriteWallet::transferUtilityTokens(core::EntryKey id,
     -> utilxx::Result<std::vector<std::string>,
                       WalletError>
 {
-    auto token_str = toHexString(id);
-    auto send_list_res = getUtilityTokenSendVector(token_str,
+    auto send_list_res = getUtilityTokenSendVector(id,
                                                    amount);
 
     if(!send_list_res) {
@@ -375,8 +374,7 @@ auto ReadWriteWallet::deleteUtilityTokens(core::EntryKey id,
     -> utilxx::Result<std::vector<std::string>,
                       WalletError>
 {
-    auto token_str = toHexString(id);
-    auto send_list_res = getUtilityTokenSendVector(token_str,
+    auto send_list_res = getUtilityTokenSendVector(id,
                                                    amount);
 
     if(!send_list_res) {
@@ -397,7 +395,7 @@ auto ReadWriteWallet::deleteUtilityTokens(core::EntryKey id,
         });
 }
 
-auto ReadWriteWallet::getUtilityTokenSendVector(const std::string& token,
+auto ReadWriteWallet::getUtilityTokenSendVector(const std::vector<std::byte>& token,
                                                 std::uint64_t desired_amount)
     -> utilxx::Result<
         std::vector<
@@ -426,9 +424,10 @@ auto ReadWriteWallet::getUtilityTokenSendVector(const std::string& token,
     }
 
     if(covered != desired_amount) {
+        auto token_str = toHexString(token);
         auto error =
             fmt::format("insufficient funds of token {}, needed: {}, available: {}",
-                        token,
+                        token_str,
                         desired_amount,
                         covered);
         return WalletError{std::move(error)};
