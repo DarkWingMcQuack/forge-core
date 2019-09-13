@@ -8,7 +8,7 @@
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
 #include <numeric>
-#include <rpc/ReadWriteWalletServer.hpp>
+#include <rpc/JsonRpcServer.hpp>
 #include <thread>
 #include <utilxx/Algorithm.hpp>
 #include <utilxx/Overload.hpp>
@@ -16,7 +16,7 @@
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
 
-using forge::rpc::ReadWriteWalletServer;
+using forge::rpc::JsonRpcServer;
 using forge::core::getBlockTimeInSeconds;
 using forge::core::EntryKey;
 using forge::core::UMEntryValue;
@@ -28,27 +28,27 @@ using forge::wallet::ReadOnlyWallet;
 using forge::lookup::LookupManager;
 using jsonrpc::JsonRpcException;
 
-ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
-                                             jsonrpc::serverVersion_t type,
-                                             wallet::ReadWriteWallet&& wallet)
+JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
+                             jsonrpc::serverVersion_t type,
+                             wallet::ReadWriteWallet&& wallet)
     : AbstractReadWriteWalletStubSever(connector, type),
       logic_(std::move(wallet))
 {
     startUpdaterThread();
 }
 
-ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
-                                             jsonrpc::serverVersion_t type,
-                                             wallet::ReadOnlyWallet&& wallet)
+JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
+                             jsonrpc::serverVersion_t type,
+                             wallet::ReadOnlyWallet&& wallet)
     : AbstractReadWriteWalletStubSever(connector, type),
       logic_(std::move(wallet))
 {
     startUpdaterThread();
 }
 
-ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
-                                             jsonrpc::serverVersion_t type,
-                                             lookup::LookupManager&& lookup)
+JsonRpcServer::JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
+                             jsonrpc::serverVersion_t type,
+                             lookup::LookupManager&& lookup)
     : AbstractReadWriteWalletStubSever(connector, type),
       logic_(std::move(lookup))
 {
@@ -56,7 +56,7 @@ ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& c
 }
 
 
-auto ReadWriteWalletServer::updatelookup()
+auto JsonRpcServer::updatelookup()
     -> bool
 {
     if(indexing_.load()) {
@@ -79,7 +79,7 @@ auto ReadWriteWalletServer::updatelookup()
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::rebuildlookup()
+auto JsonRpcServer::rebuildlookup()
     -> void
 {
     if(indexing_.load()) {
@@ -98,13 +98,13 @@ auto ReadWriteWalletServer::rebuildlookup()
     }
 }
 
-auto ReadWriteWalletServer::shutdown()
+auto JsonRpcServer::shutdown()
     -> void
 {
     should_shutdown_.store(true);
 }
 
-auto ReadWriteWalletServer::lookupumvalue(bool isstring, const std::string& key)
+auto JsonRpcServer::lookupumvalue(bool isstring, const std::string& key)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -126,7 +126,7 @@ auto ReadWriteWalletServer::lookupumvalue(bool isstring, const std::string& key)
     return forge::core::umentryValueToJson(res.getValue().get());
 }
 
-auto ReadWriteWalletServer::lookupuniquevalue(bool isstring, const std::string& key)
+auto JsonRpcServer::lookupuniquevalue(bool isstring, const std::string& key)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -148,7 +148,7 @@ auto ReadWriteWalletServer::lookupuniquevalue(bool isstring, const std::string& 
     return forge::core::umentryValueToJson(res.getValue().get());
 }
 
-auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
+auto JsonRpcServer::lookupowner(bool isstring, const std::string& key)
     -> std::string
 {
     if(indexing_.load()) {
@@ -170,7 +170,7 @@ auto ReadWriteWalletServer::lookupowner(bool isstring, const std::string& key)
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::lookupactivationblock(bool isstring, const std::string& key)
+auto JsonRpcServer::lookupactivationblock(bool isstring, const std::string& key)
     -> int
 {
     if(indexing_.load()) {
@@ -192,7 +192,7 @@ auto ReadWriteWalletServer::lookupactivationblock(bool isstring, const std::stri
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::checkvalidity()
+auto JsonRpcServer::checkvalidity()
     -> bool
 {
     if(indexing_.load()) {
@@ -210,7 +210,7 @@ auto ReadWriteWalletServer::checkvalidity()
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::getlastvalidblockheight()
+auto JsonRpcServer::getlastvalidblockheight()
     -> int
 {
     if(indexing_.load()) {
@@ -229,7 +229,7 @@ auto ReadWriteWalletServer::getlastvalidblockheight()
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::lookupallentrysof(const std::string& owner)
+auto JsonRpcServer::lookupallentrysof(const std::string& owner)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -259,7 +259,7 @@ auto ReadWriteWalletServer::lookupallentrysof(const std::string& owner)
     return ret_json;
 }
 
-auto ReadWriteWalletServer::addwatchonlyaddress(const std::string& address)
+auto JsonRpcServer::addwatchonlyaddress(const std::string& address)
     -> void
 {
     auto& wallet = getReadOnlyWallet();
@@ -267,14 +267,14 @@ auto ReadWriteWalletServer::addwatchonlyaddress(const std::string& address)
     wallet.addWatchOnlyAddress(std::move(copy));
 }
 
-auto ReadWriteWalletServer::deletewatchonlyaddress(const std::string& address)
+auto JsonRpcServer::deletewatchonlyaddress(const std::string& address)
     -> void
 {
     auto& wallet = getReadOnlyWallet();
     wallet.deleteWatchOnlyAddress(address);
 }
 
-auto ReadWriteWalletServer::addnewownedaddress(const std::string& address)
+auto JsonRpcServer::addnewownedaddress(const std::string& address)
     -> void
 {
     auto& wallet = getReadOnlyWallet();
@@ -282,7 +282,7 @@ auto ReadWriteWalletServer::addnewownedaddress(const std::string& address)
     wallet.addNewOwnedAddress(std::move(copy));
 }
 
-auto ReadWriteWalletServer::getownedumentrys()
+auto JsonRpcServer::getownedumentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -311,7 +311,7 @@ auto ReadWriteWalletServer::getownedumentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getwatchonlyumentrys()
+auto JsonRpcServer::getwatchonlyumentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -340,7 +340,7 @@ auto ReadWriteWalletServer::getwatchonlyumentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getallwatchedumentrys()
+auto JsonRpcServer::getallwatchedumentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -369,7 +369,7 @@ auto ReadWriteWalletServer::getallwatchedumentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getowneduniqueentrys()
+auto JsonRpcServer::getowneduniqueentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -398,7 +398,7 @@ auto ReadWriteWalletServer::getowneduniqueentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getwatchonlyuniqueentrys()
+auto JsonRpcServer::getwatchonlyuniqueentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -427,7 +427,7 @@ auto ReadWriteWalletServer::getwatchonlyuniqueentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getallwatcheduniqueentrys()
+auto JsonRpcServer::getallwatcheduniqueentrys()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -456,7 +456,7 @@ auto ReadWriteWalletServer::getallwatcheduniqueentrys()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getwatchedaddresses()
+auto JsonRpcServer::getwatchedaddresses()
     -> Json::Value
 {
     const auto& wallet = getReadOnlyWallet();
@@ -472,7 +472,7 @@ auto ReadWriteWalletServer::getwatchedaddresses()
 
     return ret_json;
 }
-auto ReadWriteWalletServer::getownedaddresses()
+auto JsonRpcServer::getownedaddresses()
     -> Json::Value
 {
     const auto& wallet = getReadOnlyWallet();
@@ -489,18 +489,18 @@ auto ReadWriteWalletServer::getownedaddresses()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::ownesaddress(const std::string& address)
+auto JsonRpcServer::ownesaddress(const std::string& address)
     -> bool
 {
     const auto& wallet = getReadOnlyWallet();
     return wallet.ownesAddress(address);
 }
 
-auto ReadWriteWalletServer::createnewumentry(const std::string& address,
-                                             int burnvalue,
-                                             bool is_string,
-                                             const std::string& key,
-                                             const Json::Value& value)
+auto JsonRpcServer::createnewumentry(const std::string& address,
+                                     int burnvalue,
+                                     bool is_string,
+                                     const std::string& key,
+                                     const Json::Value& value)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -541,10 +541,10 @@ auto ReadWriteWalletServer::createnewumentry(const std::string& address,
 }
 
 
-auto ReadWriteWalletServer::updateumentry(int burnvalue,
-                                          bool is_string,
-                                          const std::string& key,
-                                          const Json::Value& value)
+auto JsonRpcServer::updateumentry(int burnvalue,
+                                  bool is_string,
+                                  const std::string& key,
+                                  const Json::Value& value)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -571,11 +571,11 @@ auto ReadWriteWalletServer::updateumentry(int burnvalue,
 }
 
 
-auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
-                                                 int burnvalue,
-                                                 bool is_string,
-                                                 const std::string& key,
-                                                 const Json::Value& value)
+auto JsonRpcServer::createnewuniqueentry(const std::string& address,
+                                         int burnvalue,
+                                         bool is_string,
+                                         const std::string& key,
+                                         const Json::Value& value)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -616,9 +616,9 @@ auto ReadWriteWalletServer::createnewuniqueentry(const std::string& address,
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::renewentry(int burnvalue,
-                                       bool is_string,
-                                       const std::string& key)
+auto JsonRpcServer::renewentry(int burnvalue,
+                               bool is_string,
+                               const std::string& key)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -635,9 +635,9 @@ auto ReadWriteWalletServer::renewentry(int burnvalue,
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::deleteentry(int burnvalue,
-                                        bool is_string,
-                                        const std::string& key)
+auto JsonRpcServer::deleteentry(int burnvalue,
+                                bool is_string,
+                                const std::string& key)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -655,10 +655,10 @@ auto ReadWriteWalletServer::deleteentry(int burnvalue,
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::transferownership(int burnvalue,
-                                              bool is_string,
-                                              const std::string& key,
-                                              const std::string& newowner)
+auto JsonRpcServer::transferownership(int burnvalue,
+                                      bool is_string,
+                                      const std::string& key,
+                                      const std::string& newowner)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -679,9 +679,9 @@ auto ReadWriteWalletServer::transferownership(int burnvalue,
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::paytoentryowner(int amount,
-                                            bool is_string,
-                                            const std::string& key)
+auto JsonRpcServer::paytoentryowner(int amount,
+                                    bool is_string,
+                                    const std::string& key)
     -> std::string
 {
     auto& wallet = getReadWriteWallet();
@@ -699,7 +699,7 @@ auto ReadWriteWalletServer::paytoentryowner(int amount,
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::getownedutilitytokens()
+auto JsonRpcServer::getownedutilitytokens()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -729,7 +729,7 @@ auto ReadWriteWalletServer::getownedutilitytokens()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getwatchonlyutilitytokens()
+auto JsonRpcServer::getwatchonlyutilitytokens()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -759,7 +759,7 @@ auto ReadWriteWalletServer::getwatchonlyutilitytokens()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getallwatchedutilitytokens()
+auto JsonRpcServer::getallwatchedutilitytokens()
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -788,7 +788,7 @@ auto ReadWriteWalletServer::getallwatchedutilitytokens()
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getutilitytokensof(const std::string& owner)
+auto JsonRpcServer::getutilitytokensof(const std::string& owner)
     -> Json::Value
 {
     if(indexing_.load()) {
@@ -818,9 +818,9 @@ auto ReadWriteWalletServer::getutilitytokensof(const std::string& owner)
     return ret_json;
 }
 
-auto ReadWriteWalletServer::getbalanceof(bool isstring,
-                                         const std::string& owner,
-                                         const std::string& token)
+auto JsonRpcServer::getbalanceof(bool isstring,
+                                 const std::string& owner,
+                                 const std::string& token)
     -> std::string
 {
     if(indexing_.load()) {
@@ -838,8 +838,8 @@ auto ReadWriteWalletServer::getbalanceof(bool isstring,
     return fmt::format("{}", balance);
 }
 
-auto ReadWriteWalletServer::getsupplyofutilitytoken(bool isstring,
-                                                    const std::string& token)
+auto JsonRpcServer::getsupplyofutilitytoken(bool isstring,
+                                            const std::string& token)
     -> std::string
 {
     if(indexing_.load()) {
@@ -855,11 +855,11 @@ auto ReadWriteWalletServer::getsupplyofutilitytoken(bool isstring,
     return fmt::format("{}", supply);
 }
 
-auto ReadWriteWalletServer::createnewutilitytoken(const std::string& address,
-                                                  int burnvalue,
-                                                  bool is_string,
-                                                  const std::string& id,
-                                                  const std::string& supply_str)
+auto JsonRpcServer::createnewutilitytoken(const std::string& address,
+                                          int burnvalue,
+                                          bool is_string,
+                                          const std::string& id,
+                                          const std::string& supply_str)
     -> std::string
 {
     if(indexing_.load()) {
@@ -899,11 +899,11 @@ auto ReadWriteWalletServer::createnewutilitytoken(const std::string& address,
     return res.getValue();
 }
 
-auto ReadWriteWalletServer::sendutilitytokens(const std::string& amount_str,
-                                              int burnvalue,
-                                              bool is_string,
-                                              const std::string& token,
-                                              const std::string& newowner)
+auto JsonRpcServer::sendutilitytokens(const std::string& amount_str,
+                                      int burnvalue,
+                                      bool is_string,
+                                      const std::string& token,
+                                      const std::string& newowner)
     -> Json::Value
 {
     auto& wallet = getReadWriteWallet();
@@ -932,10 +932,10 @@ auto ReadWriteWalletServer::sendutilitytokens(const std::string& amount_str,
         });
 }
 
-auto ReadWriteWalletServer::burnutilitytokens(const std::string& amount_str,
-                                              int burnvalue,
-                                              bool is_string,
-                                              const std::string& token)
+auto JsonRpcServer::burnutilitytokens(const std::string& amount_str,
+                                      int burnvalue,
+                                      bool is_string,
+                                      const std::string& token)
     -> Json::Value
 {
     auto& wallet = getReadWriteWallet();
@@ -962,14 +962,14 @@ auto ReadWriteWalletServer::burnutilitytokens(const std::string& amount_str,
         });
 }
 
-auto ReadWriteWalletServer::hasShutdownRequest() const
+auto JsonRpcServer::hasShutdownRequest() const
     -> bool
 {
     return should_shutdown_.load();
 }
 
 
-auto ReadWriteWalletServer::getLookup()
+auto JsonRpcServer::getLookup()
     -> lookup::LookupManager&
 {
     return std::visit(
@@ -985,7 +985,7 @@ auto ReadWriteWalletServer::getLookup()
         logic_);
 }
 
-auto ReadWriteWalletServer::getReadOnlyWallet()
+auto JsonRpcServer::getReadOnlyWallet()
     -> wallet::ReadOnlyWallet&
 {
     if(std::holds_alternative<LookupManager>(logic_)) {
@@ -1001,7 +1001,7 @@ auto ReadWriteWalletServer::getReadOnlyWallet()
     return std::get<ReadWriteWallet>(logic_);
 }
 
-auto ReadWriteWalletServer::getReadWriteWallet()
+auto JsonRpcServer::getReadWriteWallet()
     -> wallet::ReadWriteWallet&
 {
     if(!std::holds_alternative<ReadWriteWallet>(logic_)) {
@@ -1014,7 +1014,7 @@ auto ReadWriteWalletServer::getReadWriteWallet()
     return std::get<ReadWriteWallet>(logic_);
 }
 
-auto ReadWriteWalletServer::getMode() const
+auto JsonRpcServer::getMode() const
     -> std::string
 {
     return std::visit(
@@ -1031,8 +1031,8 @@ auto ReadWriteWalletServer::getMode() const
         logic_);
 }
 
-auto ReadWriteWalletServer::extractEntryKey(bool isstring,
-                                            const std::string& key_str)
+auto JsonRpcServer::extractEntryKey(bool isstring,
+                                    const std::string& key_str)
     -> core::EntryKey
 {
     if(isstring) {
@@ -1047,7 +1047,7 @@ auto ReadWriteWalletServer::extractEntryKey(bool isstring,
     return vec_opt.getValue();
 }
 
-auto ReadWriteWalletServer::startUpdaterThread()
+auto JsonRpcServer::startUpdaterThread()
     -> void
 {
     updater_ =
@@ -1069,7 +1069,7 @@ auto ReadWriteWalletServer::startUpdaterThread()
 }
 
 
-auto forge::rpc::waitForShutdown(const ReadWriteWalletServer& server)
+auto forge::rpc::waitForShutdown(const JsonRpcServer& server)
     -> void
 {
     using namespace std::literals::chrono_literals;

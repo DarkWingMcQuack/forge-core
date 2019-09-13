@@ -17,9 +17,7 @@
 #include <getopt.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
-#include <rpc/LookupOnlyServer.hpp>
-#include <rpc/ReadOnlyWalletServer.hpp>
-#include <rpc/ReadWriteWalletServer.hpp>
+#include <rpc/JsonRpcServer.hpp>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <syslog.h>
@@ -43,9 +41,7 @@ using forge::env::initConsoleLogger;
 using forge::env::initFileLogger;
 using forge::env::parseOptions;
 using forge::env::ProgramOptions;
-using forge::rpc::LookupOnlyServer;
-using forge::rpc::ReadOnlyWalletServer;
-using forge::rpc::ReadWriteWalletServer;
+using forge::rpc::JsonRpcServer;
 using jsonrpc::HttpServer;
 using jsonrpc::JSONRPC_SERVER_V1V2;
 
@@ -123,9 +119,11 @@ auto runLookupOnlyServer(const ProgramOptions& params)
                           "",
                           static_cast<int>(threads)};
 
-    LookupOnlyServer rpcserver{httpserver,
-                               JSONRPC_SERVER_V1V2,
-                               std::move(daemon)};
+    LookupManager lookup{std::move(daemon)};
+
+    JsonRpcServer rpcserver{httpserver,
+                            JSONRPC_SERVER_V1V2,
+                            std::move(lookup)};
     rpcserver.StartListening();
 
     forge::rpc::waitForShutdown(rpcserver);
@@ -153,9 +151,9 @@ auto runReadOnlyWalletServer(const ProgramOptions& params)
                           "",
                           static_cast<int>(threads)};
 
-    ReadOnlyWalletServer rpcserver{httpserver,
-                                   JSONRPC_SERVER_V1V2,
-                                   std::move(wallet)};
+    JsonRpcServer rpcserver{httpserver,
+                            JSONRPC_SERVER_V1V2,
+                            std::move(wallet)};
     rpcserver.StartListening();
 
     forge::rpc::waitForShutdown(rpcserver);
@@ -190,9 +188,9 @@ auto runReadWriteWalletServer(const ProgramOptions& params)
                           "",
                           static_cast<int>(threads)};
 
-    ReadWriteWalletServer rpcserver{httpserver,
-                                    JSONRPC_SERVER_V1V2,
-                                    std::move(wallet)};
+    JsonRpcServer rpcserver{httpserver,
+                            JSONRPC_SERVER_V1V2,
+                            std::move(wallet)};
     rpcserver.StartListening();
 
     forge::rpc::waitForShutdown(rpcserver);

@@ -83,9 +83,7 @@ target_sources(forge-src
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/ReadOnlyWallet.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/ReadWriteWallet.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/wallet/WalletError.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/rpc/LookupOnlyServer.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/rpc/ReadOnlyWalletServer.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/rpc/ReadWriteWalletServer.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/rpc/JsonRpcServer.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/LookupOnlySubcommands.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/ReadOnlySubcommands.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/ReadWriteSubcommands.hpp
@@ -127,9 +125,7 @@ target_sources(forge-src
   src/env/ProgramOptions.cpp
   src/wallet/ReadOnlyWallet.cpp
   src/wallet/ReadWriteWallet.cpp
-  src/rpc/LookupOnlyServer.cpp
-  src/rpc/ReadOnlyWalletServer.cpp
-  src/rpc/ReadWriteWalletServer.cpp
+  src/rpc/JsonRpcServer.cpp
   src/cli/LookupOnlySubcommands.cpp
   src/cli/ReadOnlySubcommands.cpp
   src/cli/ReadWriteSubcommands.cpp

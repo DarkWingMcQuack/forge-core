@@ -1,13 +1,11 @@
 #pragma once
 
 #include "entrys/token/UtilityToken.hpp"
-#include "rpc/ReadOnlyWalletServer.hpp"
 #include "wallet/ReadOnlyWallet.hpp"
 #include <atomic>
 #include <json/value.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <lookup/LookupManager.hpp>
-#include <rpc/ReadOnlyWalletServer.hpp>
 #include <rpc/abstractreadwritewalletstubsever.h>
 #include <thread>
 #include <variant>
@@ -15,21 +13,21 @@
 
 namespace forge::rpc {
 
-class ReadWriteWalletServer : public AbstractReadWriteWalletStubSever //,
-                              // public ReadOnlyWalletServer
+class JsonRpcServer : public AbstractReadWriteWalletStubSever
+
 {
 public:
-    ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
-                          jsonrpc::serverVersion_t type,
-                          wallet::ReadWriteWallet&& wallet);
+    JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
+                  jsonrpc::serverVersion_t type,
+                  wallet::ReadWriteWallet&& wallet);
 
-    ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
-                          jsonrpc::serverVersion_t type,
-                          wallet::ReadOnlyWallet&& wallet);
+    JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
+                  jsonrpc::serverVersion_t type,
+                  wallet::ReadOnlyWallet&& wallet);
 
-    ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
-                          jsonrpc::serverVersion_t type,
-                          lookup::LookupManager&& lookup);
+    JsonRpcServer(jsonrpc::AbstractServerConnector& connector,
+                  jsonrpc::serverVersion_t type,
+                  lookup::LookupManager&& lookup);
 
     virtual auto updatelookup()
         -> bool override;
@@ -201,7 +199,7 @@ private:
     std::thread updater_;
 };
 
-auto waitForShutdown(const ReadWriteWalletServer& server)
+auto waitForShutdown(const JsonRpcServer& server)
     -> void;
 
 } // namespace forge::rpc
