@@ -34,23 +34,25 @@ ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& c
     : AbstractReadWriteWalletStubSever(connector, type),
       logic_(std::move(wallet))
 {
-    //start an updater thread which updates the lookup in the background
-    updater_ =
-        std::thread{[this]() {
-            auto& lookup = getLookup();
+    startUpdaterThread();
+}
 
-            auto blocktime = getBlockTimeInSeconds(lookup.getCoin());
-            std::chrono::seconds sleeptime{blocktime / 2};
+ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
+                                             jsonrpc::serverVersion_t type,
+                                             wallet::ReadOnlyWallet&& wallet)
+    : AbstractReadWriteWalletStubSever(connector, type),
+      logic_(std::move(wallet))
+{
+    startUpdaterThread();
+}
 
-            while(!should_shutdown_.load()) {
-
-                indexing_.store(true);
-                lookup.updateLookup();
-                indexing_.store(false);
-
-                std::this_thread::sleep_for(sleeptime);
-            }
-        }};
+ReadWriteWalletServer::ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
+                                             jsonrpc::serverVersion_t type,
+                                             lookup::LookupManager&& lookup)
+    : AbstractReadWriteWalletStubSever(connector, type),
+      logic_(std::move(lookup))
+{
+    startUpdaterThread();
 }
 
 
@@ -1043,6 +1045,27 @@ auto ReadWriteWalletServer::extractEntryKey(bool isstring,
     }
 
     return vec_opt.getValue();
+}
+
+auto ReadWriteWalletServer::startUpdaterThread()
+    -> void
+{
+    updater_ =
+        std::thread{[this]() {
+            auto& lookup = getLookup();
+
+            auto blocktime = getBlockTimeInSeconds(lookup.getCoin());
+            std::chrono::seconds sleeptime{blocktime / 2};
+
+            while(!should_shutdown_.load()) {
+
+                indexing_.store(true);
+                lookup.updateLookup();
+                indexing_.store(false);
+
+                std::this_thread::sleep_for(sleeptime);
+            }
+        }};
 }
 
 

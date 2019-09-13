@@ -1,7 +1,7 @@
 #pragma once
 
-#include "rpc/ReadOnlyWalletServer.hpp"
 #include "entrys/token/UtilityToken.hpp"
+#include "rpc/ReadOnlyWalletServer.hpp"
 #include "wallet/ReadOnlyWallet.hpp"
 #include <atomic>
 #include <json/value.h>
@@ -22,6 +22,14 @@ public:
     ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
                           jsonrpc::serverVersion_t type,
                           wallet::ReadWriteWallet&& wallet);
+
+    ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
+                          jsonrpc::serverVersion_t type,
+                          wallet::ReadOnlyWallet&& wallet);
+
+    ReadWriteWalletServer(jsonrpc::AbstractServerConnector& connector,
+                          jsonrpc::serverVersion_t type,
+                          lookup::LookupManager&& lookup);
 
     virtual auto updatelookup()
         -> bool override;
@@ -174,9 +182,12 @@ private:
     auto getMode() const
         -> std::string;
 
-  auto extractEntryKey(bool isstring,
-					   const std::string& key_str)
-	-> core::EntryKey;
+    auto startUpdaterThread()
+        -> void;
+
+    auto extractEntryKey(bool isstring,
+                         const std::string& key_str)
+        -> core::EntryKey;
 
 private:
     // wallet::ReadWriteWallet wallet_;
