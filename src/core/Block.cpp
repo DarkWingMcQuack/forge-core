@@ -88,7 +88,7 @@ auto forge::core::buildBlock(Json::Value&& json)
         auto height = json["height"].asUInt();
 
         //extract hash
-        auto hash = std::move(json["hash"].asString());
+        auto hash = json["hash"].asString();
 
         return Block{std::move(transactions),
                      height,

@@ -27,7 +27,8 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string input_txid,
                                         std::int64_t burn_value,
                                         std::vector<
                                             std::pair<std::string,
-                                                      std::int64_t>> outputs) const
+                                                      std::int64_t>>
+                                            outputs) const
     -> Result<std::vector<std::byte>,
               DaemonError>
 {
@@ -51,7 +52,8 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string input_txid,
                                                     std::int64_t burn_value,
                                                     std::vector<
                                                         std::pair<std::string,
-                                                                  std::int64_t>> outputs) const
+                                                                  std::int64_t>>
+                                                        outputs) const
     -> Json::Value
 {
     auto metadata_str = toHexString(metadata);
@@ -306,7 +308,7 @@ auto forge::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::byte>,
                       DaemonError>
 {
-    auto result = std::move(response.toStyledString());
+    auto result = response.toStyledString();
 
     auto number_of_delimiters =
         std::count(std::begin(result),
@@ -344,9 +346,8 @@ auto forge::daemon::odin::processSignRawTxResponse(Json::Value&& response)
            && response["errors"][0].isMember("error")
            && response["errors"][0]["error"].isString()) {
             return DaemonError{std::move(response["errors"][0]["error"].asString())};
-        } else {
-            return DaemonError{"unknown error during transaction signing"};
         }
+        return DaemonError{"unknown error during transaction signing"};
     }
 
     if(!response.isMember("hex")
@@ -354,7 +355,7 @@ auto forge::daemon::odin::processSignRawTxResponse(Json::Value&& response)
         return DaemonError{"no hex value was returned from transaction signing"};
     }
 
-    auto hex_str = std::move(response["hex"].asString());
+    auto hex_str = response["hex"].asString();
 
     auto hex_vec = stringToByteVec(hex_str);
 

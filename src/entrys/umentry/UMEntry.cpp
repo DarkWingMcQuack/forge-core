@@ -301,7 +301,7 @@ auto forge::core::jsonToUMEntryValue(Json::Value&& value)
         if(!value_json.isString()) {
             return std::nullopt;
         }
-        auto value_str = std::move(value_json.asString());
+        auto value_str = value_json.asString();
         auto byte_vec_opt = stringToByteVec(value_str);
 
         if(!byte_vec_opt.hasValue()) {

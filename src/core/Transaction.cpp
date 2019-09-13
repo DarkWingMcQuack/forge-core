@@ -322,7 +322,7 @@ auto forge::core::buildTxIn(Json::Value&& json)
             return std::nullopt;
         }
 
-        auto txid = std::move(json["txid"].asString());
+        auto txid = json["txid"].asString();
         auto vout_index = json["vout"].asUInt();
 
         return TxIn{std::move(txid),
