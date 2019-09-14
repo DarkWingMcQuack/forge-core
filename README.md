@@ -1,9 +1,8 @@
-# forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core)[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+# forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 This is a C++17 implementation of FORGE.
 
 ## Building
-### Dependencys
 Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
 Currently Forge dependes on you installing `libmicrohttpd`. The following guides will help you building forge-core
 on your system.
@@ -11,6 +10,8 @@ on your system.
 ### OSX
 ### Windows
 ### Ubuntu
+Currently Ubuntu Bionic Beaver (18.04) and newer are supported. If you want to compile forge-core on an older Ubuntu version,
+it can happen that you run into linking problems due to old versions of `libmicrohttpd` in the official package sources. To avoid this you can try to install `libmicrohttpd` by yourself. 
 
 #### installing GCC 9 as C++17 ready compiler
 In order to compile Forge you need to have compiler installed which supports C++17.
