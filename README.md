@@ -2,6 +2,13 @@
 This is a C++17 implementation of FORGE.
 
 ## Building
+### Dependencys
+Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
+Currently Forge dependes on you installing `libmicrohttpd`. The following guides will help you building forge-core
+on your system.
+
+### OSX
+### Windows
 ### Ubuntu
 
 #### installing GCC 9 as C++17 ready compiler
@@ -76,15 +83,26 @@ If everything works as intended, you can now use Forge.
 The binary files `forged` which is the Forge server and `forge-cli` which 
 is a CLI tool to talk with the server should now be available in your `build` directory.
 
-
-
-### Tested Compilers
+### Currently Tested Compilers
 * gcc 8.3
 * gcc 9.1
 * clang 8
 * clang 9
 * clang 10
 
-### Dependencys
-in order to build Forge libmicrohttpd needs to be installed on the machine.
-All other dependencies will be downloaded and compiled by the makefiles.
+
+
+## FAQ
+### What actualy is Forge?
+### What Blockchains are supported?
+Currently only [ODIN](https://odinblockchain.org/) is supported, but in the future i surely plan to add support for [bitcoin](https://bitcoin.org/en/) and [bitcoin cash](https://www.bitcoincash.org/). If you want your project to be supported, feel free
+to add it with a pull request or talk to me.
+#### How can I make Forge work with my Altcoin X?
+Forge-core is build in a way that it is not hard to add support for other blockchains.
+To add your own, have a look at the classes in the `forge::daemon` namespace and the `forge::core::Coin` class.
+### Why did you build Forge?
+For fun :)
+### Why does Forge not support feature X?
+Maybe because i did not even thought about it. Open an issue or pull request and we will see what we can do and if it is a good idea.
+### Why does Forge currently not have any UI?
+Because i did not want to integrate a UI into forge-core directly. I thought it would be a good idea to separate the logic part from the UI. Forge-core exposes a ton of [JSON-RPC](https://en.wikipedia.org/wiki/JSON-RPC) methods which make it easy to build a webview for Forge. Unfortunately I have never done any web programming or frontend development. If you are a web developer and want to help this project, feel free to start a webview talking to the `forged` server.
