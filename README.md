@@ -1,6 +1,14 @@
 # forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
-This is a C++17 implementation of FORGE.
+This is a C++17 implementation of Forge.
+Forge is a protocol using OP_RETURN transactions in blockchains to encode commands.
+Doing this, Forge is currently able to support **Utility Tokens** and **Unique Entrys**. 
+
+## Utility Tokens
+## Unique Entrys
+### modifiable unique entrys
+### immutable unique entrys
+### P2E
 
 ## Building
 Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
