@@ -5,8 +5,8 @@ Forge is a protocol using OP_RETURN transactions in blockchains to encode comman
 Doing this, Forge is currently able to support **Utility Tokens** and **Unique Entrys**. 
 
 ## Utility Tokens
-## Unique Entrys
-Unique tokens are *key-value* pairs where the key is owned and controlled by exactly one owner at a time.
+## Unique Entries
+Unique Entries are *key-value* pairs where the key is owned and controlled by exactly one owner at a time.
 The *value* of such a key, which can currently be *nothing*, an *IPv4*, an *IPv6* or an arbitrary string can be choosen by the owner.
 
 #### Lifetime and Refreshing
