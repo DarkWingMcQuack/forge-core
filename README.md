@@ -6,9 +6,35 @@ Doing this, Forge is currently able to support **Utility Tokens** and **Unique E
 
 ## Utility Tokens
 ## Unique Entrys
-### modifiable unique entrys
-### immutable unique entrys
+Unique tokens are *key-value* pairs where the key is owned and controlled by exactly one owner at a time.
+The *value* of such a key, which can currently be *nothing*, an *IPv4*, an *IPv6* or an arbitrary string can be choosen by the owner.
+
+#### Lifetime and Refreshing
+Once created such an unique entry it is valid for the next year. To make it longer valid the owner can **refresh** the entry at any given time which makes the entry valid for another year since the refreshing.
+
+#### Ownership Transfering
+Like tokens, unique entrys can be transfered to another owner. After such an ownership transfer the new owner has the responsibility of refreshing the entry.
+
+#### Deletion
+In order to give an entry free for others to use it, an entry can be deleted. After deletion, the entry is invalidated, cannot be found in lookup operations anymore and it can be created from any other user of forge with any assigned *value*.
+
+Currently there are two types of unique entrys. *Modifiable Unique Entrys*, called *UMEntrys* and *Immutable Unique Entrys*, called *Unique Entrys* in the code.
+
+### Modifiable Unique Entrys
+Modifiable Unique Entrys are handy whenever the owner is unsure which *value* he wants to be paired with the entry, since modifiable entries support **update** operations which reasign a new *value* to the entry.
+
+### Immutable Unique Entrys
+Modifiable Unique Entrys do not support update operations, which means once created with a specific *value* it cannot be updated or changed.
+
 ### P2E
+Since Forge knows the owner of unique entries and unique entries are as the name suggests unique, it is possible to use Forge as a DNS for payments. This means instead of paying somebody with an address, it is possible using forge to pay someone to its entry. Since entries can have arbitrary names users can create an entry with a nickname and then recieve payments to their nickname instead of publishing an complex address.
+
+### DNS
+Forge supports *IPv4* and *IPv6* as associated values with entries, which means Forge can operate as a decentralized DNS, where users lookup IP addresses through Forge Entries.
+It is planed for the future that Forge provides scripts which can be started in order to run a local DNS-Server which utilizes Forge as backend.
+
+### Keyserver
+Not only IP addresses can be supported, but also public keys can be looked up in a decentralized manner, meaning Forge can be used as a decentralized Keyserver.
 
 ## Building
 Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
