@@ -36,14 +36,14 @@ It is planed for the future that Forge provides scripts which can be started in 
 ### Keyserver
 Not only IP addresses can be supported, but also public keys can be looked up in a decentralized manner, meaning Forge can be used as a decentralized Keyserver.
 
-## Building
+# Building
 Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
 Currently Forge dependes on you installing `libmicrohttpd`. The following guides will help you building forge-core
 on your system.
 
-### OSX
-### Windows
-### Ubuntu
+## OSX
+## Windows
+## Ubuntu
 Currently Ubuntu Bionic Beaver (18.04) and newer are supported. If you want to compile forge-core on an older Ubuntu version,
 it can happen that you run into linking problems due to old versions of `libmicrohttpd` in the official package sources. To avoid this you can try to install `libmicrohttpd` by yourself. 
 
@@ -119,7 +119,7 @@ If everything works as intended, you can now use Forge.
 The binary files `forged` which is the Forge server and `forge-cli` which 
 is a CLI tool to talk with the server should now be available in your `build` directory.
 
-### Currently Tested Compilers
+## Currently Tested Compilers
 * gcc 8.3
 * gcc 9.1
 * clang 8
@@ -128,7 +128,7 @@ is a CLI tool to talk with the server should now be available in your `build` di
 
 
 
-## FAQ
+# FAQ
 ### What actualy is Forge?
 ### What Blockchains are supported?
 Currently only [ODIN](https://odinblockchain.org/) is supported, but in the future i surely plan to add support for [bitcoin](https://bitcoin.org/en/) and [bitcoin cash](https://www.bitcoincash.org/). If you want your project to be supported, feel free
