@@ -5,6 +5,20 @@ Forge is a protocol using OP_RETURN transactions in blockchains to encode comman
 Doing this, Forge is currently able to support **Utility Tokens** and **Unique Entrys**. 
 
 ## Utility Tokens
+Utility tokens can be used to create new digital assets ontop of already existing blockchains.
+Utility tokens consist of a *name* and a *supply*
+#### creation
+A new type of utility token can only be created if its name is not used by any other type of token or entry at the time of creation.
+When a user creates a new utility token, he specifies the *name* and the *supply* and then recievies the *supply* of his new tokens to his address.
+
+#### Transfering Utility Tokens
+Utility Tokens can be send to other addresses. The owner of a bunch of tokens of the same type can create a *ownership transfer* operation using Forge. Such an operation consists of the *name* of the token he wants to send, the *number* of tokens he wants to send and ofcourse a reciever address. If at the time of the transaction the owner has enought tokens, he the reciever will recieve specified number of tokens and the creator of the *ownership transfer* does not have access or controll over the send tokens anymore.
+
+#### Burning Utility Tokens
+Much like Bitcoin or any other Cryptocurrency, Utility Tokens can be burned. To do this a user needs to create *deletion* operation which consists of the *name* of the token he wants to burn and a *number* of tokens he/she wants to burn.
+If the user has enought tokens at the time of the *deletion* operation, the *number* of tokens get burned and nobody has access to them anymore after that, which means the total *supply* of a token is decreased.
+If a token has a *supply* of 0 at any time, the *name* of the token can be reused for another *creation* of tokens or entries within Forge.
+
 ## Unique Entries
 Unique Entries are *key-value* pairs where the key is owned and controlled by exactly one owner at a time.
 The *value* of such a key, which can currently be *nothing*, an *IPv4*, an *IPv6* or an arbitrary string can be choosen by the owner.
