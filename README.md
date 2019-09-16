@@ -36,6 +36,9 @@ It is planed for the future that Forge provides scripts which can be started in 
 ### Keyserver
 Not only IP addresses can be supported, but also public keys can be looked up in a decentralized manner, meaning Forge can be used as a decentralized Keyserver.
 
+### File Hashes
+Since Unique Entries support storing arbitrary byte-values, it is possible to store file hashes into the blockchain which are accosiated by an entry name. This makes the filehash easy to lookup in the future and the proof of knowledge of a given file at a given time can be done easily with Forge.
+
 # Building
 Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
 Currently Forge dependes on you installing `libmicrohttpd`. The following guides will help you building forge-core
