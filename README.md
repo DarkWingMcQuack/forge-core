@@ -152,6 +152,11 @@ Doing so Forge can support operations which the underlying blockchain does not u
 Forge-core is an implementation of this protocol which tries to make the use of Forge as simple as possible by supporting a large amount of commands.
 
 Forge also supports the creation of unique entry-value pairs which then can be looked up. This enables a large amount of use cases, such as public key lookups. Decentralized DNS services and a DNS like system for payments where users do not need to know the address of an entity to pay them, but their username.
+
+### How can I run Forge?
+Forge-core consists of two binaries. **forged** which is a server talking to the underlying blockchain daemon(like bitcoind).
+On the first run it creates a *.forge/* directory in *$HOME*. Inside that directory all the configuration files can be found and addapted to your needs.
+The other binary **forge-cli** is an utility which can be used to talk with **forged** and to send commands.
 ### What Blockchains are supported?
 Currently only [ODIN](https://odinblockchain.org/) is supported, but in the future i surely plan to add support for [bitcoin](https://bitcoin.org/en/) and [bitcoin cash](https://www.bitcoincash.org/). If you want your project to be supported, feel free
 to add it with a pull request or talk to me.
