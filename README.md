@@ -147,6 +147,11 @@ is a CLI tool to talk with the server should now be available in your `build` di
 
 # FAQ
 ### What actualy is Forge?
+Forge is a protocol which uses OP_RETURN transactions provided by blockchains to save data and commands into the blockchain.
+Doing so Forge can support operations which the underlying blockchain does not understand, such as the creation of tokens.
+Forge-core is an implementation of this protocol which tries to make the use of Forge as simple as possible by supporting a large amount of commands.
+
+Forge also supports the creation of unique entry-value pairs which then can be looked up. This enables a large amount of use cases, such as public key lookups. Decentralized DNS services and a DNS like system for payments where users do not need to know the address of an entity to pay them, but their username.
 ### What Blockchains are supported?
 Currently only [ODIN](https://odinblockchain.org/) is supported, but in the future i surely plan to add support for [bitcoin](https://bitcoin.org/en/) and [bitcoin cash](https://www.bitcoincash.org/). If you want your project to be supported, feel free
 to add it with a pull request or talk to me.
