@@ -7,7 +7,8 @@
 namespace forge::core {
 
 enum class Coin {
-    Odin
+    Odin,
+    tOdin
 };
 
 auto fromString(std::string_view str)

@@ -44,6 +44,7 @@ auto forge::daemon::make_writing_daemon(const std::string& host,
 {
     switch(coin) {
     case core::Coin::Odin:
+    case core::Coin::tOdin:
         return std::make_unique<ReadWriteOdinDaemon>(host,
                                                      user,
                                                      password,

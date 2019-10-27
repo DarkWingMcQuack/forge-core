@@ -22,6 +22,7 @@ auto forge::daemon::make_readonly_daemon(const std::string& host,
 {
     switch(coin) {
     case core::Coin::Odin:
+    case core::Coin::tOdin:
         return std::make_unique<ReadOnlyOdinDaemon>(host,
                                                     user,
                                                     password,
