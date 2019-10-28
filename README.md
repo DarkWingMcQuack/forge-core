@@ -1,16 +1,68 @@
-# forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core)[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+# forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
-This is a C++17 implementation of FORGE.
+This is a C++17 implementation of Forge.
+Forge is a protocol using OP_RETURN transactions in blockchains to encode commands.
+Doing this, Forge is currently able to support **Utility Tokens** and **Unique Entrys**. 
 
-## Building
-### Dependencys
+## Utility Tokens
+Utility tokens can be used to create new digital assets ontop of already existing blockchains.
+Utility tokens consist of a *name* and a *supply*
+#### creation
+A new type of utility token can only be created if its name is not used by any other type of token or entry at the time of creation.
+When a user creates a new utility token, he specifies the *name* and the *supply* and then recievies the *supply* of his new tokens to his address.
+
+#### Transfering Utility Tokens
+Utility Tokens can be send to other addresses. The owner of a bunch of tokens of the same type can create a *ownership transfer* operation using Forge. Such an operation consists of the *name* of the token he wants to send, the *number* of tokens he wants to send and ofcourse a reciever address. If at the time of the transaction the owner has enought tokens, he the reciever will recieve specified number of tokens and the creator of the *ownership transfer* does not have access or controll over the send tokens anymore.
+
+#### Burning Utility Tokens
+Much like Bitcoin or any other Cryptocurrency, Utility Tokens can be burned. To do this a user needs to create *deletion* operation which consists of the *name* of the token he wants to burn and a *number* of tokens he/she wants to burn.
+If the user has enought tokens at the time of the *deletion* operation, the *number* of tokens get burned and nobody has access to them anymore after that, which means the total *supply* of a token is decreased.
+If a token has a *supply* of 0 at any time, the *name* of the token can be reused for another *creation* of tokens or entries within Forge.
+
+## Unique Entries
+Unique Entries are *key-value* pairs where the key is owned and controlled by exactly one owner at a time.
+The *value* of such a key, which can currently be *nothing*, an *IPv4*, an *IPv6* or an arbitrary string can be choosen by the owner.
+
+#### Lifetime and Refreshing
+Once created such an unique entry it is valid for the next year. To make it longer valid the owner can **refresh** the entry at any given time which makes the entry valid for another year since the refreshing.
+
+#### Ownership Transfering
+Like tokens, unique entrys can be transfered to another owner. After such an ownership transfer the new owner has the responsibility of refreshing the entry.
+
+#### Deletion
+In order to give an entry free for others to use it, an entry can be deleted. After deletion, the entry is invalidated, cannot be found in lookup operations anymore and it can be created from any other user of forge with any assigned *value*.
+
+Currently there are two types of unique entrys. *Modifiable Unique Entrys*, called *UMEntrys* and *Immutable Unique Entrys*, called *Unique Entrys* in the code.
+
+### Modifiable Unique Entrys
+Modifiable Unique Entrys are handy whenever the owner is unsure which *value* he wants to be paired with the entry, since modifiable entries support **update** operations which reasign a new *value* to the entry.
+
+### Immutable Unique Entrys
+Modifiable Unique Entrys do not support update operations, which means once created with a specific *value* it cannot be updated or changed.
+
+### P2E
+Since Forge knows the owner of unique entries and unique entries are as the name suggests unique, it is possible to use Forge as a DNS for payments. This means instead of paying somebody with an address, it is possible using forge to pay someone to its entry. Since entries can have arbitrary names users can create an entry with a nickname and then recieve payments to their nickname instead of publishing an complex address.
+
+### DNS
+Forge supports *IPv4* and *IPv6* as associated values with entries, which means Forge can operate as a decentralized DNS, where users lookup IP addresses through Forge Entries.
+It is planed for the future that Forge provides scripts which can be started in order to run a local DNS-Server which utilizes Forge as backend.
+
+### Keyserver
+Not only IP addresses can be supported, but also public keys can be looked up in a decentralized manner, meaning Forge can be used as a decentralized Keyserver.
+
+### File Hashes
+Since Unique Entries support storing arbitrary byte-values, it is possible to store file hashes into the blockchain which are accosiated by an entry name. This makes the filehash easy to lookup in the future and the proof of knowledge of a given file at a given time can be done easily with Forge.
+
+# Building
 Forge-core tries to download and build all its dependencies by itself. Unfortunately this is not always possible.
 Currently Forge dependes on you installing `libmicrohttpd`. The following guides will help you building forge-core
 on your system.
 
-### OSX
-### Windows
-### Ubuntu
+## OSX
+## Windows
+## Ubuntu
+Currently Ubuntu Bionic Beaver (18.04) and newer are supported. If you want to compile forge-core on an older Ubuntu version,
+it can happen that you run into linking problems due to old versions of `libmicrohttpd` in the official package sources. To avoid this you can try to install `libmicrohttpd` by yourself. 
 
 #### installing GCC 9 as C++17 ready compiler
 In order to compile Forge you need to have compiler installed which supports C++17.
@@ -84,7 +136,7 @@ If everything works as intended, you can now use Forge.
 The binary files `forged` which is the Forge server and `forge-cli` which 
 is a CLI tool to talk with the server should now be available in your `build` directory.
 
-### Currently Tested Compilers
+## Currently Tested Compilers
 * gcc 8.3
 * gcc 9.1
 * clang 8
@@ -93,8 +145,18 @@ is a CLI tool to talk with the server should now be available in your `build` di
 
 
 
-## FAQ
+# FAQ
 ### What actualy is Forge?
+Forge is a protocol which uses OP_RETURN transactions provided by blockchains to save data and commands into the blockchain.
+Doing so Forge can support operations which the underlying blockchain does not understand, such as the creation of tokens.
+Forge-core is an implementation of this protocol which tries to make the use of Forge as simple as possible by supporting a large amount of commands.
+
+Forge also supports the creation of unique entry-value pairs which then can be looked up. This enables a large amount of use cases, such as public key lookups. Decentralized DNS services and a DNS like system for payments where users do not need to know the address of an entity to pay them, but their username.
+
+### How can I run Forge?
+Forge-core consists of two binaries. **forged** which is a server talking to the underlying blockchain daemon(like bitcoind).
+On the first run it creates a *.forge/* directory in *$HOME*. Inside that directory all the configuration files can be found and addapted to your needs.
+The other binary **forge-cli** is an utility which can be used to talk with **forged** and to send commands.
 ### What Blockchains are supported?
 Currently only [ODIN](https://odinblockchain.org/) is supported, but in the future i surely plan to add support for [bitcoin](https://bitcoin.org/en/) and [bitcoin cash](https://www.bitcoincash.org/). If you want your project to be supported, feel free
 to add it with a pull request or talk to me.
