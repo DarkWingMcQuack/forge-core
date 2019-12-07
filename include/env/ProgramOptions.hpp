@@ -110,4 +110,7 @@ auto parseOptions(int argc, char* argv[])
 auto parseConfigFile(const std::string& config_path)
     -> ProgramOptions;
 
+auto fromEnvironment()
+    -> ProgramOptions;
+
 } // namespace forge::env

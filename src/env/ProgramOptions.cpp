@@ -1,6 +1,7 @@
 #include <CLI/CLI.hpp>
 #include <CLI/Validators.hpp>
 #include <cpptoml.h>
+#include <curl/curl.h>
 #include <env/ProgramOptions.hpp>
 #include <filesystem>
 #include <fmt/core.h>
@@ -122,6 +123,120 @@ auto ProgramOptions::getNumberOfThreads() const
     return number_of_threads_;
 }
 
+namespace {
+
+auto getBasePathFromEnv()
+    -> std::string
+{
+    using namespace std::string_literals;
+
+    auto raw_str = std::getenv("BASE_DIR");
+    if(raw_str == nullptr) {
+        return getenv("HOME") + "/.forge"s;
+    }
+
+    return raw_str;
+}
+
+auto getServerModeFromEnv()
+    -> std::string
+{
+    auto raw_str = std::getenv("SERVER_MODE");
+    if(raw_str == nullptr) {
+        return "readwrite";
+    }
+
+    return raw_str;
+}
+
+auto getDaemonModeFromEnv()
+    -> bool
+{
+    auto raw_str = std::getenv("DEBUG");
+    std::string str = raw_str ? raw_str : "";
+    for(auto& ch : str) {
+        ch = std::toupper(ch);
+    }
+
+    return str == "TRUE";
+}
+
+auto getCoinStringFromEnv()
+    -> std::string
+{
+    auto raw_str = std::getenv("COIN");
+    if(raw_str == nullptr) {
+        return "odin";
+    }
+
+    return raw_str;
+}
+
+auto getCoinPortEnv()
+{
+    try {
+        auto raw_str = std::getenv("COIN_PORT");
+        return std::stoi(raw_str);
+    } catch(...) {
+        return 22101;
+    }
+}
+
+auto getCoinHostFromEnv()
+    -> std::string
+{
+    auto raw_str = std::getenv("COIN_HOST");
+    if(raw_str == nullptr) {
+        return "localhost";
+    }
+
+    return raw_str;
+}
+
+auto getCoinUserFromEnv()
+    -> std::string
+{
+    auto raw_str = std::getenv("COIN_USER");
+    if(raw_str == nullptr) {
+        return "user";
+    }
+
+    return raw_str;
+}
+
+auto getCoinPasswordFromEnv()
+    -> std::string
+{
+    auto raw_str = std::getenv("COIN_PASSWORD");
+    if(raw_str == nullptr) {
+        return "password";
+    }
+
+    return raw_str;
+}
+
+auto getRPCPortEnv()
+{
+    try {
+        auto raw_str = std::getenv("RPC_PORT");
+        return std::stoi(raw_str);
+    } catch(...) {
+        return 6969;
+    }
+}
+
+auto getThreadsEnv()
+{
+    try {
+        auto raw_str = std::getenv("THREADS");
+        return std::stoi(raw_str);
+    } catch(...) {
+        return 10;
+    }
+}
+
+} // namespace
+
 auto forge::env::parseOptions(int argc, char* argv[])
     -> ProgramOptions
 {
@@ -133,12 +248,17 @@ auto forge::env::parseOptions(int argc, char* argv[])
     CLI::App app{"forged server, adding a second layer to blockchains"};
 
     bool log_to_console = false;
+    bool read_config_from_env = false;
     auto config_path = default_forge_dir;
     app.set_help_all_flag("--help-all",
                           "Show all help");
 
     app.add_flag("-l,--log",
                  log_to_console,
+                 "if set, logging will be displayed on the terminal");
+
+    app.add_flag("-e,--env",
+                 read_config_from_env,
                  "if set, logging will be displayed on the terminal");
 
     app.add_option("-w,--workdir",
@@ -151,8 +271,18 @@ auto forge::env::parseOptions(int argc, char* argv[])
         std::exit(app.exit(e));
     }
 
+    if(read_config_from_env) {
+        config_path = getBasePathFromEnv();
+        fs::create_directory(config_path);
 
-    fs::create_directory(config_path);
+
+        auto params = fromEnvironment();
+
+        params.setShouldLogToConsole(log_to_console);
+
+        return params;
+    }
+
 
     if(!fs::exists(config_path + "/forge.conf")) {
         fmt::print("config file {} not found\n",
@@ -208,6 +338,65 @@ auto forge::env::parseConfigFile(const std::string& config_path)
             fmt::print(R"(invalid value for "server.mode", should be "lookup", "readonly" or "readwrite")");
             std::exit(-1);
         }
+    }();
+
+    //try to get the coind
+    auto coin_opt = core::fromString(coin_str);
+    if(!coin_opt) {
+        fmt::print("invalid value for \"coin.coin\" = {}", coin_str);
+        std::exit(-1);
+    }
+
+    return ProgramOptions{std::move(log_path),
+                          threads,
+                          mode,
+                          daemonize,
+                          coin_opt.getValue(),
+                          coin_port,
+                          std::move(coin_host),
+                          std::move(coin_user),
+                          std::move(coin_password),
+                          rpc_port,
+                          std::move(rpc_user),
+                          std::move(rpc_password)};
+}
+
+
+auto forge::env::fromEnvironment()
+    -> ProgramOptions
+{
+    namespace fs = std::filesystem;
+
+    auto config = getBasePathFromEnv();
+    auto log_path = config + "/logs/";
+    auto mode_str = getServerModeFromEnv();
+    auto daemonize = getDaemonModeFromEnv();
+    auto coin_str = getCoinStringFromEnv();
+    auto coin_port = getCoinPortEnv();
+    auto coin_host = getCoinHostFromEnv();
+    auto coin_user = getCoinUserFromEnv();
+    auto coin_password = getCoinPasswordFromEnv();
+    auto rpc_port = getRPCPortEnv();
+    auto rpc_user = "";
+    auto rpc_password = "";
+    auto threads = getThreadsEnv();
+
+    //create the log folder
+    fs::create_directory(log_path);
+
+    //try to get the mode
+    auto mode = [&]() {
+        if(mode_str == "lookup") {
+            return forge::env::Mode::LookupOnly;
+        }
+        if(mode_str == "readonly") {
+            return forge::env::Mode::ReadOnly;
+        }
+        if(mode_str == "readwrite") {
+            return forge::env::Mode::ReadWrite;
+        }
+        fmt::print(R"(invalid value for "server.mode", should be "lookup", "readonly" or "readwrite")");
+        std::exit(-1);
     }();
 
     //try to get the coind
