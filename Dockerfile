@@ -4,7 +4,7 @@ LABEL description="Build container - forge"
 RUN apt update && apt -y install \
     cmake gcc-9 g++-9 libssl-dev \
     make binutils build-essential git \
-    zlib1g wget libmicrohttpd-dev libcurl-dev
+    zlib1g wget libmicrohttpd-dev libcurl4-openssl-dev
 
 RUN update-alternatives --install /usr/bin/gcc \
     gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ \
