@@ -223,11 +223,11 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::vector<std::byte>& 
     //on the other hand deletions and transfers are only valid
     //it the token already exists
     if(checkIfTokenExists(token_id)
-	   || (manager_ != nullptr && manager_->isReserverdEntryKey(token_id))) {
+       || (manager_ != nullptr && manager_->isReserverdEntryKey(token_id))) {
         creations.clear();
     } else {
         //return the creation op with the highest burn value
-        auto iter =
+        auto max_iter =
             std::max_element(
                 std::cbegin(creations),
                 std::cend(creations),
@@ -235,11 +235,26 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::vector<std::byte>& 
                     return lhs.getBurnValue() < rhs.getBurnValue();
                 });
 
-        if(iter == std::cend(creations)) {
+        if(max_iter == std::cend(creations)) {
             return {};
         }
 
-        return {std::move(*iter)};
+        //if there are two or more operations
+        //with the same burn value which is the highest one
+        //we dont execute any operation of them because
+        //it would be ambiguous
+        auto number_of_ops_with_max_burn =
+            std::count_if(std::cbegin(creations),
+                          std::cend(creations),
+                          [&max_iter](const auto& op) {
+                              return op.getBurnValue() >= max_iter->getBurnValue();
+                          });
+
+        if(number_of_ops_with_max_burn > 1) {
+            return {};
+        }
+
+        return {std::move(*max_iter)};
     }
 
     //group operations by creator

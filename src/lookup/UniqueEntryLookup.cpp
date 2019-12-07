@@ -254,7 +254,20 @@ auto UniqueEntryLookup::filterNonRelevantOperations(std::vector<UniqueEntryOpera
                                  return lhs_value < rhs_value;
                              });
 
-        relevant_ops.push_back(std::move(*max_iter));
+        //if there are two or more operations
+        //with the same burn value which is the highest one
+        //we dont execute any operation of them because
+        //it would be ambiguous
+        auto number_of_ops_with_max_burn =
+            std::count_if(std::cbegin(operations),
+                          std::cend(operations),
+                          [&max_iter](const auto& op) {
+                              return getValue(op) >= getValue(max_iter);
+                          });
+
+        if(number_of_ops_with_max_burn == 1) {
+            relevant_ops.emplace_back(std::move(*max_iter));
+        }
     }
 
     return relevant_ops;
