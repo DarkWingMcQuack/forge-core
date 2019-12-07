@@ -39,7 +39,7 @@ LABEL description="Running container - forge"
 RUN apt update && apt -y install \
     cmake gcc-8 g++-8 libssl-dev \
     make binutils build-essential git \
-    zlib1g libmicrohttpd-dev
+    zlib1g libmicrohttpd-dev libcurl4-openssl-dev
 
 WORKDIR /forge
 
