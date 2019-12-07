@@ -1,7 +1,6 @@
 #include <CLI/CLI.hpp>
 #include <CLI/Validators.hpp>
 #include <cpptoml.h>
-#include <curl/curl.h>
 #include <env/ProgramOptions.hpp>
 #include <filesystem>
 #include <fmt/core.h>
