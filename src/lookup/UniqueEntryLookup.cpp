@@ -262,7 +262,7 @@ auto UniqueEntryLookup::filterNonRelevantOperations(std::vector<UniqueEntryOpera
             std::count_if(std::cbegin(operations),
                           std::cend(operations),
                           [&max_iter](const auto& op) {
-                              return getValue(op) >= getValue(max_iter);
+                              return getValue(op) >= getValue(*max_iter);
                           });
 
         if(number_of_ops_with_max_burn == 1) {
