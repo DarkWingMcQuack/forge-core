@@ -295,11 +295,13 @@ auto LookupManager::processBlock(core::Block&& block)
 
     //extract transactions
     auto transactions = txs_res.getValue();
+    auto [um_ops, unique_ops, utility_ops] =
+        parseAndFilter(std::move(transactions),
+                       block_height);
 
-    //execute all the operations on the entrys
-    processUMEntrys(transactions, block_height);
-    processUniqueEntrys(transactions, block_height);
-    processUtilityTokens(transactions, block_height);
+    um_entry_lookup_.executeOperations(std::move(um_ops));
+    unique_entry_lookup_.executeOperations(std::move(unique_ops));
+    utility_token_lookup_.executeOperations(std::move(utility_ops));
 
     //add blockhash to the processed blocks
     block_hashes_.push_back(std::move(block_hash));
@@ -428,7 +430,6 @@ auto LookupManager::isReserverdEntryKey(const std::vector<std::byte>& key) const
     return unique_opt || um_opt || utility_token_opt;
 }
 
-
 auto forge::lookup::generateMessage(ManagerError&& error)
     -> std::string
 {
@@ -446,16 +447,188 @@ auto forge::lookup::generateMessage(ManagerError&& error)
                       std::move(error));
 }
 
-
 auto LookupManager::getDaemon() const
     -> const daemon::ReadOnlyDaemonBase&
 {
     return *daemon_;
 }
 
-
 auto LookupManager::getCoin() const
     -> core::Coin
 {
     return daemon_->getCoin();
+}
+
+
+auto LookupManager::extractUMEntryOperations(const std::vector<core::Transaction>& txs,
+                                             std::int64_t block_height)
+    -> std::vector<core::UMEntryOperation>
+{
+    std::vector<core::UMEntryOperation> um_ops;
+
+    for(const auto& tx : txs) {
+        auto um_res = core::parseTransactionToUMEntry(tx, block_height, daemon_.get());
+        if(!um_res) {
+            //getting an error instead of an Opt indicates a wallet error
+            LOG(WARNING) << um_res.getError().what();
+            continue;
+        }
+
+        auto um_op_opt = std::move(um_res.getValue());
+        if(!um_op_opt) {
+            continue;
+        }
+
+        auto um_op = std::move(um_op_opt.getValue());
+        um_ops.emplace_back(std::move(um_op));
+    }
+
+    return um_ops;
+}
+
+auto LookupManager::extractUniqueEntryOperations(const std::vector<core::Transaction>& txs,
+                                                 std::int64_t block_height)
+    -> std::vector<core::UniqueEntryOperation>
+{
+    std::vector<core::UniqueEntryOperation> unique_ops;
+
+    for(const auto& tx : txs) {
+        auto unique_res = core::parseTransactionToUniqueEntry(tx, block_height, daemon_.get());
+        if(!unique_res) {
+            //getting an error instead of an Opt indicates a wallet error
+            LOG(WARNING) << unique_res.getError().what();
+            continue;
+        }
+
+        auto unique_op_opt = std::move(unique_res.getValue());
+        if(!unique_op_opt) {
+            continue;
+        }
+
+        auto unique_op = std::move(unique_op_opt.getValue());
+        unique_ops.emplace_back(std::move(unique_op));
+    }
+
+    return unique_ops;
+}
+
+auto LookupManager::extractUtilityTokenOperations(const std::vector<core::Transaction>& txs,
+                                                  std::int64_t block_height)
+    -> std::vector<core::UtilityTokenOperation>
+{
+    std::vector<core::UtilityTokenOperation> utility_ops;
+    for(const auto& tx : txs) {
+        auto utility_res = core::parseTransactionToUtilityTokenOp(tx, block_height, daemon_.get());
+        if(!utility_res) {
+            //getting an error instead of an Opt indicates a wallet error
+            LOG(WARNING) << utility_res.getError().what();
+            continue;
+        }
+
+        auto utility_op_opt = std::move(utility_res.getValue());
+        if(!utility_op_opt) {
+            continue;
+        }
+
+        auto utility_op = std::move(utility_op_opt.getValue());
+        utility_ops.emplace_back(std::move(utility_op));
+    }
+
+    return utility_ops;
+}
+
+auto LookupManager::parseAndFilter(std::vector<core::Transaction>&& txs,
+                                   std::int64_t block_height)
+    -> std::tuple<std::vector<core::UMEntryOperation>,
+                  std::vector<core::UniqueEntryOperation>,
+                  std::vector<core::UtilityTokenOperation>>
+{
+    std::map<EntryKey, std::vector<core::EntryCreationOp>> creation_map;
+
+    std::vector<core::UMEntryOperation> um_ops;
+    std::vector<core::UniqueEntryOperation> unique_ops;
+    std::vector<core::UtilityTokenOperation> utility_ops;
+
+    auto raw_um_ops = extractUMEntryOperations(txs, block_height);
+    auto raw_unique_ops = extractUniqueEntryOperations(txs, block_height);
+    auto raw_utility_ops = extractUtilityTokenOperations(txs, block_height);
+
+    for(auto um_op : std::move(raw_um_ops)) {
+        if(std::holds_alternative<core::UMEntryCreationOp>(um_op)) {
+            auto creation = std::get<core::UMEntryCreationOp>(std::move(um_op));
+            auto key = creation.getEntryKey();
+            auto [iter, inserted] = creation_map.insert({std::move(key), {creation}});
+            if(!inserted) {
+                iter->second.emplace_back(std::move(creation));
+            }
+            continue;
+        }
+
+        um_ops.emplace_back(std::move(um_op));
+    }
+
+    for(auto unique_op : std::move(raw_unique_ops)) {
+        if(std::holds_alternative<core::UniqueEntryCreationOp>(unique_op)) {
+            auto creation = std::get<core::UniqueEntryCreationOp>(std::move(unique_op));
+            auto key = creation.getEntryKey();
+            auto [iter, inserted] = creation_map.insert({std::move(key), {creation}});
+            if(!inserted) {
+                iter->second.emplace_back(std::move(creation));
+            }
+            continue;
+        }
+
+        unique_ops.emplace_back(std::move(unique_op));
+    }
+
+    for(auto utility_op : std::move(raw_utility_ops)) {
+        if(std::holds_alternative<core::UtilityTokenCreationOp>(utility_op)) {
+            auto creation = std::get<core::UtilityTokenCreationOp>(std::move(utility_op));
+            auto key = creation.getUtilityToken().getId();
+            auto [iter, inserted] = creation_map.insert({std::move(key), {creation}});
+            if(!inserted) {
+                iter->second.emplace_back(std::move(creation));
+            }
+            continue;
+        }
+
+        utility_ops.emplace_back(std::move(utility_op));
+    }
+
+    for(auto [_, creations] : std::move(creation_map)) {
+
+        if(creations.empty()) {
+            continue;
+        }
+
+
+        std::sort(std::begin(creations),
+                  std::end(creations),
+                  [](const auto& lhs, const auto& rhs) {
+                      return core::getBurnValue(lhs) < core::getBurnValue(rhs);
+                  });
+
+        std::reverse(std::begin(creations),
+                     std::end(creations));
+
+
+        if(creations.size() == 1
+           || core::getBurnValue(creations[0]) != core::getBurnValue(creations[1])) {
+            std::visit(utilxx::overload{
+                           [&](core::UMEntryCreationOp op) {
+                               um_ops.emplace_back(std::move(op));
+                           },
+                           [&](core::UniqueEntryCreationOp op) {
+                               unique_ops.emplace_back(std::move(op));
+                           },
+                           [&](core::UtilityTokenCreationOp op) {
+                               utility_ops.emplace_back(std::move(op));
+                           }},
+                       std::move(creations[0]));
+        }
+    }
+
+    return std::tuple{std::move(um_ops),
+                      std::move(unique_ops),
+                      std::move(utility_ops)};
 }

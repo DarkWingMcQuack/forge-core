@@ -47,6 +47,7 @@ add_library(forge "")
 target_sources(forge
   PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/Entry.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/entrys/EntryCreationOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/EntryOperation.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntryOperation.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/umentry/UMEntry.hpp
@@ -92,6 +93,7 @@ target_sources(forge
 
   PRIVATE
   src/entrys/Entry.cpp
+  src/entrys/EntryCreationOp.cpp
   src/entrys/EntryOperation.cpp
   src/entrys/umentry/UMEntryOperation.cpp
   src/entrys/umentry/UMEntry.cpp

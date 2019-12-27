@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <daemon/ReadOnlyDaemonBase.hpp>
 #include <entrys/Entry.hpp>
+#include <entrys/EntryCreationOp.hpp>
 #include <entrys/token/UtilityToken.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <functional>
@@ -103,6 +104,30 @@ private:
     auto processUtilityTokens(const std::vector<core::Transaction>& txs,
                               std::int64_t block_height)
         -> void;
+
+    auto parseAndFilter(std::vector<core::Transaction>&& txs,
+                        std::int64_t block_height)
+        -> std::tuple<std::vector<core::UMEntryOperation>,
+                      std::vector<core::UniqueEntryOperation>,
+                      std::vector<core::UtilityTokenOperation>>;
+
+    auto extractOperations(const std::vector<core::Transaction>& txs,
+                           std::int64_t block_height)
+        -> std::tuple<std::vector<core::UMEntryOperation>,
+                      std::vector<core::UniqueEntryOperation>,
+                      std::vector<core::UtilityTokenOperation>>;
+
+    auto extractUMEntryOperations(const std::vector<core::Transaction>& txs,
+                                  std::int64_t block_height)
+        -> std::vector<core::UMEntryOperation>;
+
+    auto extractUniqueEntryOperations(const std::vector<core::Transaction>& txs,
+                                      std::int64_t block_height)
+        -> std::vector<core::UniqueEntryOperation>;
+
+    auto extractUtilityTokenOperations(const std::vector<core::Transaction>& txs,
+                                       std::int64_t block_height)
+        -> std::vector<core::UtilityTokenOperation>;
 
 private:
     std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
