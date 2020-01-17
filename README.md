@@ -1,4 +1,8 @@
-# forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+# forge-core [![Build Status](https://travis-ci.com/DarkWingMcQuack/forge-core.svg?token=DspAxqiWFXesStxvvxdD&branch=master)](https://travis-ci.com/DarkWingMcQuack/forge-core) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html) [![chatroom icon](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/forgecore)
+<p align="center">
+ <img src="https://github.com/DarkWingMcQuack/forge-core/blob/master/graphics/logo.jpeg" width="400" height="300">
+</p>
+
 
 This is a C++17 implementation of Forge.
 Forge is a protocol using OP_RETURN transactions in blockchains to encode commands.
