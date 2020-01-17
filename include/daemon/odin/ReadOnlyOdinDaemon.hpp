@@ -52,6 +52,10 @@ public:
         -> utilxx::Result<std::vector<std::string>,
                           DaemonError> override;
 
+    auto isMainnet() const
+        -> utilxx::Result<bool,
+                          DaemonError> override;
+
 protected:
     auto sendcommand(const std::string& command,
                      Json::Value params) const

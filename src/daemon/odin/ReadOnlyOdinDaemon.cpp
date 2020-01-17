@@ -58,7 +58,7 @@ auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
                [this](const auto& command,
                       auto params) {
                    return client_.CallMethod(command,
-											 std::move(params));
+                                             std::move(params));
                },
                command,
                std::move(params))
@@ -209,6 +209,33 @@ auto ReadOnlyOdinDaemon::getAddresses() const
     return sendcommand(command, {})
         .flatMap([&](auto json) {
             return odin::processGetAddressesResponse(std::move(json));
+        });
+}
+
+
+auto ReadOnlyOdinDaemon::isMainnet() const
+    -> utilxx::Result<bool,
+                      DaemonError>
+{
+    static const auto command = "getinfo";
+
+    return sendcommand(command, {})
+        .flatMap([&](Json::Value json)
+                     -> Result<bool, DaemonError> {
+            if(!json.isMember("testnet")
+               || !json["testnet"].isBool()) {
+                return DaemonError{
+                    "unable to find \"testnet\" entry "
+                    "in the json respond from the \"getinfo\" command"};
+            }
+
+            if(!json["testnet"].isBool()) {
+                return DaemonError{
+                    "\"testnet\" entry in the json "
+                    "respond from the \"getinfo\" command is not boolean"};
+            }
+
+            return !json["testnet"].asBool();
         });
 }
 

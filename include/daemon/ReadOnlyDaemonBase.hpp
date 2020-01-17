@@ -46,6 +46,9 @@ public:
         -> utilxx::Result<std::vector<std::string>,
                           DaemonError> = 0;
 
+    virtual auto isMainnet() const
+        -> utilxx::Result<bool, DaemonError> = 0;
+
     virtual auto getCoin() const
         -> core::Coin final;
 
