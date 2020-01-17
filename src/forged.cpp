@@ -98,6 +98,26 @@ static void daemonize()
     stderr = fopen("/dev/null", "w+");
 }
 
+auto assertOnMainnet(const forge::daemon::ReadOnlyDaemonBase& daemon)
+{
+    auto is_main_res = daemon.isMainnet();
+
+    if(is_main_res.hasError()) {
+        fmt::print("{}\n", is_main_res.getError().what());
+        std::exit(-1);
+    }
+
+    auto is_main = is_main_res.getValue();
+
+    if(is_main) {
+        fmt::print("forge-core discovered that you are trying to use it on mainnet\n");
+        fmt::print(
+            "forge-core is currently highly unstable software "
+            "please only connect forge core with testnet wallets\n");
+        std::exit(0);
+    }
+}
+
 auto runLookupOnlyServer(const ProgramOptions& params)
 {
     auto daemon = make_readonly_daemon(params.getCoinHost(),
@@ -105,6 +125,7 @@ auto runLookupOnlyServer(const ProgramOptions& params)
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
                                        params.getCoin());
+    assertOnMainnet(*daemon);
 
     auto port = params.getRpcPort();
     auto threads = params.getNumberOfThreads();
@@ -135,6 +156,8 @@ auto runReadOnlyWalletServer(const ProgramOptions& params)
                                        params.getCoinPort(),
                                        params.getCoin());
 
+    assertOnMainnet(*daemon);
+
     auto lookup = std::make_unique<LookupManager>(std::move(daemon));
     ReadOnlyWallet wallet{std::move(lookup)};
 
@@ -164,6 +187,8 @@ auto runReadWriteWalletServer(const ProgramOptions& params)
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
                                        params.getCoin());
+
+    assertOnMainnet(*reader);
 
     auto writer = make_writing_daemon(params.getCoinHost(),
                                       params.getCoinUser(),

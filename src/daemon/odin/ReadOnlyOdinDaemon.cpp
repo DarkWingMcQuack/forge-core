@@ -239,12 +239,11 @@ auto ReadOnlyOdinDaemon::isMainnet() const
         });
 }
 
-auto forge::daemon::odin::processGetTransactionResponse(Json::Value&& json,
+auto forge::daemon::odin::processGetTransactionResponse(Json::Value&& response,
                                                         const Json::Value& params)
     -> utilxx::Result<Transaction, DaemonError>
 {
-    // auto copy = json;
-    if(auto tx_opt = buildTransaction(std::move(json));
+    if(auto tx_opt = buildTransaction(std::move(response));
        tx_opt) {
         return std::move(tx_opt.getValue());
     }
