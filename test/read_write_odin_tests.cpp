@@ -183,7 +183,7 @@ TEST(ReadWriteOdinClientTest, processSendToAddressResponseInvalid)
     auto file2 = readFile("send_to_address_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = forge::client::odin::processSendToAddressResponse(std::move(json1),
+    auto res2 = forge::client::odin::processSendToAddressResponse(std::move(json2),
                                                                   {});
 
     ASSERT_TRUE(res2.hasError());
