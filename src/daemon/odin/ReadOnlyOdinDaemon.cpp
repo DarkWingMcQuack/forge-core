@@ -363,7 +363,7 @@ auto forge::daemon::odin::processGetAddressesResponse(Json::Value&& response)
                 break;
             }
 
-            addresses.push_back(std::move(elem[0].asString()));
+            addresses.push_back(elem[0].asString());
         }
     }
 
