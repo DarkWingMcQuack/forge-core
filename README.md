@@ -7,7 +7,7 @@ Doing this, Forge is currently able to support **Utility Tokens** and **Unique E
 ## Utility Tokens
 Utility tokens can be used to create new digital assets ontop of already existing blockchains.
 Utility tokens consist of a *name* and a *supply*
-#### creation
+#### Creation
 A new type of utility token can only be created if its name is not used by any other type of token or entry at the time of creation.
 When a user creates a new utility token, he specifies the *name* and the *supply* and then recievies the *supply* of his new tokens to his address.
 
@@ -58,6 +58,7 @@ Forge-core tries to download and build all its dependencies by itself. Unfortuna
 Currently Forge dependes on you installing `libmicrohttpd`. The following guides will help you building forge-core
 on your system.
 
+## Docker
 ## OSX
 ## Windows
 ## Ubuntu
