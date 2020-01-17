@@ -14,7 +14,7 @@ using forge::env::ProgramOptions;
 ProgramOptions::ProgramOptions(std::string&& logfolder,
                                std::int64_t number_of_threads,
                                Mode mode,
-                               bool daemonize,
+                               bool clientize,
                                core::Coin coin,
                                std::int64_t coin_port,
                                std::string&& coin_host,
@@ -26,7 +26,7 @@ ProgramOptions::ProgramOptions(std::string&& logfolder,
     : logfolder_(std::move(logfolder)),
       number_of_threads_(number_of_threads),
       mode_(mode),
-      daemonize_(daemonize),
+      clientize_(clientize),
       coin_(coin),
       coin_port_(coin_port),
       coin_host_(std::move(coin_host)),
@@ -68,10 +68,10 @@ auto ProgramOptions::getCoin() const
     return coin_;
 }
 
-auto ProgramOptions::shouldDaemonize() const
+auto ProgramOptions::shouldClientize() const
     -> bool
 {
-    return daemonize_;
+    return clientize_;
 }
 
 auto ProgramOptions::getCoinPort() const
@@ -148,7 +148,7 @@ auto getServerModeFromEnv()
     return raw_str;
 }
 
-auto getDaemonModeFromEnv()
+auto getClientModeFromEnv()
     -> bool
 {
     auto raw_str = std::getenv("DEBUG");
@@ -310,7 +310,7 @@ auto forge::env::parseConfigFile(const std::string& config_path)
     auto config = cpptoml::parse_file(config_path + "/forge.conf");
     auto log_path = config->get_qualified_as<std::string>("log-folder").value_or(config_path + "/log/");
     auto mode_str = *config->get_qualified_as<std::string>("server.mode");
-    auto daemonize = *config->get_qualified_as<bool>("server.daemon");
+    auto clientize = *config->get_qualified_as<bool>("server.client");
     auto coin_str = *config->get_qualified_as<std::string>("coin.coin");
     auto coin_port = *config->get_qualified_as<std::int64_t>("coin.port");
     auto coin_host = *config->get_qualified_as<std::string>("coin.host");
@@ -349,7 +349,7 @@ auto forge::env::parseConfigFile(const std::string& config_path)
     return ProgramOptions{std::move(log_path),
                           threads,
                           mode,
-                          daemonize,
+                          clientize,
                           coin_opt.getValue(),
                           coin_port,
                           std::move(coin_host),
@@ -369,7 +369,7 @@ auto forge::env::fromEnvironment()
     auto config = getBasePathFromEnv();
     auto log_path = config + "/logs/";
     auto mode_str = getServerModeFromEnv();
-    auto daemonize = getDaemonModeFromEnv();
+    auto clientize = getClientModeFromEnv();
     auto coin_str = getCoinStringFromEnv();
     auto coin_port = getCoinPortEnv();
     auto coin_host = getCoinHostFromEnv();
@@ -408,7 +408,7 @@ auto forge::env::fromEnvironment()
     return ProgramOptions{std::move(log_path),
                           threads,
                           mode,
-                          daemonize,
+                          clientize,
                           coin_opt.getValue(),
                           coin_port,
                           std::move(coin_host),

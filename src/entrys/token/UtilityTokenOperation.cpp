@@ -4,8 +4,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <daemon/DaemonError.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ClientError.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/token/UtilityToken.hpp>
 #include <entrys/token/UtilityTokenCreationOp.hpp>
 #include <entrys/token/UtilityTokenDeletionOp.hpp>
@@ -26,8 +26,8 @@ using forge::core::UTILITY_TOKEN_DELETION_FLAG;
 using forge::core::UTILITY_TOKEN_OWNERSHIP_TRANSFER_FLAG;
 using forge::core::Transaction;
 using forge::core::UtilityTokenOperation;
-using forge::daemon::ReadOnlyDaemonBase;
-using forge::daemon::DaemonError;
+using forge::client::ReadOnlyClientBase;
+using forge::client::ClientError;
 
 auto forge::core::getUtilitToken(const UtilityTokenOperation& op)
     -> const UtilityToken&
@@ -109,14 +109,14 @@ auto forge::core::extractOperationFlag(const UtilityTokenOperation& op)
 
 auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
                                                    std::int64_t block,
-                                                   const ReadOnlyDaemonBase* daemon)
+                                                   const ReadOnlyClientBase* client)
     -> utilxx::Result<utilxx::Opt<UtilityTokenOperation>,
-                      DaemonError>
+                      ClientError>
 {
     using ResultType = utilxx::Result<utilxx::Opt<UtilityTokenOperation>,
-                                      DaemonError>;
+                                      ClientError>;
 
-    LOG_IF(FATAL, !daemon) << "ReadOnlyDaemonBase pointer is null";
+    LOG_IF(FATAL, !client) << "ReadOnlyClientBase pointer is null";
 
     //check if the transaction has exactly one op return
     //output and exactly one input
@@ -174,7 +174,7 @@ auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
     }
 
     LOG(DEBUG) << "resoving vin from " << vin.getTxid();
-    return daemon
+    return client
         ->resolveTxIn(std::move(vin))
         .flatMap([&](auto resolvedVin) {
             //we can only have one input address

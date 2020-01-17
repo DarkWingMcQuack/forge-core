@@ -3,8 +3,8 @@
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
-#include <daemon/WriteOnlyDaemonBase.hpp>
-#include <daemon/odin/ReadOnlyOdinDaemon.hpp>
+#include <client/WriteOnlyClientBase.hpp>
+#include <client/odin/ReadOnlyOdinClient.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <env/LoggingSetup.hpp>
 #include <env/ProgramOptions.hpp>
@@ -29,8 +29,8 @@
 #include <wallet/ReadWriteWallet.hpp>
 
 using forge::lookup::LookupManager;
-using forge::daemon::make_readonly_daemon;
-using forge::daemon::make_writing_daemon;
+using forge::client::make_readonly_client;
+using forge::client::make_writing_client;
 using forge::wallet::ReadWriteWallet;
 using forge::wallet::ReadOnlyWallet;
 using forge::env::initConsoleLogger;
@@ -41,7 +41,7 @@ using forge::rpc::JsonRpcServer;
 using jsonrpc::HttpServer;
 using jsonrpc::JSONRPC_SERVER_V1V2;
 
-static void daemonize()
+static void clientize()
 {
     pid_t pid = 0;
     int fd;
@@ -98,9 +98,9 @@ static void daemonize()
     stderr = fopen("/dev/null", "w+");
 }
 
-auto assertOnMainnet(const forge::daemon::ReadOnlyDaemonBase& daemon)
+auto assertOnMainnet(const forge::client::ReadOnlyClientBase& client)
 {
-    auto is_main_res = daemon.isMainnet();
+    auto is_main_res = client.isMainnet();
 
     if(is_main_res.hasError()) {
         fmt::print("{}\n", is_main_res.getError().what());
@@ -120,12 +120,12 @@ auto assertOnMainnet(const forge::daemon::ReadOnlyDaemonBase& daemon)
 
 auto runLookupOnlyServer(const ProgramOptions& params)
 {
-    auto daemon = make_readonly_daemon(params.getCoinHost(),
+    auto client = make_readonly_client(params.getCoinHost(),
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
                                        params.getCoin());
-    assertOnMainnet(*daemon);
+    assertOnMainnet(*client);
 
     auto port = params.getRpcPort();
     auto threads = params.getNumberOfThreads();
@@ -136,7 +136,7 @@ auto runLookupOnlyServer(const ProgramOptions& params)
                           "",
                           static_cast<int>(threads)};
 
-    LookupManager lookup{std::move(daemon)};
+    LookupManager lookup{std::move(client)};
 
     JsonRpcServer rpcserver{httpserver,
                             JSONRPC_SERVER_V1V2,
@@ -150,15 +150,15 @@ auto runLookupOnlyServer(const ProgramOptions& params)
 
 auto runReadOnlyWalletServer(const ProgramOptions& params)
 {
-    auto daemon = make_readonly_daemon(params.getCoinHost(),
+    auto client = make_readonly_client(params.getCoinHost(),
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
                                        params.getCoin());
 
-    assertOnMainnet(*daemon);
+    assertOnMainnet(*client);
 
-    auto lookup = std::make_unique<LookupManager>(std::move(daemon));
+    auto lookup = std::make_unique<LookupManager>(std::move(client));
     ReadOnlyWallet wallet{std::move(lookup)};
 
     auto port = params.getRpcPort();
@@ -182,7 +182,7 @@ auto runReadOnlyWalletServer(const ProgramOptions& params)
 
 auto runReadWriteWalletServer(const ProgramOptions& params)
 {
-    auto reader = make_readonly_daemon(params.getCoinHost(),
+    auto reader = make_readonly_client(params.getCoinHost(),
                                        params.getCoinUser(),
                                        params.getCoinPassword(),
                                        params.getCoinPort(),
@@ -190,7 +190,7 @@ auto runReadWriteWalletServer(const ProgramOptions& params)
 
     assertOnMainnet(*reader);
 
-    auto writer = make_writing_daemon(params.getCoinHost(),
+    auto writer = make_writing_client(params.getCoinHost(),
                                       params.getCoinUser(),
                                       params.getCoinPassword(),
                                       params.getCoinPort(),
@@ -225,12 +225,12 @@ auto main(int argc, char* argv[]) -> int
 
     auto params = parseOptions(argc, argv);
 
-    //we need to first daemonize because of
+    //we need to first clientize because of
     //https://github.com/KjellKod/g3log/issues/151
-    if(params.shouldDaemonize()) {
-        fmt::print("Starting forge daemon, listening on port {}\n",
+    if(params.shouldClientize()) {
+        fmt::print("Starting forge client, listening on port {}\n",
                    params.getRpcPort());
-        daemonize();
+        clientize();
     }
 
     if(!params.shouldLogToConsole()) {

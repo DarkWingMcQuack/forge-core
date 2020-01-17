@@ -1,7 +1,7 @@
 #include <core/Block.hpp>
 #include <core/Coin.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
-#include <daemon/odin/ReadOnlyOdinDaemon.hpp>
+#include <client/ReadOnlyClientBase.hpp>
+#include <client/odin/ReadOnlyOdinClient.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <jsonrpccpp/client.h>
@@ -10,8 +10,8 @@
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using forge::daemon::ReadOnlyOdinDaemon;
-using forge::daemon::DaemonError;
+using forge::client::ReadOnlyOdinClient;
+using forge::client::ClientError;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::Try;
@@ -33,12 +33,12 @@ using jsonrpc::JsonRpcException;
 using namespace std::string_literals;
 
 
-ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
+ReadOnlyOdinClient::ReadOnlyOdinClient(const std::string& host,
                                        const std::string& user,
                                        const std::string& password,
                                        std::int64_t port,
                                        core::Coin coin)
-    : ReadOnlyDaemonBase(coin),
+    : ReadOnlyClientBase(coin),
       http_client_("http://"
                    + user
                    + ":"
@@ -50,9 +50,9 @@ ReadOnlyOdinDaemon::ReadOnlyOdinDaemon(const std::string& host,
       client_(http_client_, JSONRPC_CLIENT_V1) {}
 
 
-auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
+auto ReadOnlyOdinClient::sendcommand(const std::string& command,
                                      Json::Value params) const
-    -> Result<Json::Value, DaemonError>
+    -> Result<Json::Value, ClientError>
 {
     return Try<jsonrpc::JsonRpcException>(
                [this](const auto& command,
@@ -64,12 +64,12 @@ auto ReadOnlyOdinDaemon::sendcommand(const std::string& command,
                std::move(params))
         .mapError([&](auto error) {
             LOG(WARNING) << command << " failed";
-            return DaemonError{error.what()};
+            return ClientError{error.what()};
         });
 }
 
-auto ReadOnlyOdinDaemon::getBlockCount() const
-    -> Result<std::int64_t, DaemonError>
+auto ReadOnlyOdinClient::getBlockCount() const
+    -> Result<std::int64_t, ClientError>
 {
     static const auto command = "getblockcount"s;
 
@@ -80,8 +80,8 @@ auto ReadOnlyOdinDaemon::getBlockCount() const
         });
 }
 
-auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
-    -> utilxx::Result<std::string, DaemonError>
+auto ReadOnlyOdinClient::getBlockHash(std::int64_t index) const
+    -> utilxx::Result<std::string, ClientError>
 {
     static const auto command = "getblockhash"s;
 
@@ -95,8 +95,8 @@ auto ReadOnlyOdinDaemon::getBlockHash(std::int64_t index) const
         });
 }
 
-auto ReadOnlyOdinDaemon::getBlock(std::string hash) const
-    -> utilxx::Result<Block, DaemonError>
+auto ReadOnlyOdinClient::getBlock(std::string hash) const
+    -> utilxx::Result<Block, ClientError>
 {
     static const auto command = "getblock"s;
 
@@ -112,8 +112,8 @@ auto ReadOnlyOdinDaemon::getBlock(std::string hash) const
         });
 }
 
-auto ReadOnlyOdinDaemon::getNewestBlock() const
-    -> Result<Block, DaemonError>
+auto ReadOnlyOdinClient::getNewestBlock() const
+    -> Result<Block, ClientError>
 {
     return getBlockCount()
         .flatMap([this](auto height) {
@@ -124,29 +124,29 @@ auto ReadOnlyOdinDaemon::getNewestBlock() const
         });
 }
 
-auto ReadOnlyOdinDaemon::resolveTxIn(TxIn vin) const
-    -> utilxx::Result<TxOut, DaemonError>
+auto ReadOnlyOdinClient::resolveTxIn(TxIn vin) const
+    -> utilxx::Result<TxOut, ClientError>
 {
     auto index = vin.getVoutIndex();
     auto txid = std::move(vin.getTxid());
 
     return getTransaction(std::move(txid))
         .flatMap([&](auto tx)
-                     -> utilxx::Result<TxOut, DaemonError> {
+                     -> utilxx::Result<TxOut, ClientError> {
             if(static_cast<std::int64_t>(tx.getOutputs().size())
                <= vin.getVoutIndex()) {
                 auto what = fmt::format("unable to get output #{} of transaction {}",
                                         index,
                                         tx.getTxid());
-                return DaemonError{std::move(what)};
+                return ClientError{std::move(what)};
             }
 
             return tx.getOutputs()[index];
         });
 }
 
-auto ReadOnlyOdinDaemon::getTransaction(std::string txid) const
-    -> utilxx::Result<core::Transaction, DaemonError>
+auto ReadOnlyOdinClient::getTransaction(std::string txid) const
+    -> utilxx::Result<core::Transaction, ClientError>
 {
     static const auto command = "getrawtransaction";
 
@@ -161,9 +161,9 @@ auto ReadOnlyOdinDaemon::getTransaction(std::string txid) const
         });
 }
 
-auto ReadOnlyOdinDaemon::getUnspent() const
+auto ReadOnlyOdinClient::getUnspent() const
     -> Result<std::vector<Unspent>,
-              DaemonError>
+              ClientError>
 {
     static const auto command = "listunspent";
 
@@ -178,14 +178,14 @@ auto ReadOnlyOdinDaemon::getUnspent() const
         });
 }
 
-auto ReadOnlyOdinDaemon::getOutputValue(std::string txid,
+auto ReadOnlyOdinClient::getOutputValue(std::string txid,
                                         std::int64_t index) const
-    -> utilxx::Result<std::int64_t, DaemonError>
+    -> utilxx::Result<std::int64_t, ClientError>
 {
     auto txid_copy = txid;
     return getTransaction(std::move(txid))
         .flatMap([&](auto tx)
-                     -> utilxx::Result<std::int64_t, DaemonError> {
+                     -> utilxx::Result<std::int64_t, ClientError> {
             if(auto value_opt = tx.getValueOfOutput(index);
                value_opt) {
                 return value_opt.getValue();
@@ -196,13 +196,13 @@ auto ReadOnlyOdinDaemon::getOutputValue(std::string txid,
                             index,
                             txid_copy);
 
-            return DaemonError{std::move(error)};
+            return ClientError{std::move(error)};
         });
 }
 
-auto ReadOnlyOdinDaemon::getAddresses() const
+auto ReadOnlyOdinClient::getAddresses() const
     -> utilxx::Result<std::vector<std::string>,
-                      DaemonError>
+                      ClientError>
 {
     static const auto command = "listaddressgroupings";
 
@@ -213,24 +213,24 @@ auto ReadOnlyOdinDaemon::getAddresses() const
 }
 
 
-auto ReadOnlyOdinDaemon::isMainnet() const
+auto ReadOnlyOdinClient::isMainnet() const
     -> utilxx::Result<bool,
-                      DaemonError>
+                      ClientError>
 {
     static const auto command = "getinfo";
 
     return sendcommand(command, {})
         .flatMap([&](Json::Value json)
-                     -> Result<bool, DaemonError> {
+                     -> Result<bool, ClientError> {
             if(!json.isMember("testnet")
                || !json["testnet"].isBool()) {
-                return DaemonError{
+                return ClientError{
                     "unable to find \"testnet\" entry "
                     "in the json respond from the \"getinfo\" command"};
             }
 
             if(!json["testnet"].isBool()) {
-                return DaemonError{
+                return ClientError{
                     "\"testnet\" entry in the json "
                     "respond from the \"getinfo\" command is not boolean"};
             }
@@ -239,9 +239,9 @@ auto ReadOnlyOdinDaemon::isMainnet() const
         });
 }
 
-auto forge::daemon::odin::processGetTransactionResponse(Json::Value&& response,
+auto forge::client::odin::processGetTransactionResponse(Json::Value&& response,
                                                         const Json::Value& params)
-    -> utilxx::Result<Transaction, DaemonError>
+    -> utilxx::Result<Transaction, ClientError>
 {
     if(auto tx_opt = buildTransaction(std::move(response));
        tx_opt) {
@@ -253,36 +253,36 @@ auto forge::daemon::odin::processGetTransactionResponse(Json::Value&& response,
                     "getrawtransaction",
                     params.toStyledString());
 
-    return DaemonError{std::move(error_str)};
+    return ClientError{std::move(error_str)};
 }
 
-auto forge::daemon::odin::processGetBlockCountResponse(Json::Value&& response,
+auto forge::client::odin::processGetBlockCountResponse(Json::Value&& response,
                                                        const Json::Value & /*params*/)
-    -> utilxx::Result<std::int64_t, DaemonError>
+    -> utilxx::Result<std::int64_t, ClientError>
 {
     if(!response.isInt64()) {
-        return DaemonError{"unable to get current block count"};
+        return ClientError{"unable to get current block count"};
     }
 
     return response.asInt64();
 }
 
-auto forge::daemon::odin::processGetBlockHashResponse(Json::Value&& response,
+auto forge::client::odin::processGetBlockHashResponse(Json::Value&& response,
                                                       const Json::Value& params)
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     if(!response.isString()) {
         auto error = fmt::format("unable to get blockhash with parameters {}",
                                  params.toStyledString());
-        return DaemonError{std::move(error)};
+        return ClientError{std::move(error)};
     }
 
     return response.asString();
 }
 
-auto forge::daemon::odin::processGetBlockResponse(Json::Value&& response,
+auto forge::client::odin::processGetBlockResponse(Json::Value&& response,
                                                   const Json::Value& params)
-    -> utilxx::Result<Block, DaemonError>
+    -> utilxx::Result<Block, ClientError>
 {
     if(auto block_opt = buildBlock(std::move(response));
        block_opt) {
@@ -295,16 +295,16 @@ auto forge::daemon::odin::processGetBlockResponse(Json::Value&& response,
                     params.asString());
 
 
-    return DaemonError{std::move(error_str)};
+    return ClientError{std::move(error_str)};
 }
 
-auto forge::daemon::odin::processGetUnspentResponse(Json::Value&& response,
+auto forge::client::odin::processGetUnspentResponse(Json::Value&& response,
                                                     const Json::Value& params)
     -> utilxx::Result<std::vector<Unspent>,
-                      DaemonError>
+                      ClientError>
 {
     if(!response.isArray()) {
-        return DaemonError{"result of \"listunspent\" was not an json array"};
+        return ClientError{"result of \"listunspent\" was not an json array"};
     }
 
     std::vector<Unspent> ret_vec;
@@ -341,12 +341,12 @@ auto forge::daemon::odin::processGetUnspentResponse(Json::Value&& response,
     return std::move(ret_vec);
 }
 
-auto forge::daemon::odin::processGetAddressesResponse(Json::Value&& response)
+auto forge::client::odin::processGetAddressesResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::string>,
-                      DaemonError>
+                      ClientError>
 {
     if(!response.isArray()) {
-        return DaemonError{"result of \"listaddressgroupings\" was not an json array"};
+        return ClientError{"result of \"listaddressgroupings\" was not an json array"};
     }
 
     std::vector<std::string> addresses;

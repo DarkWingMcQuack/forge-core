@@ -1,18 +1,18 @@
 #include <core/Block.hpp>
 #include <core/Coin.hpp>
 #include <core/Transaction.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
-#include <daemon/WriteOnlyDaemonBase.hpp>
-#include <daemon/odin/ReadOnlyOdinDaemon.hpp>
-#include <daemon/odin/ReadWriteOdinDaemon.hpp>
+#include <client/ReadOnlyClientBase.hpp>
+#include <client/WriteOnlyClientBase.hpp>
+#include <client/odin/ReadOnlyOdinClient.hpp>
+#include <client/odin/ReadWriteOdinClient.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <json/value.h>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-using forge::daemon::ReadWriteOdinDaemon;
-using forge::daemon::ReadOnlyOdinDaemon;
+using forge::client::ReadWriteOdinClient;
+using forge::client::ReadOnlyOdinClient;
 using utilxx::Opt;
 using utilxx::Result;
 using forge::core::stringToByteVec;
@@ -21,7 +21,7 @@ using forge::core::getDefaultTxFee;
 using namespace std::string_literals;
 
 
-auto ReadWriteOdinDaemon::generateRawTx(std::string input_txid,
+auto ReadWriteOdinClient::generateRawTx(std::string input_txid,
                                         std::int64_t index,
                                         std::vector<std::byte> metadata,
                                         std::int64_t burn_value,
@@ -30,7 +30,7 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string input_txid,
                                                       std::int64_t>>
                                             outputs) const
     -> Result<std::vector<std::byte>,
-              DaemonError>
+              ClientError>
 {
     static const auto command = "createrawtransaction"s;
 
@@ -46,7 +46,7 @@ auto ReadWriteOdinDaemon::generateRawTx(std::string input_txid,
         });
 }
 
-auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string input_txid,
+auto ReadWriteOdinClient::generateRpcParamsForRawTx(std::string input_txid,
                                                     std::int64_t index,
                                                     std::vector<std::byte> metadata,
                                                     std::int64_t burn_value,
@@ -88,9 +88,9 @@ auto ReadWriteOdinDaemon::generateRpcParamsForRawTx(std::string input_txid,
     return param;
 }
 
-auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte> tx) const
+auto ReadWriteOdinClient::signRawTx(std::vector<std::byte> tx) const
     -> Result<std::vector<std::byte>,
-              DaemonError>
+              ClientError>
 {
     static const auto command = "signrawtransaction"s;
 
@@ -103,8 +103,8 @@ auto ReadWriteOdinDaemon::signRawTx(std::vector<std::byte> tx) const
         });
 }
 
-auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte> tx) const
-    -> Result<std::string, DaemonError>
+auto ReadWriteOdinClient::sendRawTx(std::vector<std::byte> tx) const
+    -> Result<std::string, ClientError>
 {
     static const auto command = "sendrawtransaction"s;
 
@@ -115,17 +115,17 @@ auto ReadWriteOdinDaemon::sendRawTx(std::vector<std::byte> tx) const
 
     return sendcommand(command, std::move(params))
         .flatMap([](auto json)
-                     -> Result<std::string, DaemonError> {
+                     -> Result<std::string, ClientError> {
             if(json.isString()) {
                 return json.asString();
             }
 
-            return DaemonError{json.toStyledString()};
+            return ClientError{json.toStyledString()};
         });
 }
 
-auto ReadWriteOdinDaemon::generateNewAddress() const
-    -> utilxx::Result<std::string, DaemonError>
+auto ReadWriteOdinClient::generateNewAddress() const
+    -> utilxx::Result<std::string, ClientError>
 {
     static const auto command = "getnewaddress"s;
 
@@ -135,8 +135,8 @@ auto ReadWriteOdinDaemon::generateNewAddress() const
         });
 }
 
-auto ReadWriteOdinDaemon::decodeTxidOfRawTx(const std::vector<std::byte>& tx) const
-    -> utilxx::Result<std::string, DaemonError>
+auto ReadWriteOdinClient::decodeTxidOfRawTx(const std::vector<std::byte>& tx) const
+    -> utilxx::Result<std::string, ClientError>
 {
     static const auto command = "decoderawtransaction"s;
 
@@ -149,14 +149,14 @@ auto ReadWriteOdinDaemon::decodeTxidOfRawTx(const std::vector<std::byte>& tx) co
         });
 }
 
-auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
+auto ReadWriteOdinClient::burnAmount(std::int64_t amount,
                                      std::vector<std::byte> metadata) const
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     auto fees = getDefaultTxFee(getCoin());
     return getUnspent()
         .flatMap([&](auto unspents)
-                     -> utilxx::Result<std::string, DaemonError> {
+                     -> utilxx::Result<std::string, ClientError> {
             auto iter =
                 std::find_if(std::cbegin(unspents),
                              std::cend(unspents),
@@ -164,7 +164,7 @@ auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
                                  return elem.getValue() >= amount + fees;
                              });
             if(iter == std::cend(unspents)) {
-                return DaemonError{"no input available to burn a value of "
+                return ClientError{"no input available to burn a value of "
                                    + std::to_string(amount)
                                    + " coins + "
                                    + std::to_string(fees)
@@ -198,16 +198,16 @@ auto ReadWriteOdinDaemon::burnAmount(std::int64_t amount,
         });
 }
 
-auto ReadWriteOdinDaemon::burnAmount(std::string txid,
+auto ReadWriteOdinClient::burnAmount(std::string txid,
                                      std::int64_t index,
                                      std::int64_t amount,
                                      std::vector<std::byte> metadata,
                                      std::string change_address) const
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     return getOutputValue(txid, index)
         .flatMap([&](auto output_value)
-                     -> Result<std::string, DaemonError> {
+                     -> Result<std::string, ClientError> {
             auto fee = getDefaultTxFee(getCoin());
             //if the output value is less than the requested amount + fee return an error
             if(output_value < amount + fee) {
@@ -215,7 +215,7 @@ auto ReadWriteOdinDaemon::burnAmount(std::string txid,
                                          txid,
                                          index,
                                          amount);
-                return DaemonError{std::move(error)};
+                return ClientError{std::move(error)};
             }
 
             //if the output value is the same as the requested + fee
@@ -234,10 +234,10 @@ auto ReadWriteOdinDaemon::burnAmount(std::string txid,
         });
 }
 
-auto ReadWriteOdinDaemon::burnOutput(std::string txid,
+auto ReadWriteOdinClient::burnOutput(std::string txid,
                                      std::int64_t index,
                                      std::vector<std::byte> metadata) const
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     return getOutputValue(txid, index)
         .flatMap([&](auto output_value) {
@@ -263,9 +263,9 @@ std::string roundDouble(double num)
 
 } // namespace
 
-auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
+auto ReadWriteOdinClient::sendToAddress(std::int64_t amount,
                                         std::string address) const
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     static const auto command = "sendtoaddress"s;
 
@@ -283,10 +283,10 @@ auto ReadWriteOdinDaemon::sendToAddress(std::int64_t amount,
 }
 
 
-auto ReadWriteOdinDaemon::getVOutIdxByAmountAndAddress(std::string txid,
+auto ReadWriteOdinClient::getVOutIdxByAmountAndAddress(std::string txid,
                                                        std::int64_t amount,
                                                        std::string address) const
-    -> utilxx::Result<std::int64_t, DaemonError>
+    -> utilxx::Result<std::int64_t, ClientError>
 {
     static const auto command = "getrawtransaction"s;
 
@@ -304,9 +304,9 @@ auto ReadWriteOdinDaemon::getVOutIdxByAmountAndAddress(std::string txid,
 }
 
 
-auto forge::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
+auto forge::client::odin::processGenerateRawTxResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::byte>,
-                      DaemonError>
+                      ClientError>
 {
     auto result = response.toStyledString();
 
@@ -316,7 +316,7 @@ auto forge::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
                    '"');
 
     if(number_of_delimiters < 2) {
-        return DaemonError{"The result of \"createrawtransaction\" was way to short"};
+        return ClientError{"The result of \"createrawtransaction\" was way to short"};
     }
 
     auto first = result.find('"') + 1;
@@ -327,13 +327,13 @@ auto forge::daemon::odin::processGenerateRawTxResponse(Json::Value&& response)
        byte_vec_opt) {
         return byte_vec_opt.getValue();
     } else {
-        return DaemonError{std::move(result)};
+        return ClientError{std::move(result)};
     }
 }
 
-auto forge::daemon::odin::processSignRawTxResponse(Json::Value&& response)
+auto forge::client::odin::processSignRawTxResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::byte>,
-                      DaemonError>
+                      ClientError>
 {
     //check if the request was complete
     if(!response.isMember("complete")
@@ -345,14 +345,14 @@ auto forge::daemon::odin::processSignRawTxResponse(Json::Value&& response)
            && response["errors"].isValidIndex(0)
            && response["errors"][0].isMember("error")
            && response["errors"][0]["error"].isString()) {
-            return DaemonError{std::move(response["errors"][0]["error"].asString())};
+            return ClientError{std::move(response["errors"][0]["error"].asString())};
         }
-        return DaemonError{"unknown error during transaction signing"};
+        return ClientError{"unknown error during transaction signing"};
     }
 
     if(!response.isMember("hex")
        || !response["hex"].isString()) {
-        return DaemonError{"no hex value was returned from transaction signing"};
+        return ClientError{"no hex value was returned from transaction signing"};
     }
 
     auto hex_str = response["hex"].asString();
@@ -360,58 +360,58 @@ auto forge::daemon::odin::processSignRawTxResponse(Json::Value&& response)
     auto hex_vec = stringToByteVec(hex_str);
 
     if(!hex_vec) {
-        return DaemonError{"wasn't able to create byte vec from the result of a transaction signing"};
+        return ClientError{"wasn't able to create byte vec from the result of a transaction signing"};
     }
 
     return hex_vec.getValue();
 }
 
-auto forge::daemon::odin::processGenerateNewAddressResponse(Json::Value&& response)
-    -> utilxx::Result<std::string, DaemonError>
+auto forge::client::odin::processGenerateNewAddressResponse(Json::Value&& response)
+    -> utilxx::Result<std::string, ClientError>
 {
     if(!response.isString()) {
-        return DaemonError{"unknown error while getting new address"};
+        return ClientError{"unknown error while getting new address"};
     }
 
     return response.asString();
 }
 
-auto forge::daemon::odin::processDecodeTxidOfRawTxResponse(Json::Value&& response)
-    -> utilxx::Result<std::string, DaemonError>
+auto forge::client::odin::processDecodeTxidOfRawTxResponse(Json::Value&& response)
+    -> utilxx::Result<std::string, ClientError>
 {
     if(!response.isMember("txid")
        || !response["txid"].isString()) {
         auto error = fmt::format("unable to find txid in decoded raw transaction {}",
                                  response.toStyledString());
-        return DaemonError{std::move(error)};
+        return ClientError{std::move(error)};
     }
 
     return response["txid"].asString();
 }
 
-auto forge::daemon::odin::processSendToAddressResponse(Json::Value&& response,
+auto forge::client::odin::processSendToAddressResponse(Json::Value&& response,
                                                        const std::string& address)
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     if(!response.isString()) {
         auto error = fmt::format("unknown error sending odin to address {}",
                                  address);
-        return DaemonError{std::move(error)};
+        return ClientError{std::move(error)};
     }
 
     return response.asString();
 }
 
 
-auto forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
+auto forge::client::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
                                                                       std::int64_t amount,
                                                                       const std::string& address)
-    -> utilxx::Result<std::int64_t, DaemonError>
+    -> utilxx::Result<std::int64_t, ClientError>
 {
     if(!response.isMember("vout")
        || !response["vout"].isArray()) {
         auto error = fmt::format("unable to decode response of \"getrawtransaction\"");
-        return DaemonError{std::move(error)};
+        return ClientError{std::move(error)};
     }
 
     auto coins_raw = static_cast<double>(amount) / 100000000.;
@@ -429,7 +429,7 @@ auto forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Valu
 
             auto error = fmt::format("unable to decode vout:{} response of \"getrawtransaction\"",
                                      counter);
-            return DaemonError{std::move(error)};
+            return ClientError{std::move(error)};
         }
 
         auto holds_address =
@@ -451,5 +451,5 @@ auto forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Valu
                     address,
                     amount);
 
-    return DaemonError{std::move(error)};
+    return ClientError{std::move(error)};
 }

@@ -3,7 +3,7 @@
 #include <array>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>
 #include <entrys/uentry/UniqueEntryCreationOp.hpp>
 #include <entrys/uentry/UniqueEntryDeletionOp.hpp>
@@ -59,8 +59,8 @@ auto extractOperationFlag(const UniqueEntryOperation&)
 //and the metadata has the needed formating
 auto parseTransactionToUniqueEntry(core::Transaction tx,
                                    std::int64_t block,
-                                   const daemon::ReadOnlyDaemonBase* daemon)
-    -> utilxx::Result<utilxx::Opt<UniqueEntryOperation>, daemon::DaemonError>;
+                                   const client::ReadOnlyClientBase* client)
+    -> utilxx::Result<utilxx::Opt<UniqueEntryOperation>, client::ClientError>;
 
 //parses given metadata and constructs a UniqueEntryOperation from
 //the given information if possible

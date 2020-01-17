@@ -1,7 +1,7 @@
 #include <core/FlagIndexes.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <fmt/core.h>
@@ -16,8 +16,8 @@ using utilxx::Result;
 using utilxx::overload;
 using utilxx::Opt;
 using forge::core::Transaction;
-using forge::daemon::ReadOnlyDaemonBase;
-using forge::daemon::DaemonError;
+using forge::client::ReadOnlyClientBase;
+using forge::client::ClientError;
 using forge::core::parseUMEntry;
 using forge::core::FORGE_IDENTIFIER_MASK;
 
@@ -173,12 +173,12 @@ auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadat
 
 auto forge::core::parseTransactionToUMEntry(Transaction tx,
                                             std::int64_t block,
-                                            const daemon::ReadOnlyDaemonBase* daemon)
-    -> Result<Opt<UMEntryOperation>, DaemonError>
+                                            const client::ReadOnlyClientBase* client)
+    -> Result<Opt<UMEntryOperation>, ClientError>
 {
-    using ResultType = Result<Opt<UMEntryOperation>, DaemonError>;
+    using ResultType = Result<Opt<UMEntryOperation>, ClientError>;
 
-    LOG_IF(FATAL, !daemon) << "ReadOnlyDaemonBase pointer is null";
+    LOG_IF(FATAL, !client) << "ReadOnlyClientBase pointer is null";
 
     //check if the transaction has exactly one op return
     //output and exactly one input
@@ -234,7 +234,7 @@ auto forge::core::parseTransactionToUMEntry(Transaction tx,
     }
 
     LOG(DEBUG) << "resoving vin from " << vin.getTxid();
-    return daemon
+    return client
         ->resolveTxIn(std::move(vin))
         .flatMap([&](auto resolvedVin) {
             //we can only have one input address

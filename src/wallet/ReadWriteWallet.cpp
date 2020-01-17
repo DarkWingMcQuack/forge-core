@@ -34,9 +34,9 @@ using forge::core::createUMEntryUpdateOpMetadata;
 using utilxx::Result;
 
 ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
-                                 std::unique_ptr<daemon::WriteOnlyDaemonBase>&& daemon)
+                                 std::unique_ptr<client::WriteOnlyClientBase>&& client)
     : ReadOnlyWallet(std::move(lookup)),
-      daemon_(std::move(daemon)) {}
+      client_(std::move(client)) {}
 
 
 auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
@@ -44,7 +44,7 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
                                        std::int64_t burn_amount)
     -> Result<std::string, WalletError>
 {
-    return daemon_
+    return client_
         ->generateNewAddress() //generate new address
         .mapError([](auto error) {
             return WalletError{std::move(error.what())};
@@ -127,7 +127,7 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
                                            std::int64_t burn_amount)
     -> Result<std::string, WalletError>
 {
-    return daemon_
+    return client_
         ->generateNewAddress() //generate new address
         .mapError([](auto error) {
             return WalletError{std::move(error.what())};
@@ -149,7 +149,7 @@ auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
                                             std::int64_t burn_amount)
     -> utilxx::Result<std::string, WalletError>
 {
-    return daemon_
+    return client_
         ->generateNewAddress() //generate new address
         .mapError([](auto error) {
             return WalletError{std::move(error.what())};
@@ -451,7 +451,7 @@ auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
 
     auto owner = owner_opt.getValue().get();
 
-    return daemon_
+    return client_
         ->sendToAddress(amount,
                         std::move(owner))
         .mapError([](auto error) {
@@ -530,20 +530,20 @@ auto ReadWriteWallet::burn(const std::string& address,
 {
     auto default_fee = getDefaultTxFee(getLookup().getCoin());
 
-    return daemon_
+    return client_
         //send the needed amount to the address
         ->sendToAddress(burn_amount
                             + default_fee,
                         address)
         .flatMap([&](auto txid) {
             //write the metadata to the blockchain
-            return daemon_
+            return client_
                 ->getVOutIdxByAmountAndAddress(txid,
                                                burn_amount
                                                    + default_fee,
                                                address)
                 .flatMap([&](auto vout_idx) {
-                    return daemon_
+                    return client_
                         ->burnOutput(std::move(txid),
                                      vout_idx,
                                      std::move(metadata));
@@ -565,21 +565,21 @@ auto ReadWriteWallet::burn(const std::string& owner,
 {
     auto coin = getLookup().getCoin();
 
-    return daemon_
+    return client_
         //send +minTxAmount because this will be send to the new owner address
         ->sendToAddress(burn_amount
                             + getMinimumTxAmount(coin)
                             + getDefaultTxFee(coin),
                         owner)
         .flatMap([&](auto txid) {
-            return daemon_
+            return client_
                 ->getVOutIdxByAmountAndAddress(txid,
                                                burn_amount
                                                    + getMinimumTxAmount(coin)
                                                    + getDefaultTxFee(coin),
                                                std::move(owner))
                 .flatMap([&](auto vout_idx) {
-                    return daemon_
+                    return client_
                         ->burnAmount(std::move(txid),
                                      vout_idx,
                                      burn_amount,

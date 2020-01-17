@@ -3,7 +3,7 @@
 #include <core/Coin.hpp>
 #include <core/Transaction.hpp>
 #include <cstdint>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/Entry.hpp>
 #include <entrys/EntryCreationOp.hpp>
 #include <entrys/token/UtilityToken.hpp>
@@ -20,7 +20,7 @@
 namespace forge::lookup {
 
 using ManagerError = std::variant<LookupError,
-                                  daemon::DaemonError>;
+                                  client::ClientError>;
 
 auto generateMessage(ManagerError&& error)
     -> std::string;
@@ -28,7 +28,7 @@ auto generateMessage(ManagerError&& error)
 class LookupManager final
 {
 public:
-    LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon);
+    LookupManager(std::unique_ptr<client::ReadOnlyClientBase>&& client);
     LookupManager(LookupManager&&) = default;
 
     auto updateLookup()
@@ -53,10 +53,10 @@ public:
         -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupIsValid() const
-        -> utilxx::Result<bool, daemon::DaemonError>;
+        -> utilxx::Result<bool, client::ClientError>;
 
     auto getLastValidBlockHeight() const
-        -> utilxx::Result<int64_t, daemon::DaemonError>;
+        -> utilxx::Result<int64_t, client::ClientError>;
 
     auto getUtilityTokenCreditOf(const std::string& owner,
                                  const std::vector<std::byte>& token) const
@@ -88,8 +88,8 @@ public:
     auto getCoin() const
         -> core::Coin;
 
-    auto getDaemon() const
-        -> const daemon::ReadOnlyDaemonBase&;
+    auto getClient() const
+        -> const client::ReadOnlyClientBase&;
 
 private:
     auto processBlock(core::Block&& block)
@@ -130,7 +130,7 @@ private:
         -> std::vector<core::UtilityTokenOperation>;
 
 private:
-    std::unique_ptr<daemon::ReadOnlyDaemonBase> daemon_;
+    std::unique_ptr<client::ReadOnlyClientBase> client_;
 
     std::unique_ptr<std::shared_mutex> rw_mtx_;
     UMEntryLookup um_entry_lookup_;

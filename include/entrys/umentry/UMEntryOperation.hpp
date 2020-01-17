@@ -3,7 +3,7 @@
 #include <array>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryCreationOp.hpp>
 #include <entrys/umentry/UMEntryDeletionOp.hpp>
@@ -62,8 +62,8 @@ auto extractOperationFlag(const UMEntryOperation&)
 //and the metadata has the needed formating
 auto parseTransactionToUMEntry(core::Transaction tx,
                                std::int64_t block,
-                               const daemon::ReadOnlyDaemonBase* daemon)
-    -> utilxx::Result<utilxx::Opt<UMEntryOperation>, daemon::DaemonError>;
+                               const client::ReadOnlyClientBase* client)
+    -> utilxx::Result<utilxx::Opt<UMEntryOperation>, client::ClientError>;
 
 //parses given metadata and constructs a UNEntryOperation from
 //the given information if possible

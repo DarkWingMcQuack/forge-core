@@ -69,11 +69,11 @@ target_sources(forge
   ${CMAKE_CURRENT_LIST_DIR}/include/entrys/token/UtilityTokenOwnershipTransferOp.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Block.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Coin.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/ReadOnlyDaemonBase.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/WriteOnlyDaemonBase.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/DaemonError.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadOnlyOdinDaemon.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/daemon/odin/ReadWriteOdinDaemon.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/client/ReadOnlyClientBase.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/client/WriteOnlyClientBase.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/client/ClientError.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/client/odin/ReadOnlyOdinClient.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/client/odin/ReadWriteOdinClient.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/core/Transaction.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/LookupError.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/lookup/UMEntryLookup.hpp
@@ -115,10 +115,10 @@ target_sources(forge
   src/entrys/token/UtilityTokenOwnershipTransferOp.cpp
   src/core/Block.cpp
   src/core/Coin.cpp
-  src/daemon/ReadOnlyDaemonBase.cpp
-  src/daemon/WriteOnlyDaemonBase.cpp
-  src/daemon/odin/ReadOnlyOdinDaemon.cpp
-  src/daemon/odin/ReadWriteOdinDaemon.cpp
+  src/client/ReadOnlyClientBase.cpp
+  src/client/WriteOnlyClientBase.cpp
+  src/client/odin/ReadOnlyOdinClient.cpp
+  src/client/odin/ReadWriteOdinClient.cpp
   src/core/Transaction.cpp
   src/lookup/UMEntryLookup.cpp
   src/lookup/UtilityTokenLookup.cpp

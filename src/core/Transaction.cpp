@@ -2,7 +2,7 @@
 #include <core/FlagIndexes.hpp>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <fmt/core.h>
 #include <iomanip>
 #include <json/value.h>

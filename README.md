@@ -155,7 +155,7 @@ Forge-core is an implementation of this protocol which tries to make the use of 
 Forge also supports the creation of unique entry-value pairs which then can be looked up. This enables a large amount of use cases, such as public key lookups. Decentralized DNS services and a DNS like system for payments where users do not need to know the address of an entity to pay them, but their username.
 
 ### How can I run Forge?
-Forge-core consists of two binaries. **forged** which is a server talking to the underlying blockchain daemon(like bitcoind).
+Forge-core consists of two binaries. **forged** which is a server talking to the underlying blockchain client(like bitcoind).
 On the first run it creates a *.forge/* directory in *$HOME*. Inside that directory all the configuration files can be found and addapted to your needs.
 The other binary **forge-cli** is an utility which can be used to talk with **forged** and to send commands.
 ### What Blockchains are supported?
@@ -163,7 +163,7 @@ Currently only [ODIN](https://odinblockchain.org/) is supported, but in the futu
 to add it with a pull request or talk to me.
 #### How can I make Forge work with my Altcoin X?
 Forge-core is build in a way that it is not hard to add support for other blockchains.
-To add your own, have a look at the classes in the `forge::daemon` namespace and the `forge::core::Coin` class.
+To add your own, have a look at the classes in the `forge::client` namespace and the `forge::core::Coin` class.
 ### Why did you build Forge?
 For fun :)
 ### Why does Forge not support feature X?

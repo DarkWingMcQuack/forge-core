@@ -4,7 +4,7 @@
 #include <core/Transaction.hpp>
 #include <cstddef>
 #include <cstdint>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/token/UtilityToken.hpp>
 #include <entrys/token/UtilityTokenCreationOp.hpp>
 #include <entrys/token/UtilityTokenDeletionOp.hpp>
@@ -49,9 +49,9 @@ auto extractOperationFlag(const UtilityTokenOperation&)
 //and the metadata has the needed formating
 auto parseTransactionToUtilityTokenOp(core::Transaction tx,
                                       std::int64_t block,
-                                      const daemon::ReadOnlyDaemonBase* daemon)
+                                      const client::ReadOnlyClientBase* client)
     -> utilxx::Result<utilxx::Opt<UtilityTokenOperation>,
-                      daemon::DaemonError>;
+                      client::ClientError>;
 
 //parses given metadata and constructs a UtilityTokenOp from
 //the given information if possible

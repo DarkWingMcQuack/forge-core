@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/Coin.hpp>
-#include <daemon/WriteOnlyDaemonBase.hpp>
+#include <client/WriteOnlyClientBase.hpp>
 #include <entrys/Entry.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>
 #include <entrys/umentry/UMEntry.hpp>
@@ -18,7 +18,7 @@ class ReadWriteWallet : public ReadOnlyWallet
 {
 public:
     ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
-                    std::unique_ptr<daemon::WriteOnlyDaemonBase>&& daemon);
+                    std::unique_ptr<client::WriteOnlyClientBase>&& client);
     //creates a new entry key value pair on the blockchain
     //using any output of the dameonwallet
     //coins will be send to a new address and this output
@@ -108,7 +108,7 @@ public:
     //coins will be transfered to the owner address which then will be used
     //for the OP_RETURN transaction
     //if the the wallet actualy is the owner of the entry
-    //and the daemon wallet has enough funds to do the renewal with the
+    //and the client wallet has enough funds to do the renewal with the
     //given parameters the renewal is valid and will be executed
     //on success the txid of the transaction renewing the enty will be returned
     //on error a WalletError holding the reason will be returned
@@ -208,7 +208,7 @@ private:
         -> utilxx::Result<std::string, WalletError>;
 
 private:
-    std::unique_ptr<daemon::WriteOnlyDaemonBase> daemon_;
+    std::unique_ptr<client::WriteOnlyClientBase> client_;
 };
 
 } // namespace forge::wallet

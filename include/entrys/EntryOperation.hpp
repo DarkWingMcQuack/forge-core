@@ -3,7 +3,7 @@
 #include <array>
 #include <core/Transaction.hpp>
 #include <cstddef>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/Entry.hpp>
 #include <entrys/uentry/UniqueEntryOperation.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>

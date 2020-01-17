@@ -1,17 +1,17 @@
 #include "parsing.hpp"
 #include <core/Transaction.hpp>
-#include <daemon/odin/ReadWriteOdinDaemon.hpp>
+#include <client/odin/ReadWriteOdinClient.hpp>
 #include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <json/value.h>
 
-TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseValid)
+TEST(ReadWriteOdinClientTest, processGenerateRawTxResponseValid)
 {
     using namespace std::string_literals;
     using forge::core::stringToByteVec;
 
     auto response1 = "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635"s;
-    auto res_1 = forge::daemon::odin::processGenerateRawTxResponse(response1);
+    auto res_1 = forge::client::odin::processGenerateRawTxResponse(response1);
     ASSERT_TRUE(res_1.hasValue());
 
     auto expected1 =
@@ -21,7 +21,7 @@ TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseValid)
 
 
     auto response2 = "e1f0d6373e51c572df26f19e161bc0463978604c1148fb4d66fe7800e8c66f31"s;
-    auto res_2 = forge::daemon::odin::processGenerateRawTxResponse(response2);
+    auto res_2 = forge::client::odin::processGenerateRawTxResponse(response2);
     ASSERT_TRUE(res_2.hasValue());
 
     auto expected2 =
@@ -30,27 +30,27 @@ TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseValid)
     EXPECT_EQ(res_2.getValue(), expected2);
 }
 
-TEST(ReadWriteOdinDaemonTest, processGenerateRawTxResponseInvalid)
+TEST(ReadWriteOdinClientTest, processGenerateRawTxResponseInvalid)
 {
     using namespace std::string_literals;
     using forge::core::stringToByteVec;
 
     auto response1 = "6X14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635"s;
-    auto res_1 = forge::daemon::odin::processGenerateRawTxResponse(response1);
+    auto res_1 = forge::client::odin::processGenerateRawTxResponse(response1);
     ASSERT_TRUE(res_1.hasError());
 
-    auto res_2 = forge::daemon::odin::processGenerateRawTxResponse(10);
+    auto res_2 = forge::client::odin::processGenerateRawTxResponse(10);
     ASSERT_TRUE(res_2.hasError());
 }
 
-TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseValid)
+TEST(ReadWriteOdinClientTest, processSignRawTxResponseValid)
 {
     using forge::core::stringToByteVec;
 
     auto file1 = readFile("sign_raw_tx_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processSignRawTxResponse(std::move(json1));
+    auto res1 = forge::client::odin::processSignRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
 
@@ -61,12 +61,12 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseValid)
     EXPECT_EQ(res1.getValue(), expected);
 }
 
-TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
+TEST(ReadWriteOdinClientTest, processSignRawTxResponseInvalid)
 {
     auto file1 = readFile("sign_raw_tx_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processSignRawTxResponse(std::move(json1));
+    auto res1 = forge::client::odin::processSignRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -74,14 +74,14 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
     auto file2 = readFile("sign_raw_tx_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = forge::daemon::odin::processSignRawTxResponse(std::move(json2));
+    auto res2 = forge::client::odin::processSignRawTxResponse(std::move(json2));
 
     ASSERT_TRUE(res2.hasError());
 
     auto file3 = readFile("sign_raw_tx_invalid3.json");
     auto json3 = parseString(file3);
 
-    auto res3 = forge::daemon::odin::processSignRawTxResponse(std::move(json3));
+    auto res3 = forge::client::odin::processSignRawTxResponse(std::move(json3));
 
     ASSERT_TRUE(res3.hasError());
     EXPECT_STREQ(res3.getError().what(), "fuckin error");
@@ -90,28 +90,28 @@ TEST(ReadWriteOdinDaemonTest, processSignRawTxResponseInvalid)
     auto file4 = readFile("sign_raw_tx_invalid4.json");
     auto json4 = parseString(file4);
 
-    auto res4 = forge::daemon::odin::processSignRawTxResponse(std::move(json4));
+    auto res4 = forge::client::odin::processSignRawTxResponse(std::move(json4));
 
     ASSERT_TRUE(res4.hasError());
 }
 
-TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseValid)
+TEST(ReadWriteOdinClientTest, processGenerateNewAddressResponseValid)
 {
     auto file1 = readFile("generate_new_address_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+    auto res1 = forge::client::odin::processGenerateNewAddressResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
     EXPECT_EQ(res1.getValue(), "oRDxB5XznfHGDMPcRyjD2cnq6hahtpWkTT");
 }
 
-TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseInvalid)
+TEST(ReadWriteOdinClientTest, processGenerateNewAddressResponseInvalid)
 {
     auto file1 = readFile("generate_new_address_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json1));
+    auto res1 = forge::client::odin::processGenerateNewAddressResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -119,28 +119,28 @@ TEST(ReadWriteOdinDaemonTest, processGenerateNewAddressResponseInvalid)
     auto file2 = readFile("generate_new_address_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
+    auto res2 = forge::client::odin::processGenerateNewAddressResponse(std::move(json2));
 
     ASSERT_TRUE(res2.hasError());
 }
 
-TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseValid)
+TEST(ReadWriteOdinClientTest, processDecodeTxidOfRawTxResponseValid)
 {
     auto file1 = readFile("decode_txid_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
+    auto res1 = forge::client::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasValue());
     EXPECT_EQ(res1.getValue(), "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635");
 }
 
-TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
+TEST(ReadWriteOdinClientTest, processDecodeTxidOfRawTxResponseInvalid)
 {
     auto file1 = readFile("decode_txid_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
+    auto res1 = forge::client::odin::processDecodeTxidOfRawTxResponse(std::move(json1));
 
     ASSERT_TRUE(res1.hasError());
 
@@ -148,20 +148,20 @@ TEST(ReadWriteOdinDaemonTest, processDecodeTxidOfRawTxResponseInvalid)
     auto file2 = readFile("decode_txid_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = forge::daemon::odin::processGenerateNewAddressResponse(std::move(json2));
+    auto res2 = forge::client::odin::processGenerateNewAddressResponse(std::move(json2));
 
     ASSERT_TRUE(res2.hasError());
 }
 
 
-TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseValid)
+TEST(ReadWriteOdinClientTest, processSendToAddressResponseValid)
 {
     using forge::core::stringToByteVec;
 
     auto file1 = readFile("send_to_address_valid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processSendToAddressResponse(std::move(json1),
+    auto res1 = forge::client::odin::processSendToAddressResponse(std::move(json1),
                                                                   {});
 
     ASSERT_TRUE(res1.hasValue());
@@ -169,12 +169,12 @@ TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseValid)
     EXPECT_EQ(res1.getValue(), "6a14e96a93444c92a7db9accfc4e4675af6ea4c2a74676a025109df614640635");
 }
 
-TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
+TEST(ReadWriteOdinClientTest, processSendToAddressResponseInvalid)
 {
     auto file1 = readFile("send_to_address_invalid1.json");
     auto json1 = parseString(file1);
 
-    auto res1 = forge::daemon::odin::processSendToAddressResponse(std::move(json1),
+    auto res1 = forge::client::odin::processSendToAddressResponse(std::move(json1),
                                                                   {});
 
     ASSERT_TRUE(res1.hasError());
@@ -183,13 +183,13 @@ TEST(ReadWriteOdinDaemonTest, processSendToAddressResponseInvalid)
     auto file2 = readFile("send_to_address_invalid2.json");
     auto json2 = parseString(file2);
 
-    auto res2 = forge::daemon::odin::processSendToAddressResponse(std::move(json1),
+    auto res2 = forge::client::odin::processSendToAddressResponse(std::move(json1),
                                                                   {});
 
     ASSERT_TRUE(res2.hasError());
 }
 
-TEST(ReadWriteOdinDaemonTest, processGetVOutIdxByAmountAndAddressResponseValid)
+TEST(ReadWriteOdinClientTest, processGetVOutIdxByAmountAndAddressResponseValid)
 {
     using forge::core::stringToByteVec;
 
@@ -197,7 +197,7 @@ TEST(ReadWriteOdinDaemonTest, processGetVOutIdxByAmountAndAddressResponseValid)
     auto json1 = parseString(file1);
 
     auto res1 =
-        forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json1),
+        forge::client::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json1),
                                                                          52000,
                                                                          "oeotQimis9AwftfjrQMfj29bcwnmGUDnEr");
 
@@ -210,7 +210,7 @@ TEST(ReadWriteOdinDaemonTest, processGetVOutIdxByAmountAndAddressResponseValid)
 
 
     auto res2 =
-        forge::daemon::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json2),
+        forge::client::odin::processGetVOutIdxByAmountAndAddressResponse(std::move(json2),
                                                                          999945162,
                                                                          "oYHBhrLBc1JiLZqPqNBTXY8SLt71yCWxPP");
 

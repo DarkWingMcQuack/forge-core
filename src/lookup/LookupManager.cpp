@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <core/Coin.hpp>
 #include <core/Transaction.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <entrys/token/UtilityToken.hpp>
 #include <entrys/token/UtilityTokenOperation.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
@@ -27,14 +27,14 @@ using forge::core::getMaturity;
 using utilxx::Opt;
 using utilxx::Result;
 using utilxx::traverse;
-using forge::daemon::ReadOnlyDaemonBase;
+using forge::client::ReadOnlyClientBase;
 
-LookupManager::LookupManager(std::unique_ptr<daemon::ReadOnlyDaemonBase>&& daemon)
-    : daemon_(std::move(daemon)),
+LookupManager::LookupManager(std::unique_ptr<client::ReadOnlyClientBase>&& client)
+    : client_(std::move(client)),
       rw_mtx_(std::make_unique<std::shared_mutex>()),
-      um_entry_lookup_(this, getStartingBlock(daemon_->getCoin())),
-      unique_entry_lookup_(this, getStartingBlock(daemon_->getCoin())),
-      utility_token_lookup_(this, core::getStartingBlock(daemon_->getCoin()))
+      um_entry_lookup_(this, getStartingBlock(client_->getCoin())),
+      unique_entry_lookup_(this, getStartingBlock(client_->getCoin())),
+      utility_token_lookup_(this, core::getStartingBlock(client_->getCoin()))
 {}
 
 auto LookupManager::updateLookup()
@@ -42,9 +42,9 @@ auto LookupManager::updateLookup()
 {
     //aquire writer lock
     std::unique_lock lock{*rw_mtx_};
-    const auto maturity = getMaturity(daemon_->getCoin());
+    const auto maturity = getMaturity(client_->getCoin());
 
-    return daemon_->getBlockCount()
+    return client_->getBlockCount()
         .mapError([](auto error) {
             return ManagerError{std::move(error)};
         })
@@ -63,10 +63,10 @@ auto LookupManager::updateLookup()
             while(actual_height - maturity > lookup_block_height_) {
                 auto res =
                     //get block hash
-                    daemon_->getBlockHash(++lookup_block_height_)
+                    client_->getBlockHash(++lookup_block_height_)
                         .flatMap([&](auto block_hash) {
                             //get block
-                            return daemon_->getBlock(std::move(block_hash));
+                            return client_->getBlock(std::move(block_hash));
                         })
                         .mapError([](auto error) {
                             return ManagerError{std::move(error)};
@@ -179,7 +179,7 @@ auto LookupManager::processUMEntrys(const std::vector<core::Transaction>& txs,
 
         auto op_res = parseTransactionToUMEntry(tx,
                                                 block_height,
-                                                daemon_.get());
+                                                client_.get());
         //if we dont get an opt, but an error we log it
         if(!op_res) {
             LOG(WARNING) << op_res.getError().what();
@@ -213,7 +213,7 @@ auto LookupManager::processUniqueEntrys(const std::vector<core::Transaction>& tx
 
         auto op_res = parseTransactionToUniqueEntry(tx,
                                                     block_height,
-                                                    daemon_.get());
+                                                    client_.get());
         //if we dont get an opt, but an error we log it
         if(!op_res) {
             LOG(WARNING) << op_res.getError().what();
@@ -247,7 +247,7 @@ auto LookupManager::processUtilityTokens(const std::vector<core::Transaction>& t
 
         auto op_res = core::parseTransactionToUtilityTokenOp(tx,
                                                              block_height,
-                                                             daemon_.get());
+                                                             client_.get());
         //if we dont get an opt, but an error we log it
         if(!op_res) {
             LOG(WARNING) << op_res.getError().what();
@@ -280,7 +280,7 @@ auto LookupManager::processBlock(core::Block&& block)
         traverse(
             std::move(block.getTxids()),
             [this](auto txid) {
-                return daemon_
+                return client_
                     ->getTransaction(std::move(txid))
                     .mapError([](auto error) {
                         return ManagerError{std::move(error)};
@@ -310,12 +310,12 @@ auto LookupManager::processBlock(core::Block&& block)
 }
 
 auto LookupManager::lookupIsValid() const
-    -> utilxx::Result<bool, daemon::DaemonError>
+    -> utilxx::Result<bool, client::ClientError>
 {
     return getLastValidBlockHeight()
         .map([this](auto last_valid_block) {
             auto starting_block =
-                getStartingBlock(daemon_->getCoin());
+                getStartingBlock(client_->getCoin());
 
             return static_cast<std::int64_t>(block_hashes_.size())
                 == last_valid_block - starting_block;
@@ -323,13 +323,13 @@ auto LookupManager::lookupIsValid() const
 }
 
 auto LookupManager::getLastValidBlockHeight() const
-    -> utilxx::Result<int64_t, daemon::DaemonError>
+    -> utilxx::Result<int64_t, client::ClientError>
 {
-    auto starting_block = getStartingBlock(daemon_->getCoin());
+    auto starting_block = getStartingBlock(client_->getCoin());
 
     std::shared_lock lock{*rw_mtx_};
     for(auto&& hash : block_hashes_) {
-        if(auto res = daemon_->getBlockHash(++starting_block);
+        if(auto res = client_->getBlockHash(++starting_block);
            res) {
             if(res.getValue() != hash) {
                 return starting_block - 1;
@@ -438,8 +438,8 @@ auto forge::lookup::generateMessage(ManagerError&& error)
             return fmt::format("LookupError inside ManagerError: {}",
                                std::move(error.what()));
         },
-        [](daemon::DaemonError&& error) {
-            return fmt::format("DaemonError inside ManagerError: {}",
+        [](client::ClientError&& error) {
+            return fmt::format("ClientError inside ManagerError: {}",
                                std::move(error.what()));
         }};
 
@@ -447,16 +447,16 @@ auto forge::lookup::generateMessage(ManagerError&& error)
                       std::move(error));
 }
 
-auto LookupManager::getDaemon() const
-    -> const daemon::ReadOnlyDaemonBase&
+auto LookupManager::getClient() const
+    -> const client::ReadOnlyClientBase&
 {
-    return *daemon_;
+    return *client_;
 }
 
 auto LookupManager::getCoin() const
     -> core::Coin
 {
-    return daemon_->getCoin();
+    return client_->getCoin();
 }
 
 
@@ -467,7 +467,7 @@ auto LookupManager::extractUMEntryOperations(const std::vector<core::Transaction
     std::vector<core::UMEntryOperation> um_ops;
 
     for(const auto& tx : txs) {
-        auto um_res = core::parseTransactionToUMEntry(tx, block_height, daemon_.get());
+        auto um_res = core::parseTransactionToUMEntry(tx, block_height, client_.get());
         if(!um_res) {
             //getting an error instead of an Opt indicates a wallet error
             LOG(WARNING) << um_res.getError().what();
@@ -493,7 +493,7 @@ auto LookupManager::extractUniqueEntryOperations(const std::vector<core::Transac
     std::vector<core::UniqueEntryOperation> unique_ops;
 
     for(const auto& tx : txs) {
-        auto unique_res = core::parseTransactionToUniqueEntry(tx, block_height, daemon_.get());
+        auto unique_res = core::parseTransactionToUniqueEntry(tx, block_height, client_.get());
         if(!unique_res) {
             //getting an error instead of an Opt indicates a wallet error
             LOG(WARNING) << unique_res.getError().what();
@@ -518,7 +518,7 @@ auto LookupManager::extractUtilityTokenOperations(const std::vector<core::Transa
 {
     std::vector<core::UtilityTokenOperation> utility_ops;
     for(const auto& tx : txs) {
-        auto utility_res = core::parseTransactionToUtilityTokenOp(tx, block_height, daemon_.get());
+        auto utility_res = core::parseTransactionToUtilityTokenOp(tx, block_height, client_.get());
         if(!utility_res) {
             //getting an error instead of an Opt indicates a wallet error
             LOG(WARNING) << utility_res.getError().what();

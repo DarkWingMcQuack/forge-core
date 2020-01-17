@@ -10,7 +10,7 @@ namespace forge::env {
 constexpr static inline auto DEFAULT_CONFIG_FILE =
     "[server]\n"
     "mode = \"readwrite\"\n"
-    "daemon = true\n"
+    "client = true\n"
     "threads = 10\n\n"
 
     "[rpc]\n"
@@ -38,7 +38,7 @@ public:
     ProgramOptions(std::string&& logfolder,
                    std::int64_t number_of_threads,
                    Mode mode,
-                   bool daemonize,
+                   bool clientize,
                    core::Coin coin,
                    std::int64_t coin_port,
                    std::string&& coin_host,
@@ -59,7 +59,7 @@ public:
 
     auto getMode() const
         -> Mode;
-    auto shouldDaemonize() const
+    auto shouldClientize() const
         -> bool;
 
     auto getCoin() const
@@ -91,7 +91,7 @@ private:
     std::int64_t number_of_threads_;
 
     Mode mode_;
-    bool daemonize_;
+    bool clientize_;
     core::Coin coin_;
 
     std::int64_t coin_port_;

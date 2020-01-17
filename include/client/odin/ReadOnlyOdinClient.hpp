@@ -3,63 +3,63 @@
 #include <core/Block.hpp>
 #include <core/Coin.hpp>
 #include <core/Transaction.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
+#include <client/ReadOnlyClientBase.hpp>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace forge::daemon {
+namespace forge::client {
 
-class ReadOnlyOdinDaemon : public ReadOnlyDaemonBase
+class ReadOnlyOdinClient : public ReadOnlyClientBase
 {
 public:
-    ReadOnlyOdinDaemon(const std::string& host,
+    ReadOnlyOdinClient(const std::string& host,
                        const std::string& user,
                        const std::string& password,
                        std::int64_t port,
                        core::Coin coin);
 
-    virtual ~ReadOnlyOdinDaemon() = default;
+    virtual ~ReadOnlyOdinClient() = default;
 
     auto getNewestBlock() const
-        -> utilxx::Result<core::Block, DaemonError> override;
+        -> utilxx::Result<core::Block, ClientError> override;
 
     auto getTransaction(std::string txid) const
-        -> utilxx::Result<core::Transaction, DaemonError> override;
+        -> utilxx::Result<core::Transaction, ClientError> override;
 
     auto resolveTxIn(core::TxIn vin) const
-        -> utilxx::Result<core::TxOut, DaemonError> override;
+        -> utilxx::Result<core::TxOut, ClientError> override;
 
     auto getBlockCount() const
-        -> utilxx::Result<std::int64_t, DaemonError> override;
+        -> utilxx::Result<std::int64_t, ClientError> override;
 
     auto getBlockHash(std::int64_t index) const
-        -> utilxx::Result<std::string, DaemonError> override;
+        -> utilxx::Result<std::string, ClientError> override;
 
     auto getBlock(std::string hash) const
-        -> utilxx::Result<core::Block, DaemonError> override;
+        -> utilxx::Result<core::Block, ClientError> override;
 
     auto getOutputValue(std::string txid,
                         std::int64_t index) const
-        -> utilxx::Result<std::int64_t, DaemonError> override;
+        -> utilxx::Result<std::int64_t, ClientError> override;
 
     auto getUnspent() const
         -> utilxx::Result<std::vector<core::Unspent>,
-                          DaemonError> override;
+                          ClientError> override;
 
     auto getAddresses() const
         -> utilxx::Result<std::vector<std::string>,
-                          DaemonError> override;
+                          ClientError> override;
 
     auto isMainnet() const
         -> utilxx::Result<bool,
-                          DaemonError> override;
+                          ClientError> override;
 
 protected:
     auto sendcommand(const std::string& command,
                      Json::Value params) const
-        -> utilxx::Result<Json::Value, DaemonError>;
+        -> utilxx::Result<Json::Value, ClientError>;
 
 
 private:
@@ -71,28 +71,28 @@ namespace odin {
 
 auto processGetTransactionResponse(Json::Value&& response,
                                    const Json::Value& params)
-    -> utilxx::Result<core::Transaction, DaemonError>;
+    -> utilxx::Result<core::Transaction, ClientError>;
 
 auto processGetBlockCountResponse(Json::Value&& response,
                                   const Json::Value& params)
-    -> utilxx::Result<std::int64_t, DaemonError>;
+    -> utilxx::Result<std::int64_t, ClientError>;
 
 auto processGetBlockHashResponse(Json::Value&& response,
                                  const Json::Value& params)
-    -> utilxx::Result<std::string, DaemonError>;
+    -> utilxx::Result<std::string, ClientError>;
 
 auto processGetBlockResponse(Json::Value&& response,
                              const Json::Value& params)
-    -> utilxx::Result<core::Block, DaemonError>;
+    -> utilxx::Result<core::Block, ClientError>;
 
 auto processGetUnspentResponse(Json::Value&& response,
                                const Json::Value& params)
     -> utilxx::Result<std::vector<core::Unspent>,
-                      DaemonError>;
+                      ClientError>;
 
 auto processGetAddressesResponse(Json::Value&& response)
     -> utilxx::Result<std::vector<std::string>,
-                      DaemonError>;
+                      ClientError>;
 } // namespace odin
 
-} // namespace forge::daemon
+} // namespace forge::client

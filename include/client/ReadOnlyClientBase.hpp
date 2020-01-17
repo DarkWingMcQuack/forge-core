@@ -3,69 +3,69 @@
 #include <core/Block.hpp>
 #include <core/Coin.hpp>
 #include <core/Transaction.hpp>
-#include <daemon/DaemonError.hpp>
+#include <client/ClientError.hpp>
 #include <memory>
 #include <utilxx/Opt.hpp>
 #include <utilxx/Result.hpp>
 
-namespace forge::daemon {
+namespace forge::client {
 
-class ReadOnlyDaemonBase
+class ReadOnlyClientBase
 {
 public:
-    ReadOnlyDaemonBase(core::Coin coin)
+    ReadOnlyClientBase(core::Coin coin)
         : coin_(coin) {}
 
     virtual auto getNewestBlock() const
-        -> utilxx::Result<core::Block, DaemonError> = 0;
+        -> utilxx::Result<core::Block, ClientError> = 0;
 
     virtual auto getTransaction(std::string txid) const
-        -> utilxx::Result<core::Transaction, DaemonError> = 0;
+        -> utilxx::Result<core::Transaction, ClientError> = 0;
 
     virtual auto resolveTxIn(core::TxIn vin) const
-        -> utilxx::Result<core::TxOut, DaemonError> = 0;
+        -> utilxx::Result<core::TxOut, ClientError> = 0;
 
     virtual auto getBlockCount() const
-        -> utilxx::Result<std::int64_t, DaemonError> = 0;
+        -> utilxx::Result<std::int64_t, ClientError> = 0;
 
     virtual auto getBlockHash(std::int64_t index) const
-        -> utilxx::Result<std::string, DaemonError> = 0;
+        -> utilxx::Result<std::string, ClientError> = 0;
 
     virtual auto getBlock(std::string hash) const
-        -> utilxx::Result<core::Block, DaemonError> = 0;
+        -> utilxx::Result<core::Block, ClientError> = 0;
 
     virtual auto getUnspent() const
         -> utilxx::Result<std::vector<core::Unspent>,
-                          DaemonError> = 0;
+                          ClientError> = 0;
 
     virtual auto getOutputValue(std::string txid,
                                 std::int64_t index) const
-        -> utilxx::Result<std::int64_t, DaemonError> = 0;
+        -> utilxx::Result<std::int64_t, ClientError> = 0;
 
     virtual auto getAddresses() const
         -> utilxx::Result<std::vector<std::string>,
-                          DaemonError> = 0;
+                          ClientError> = 0;
 
     virtual auto isMainnet() const
-        -> utilxx::Result<bool, DaemonError> = 0;
+        -> utilxx::Result<bool, ClientError> = 0;
 
     virtual auto getCoin() const
         -> core::Coin final;
 
 
-    virtual ~ReadOnlyDaemonBase() = default;
+    virtual ~ReadOnlyClientBase() = default;
 
 private:
     core::Coin coin_;
 };
 
-auto make_readonly_daemon(const std::string& host,
+auto make_readonly_client(const std::string& host,
                           const std::string& user,
                           const std::string& password,
                           std::int64_t port,
                           core::Coin coin)
-    -> std::unique_ptr<ReadOnlyDaemonBase>;
+    -> std::unique_ptr<ReadOnlyClientBase>;
 
 
 
-} // namespace forge::daemon
+} // namespace forge::client

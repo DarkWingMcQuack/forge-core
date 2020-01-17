@@ -1,17 +1,17 @@
-#include <daemon/DaemonError.hpp>
-#include <daemon/ReadOnlyDaemonBase.hpp>
-#include <daemon/WriteOnlyDaemonBase.hpp>
-#include <daemon/odin/ReadWriteOdinDaemon.hpp>
+#include <client/ClientError.hpp>
+#include <client/ReadOnlyClientBase.hpp>
+#include <client/WriteOnlyClientBase.hpp>
+#include <client/odin/ReadWriteOdinClient.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <g3log/g3log.hpp>
 #include <utilxx/Result.hpp>
 
-using forge::daemon::WriteOnlyDaemonBase;
-using forge::daemon::ReadWriteOdinDaemon;
+using forge::client::WriteOnlyClientBase;
+using forge::client::ReadWriteOdinClient;
 
 
 
-auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string txid_input,
+auto WriteOnlyClientBase::writeTxToBlockchain(std::string txid_input,
                                               std::int64_t index,
                                               std::vector<std::byte> metadata,
                                               std::int64_t burn_value,
@@ -19,7 +19,7 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string txid_input,
                                                   std::pair<std::string,
                                                             std::int64_t>>
                                                   outputs) const
-    -> utilxx::Result<std::string, DaemonError>
+    -> utilxx::Result<std::string, ClientError>
 {
     return generateRawTx(std::move(txid_input),
                          index,
@@ -35,17 +35,17 @@ auto WriteOnlyDaemonBase::writeTxToBlockchain(std::string txid_input,
 }
 
 
-auto forge::daemon::make_writing_daemon(const std::string& host,
+auto forge::client::make_writing_client(const std::string& host,
                                         const std::string& user,
                                         const std::string& password,
                                         std::int64_t port,
                                         core::Coin coin)
-    -> std::unique_ptr<WriteOnlyDaemonBase>
+    -> std::unique_ptr<WriteOnlyClientBase>
 {
     switch(coin) {
     case core::Coin::Odin:
     case core::Coin::tOdin:
-        return std::make_unique<ReadWriteOdinDaemon>(host,
+        return std::make_unique<ReadWriteOdinClient>(host,
                                                      user,
                                                      password,
                                                      port,
