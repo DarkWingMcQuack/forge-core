@@ -6,15 +6,15 @@
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Overload.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Overload.hpp>
+#include <utils/Result.hpp>
 #include <vector>
 
 using forge::core::UMEntry;
-using utilxx::Result;
-using utilxx::overload;
-using utilxx::Opt;
+using forge::utils::Result;
+using forge::utils::overload;
+using forge::utils::Opt;
 using forge::core::Transaction;
 using forge::client::ReadOnlyClientBase;
 using forge::client::ClientError;
@@ -114,7 +114,7 @@ auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadat
                                            std::int64_t block,
                                            std::string&& owner,
                                            std::int64_t value,
-                                           utilxx::Opt<std::string>&& new_owner_opt)
+                                           utils::Opt<std::string>&& new_owner_opt)
     -> Opt<UMEntryOperation>
 {
     if(metadata.size() < 10) {
@@ -123,7 +123,7 @@ auto forge::core::parseMetadataToUMEntryOp(const std::vector<std::byte>& metadat
 
     return parseUMEntry(metadata)
         .flatMap([&](auto entry)
-                     -> utilxx::Opt<UMEntryOperation> {
+                     -> utils::Opt<UMEntryOperation> {
             switch(static_cast<std::byte>(metadata[OPERATION_FLAG_INDEX])) {
 
             case UMENTRY_CREATION_FLAG:

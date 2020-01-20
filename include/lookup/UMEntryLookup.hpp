@@ -4,8 +4,8 @@
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <lookup/LookupError.hpp>
 #include <map>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
 namespace forge::lookup {
 
@@ -21,31 +21,31 @@ public:
         -> void;
 
     auto lookup(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
+        -> utils::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
     auto lookup(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<core::UMEntryValue>>;
+        -> utils::Opt<std::reference_wrapper<core::UMEntryValue>>;
 
     auto lookupOwner(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const std::string>>;
+        -> utils::Opt<std::reference_wrapper<const std::string>>;
 
     auto lookupOwner(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<std::string>>;
+        -> utils::Opt<std::reference_wrapper<std::string>>;
 
     auto lookupActivationBlock(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<std::int64_t>>;
+        -> utils::Opt<std::reference_wrapper<std::int64_t>>;
 
     auto lookupActivationBlock(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
+        -> utils::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupUMEntry(const core::EntryKey& key)
-        -> utilxx::Opt<
+        -> utils::Opt<
             std::tuple<std::reference_wrapper<core::UMEntryValue>,
                        std::reference_wrapper<std::string>,
                        std::reference_wrapper<std::int64_t>>>;
 
     auto lookupUMEntry(const core::EntryKey& key) const
-        -> utilxx::Opt<
+        -> utils::Opt<
             std::tuple<std::reference_wrapper<const core::UMEntryValue>,
                        std::reference_wrapper<const std::string>,
                        std::reference_wrapper<const std::int64_t>>>;

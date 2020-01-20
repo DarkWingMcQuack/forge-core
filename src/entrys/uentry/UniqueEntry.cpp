@@ -2,7 +2,7 @@
 #include <core/Transaction.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>
 #include <entrys/umentry/UMEntry.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Overload.hpp>
 #include <variant>
 #include <vector>
 
@@ -81,7 +81,7 @@ auto UniqueEntry::getValue()
 
 
 auto forge::core::parseUniqueValue(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UniqueEntryValue>
+    -> utils::Opt<UniqueEntryValue>
 {
     return parseUMValue(data)
         .map([](auto um_value) {
@@ -94,13 +94,13 @@ auto forge::core::parseUniqueValue(const std::vector<std::byte>& data)
 }
 
 auto forge::core::parseUniqueKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryKey>
+    -> utils::Opt<EntryKey>
 {
     return parseUMKey(data);
 }
 
 auto forge::core::parseUniqueEntry(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UniqueEntry>
+    -> utils::Opt<UniqueEntry>
 {
     //3 bytes mask
     //1 tokeyn type flag
@@ -133,7 +133,7 @@ auto forge::core::extractUniqueValueFlag(const UniqueEntryValue& value)
     -> std::byte
 {
     static constexpr auto value_flag_visitor =
-        utilxx::overload{
+        utils::overload{
             [](const IPv4Value&) { return static_cast<std::byte>(0b00000001); },
             [](const IPv6Value&) { return static_cast<std::byte>(0b00000010); },
             [](const NoneValue&) { return static_cast<std::byte>(0b00000100); },
@@ -149,7 +149,7 @@ auto forge::core::uniqueEntryValueToRawData(const UniqueEntryValue& value)
 }
 
 auto forge::core::jsonToUniqueEntryValue(Json::Value&& value)
-    -> utilxx::Opt<UniqueEntryValue>
+    -> utils::Opt<UniqueEntryValue>
 {
     return jsonToUMEntryValue(std::move(value))
         .map([](auto um_value) {

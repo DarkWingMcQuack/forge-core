@@ -13,9 +13,9 @@
 #include <lookup/UMEntryLookup.hpp>
 #include <memory>
 #include <shared_mutex>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Overload.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Overload.hpp>
+#include <utils/Result.hpp>
 
 using forge::lookup::LookupManager;
 using forge::lookup::LookupError;
@@ -24,9 +24,9 @@ using forge::core::UMEntryValue;
 using forge::core::UMEntryOperation;
 using forge::core::UniqueEntryOperation;
 using forge::core::getMaturity;
-using utilxx::Opt;
-using utilxx::Result;
-using utilxx::traverse;
+using forge::utils::Opt;
+using forge::utils::Result;
+using forge::utils::traverse;
 using forge::client::ReadOnlyClientBase;
 
 LookupManager::LookupManager(std::unique_ptr<client::ReadOnlyClientBase>&& client)
@@ -38,7 +38,7 @@ LookupManager::LookupManager(std::unique_ptr<client::ReadOnlyClientBase>&& clien
 {}
 
 auto LookupManager::updateLookup()
-    -> utilxx::Result<bool, ManagerError>
+    -> utils::Result<bool, ManagerError>
 {
     //aquire writer lock
     std::unique_lock lock{*rw_mtx_};
@@ -89,7 +89,7 @@ auto LookupManager::updateLookup()
 }
 
 auto LookupManager::rebuildLookup()
-    -> utilxx::Result<void, ManagerError>
+    -> utils::Result<void, ManagerError>
 {
     std::unique_lock lock{*rw_mtx_};
     um_entry_lookup_.clear();
@@ -105,14 +105,14 @@ auto LookupManager::rebuildLookup()
 }
 
 auto LookupManager::lookupUMValue(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>
+    -> utils::Opt<std::reference_wrapper<const core::UMEntryValue>>
 {
     std::shared_lock lock{*rw_mtx_};
     return um_entry_lookup_.lookup(key);
 }
 
 auto LookupManager::lookupUniqueValue(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>
+    -> utils::Opt<std::reference_wrapper<const core::UniqueEntryValue>>
 {
     std::shared_lock lock{*rw_mtx_};
     return unique_entry_lookup_.lookup(key);
@@ -120,7 +120,7 @@ auto LookupManager::lookupUniqueValue(const core::EntryKey& key) const
 
 
 auto LookupManager::lookup(const core::EntryKey& key) const
-    -> utilxx::Opt<core::Entry>
+    -> utils::Opt<core::Entry>
 {
     if(auto um_value = lookupUMValue(key);
        um_value) {
@@ -141,7 +141,7 @@ auto LookupManager::lookup(const core::EntryKey& key) const
 }
 
 auto LookupManager::lookupOwner(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const std::string>>
+    -> utils::Opt<std::reference_wrapper<const std::string>>
 {
     std::shared_lock lock{*rw_mtx_};
     auto um_owner_opt = um_entry_lookup_.lookupOwner(key);
@@ -154,7 +154,7 @@ auto LookupManager::lookupOwner(const core::EntryKey& key) const
 }
 
 auto LookupManager::lookupActivationBlock(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
+    -> utils::Opt<std::reference_wrapper<const std::int64_t>>
 {
     std::shared_lock lock{*rw_mtx_};
 
@@ -270,7 +270,7 @@ auto LookupManager::processUtilityTokens(const std::vector<core::Transaction>& t
 }
 
 auto LookupManager::processBlock(core::Block&& block)
-    -> utilxx::Result<void, ManagerError>
+    -> utils::Result<void, ManagerError>
 {
     auto block_height = block.getHeight();
     auto block_hash = std::move(block.getHash());
@@ -310,7 +310,7 @@ auto LookupManager::processBlock(core::Block&& block)
 }
 
 auto LookupManager::lookupIsValid() const
-    -> utilxx::Result<bool, client::ClientError>
+    -> utils::Result<bool, client::ClientError>
 {
     return getLastValidBlockHeight()
         .map([this](auto last_valid_block) {
@@ -323,7 +323,7 @@ auto LookupManager::lookupIsValid() const
 }
 
 auto LookupManager::getLastValidBlockHeight() const
-    -> utilxx::Result<int64_t, client::ClientError>
+    -> utils::Result<int64_t, client::ClientError>
 {
     auto starting_block = getStartingBlock(client_->getCoin());
 
@@ -433,7 +433,7 @@ auto LookupManager::isReserverdEntryKey(const std::vector<std::byte>& key) const
 auto forge::lookup::generateMessage(ManagerError&& error)
     -> std::string
 {
-    static constexpr auto visitor = utilxx::overload{
+    static constexpr auto visitor = utils::overload{
         [](LookupError&& error) {
             return fmt::format("LookupError inside ManagerError: {}",
                                std::move(error.what()));
@@ -614,7 +614,7 @@ auto LookupManager::parseAndFilter(std::vector<core::Transaction>&& txs,
 
         if(creations.size() == 1
            || core::getBurnValue(creations[0]) != core::getBurnValue(creations[1])) {
-            std::visit(utilxx::overload{
+            std::visit(utils::overload{
                            [&](core::UMEntryCreationOp op) {
                                um_ops.emplace_back(std::move(op));
                            },

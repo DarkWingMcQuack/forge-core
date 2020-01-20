@@ -63,7 +63,7 @@ auto extractOperationFlag(const UMEntryOperation&)
 auto parseTransactionToUMEntry(core::Transaction tx,
                                std::int64_t block,
                                const client::ReadOnlyClientBase* client)
-    -> utilxx::Result<utilxx::Opt<UMEntryOperation>, client::ClientError>;
+    -> utils::Result<utils::Opt<UMEntryOperation>, client::ClientError>;
 
 //parses given metadata and constructs a UNEntryOperation from
 //the given information if possible
@@ -71,8 +71,8 @@ auto parseMetadataToUMEntryOp(const std::vector<std::byte>& metadata,
                               std::int64_t block,
                               std::string&& owner,
                               std::int64_t value,
-                              utilxx::Opt<std::string>&& new_owner = std::nullopt)
-    -> utilxx::Opt<UMEntryOperation>;
+                              utils::Opt<std::string>&& new_owner = std::nullopt)
+    -> utils::Opt<UMEntryOperation>;
 
 //given a UMEntryOperation, this function builds a matching
 //metadata which can be used to write it on the blockchain

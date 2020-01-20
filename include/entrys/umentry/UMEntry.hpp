@@ -3,7 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 #include <vector>
 
@@ -74,13 +74,13 @@ private:
 
 
 auto parseUMValue(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UMEntryValue>;
+    -> utils::Opt<UMEntryValue>;
 
 auto parseUMKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryKey>;
+    -> utils::Opt<EntryKey>;
 
 auto parseUMEntry(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UMEntry>;
+    -> utils::Opt<UMEntry>;
 
 auto extractValueFlag(const UMEntryValue& value)
     -> std::byte;
@@ -89,7 +89,7 @@ auto umEntryValueToRawData(const UMEntryValue& value)
     -> std::vector<std::byte>;
 
 auto jsonToUMEntryValue(Json::Value&& value)
-    -> utilxx::Opt<UMEntryValue>;
+    -> utils::Opt<UMEntryValue>;
 
 auto umentryValueToJson(UMEntryValue value)
     -> Json::Value;

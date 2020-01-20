@@ -6,7 +6,7 @@
 #include <entrys/uentry/UniqueEntry.hpp>
 #include <entrys/umentry/UMEntry.hpp>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 #include <vector>
 
@@ -20,7 +20,7 @@ using RenewableEntry = std::variant<UniqueEntry,
                                     UMEntry>;
 
 auto parseEntry(const std::vector<std::byte>& data)
-    -> utilxx::Opt<Entry>;
+    -> utils::Opt<Entry>;
 
 auto entryToRawData(const Entry& entry)
     -> std::vector<std::byte>;

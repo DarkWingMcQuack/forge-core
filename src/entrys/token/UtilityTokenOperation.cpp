@@ -14,8 +14,8 @@
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Overload.hpp>
 #include <variant>
 #include <vector>
 
@@ -63,7 +63,7 @@ auto forge::core::getCreator(const UtilityTokenOperation& op)
     -> const std::string&
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](const UtilityTokenOwnershipTransferOp& owner)
                 -> decltype(auto) {
                 return owner.getCreator();
@@ -80,7 +80,7 @@ auto forge::core::getCreator(UtilityTokenOperation&& op)
 
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](UtilityTokenOwnershipTransferOp&& owner) {
                 return owner.getCreator();
             },
@@ -94,7 +94,7 @@ auto forge::core::extractOperationFlag(const UtilityTokenOperation& op)
     -> std::byte
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](const UtilityTokenCreationOp&) {
                 return forge::core::UTILITY_TOKEN_CREATION_FLAG;
             },
@@ -110,10 +110,10 @@ auto forge::core::extractOperationFlag(const UtilityTokenOperation& op)
 auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
                                                    std::int64_t block,
                                                    const ReadOnlyClientBase* client)
-    -> utilxx::Result<utilxx::Opt<UtilityTokenOperation>,
+    -> utils::Result<utils::Opt<UtilityTokenOperation>,
                       ClientError>
 {
-    using ResultType = utilxx::Result<utilxx::Opt<UtilityTokenOperation>,
+    using ResultType = utils::Result<utils::Opt<UtilityTokenOperation>,
                                       ClientError>;
 
     LOG_IF(FATAL, !client) << "ReadOnlyClientBase pointer is null";
@@ -140,7 +140,7 @@ auto forge::core::parseTransactionToUtilityTokenOp(Transaction tx,
     auto new_owner_opt =
         tx.getFirstNonOpReturnOutput()
             .flatMap([](auto ref)
-                         -> utilxx::Opt<std::string> {
+                         -> utils::Opt<std::string> {
                 //we only care about outputs with exactly one
                 //address
                 if(ref.get().getAddresses().size() != 1) {
@@ -201,8 +201,8 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
                                                 std::int64_t block,
                                                 std::string&& owner,
                                                 std::int64_t burn_value,
-                                                utilxx::Opt<std::string>&& new_owner_opt)
-    -> utilxx::Opt<UtilityTokenOperation>
+                                                utils::Opt<std::string>&& new_owner_opt)
+    -> utils::Opt<UtilityTokenOperation>
 {
     if(metadata.size() < 14) {
         return std::nullopt;
@@ -210,7 +210,7 @@ auto forge::core::parseMetadataToUtilityTokenOp(const std::vector<std::byte>& me
 
     return parseUtilityToken(metadata)
         .flatMap([&](auto entry)
-                     -> utilxx::Opt<UtilityTokenOperation> {
+                     -> utils::Opt<UtilityTokenOperation> {
             auto amount = entry.getAttachedAmount();
 
             switch(metadata[OPERATION_FLAG_INDEX]) {
@@ -253,7 +253,7 @@ auto forge::core::toMetadata(UtilityTokenOperation&& op)
     -> std::vector<std::byte>
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](UtilityTokenCreationOp&& creation) {
                 return createUtilityTokenCreationOpMetadata(
                     std::move(creation.getUtilityToken()));

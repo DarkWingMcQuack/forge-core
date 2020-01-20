@@ -8,13 +8,13 @@
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
 using forge::client::ReadWriteOdinClient;
 using forge::client::ReadOnlyOdinClient;
-using utilxx::Opt;
-using utilxx::Result;
+using forge::utils::Opt;
+using forge::utils::Result;
 using forge::core::stringToByteVec;
 using forge::core::toHexString;
 using forge::core::getDefaultTxFee;
@@ -125,7 +125,7 @@ auto ReadWriteOdinClient::sendRawTx(std::vector<std::byte> tx) const
 }
 
 auto ReadWriteOdinClient::generateNewAddress() const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     static const auto command = "getnewaddress"s;
 
@@ -136,7 +136,7 @@ auto ReadWriteOdinClient::generateNewAddress() const
 }
 
 auto ReadWriteOdinClient::decodeTxidOfRawTx(const std::vector<std::byte>& tx) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     static const auto command = "decoderawtransaction"s;
 
@@ -151,12 +151,12 @@ auto ReadWriteOdinClient::decodeTxidOfRawTx(const std::vector<std::byte>& tx) co
 
 auto ReadWriteOdinClient::burnAmount(std::int64_t amount,
                                      std::vector<std::byte> metadata) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     auto fees = getDefaultTxFee(getCoin());
     return getUnspent()
         .flatMap([&](auto unspents)
-                     -> utilxx::Result<std::string, ClientError> {
+                     -> utils::Result<std::string, ClientError> {
             auto iter =
                 std::find_if(std::cbegin(unspents),
                              std::cend(unspents),
@@ -203,7 +203,7 @@ auto ReadWriteOdinClient::burnAmount(std::string txid,
                                      std::int64_t amount,
                                      std::vector<std::byte> metadata,
                                      std::string change_address) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     return getOutputValue(txid, index)
         .flatMap([&](auto output_value)
@@ -237,7 +237,7 @@ auto ReadWriteOdinClient::burnAmount(std::string txid,
 auto ReadWriteOdinClient::burnOutput(std::string txid,
                                      std::int64_t index,
                                      std::vector<std::byte> metadata) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     return getOutputValue(txid, index)
         .flatMap([&](auto output_value) {
@@ -265,7 +265,7 @@ std::string roundDouble(double num)
 
 auto ReadWriteOdinClient::sendToAddress(std::int64_t amount,
                                         std::string address) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     static const auto command = "sendtoaddress"s;
 
@@ -286,7 +286,7 @@ auto ReadWriteOdinClient::sendToAddress(std::int64_t amount,
 auto ReadWriteOdinClient::getVOutIdxByAmountAndAddress(std::string txid,
                                                        std::int64_t amount,
                                                        std::string address) const
-    -> utilxx::Result<std::int64_t, ClientError>
+    -> utils::Result<std::int64_t, ClientError>
 {
     static const auto command = "getrawtransaction"s;
 
@@ -305,7 +305,7 @@ auto ReadWriteOdinClient::getVOutIdxByAmountAndAddress(std::string txid,
 
 
 auto forge::client::odin::processGenerateRawTxResponse(Json::Value&& response)
-    -> utilxx::Result<std::vector<std::byte>,
+    -> utils::Result<std::vector<std::byte>,
                       ClientError>
 {
     auto result = response.toStyledString();
@@ -332,7 +332,7 @@ auto forge::client::odin::processGenerateRawTxResponse(Json::Value&& response)
 }
 
 auto forge::client::odin::processSignRawTxResponse(Json::Value&& response)
-    -> utilxx::Result<std::vector<std::byte>,
+    -> utils::Result<std::vector<std::byte>,
                       ClientError>
 {
     //check if the request was complete
@@ -367,7 +367,7 @@ auto forge::client::odin::processSignRawTxResponse(Json::Value&& response)
 }
 
 auto forge::client::odin::processGenerateNewAddressResponse(Json::Value&& response)
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     if(!response.isString()) {
         return ClientError{"unknown error while getting new address"};
@@ -377,7 +377,7 @@ auto forge::client::odin::processGenerateNewAddressResponse(Json::Value&& respon
 }
 
 auto forge::client::odin::processDecodeTxidOfRawTxResponse(Json::Value&& response)
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     if(!response.isMember("txid")
        || !response["txid"].isString()) {
@@ -391,7 +391,7 @@ auto forge::client::odin::processDecodeTxidOfRawTxResponse(Json::Value&& respons
 
 auto forge::client::odin::processSendToAddressResponse(Json::Value&& response,
                                                        const std::string& address)
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     if(!response.isString()) {
         auto error = fmt::format("unknown error sending odin to address {}",
@@ -406,7 +406,7 @@ auto forge::client::odin::processSendToAddressResponse(Json::Value&& response,
 auto forge::client::odin::processGetVOutIdxByAmountAndAddressResponse(Json::Value&& response,
                                                                       std::int64_t amount,
                                                                       const std::string& address)
-    -> utilxx::Result<std::int64_t, ClientError>
+    -> utils::Result<std::int64_t, ClientError>
 {
     if(!response.isMember("vout")
        || !response["vout"].isArray()) {

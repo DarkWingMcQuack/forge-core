@@ -1,15 +1,15 @@
 #include <entrys/Entry.hpp>
 #include <entrys/uentry/UniqueEntry.hpp>
 #include <entrys/umentry/UMEntry.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Overload.hpp>
 #include <variant>
 #include <vector>
 
 using forge::core::Entry;
 
 auto forge::core::parseEntry(const std::vector<std::byte>& data)
-    -> utilxx::Opt<Entry>
+    -> utils::Opt<Entry>
 {
     auto um_entry_opt = parseUMEntry(data);
     if(um_entry_opt) {

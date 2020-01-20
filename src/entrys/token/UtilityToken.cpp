@@ -7,7 +7,7 @@
 #include <entrys/token/UtilityToken.hpp>
 #include <iterator>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 #include <vector>
 
@@ -86,7 +86,7 @@ auto UtilityToken::operator!=(const UtilityToken& rhs) const
 }
 
 auto forge::core::parseUtilityToken(const std::vector<std::byte>& metadata)
-    -> utilxx::Opt<UtilityToken>
+    -> utils::Opt<UtilityToken>
 {
     //3 bytes mask
     //1 tokeyn type flag

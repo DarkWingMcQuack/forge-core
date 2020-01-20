@@ -14,7 +14,7 @@
 #include <numeric>
 #include <unordered_map>
 #include <unordered_set>
-#include <utilxx/Overload.hpp>
+#include <utils/Overload.hpp>
 
 using forge::lookup::UtilityTokenLookup;
 using forge::core::UtilityToken;
@@ -205,7 +205,7 @@ auto UtilityTokenLookup::filterOperationsPerToken(const std::vector<std::byte>& 
 
     for(auto&& op : ops) {
         std::visit(
-            utilxx::overload{
+            utils::overload{
                 [&](UtilityTokenCreationOp&& creation) {
                     if(creation.getAmount() != 0) {
                         creations.emplace_back(std::move(creation));

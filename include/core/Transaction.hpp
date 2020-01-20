@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <json/value.h>
 #include <memory>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <vector>
 
 namespace forge::core {
@@ -107,7 +107,7 @@ public:
         -> std::string&;
 
     auto getValueOfOutput(std::int64_t index) const
-        -> utilxx::Opt<std::int64_t>;
+        -> utils::Opt<std::int64_t>;
 
     auto hasOpReturnOutput() const
         -> bool;
@@ -116,16 +116,16 @@ public:
         -> bool;
 
     auto getFirstOpReturnOutput() const
-        -> utilxx::Opt<std::reference_wrapper<const TxOut>>;
+        -> utils::Opt<std::reference_wrapper<const TxOut>>;
 
     auto getFirstOpReturnOutput()
-        -> utilxx::Opt<std::reference_wrapper<TxOut>>;
+        -> utils::Opt<std::reference_wrapper<TxOut>>;
 
     auto getFirstNonOpReturnOutput() const
-        -> utilxx::Opt<std::reference_wrapper<const TxOut>>;
+        -> utils::Opt<std::reference_wrapper<const TxOut>>;
 
     auto getFirstNonOpReturnOutput()
-        -> utilxx::Opt<std::reference_wrapper<TxOut>>;
+        -> utils::Opt<std::reference_wrapper<TxOut>>;
 
     auto hasExactlyOneInput() const
         -> bool;
@@ -184,17 +184,17 @@ private:
 };
 
 auto buildTxIn(Json::Value&& json)
-    -> utilxx::Opt<TxIn>;
+    -> utils::Opt<TxIn>;
 auto buildTxOut(Json::Value&& json)
-    -> utilxx::Opt<TxOut>;
+    -> utils::Opt<TxOut>;
 auto buildTransaction(Json::Value&& json)
-    -> utilxx::Opt<Transaction>;
+    -> utils::Opt<Transaction>;
 
 auto extractMetadata(std::string&& hex)
-    -> utilxx::Opt<std::vector<std::byte>>;
+    -> utils::Opt<std::vector<std::byte>>;
 
 auto stringToByteVec(const std::string& str)
-    -> utilxx::Opt<std::vector<std::byte>>;
+    -> utils::Opt<std::vector<std::byte>>;
 
 auto stringToASCIIByteVec(const std::string& str)
     -> std::vector<std::byte>;

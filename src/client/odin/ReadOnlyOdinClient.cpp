@@ -6,15 +6,15 @@
 #include <g3log/g3log.hpp>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
-#include <utilxx/Algorithm.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Algorithm.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
 using forge::client::ReadOnlyOdinClient;
 using forge::client::ClientError;
-using utilxx::Opt;
-using utilxx::Result;
-using utilxx::Try;
+using forge::utils::Opt;
+using forge::utils::Result;
+using forge::utils::Try;
 using forge::core::getMaturity;
 using forge::core::Block;
 using forge::core::buildBlock;
@@ -81,7 +81,7 @@ auto ReadOnlyOdinClient::getBlockCount() const
 }
 
 auto ReadOnlyOdinClient::getBlockHash(std::int64_t index) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     static const auto command = "getblockhash"s;
 
@@ -96,7 +96,7 @@ auto ReadOnlyOdinClient::getBlockHash(std::int64_t index) const
 }
 
 auto ReadOnlyOdinClient::getBlock(std::string hash) const
-    -> utilxx::Result<Block, ClientError>
+    -> utils::Result<Block, ClientError>
 {
     static const auto command = "getblock"s;
 
@@ -125,14 +125,14 @@ auto ReadOnlyOdinClient::getNewestBlock() const
 }
 
 auto ReadOnlyOdinClient::resolveTxIn(TxIn vin) const
-    -> utilxx::Result<TxOut, ClientError>
+    -> utils::Result<TxOut, ClientError>
 {
     auto index = vin.getVoutIndex();
     auto txid = std::move(vin.getTxid());
 
     return getTransaction(std::move(txid))
         .flatMap([&](auto tx)
-                     -> utilxx::Result<TxOut, ClientError> {
+                     -> utils::Result<TxOut, ClientError> {
             if(static_cast<std::int64_t>(tx.getOutputs().size())
                <= vin.getVoutIndex()) {
                 auto what = fmt::format("unable to get output #{} of transaction {}",
@@ -146,7 +146,7 @@ auto ReadOnlyOdinClient::resolveTxIn(TxIn vin) const
 }
 
 auto ReadOnlyOdinClient::getTransaction(std::string txid) const
-    -> utilxx::Result<core::Transaction, ClientError>
+    -> utils::Result<core::Transaction, ClientError>
 {
     static const auto command = "getrawtransaction";
 
@@ -180,12 +180,12 @@ auto ReadOnlyOdinClient::getUnspent() const
 
 auto ReadOnlyOdinClient::getOutputValue(std::string txid,
                                         std::int64_t index) const
-    -> utilxx::Result<std::int64_t, ClientError>
+    -> utils::Result<std::int64_t, ClientError>
 {
     auto txid_copy = txid;
     return getTransaction(std::move(txid))
         .flatMap([&](auto tx)
-                     -> utilxx::Result<std::int64_t, ClientError> {
+                     -> utils::Result<std::int64_t, ClientError> {
             if(auto value_opt = tx.getValueOfOutput(index);
                value_opt) {
                 return value_opt.getValue();
@@ -201,7 +201,7 @@ auto ReadOnlyOdinClient::getOutputValue(std::string txid,
 }
 
 auto ReadOnlyOdinClient::getAddresses() const
-    -> utilxx::Result<std::vector<std::string>,
+    -> utils::Result<std::vector<std::string>,
                       ClientError>
 {
     static const auto command = "listaddressgroupings";
@@ -214,7 +214,7 @@ auto ReadOnlyOdinClient::getAddresses() const
 
 
 auto ReadOnlyOdinClient::isMainnet() const
-    -> utilxx::Result<bool,
+    -> utils::Result<bool,
                       ClientError>
 {
     static const auto command = "getinfo";
@@ -241,7 +241,7 @@ auto ReadOnlyOdinClient::isMainnet() const
 
 auto forge::client::odin::processGetTransactionResponse(Json::Value&& response,
                                                         const Json::Value& params)
-    -> utilxx::Result<Transaction, ClientError>
+    -> utils::Result<Transaction, ClientError>
 {
     if(auto tx_opt = buildTransaction(std::move(response));
        tx_opt) {
@@ -258,7 +258,7 @@ auto forge::client::odin::processGetTransactionResponse(Json::Value&& response,
 
 auto forge::client::odin::processGetBlockCountResponse(Json::Value&& response,
                                                        const Json::Value & /*params*/)
-    -> utilxx::Result<std::int64_t, ClientError>
+    -> utils::Result<std::int64_t, ClientError>
 {
     if(!response.isInt64()) {
         return ClientError{"unable to get current block count"};
@@ -269,7 +269,7 @@ auto forge::client::odin::processGetBlockCountResponse(Json::Value&& response,
 
 auto forge::client::odin::processGetBlockHashResponse(Json::Value&& response,
                                                       const Json::Value& params)
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     if(!response.isString()) {
         auto error = fmt::format("unable to get blockhash with parameters {}",
@@ -282,7 +282,7 @@ auto forge::client::odin::processGetBlockHashResponse(Json::Value&& response,
 
 auto forge::client::odin::processGetBlockResponse(Json::Value&& response,
                                                   const Json::Value& params)
-    -> utilxx::Result<Block, ClientError>
+    -> utils::Result<Block, ClientError>
 {
     if(auto block_opt = buildBlock(std::move(response));
        block_opt) {
@@ -300,7 +300,7 @@ auto forge::client::odin::processGetBlockResponse(Json::Value&& response,
 
 auto forge::client::odin::processGetUnspentResponse(Json::Value&& response,
                                                     const Json::Value& params)
-    -> utilxx::Result<std::vector<Unspent>,
+    -> utils::Result<std::vector<Unspent>,
                       ClientError>
 {
     if(!response.isArray()) {
@@ -309,7 +309,7 @@ auto forge::client::odin::processGetUnspentResponse(Json::Value&& response,
 
     std::vector<Unspent> ret_vec;
 
-    utilxx::transform_if(
+    utils::transform_if(
         std::make_move_iterator(std::begin(response)),
         std::make_move_iterator(std::end(response)),
         std::back_inserter(ret_vec),
@@ -342,7 +342,7 @@ auto forge::client::odin::processGetUnspentResponse(Json::Value&& response,
 }
 
 auto forge::client::odin::processGetAddressesResponse(Json::Value&& response)
-    -> utilxx::Result<std::vector<std::string>,
+    -> utils::Result<std::vector<std::string>,
                       ClientError>
 {
     if(!response.isArray()) {

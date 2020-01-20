@@ -6,7 +6,7 @@
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryOwnershipTransferOp.hpp>
 #include <g3log/g3log.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Overload.hpp>
 #include <variant>
 
 using forge::core::Entry;
@@ -15,7 +15,7 @@ auto forge::core::createOwnershipTransferOpMetadata(Entry&& entry)
     -> std::vector<std::byte>
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](UMEntry&& um) {
                 return createUMEntryOwnershipTransferOpMetadata(std::move(um));
             },
@@ -32,7 +32,7 @@ auto forge::core::createRenewalOpMetadata(RenewableEntry&& entry)
     -> std::vector<std::byte>
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](UMEntry&& um) {
                 return createUMEntryRenewalOpMetadata(std::move(um));
             },
@@ -46,7 +46,7 @@ auto forge::core::createDeletionOpMetadata(Entry&& entry)
     -> std::vector<std::byte>
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](UMEntry&& um) {
                 return createUMEntryDeletionOpMetadata(std::move(um));
             },

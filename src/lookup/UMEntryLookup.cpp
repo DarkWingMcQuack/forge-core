@@ -6,11 +6,11 @@
 #include <lookup/LookupManager.hpp>
 #include <lookup/UMEntryLookup.hpp>
 #include <unordered_map>
-#include <utilxx/Algorithm.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Algorithm.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
-using utilxx::Opt;
+using forge::utils::Opt;
 using forge::core::UMEntryOperation;
 using forge::core::getValue;
 using forge::core::UMEntryValue;
@@ -87,7 +87,7 @@ auto UMEntryLookup::lookupOwner(const EntryKey& key)
 }
 
 auto UMEntryLookup::lookupUMEntry(const EntryKey& key) const
-    -> utilxx::Opt<
+    -> utils::Opt<
         std::tuple<std::reference_wrapper<const core::UMEntryValue>,
                    std::reference_wrapper<const std::string>,
                    std::reference_wrapper<const std::int64_t>>>
@@ -103,7 +103,7 @@ auto UMEntryLookup::lookupUMEntry(const EntryKey& key) const
 }
 
 auto UMEntryLookup::lookupUMEntry(const EntryKey& key)
-    -> utilxx::Opt<
+    -> utils::Opt<
         std::tuple<std::reference_wrapper<core::UMEntryValue>,
                    std::reference_wrapper<std::string>,
                    std::reference_wrapper<std::int64_t>>>
@@ -119,7 +119,7 @@ auto UMEntryLookup::lookupUMEntry(const EntryKey& key)
 }
 
 auto UMEntryLookup::lookupActivationBlock(const core::EntryKey& key)
-    -> utilxx::Opt<std::reference_wrapper<std::int64_t>>
+    -> utils::Opt<std::reference_wrapper<std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -130,7 +130,7 @@ auto UMEntryLookup::lookupActivationBlock(const core::EntryKey& key)
 }
 
 auto UMEntryLookup::lookupActivationBlock(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
+    -> utils::Opt<std::reference_wrapper<const std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -280,7 +280,7 @@ auto UMEntryLookup::getUMEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::UMEntry>
 {
     std::vector<core::UMEntry> ret_vec;
-    utilxx::transform_if(
+    utils::transform_if(
         std::cbegin(lookup_map_),
         std::cend(lookup_map_),
         std::back_inserter(ret_vec),

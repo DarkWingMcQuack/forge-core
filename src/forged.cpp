@@ -23,8 +23,8 @@
 #include <syslog.h>
 #include <thread>
 #include <unistd.h>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
 

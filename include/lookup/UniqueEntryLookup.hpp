@@ -4,8 +4,8 @@
 #include <entrys/uentry/UniqueEntryOperation.hpp>
 #include <lookup/LookupError.hpp>
 #include <map>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
 namespace forge::lookup {
 
@@ -21,31 +21,31 @@ public:
         -> void;
 
     auto lookup(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
+        -> utils::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
 
     auto lookup(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<core::UniqueEntryValue>>;
+        -> utils::Opt<std::reference_wrapper<core::UniqueEntryValue>>;
 
     auto lookupOwner(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const std::string>>;
+        -> utils::Opt<std::reference_wrapper<const std::string>>;
 
     auto lookupOwner(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<std::string>>;
+        -> utils::Opt<std::reference_wrapper<std::string>>;
 
     auto lookupActivationBlock(const core::EntryKey& key)
-        -> utilxx::Opt<std::reference_wrapper<std::int64_t>>;
+        -> utils::Opt<std::reference_wrapper<std::int64_t>>;
 
     auto lookupActivationBlock(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
+        -> utils::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupUniqueEntry(const core::EntryKey& key)
-        -> utilxx::Opt<
+        -> utils::Opt<
             std::tuple<std::reference_wrapper<core::UniqueEntryValue>,
                        std::reference_wrapper<std::string>,
                        std::reference_wrapper<std::int64_t>>>;
 
     auto lookupUniqueEntry(const core::EntryKey& key) const
-        -> utilxx::Opt<
+        -> utils::Opt<
             std::tuple<std::reference_wrapper<const core::UniqueEntryValue>,
                        std::reference_wrapper<const std::string>,
                        std::reference_wrapper<const std::int64_t>>>;

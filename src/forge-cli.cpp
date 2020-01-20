@@ -19,8 +19,8 @@
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <rpc/jsonrpcstubclient.h>
 #include <thread>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 #include <wallet/ReadWriteWallet.hpp>
 
 

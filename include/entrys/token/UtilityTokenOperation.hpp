@@ -10,7 +10,7 @@
 #include <entrys/token/UtilityTokenDeletionOp.hpp>
 #include <entrys/token/UtilityTokenOwnershipTransferOp.hpp>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 #include <vector>
 
@@ -50,7 +50,7 @@ auto extractOperationFlag(const UtilityTokenOperation&)
 auto parseTransactionToUtilityTokenOp(core::Transaction tx,
                                       std::int64_t block,
                                       const client::ReadOnlyClientBase* client)
-    -> utilxx::Result<utilxx::Opt<UtilityTokenOperation>,
+    -> utils::Result<utils::Opt<UtilityTokenOperation>,
                       client::ClientError>;
 
 //parses given metadata and constructs a UtilityTokenOp from
@@ -59,8 +59,8 @@ auto parseMetadataToUtilityTokenOp(const std::vector<std::byte>& metadata,
                                    std::int64_t block,
                                    std::string&& owner,
                                    std::int64_t value,
-                                   utilxx::Opt<std::string>&& new_owner = std::nullopt)
-    -> utilxx::Opt<UtilityTokenOperation>;
+                                   utils::Opt<std::string>&& new_owner = std::nullopt)
+    -> utils::Opt<UtilityTokenOperation>;
 
 auto toMetadata(UtilityTokenOperation&& op)
     -> std::vector<std::byte>;

@@ -1,7 +1,7 @@
 #include <entrys/EntryCreationOp.hpp>
 #include <entrys/token/UtilityTokenCreationOp.hpp>
 #include <entrys/uentry/UniqueEntryCreationOp.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Overload.hpp>
 #include <variant>
 
 using forge::core::EntryCreationOp;
@@ -10,7 +10,7 @@ auto forge::core::getBurnValue(const EntryCreationOp& op)
     -> bool
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](const core::UtilityTokenCreationOp& creation) {
                 return creation.getBurnValue();
             },

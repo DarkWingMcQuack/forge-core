@@ -3,19 +3,20 @@
 #include <entrys/token/UtilityTokenOperation.hpp>
 #include <gtest/gtest.h>
 #include <lookup/UtilityTokenLookup.hpp>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 
 using namespace forge::core;
 using forge::lookup::UtilityTokenLookup;
 using namespace std::string_literals;
+using forge::utils::Opt;
 
 namespace {
 auto createOp(const std::string& op,
               std::int64_t block,
               std::string owner,
               std::int64_t burn_value,
-              utilxx::Opt<std::string> new_owner = std::nullopt)
+              Opt<std::string> new_owner = std::nullopt)
 {
     auto metadata = stringToByteVec(op).getValue();
 

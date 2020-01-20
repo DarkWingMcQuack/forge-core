@@ -2,7 +2,7 @@
 
 #include <json/value.h>
 #include <string>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <vector>
 
 namespace forge::core {
@@ -47,6 +47,6 @@ private:
 };
 
 auto buildBlock(Json::Value&& json)
-    -> utilxx::Opt<Block>;
+    -> utils::Opt<Block>;
 
 } // namespace forge::core

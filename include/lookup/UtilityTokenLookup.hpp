@@ -9,8 +9,8 @@
 #include <map>
 #include <string_view>
 #include <unordered_map>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 #include <vector>
 
 namespace forge::lookup {

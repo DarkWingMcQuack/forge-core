@@ -14,8 +14,8 @@
 #include <lookup/UtilityTokenLookup.hpp>
 #include <set>
 #include <shared_mutex>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
 namespace forge::lookup {
 
@@ -32,31 +32,31 @@ public:
     LookupManager(LookupManager&&) = default;
 
     auto updateLookup()
-        -> utilxx::Result<bool, ManagerError>;
+        -> utils::Result<bool, ManagerError>;
 
     auto rebuildLookup()
-        -> utilxx::Result<void, ManagerError>;
+        -> utils::Result<void, ManagerError>;
 
     auto lookupUMValue(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const core::UMEntryValue>>;
+        -> utils::Opt<std::reference_wrapper<const core::UMEntryValue>>;
 
     auto lookupUniqueValue(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
+        -> utils::Opt<std::reference_wrapper<const core::UniqueEntryValue>>;
 
     auto lookup(const core::EntryKey& key) const
-        -> utilxx::Opt<core::Entry>;
+        -> utils::Opt<core::Entry>;
 
     auto lookupOwner(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const std::string>>;
+        -> utils::Opt<std::reference_wrapper<const std::string>>;
 
     auto lookupActivationBlock(const core::EntryKey& key) const
-        -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>;
+        -> utils::Opt<std::reference_wrapper<const std::int64_t>>;
 
     auto lookupIsValid() const
-        -> utilxx::Result<bool, client::ClientError>;
+        -> utils::Result<bool, client::ClientError>;
 
     auto getLastValidBlockHeight() const
-        -> utilxx::Result<int64_t, client::ClientError>;
+        -> utils::Result<int64_t, client::ClientError>;
 
     auto getUtilityTokenCreditOf(const std::string& owner,
                                  const std::vector<std::byte>& token) const
@@ -93,7 +93,7 @@ public:
 
 private:
     auto processBlock(core::Block&& block)
-        -> utilxx::Result<void, ManagerError>;
+        -> utils::Result<void, ManagerError>;
 
     auto processUMEntrys(const std::vector<core::Transaction>& txs,
                          std::int64_t block_height)

@@ -12,7 +12,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <vector>
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
@@ -31,7 +31,7 @@ using forge::core::EntryKey;
 using forge::core::UMEntryValue;
 using forge::core::createUMEntryCreationOpMetadata;
 using forge::core::createUMEntryUpdateOpMetadata;
-using utilxx::Result;
+using forge::utils::Result;
 
 ReadWriteWallet::ReadWriteWallet(std::unique_ptr<lookup::LookupManager>&& lookup,
                                  std::unique_ptr<client::WriteOnlyClientBase>&& client)
@@ -64,7 +64,7 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
                                        core::UMEntryValue value,
                                        std::string address,
                                        std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //create entry
     auto entry = UMEntry{std::move(key),
@@ -90,7 +90,7 @@ auto ReadWriteWallet::createNewUMEntry(core::EntryKey key,
 auto ReadWriteWallet::updateUMEntry(core::EntryKey key,
                                     core::UMEntryValue new_value,
                                     std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //lookup the owner of the key
     auto owner_opt = lookup_->lookupOwner(key);
@@ -147,7 +147,7 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
 auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
                                             std::uint64_t supply,
                                             std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     return client_
         ->generateNewAddress() //generate new address
@@ -169,7 +169,7 @@ auto ReadWriteWallet::createNewUniqueEntry(core::EntryKey key,
                                            core::UMEntryValue value,
                                            std::string address,
                                            std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //create entry
     auto entry = UniqueEntry{std::move(key),
@@ -197,7 +197,7 @@ auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
                                             std::uint64_t supply,
                                             std::string address,
                                             std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //create entry
     auto entry = UtilityToken{std::move(id),
@@ -222,7 +222,7 @@ auto ReadWriteWallet::createNewUtilityToken(core::EntryKey id,
 
 auto ReadWriteWallet::renewEntry(core::EntryKey key,
                                  std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //create an entry and get the owner
     return createRenewableEntryOwnerPairFromKey(std::move(key))
@@ -264,7 +264,7 @@ auto ReadWriteWallet::renewEntry(core::EntryKey key,
 
 auto ReadWriteWallet::deleteEntry(core::EntryKey key,
                                   std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //create an entry and get the owner
     return createEntryOwnerPairFromKey(std::move(key))
@@ -303,7 +303,7 @@ auto ReadWriteWallet::deleteEntry(core::EntryKey key,
 auto ReadWriteWallet::transferOwnership(core::EntryKey key,
                                         std::string new_owner,
                                         std::int64_t burn_amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     return createEntryOwnerPairFromKey(std::move(key))
         .flatMap([&](auto entry_owner_pair)
@@ -343,7 +343,7 @@ auto ReadWriteWallet::transferUtilityTokens(core::EntryKey id,
                                             std::string new_owner,
                                             std::uint64_t amount,
                                             std::int64_t burn_amount)
-    -> utilxx::Result<std::vector<std::string>,
+    -> utils::Result<std::vector<std::string>,
                       WalletError>
 {
     auto send_list_res = getUtilityTokenSendVector(id,
@@ -354,7 +354,7 @@ auto ReadWriteWallet::transferUtilityTokens(core::EntryKey id,
     }
     auto send_list = std::move(send_list_res.getValue());
 
-    return utilxx::traverse(
+    return utils::traverse(
         std::move(send_list),
         [&](auto triple) {
             auto [address, used] = std::move(triple);
@@ -371,7 +371,7 @@ auto ReadWriteWallet::transferUtilityTokens(core::EntryKey id,
 auto ReadWriteWallet::deleteUtilityTokens(core::EntryKey id,
                                           std::uint64_t amount,
                                           std::int64_t burn_amount)
-    -> utilxx::Result<std::vector<std::string>,
+    -> utils::Result<std::vector<std::string>,
                       WalletError>
 {
     auto send_list_res = getUtilityTokenSendVector(id,
@@ -382,7 +382,7 @@ auto ReadWriteWallet::deleteUtilityTokens(core::EntryKey id,
     }
     auto send_list = std::move(send_list_res.getValue());
 
-    return utilxx::traverse(
+    return utils::traverse(
         std::move(send_list),
         [&](auto triple) {
             auto [address, used] = std::move(triple);
@@ -397,7 +397,7 @@ auto ReadWriteWallet::deleteUtilityTokens(core::EntryKey id,
 
 auto ReadWriteWallet::getUtilityTokenSendVector(const std::vector<std::byte>& token,
                                                 std::uint64_t desired_amount)
-    -> utilxx::Result<
+    -> utils::Result<
         std::vector<
             std::pair<std::string,
                       std::uint64_t>>,
@@ -438,7 +438,7 @@ auto ReadWriteWallet::getUtilityTokenSendVector(const std::vector<std::byte>& to
 
 auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
                                       std::int64_t amount)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     //lookup the owner of the key
     auto owner_opt = lookup_->lookupOwner(key);
@@ -460,13 +460,13 @@ auto ReadWriteWallet::payToEntryOwner(core::EntryKey key,
 }
 
 auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
-    -> utilxx::Result<std::pair<core::Entry,
+    -> utils::Result<std::pair<core::Entry,
                                 std::string>,
                       WalletError>
 {
     auto entry_opt = lookup_->lookup(key);
     auto owner_opt = lookup_->lookupOwner(key);
-    auto lookup_opt = utilxx::combine(std::move(entry_opt),
+    auto lookup_opt = utils::combine(std::move(entry_opt),
                                       std::move(owner_opt));
     if(!lookup_opt) {
         auto error =
@@ -483,12 +483,12 @@ auto ReadWriteWallet::createEntryOwnerPairFromKey(core::EntryKey key)
 }
 
 auto ReadWriteWallet::createRenewableEntryOwnerPairFromKey(core::EntryKey key)
-    -> utilxx::Result<std::pair<core::RenewableEntry,
+    -> utils::Result<std::pair<core::RenewableEntry,
                                 std::string>,
                       WalletError>
 {
     auto entry_opt = [&]()
-        -> utilxx::Opt<core::RenewableEntry> {
+        -> utils::Opt<core::RenewableEntry> {
         if(auto um_entry_opt = lookup_->lookupUMValue(key);
            um_entry_opt) {
             return core::RenewableEntry{
@@ -507,7 +507,7 @@ auto ReadWriteWallet::createRenewableEntryOwnerPairFromKey(core::EntryKey key)
     }();
 
     auto owner_opt = lookup_->lookupOwner(key);
-    auto lookup_opt = utilxx::combine(std::move(entry_opt),
+    auto lookup_opt = utils::combine(std::move(entry_opt),
                                       std::move(owner_opt));
     if(!lookup_opt) {
         auto error =
@@ -526,7 +526,7 @@ auto ReadWriteWallet::createRenewableEntryOwnerPairFromKey(core::EntryKey key)
 auto ReadWriteWallet::burn(const std::string& address,
                            std::int64_t burn_amount,
                            std::vector<std::byte> metadata)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     auto default_fee = getDefaultTxFee(getLookup().getCoin());
 
@@ -561,7 +561,7 @@ auto ReadWriteWallet::burn(const std::string& owner,
                            const std::string& new_owner,
                            std::int64_t burn_amount,
                            std::vector<std::byte> metadata)
-    -> utilxx::Result<std::string, WalletError>
+    -> utils::Result<std::string, WalletError>
 {
     auto coin = getLookup().getCoin();
 

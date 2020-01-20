@@ -2,11 +2,11 @@
 #include <array>
 #include <core/Block.hpp>
 #include <cstddef>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <vector>
 
 using forge::core::Block;
-using utilxx::Opt;
+using forge::utils::Opt;
 
 
 
@@ -59,7 +59,7 @@ auto Block::getHash()
 
 
 auto forge::core::buildBlock(Json::Value&& json)
-    -> utilxx::Opt<Block>
+    -> utils::Opt<Block>
 {
     //use try-catch such if all the json.asFoo()
     //are failing we get a nullopt

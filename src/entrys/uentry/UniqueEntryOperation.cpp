@@ -6,15 +6,15 @@
 #include <entrys/uentry/UniqueEntryOperation.hpp>
 #include <fmt/core.h>
 #include <g3log/g3log.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Overload.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Overload.hpp>
+#include <utils/Result.hpp>
 #include <vector>
 
 using forge::core::UniqueEntry;
-using utilxx::Result;
-using utilxx::overload;
-using utilxx::Opt;
+using forge::utils::Result;
+using forge::utils::overload;
+using forge::utils::Opt;
 using forge::core::Transaction;
 using forge::client::ReadOnlyClientBase;
 using forge::client::ClientError;
@@ -113,7 +113,7 @@ auto forge::core::parseMetadataToUniqueEntryOp(const std::vector<std::byte>& met
                                                std::int64_t block,
                                                std::string&& owner,
                                                std::int64_t value,
-                                               utilxx::Opt<std::string>&& new_owner_opt)
+                                               utils::Opt<std::string>&& new_owner_opt)
     -> Opt<UniqueEntryOperation>
 {
     if(metadata.size() < 10) {
@@ -122,7 +122,7 @@ auto forge::core::parseMetadataToUniqueEntryOp(const std::vector<std::byte>& met
 
     return parseUniqueEntry(metadata)
         .flatMap([&](auto entry)
-                     -> utilxx::Opt<UniqueEntryOperation> {
+                     -> utils::Opt<UniqueEntryOperation> {
             switch(metadata[OPERATION_FLAG_INDEX]) {
 
             case UNIQUE_ENTRY_CREATION_FLAG:

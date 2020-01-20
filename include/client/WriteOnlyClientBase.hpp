@@ -4,7 +4,7 @@
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <client/ClientError.hpp>
 #include <client/ReadOnlyClientBase.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Result.hpp>
 
 namespace forge::client {
 
@@ -22,7 +22,7 @@ public:
                                          std::pair<std::string,
                                                    std::int64_t>>
                                          outputs) const
-        -> utilxx::Result<std::string, ClientError>;
+        -> utils::Result<std::string, ClientError>;
 
     //generate a raw transaction with one input
     //on OP_RETURN Output and some other arbitrary outputs
@@ -34,30 +34,30 @@ public:
                                    std::pair<std::string,
                                              std::int64_t>>
                                    outputs) const
-        -> utilxx::Result<std::vector<std::byte>,
+        -> utils::Result<std::vector<std::byte>,
                           ClientError> = 0;
 
     //sign a given transaction
     virtual auto signRawTx(std::vector<std::byte> tx) const
-        -> utilxx::Result<std::vector<std::byte>,
+        -> utils::Result<std::vector<std::byte>,
                           ClientError> = 0;
 
     //broadcast a signed tx to the p2p network
     virtual auto sendRawTx(std::vector<std::byte> tx) const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
     //extracts the txid of a raw transaction
     virtual auto decodeTxidOfRawTx(const std::vector<std::byte>& tx) const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
     //generate a new address for the wallet
     virtual auto generateNewAddress() const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
     //sends the given amount of coins to the given address
     virtual auto sendToAddress(std::int64_t amount,
                                std::string address) const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
     //should check unspent outputs,
     //select an output enought value
@@ -67,7 +67,7 @@ public:
     //and send the rest of the output to this address
     virtual auto burnAmount(std::int64_t amount,
                             std::vector<std::byte> metadata) const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
     //burns the given amount of the given output txid,
     //writes the given metadata to the blockchain
@@ -79,19 +79,19 @@ public:
                             std::int64_t amount,
                             std::vector<std::byte> metadata,
                             std::string change_address) const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
     //burn a whole output and write the given metadata to the blockchain
     virtual auto burnOutput(std::string txid,
                             std::int64_t index,
                             std::vector<std::byte> metadata) const
-        -> utilxx::Result<std::string, ClientError> = 0;
+        -> utils::Result<std::string, ClientError> = 0;
 
 
     virtual auto getVOutIdxByAmountAndAddress(std::string txid,
                                               std::int64_t amount,
                                               std::string address) const
-        -> utilxx::Result<std::int64_t, ClientError> = 0;
+        -> utils::Result<std::int64_t, ClientError> = 0;
 };
 
 auto make_writing_client(const std::string& host,

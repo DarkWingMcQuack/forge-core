@@ -28,7 +28,7 @@ public:
     auto createNewUMEntry(core::EntryKey key,
                           core::UMEntryValue value,
                           std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //creates a new entry key value pair on the blockchain
     //using the given address as owner of the entry
@@ -40,7 +40,7 @@ public:
                           core::UMEntryValue value,
                           std::string address,
                           std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //updates the value of a given umentry
     //to perform this operation the wallet needs to be the owner of the
@@ -54,7 +54,7 @@ public:
     auto updateUMEntry(core::EntryKey key,
                        core::UMEntryValue new_value,
                        std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
 
     //creates a new non modifiable unique entry on the blockchain
@@ -66,7 +66,7 @@ public:
     auto createNewUniqueEntry(core::EntryKey key,
                               core::UniqueEntryValue value,
                               std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //creates a new non modifiable unique entry on the blockchain
     //using the given address as owner of the entry
@@ -78,7 +78,7 @@ public:
                               core::UniqueEntryValue value,
                               std::string address,
                               std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //creates a new utility token on the blockchain
     //using any output of the dameonwallet
@@ -89,7 +89,7 @@ public:
     auto createNewUtilityToken(core::EntryKey id,
                                std::uint64_t supply,
                                std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //creates a new utility token on the blockchain
     //using the given address as owner of the entry
@@ -101,7 +101,7 @@ public:
                                std::uint64_t supply,
                                std::string address,
                                std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //renews the lifetime of a given entry pair on the blockchain
     //the burn_value will be burned in the OP_RETURN tx
@@ -114,7 +114,7 @@ public:
     //on error a WalletError holding the reason will be returned
     auto renewEntry(core::EntryKey key,
                     std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //deletes an Entry
     //to perform this operation the wallet needs to be the owner of the
@@ -127,7 +127,7 @@ public:
     //on error a WalletError holding the reason will be returned
     auto deleteEntry(core::EntryKey key,
                      std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //transferes the ownership of a given entry to another address
     //to perform this operation the wallet needs to be the owner of the
@@ -141,14 +141,14 @@ public:
     auto transferOwnership(core::EntryKey key,
                            std::string new_owner,
                            std::int64_t burn_amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //transfers a given *amount* of utility tokens to a *new_owner*
     auto transferUtilityTokens(core::EntryKey id,
                                std::string new_owner,
                                std::uint64_t amount,
                                std::int64_t burn_amount)
-        -> utilxx::Result<std::vector<std::string>,
+        -> utils::Result<std::vector<std::string>,
                           WalletError>;
 
     //delete/burns a given *amount* of utility tokens if they
@@ -156,7 +156,7 @@ public:
     auto deleteUtilityTokens(core::EntryKey id,
                              std::uint64_t amount,
                              std::int64_t burn_amount)
-        -> utilxx::Result<std::vector<std::string>,
+        -> utils::Result<std::vector<std::string>,
                           WalletError>;
 
     //looks up the owner of a given entry
@@ -167,16 +167,16 @@ public:
     //on error a WalletError holding the reason will be returned
     auto payToEntryOwner(core::EntryKey key,
                          std::int64_t amount)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
 private:
     auto createEntryOwnerPairFromKey(core::EntryKey key)
-        -> utilxx::Result<std::pair<core::Entry,
+        -> utils::Result<std::pair<core::Entry,
                                     std::string>,
                           WalletError>;
 
     auto createRenewableEntryOwnerPairFromKey(core::EntryKey key)
-        -> utilxx::Result<std::pair<core::RenewableEntry,
+        -> utils::Result<std::pair<core::RenewableEntry,
                                     std::string>,
                           WalletError>;
     //returns a vector of pairs (string, int) where the string is the address
@@ -184,7 +184,7 @@ private:
     //be able to send desired_amount in total
     auto getUtilityTokenSendVector(const std::vector<std::byte>& token,
                                    std::uint64_t desired_amount)
-        -> utilxx::Result<
+        -> utils::Result<
             std::vector<
                 std::pair<std::string,
                           std::uint64_t>>,
@@ -195,7 +195,7 @@ private:
     auto burn(const std::string& address,
               std::int64_t burn_amount,
               std::vector<std::byte> metadata)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
     //burns a given *burn_amout* from a given *address* while
     //writeing the given *metadata* into the OP_RETURN transaction
@@ -205,7 +205,7 @@ private:
               const std::string& new_owner,
               std::int64_t burn_amount,
               std::vector<std::byte> metadata)
-        -> utilxx::Result<std::string, WalletError>;
+        -> utils::Result<std::string, WalletError>;
 
 private:
     std::unique_ptr<client::WriteOnlyClientBase> client_;

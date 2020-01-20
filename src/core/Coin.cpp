@@ -6,7 +6,7 @@ using forge::core::Coin;
 
 
 auto forge::core::fromString(std::string_view str)
-    -> utilxx::Opt<Coin>
+    -> utils::Opt<Coin>
 {
     if(str == "odin") {
         return Coin::Odin;

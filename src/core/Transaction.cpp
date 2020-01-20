@@ -8,7 +8,7 @@
 #include <json/value.h>
 #include <sstream>
 #include <utility>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <vector>
 
 
@@ -16,8 +16,8 @@ using forge::core::TxIn;
 using forge::core::TxOut;
 using forge::core::Unspent;
 using forge::core::Transaction;
-using utilxx::Opt;
-using utilxx::traverse;
+using forge::utils::Opt;
+using forge::utils::traverse;
 using forge::core::FORGE_IDENTIFIER_MASK;
 using namespace std::string_literals;
 
@@ -173,9 +173,9 @@ auto Transaction::hasExactlyOneOpReturnOutput() const
 }
 
 auto Transaction::getFirstOpReturnOutput() const
-    -> utilxx::Opt<std::reference_wrapper<const TxOut>>
+    -> utils::Opt<std::reference_wrapper<const TxOut>>
 {
-    using Ret = utilxx::Opt<std::reference_wrapper<const TxOut>>;
+    using Ret = utils::Opt<std::reference_wrapper<const TxOut>>;
 
     auto iter = std::find_if(std::cbegin(outputs_),
                              std::cend(outputs_),
@@ -189,9 +189,9 @@ auto Transaction::getFirstOpReturnOutput() const
 }
 
 auto Transaction::getFirstOpReturnOutput()
-    -> utilxx::Opt<std::reference_wrapper<TxOut>>
+    -> utils::Opt<std::reference_wrapper<TxOut>>
 {
-    using Ret = utilxx::Opt<std::reference_wrapper<TxOut>>;
+    using Ret = utils::Opt<std::reference_wrapper<TxOut>>;
 
     auto iter = std::find_if(std::begin(outputs_),
                              std::end(outputs_),
@@ -205,9 +205,9 @@ auto Transaction::getFirstOpReturnOutput()
 }
 
 auto Transaction::getFirstNonOpReturnOutput() const
-    -> utilxx::Opt<std::reference_wrapper<const TxOut>>
+    -> utils::Opt<std::reference_wrapper<const TxOut>>
 {
-    using Ret = utilxx::Opt<std::reference_wrapper<const TxOut>>;
+    using Ret = utils::Opt<std::reference_wrapper<const TxOut>>;
 
     auto iter = std::find_if(std::cbegin(outputs_),
                              std::cend(outputs_),
@@ -221,9 +221,9 @@ auto Transaction::getFirstNonOpReturnOutput() const
 }
 
 auto Transaction::getFirstNonOpReturnOutput()
-    -> utilxx::Opt<std::reference_wrapper<TxOut>>
+    -> utils::Opt<std::reference_wrapper<TxOut>>
 {
-    using Ret = utilxx::Opt<std::reference_wrapper<TxOut>>;
+    using Ret = utils::Opt<std::reference_wrapper<TxOut>>;
 
     auto iter = std::find_if(std::begin(outputs_),
                              std::end(outputs_),
@@ -249,7 +249,7 @@ auto Transaction::getNumberOfOutputs() const
 }
 
 auto Transaction::getValueOfOutput(std::int64_t index) const
-    -> utilxx::Opt<std::int64_t>
+    -> utils::Opt<std::int64_t>
 {
     if(static_cast<std::int64_t>(outputs_.size()) < index) {
         return std::nullopt;
@@ -313,7 +313,7 @@ auto Unspent::getAddress()
 }
 
 auto forge::core::buildTxIn(Json::Value&& json)
-    -> utilxx::Opt<TxIn>
+    -> utils::Opt<TxIn>
 {
     try {
         if(!json.isMember("txid")
@@ -332,7 +332,7 @@ auto forge::core::buildTxIn(Json::Value&& json)
 }
 
 auto forge::core::buildTxOut(Json::Value&& json)
-    -> utilxx::Opt<TxOut>
+    -> utils::Opt<TxOut>
 {
     try {
         //dont check for addresses, since we allow 0 addresses
@@ -367,7 +367,7 @@ auto forge::core::buildTxOut(Json::Value&& json)
 }
 
 auto forge::core::buildTransaction(Json::Value&& json)
-    -> utilxx::Opt<Transaction>
+    -> utils::Opt<Transaction>
 {
     try {
         if(!json.isMember("txid")
@@ -409,7 +409,7 @@ auto forge::core::buildTransaction(Json::Value&& json)
 }
 
 auto forge::core::extractMetadata(std::string&& hex)
-    -> utilxx::Opt<std::vector<std::byte>>
+    -> utils::Opt<std::vector<std::byte>>
 {
     if(hex.size() < 4) {
         return std::nullopt;
@@ -428,7 +428,7 @@ auto forge::core::extractMetadata(std::string&& hex)
 }
 
 auto forge::core::stringToByteVec(const std::string& str)
-    -> utilxx::Opt<std::vector<std::byte>>
+    -> utils::Opt<std::vector<std::byte>>
 {
     //check if the string has even characters
     if(str.length() % 2 != 0) {

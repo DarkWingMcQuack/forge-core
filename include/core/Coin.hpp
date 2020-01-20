@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <string_view>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 
 namespace forge::core {
 
@@ -12,7 +12,7 @@ enum class Coin {
 };
 
 auto fromString(std::string_view str)
-    -> utilxx::Opt<Coin>;
+    -> utils::Opt<Coin>;
 
 auto getMaturity(Coin c)
     -> std::int64_t;

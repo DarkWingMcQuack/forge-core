@@ -28,7 +28,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(cmake/jsoncpp.cmake)
 include(cmake/jsonrpc.cmake)
 include(cmake/fmt.cmake)
-include(cmake/utilxx.cmake)
 include(cmake/cpptoml.cmake)
 # include(cmake/cxxopts.cmake)
 include(cmake/CLI11.cmake)
@@ -90,6 +89,10 @@ target_sources(forge
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/ReadOnlySubcommands.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/ReadWriteSubcommands.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/cli/CLIGlobalVariables.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/utils/Algorithm.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/utils/Overload.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/utils/Opt.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/utils/Result.hpp
 
   PRIVATE
   src/entrys/Entry.cpp
@@ -137,7 +140,6 @@ target_sources(forge
 # make headers available
 target_include_directories(forge PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${UTILXX_INCLUDE_DIR}
   ${CPPTOML_INCLUDE_DIR}
   ${CXXOPTS_INCLUDE_DIR}
   ${CLI11_INCLUDE_DIR}
@@ -170,7 +172,6 @@ add_dependencies(forge fmt-project)
 add_dependencies(forge jsonrpc-project)
 add_dependencies(forge g3logger-project)
 add_dependencies(forge CLI11-project)
-add_dependencies(forge utilxx-project)
 add_dependencies(forge cpptoml-project)
 add_dependencies(forged forge)
 add_dependencies(forge-cli forge)

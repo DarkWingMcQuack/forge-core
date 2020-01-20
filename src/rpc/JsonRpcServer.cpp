@@ -11,8 +11,8 @@
 #include <numeric>
 #include <rpc/JsonRpcServer.hpp>
 #include <thread>
-#include <utilxx/Algorithm.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Algorithm.hpp>
+#include <utils/Overload.hpp>
 #include <variant>
 #include <wallet/ReadOnlyWallet.hpp>
 #include <wallet/ReadWriteWallet.hpp>
@@ -242,7 +242,7 @@ auto JsonRpcServer::lookupallentrysof(const std::string& owner)
     auto entrys = lookup.getUMEntrysOfOwner(owner);
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -294,7 +294,7 @@ auto JsonRpcServer::getownedumentrys()
     auto entrys = wallet.getOwnedUMEntrys();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -323,7 +323,7 @@ auto JsonRpcServer::getwatchonlyumentrys()
     auto entrys = wallet.getWatchOnlyUMEntrys();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -352,7 +352,7 @@ auto JsonRpcServer::getallwatchedumentrys()
     auto entrys = wallet.getAllWatchedUMEntrys();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -381,7 +381,7 @@ auto JsonRpcServer::getowneduniqueentrys()
     auto entrys = wallet.getOwnedUniqueEntrys();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -410,7 +410,7 @@ auto JsonRpcServer::getwatchonlyuniqueentrys()
     auto entrys = wallet.getWatchOnlyUniqueEntrys();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -439,7 +439,7 @@ auto JsonRpcServer::getallwatcheduniqueentrys()
     auto entrys = wallet.getAllWatchedUniqueEntrys();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -712,7 +712,7 @@ auto JsonRpcServer::getownedutilitytokens()
     auto entrys = wallet.getOwnedUtilityTokens();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -742,7 +742,7 @@ auto JsonRpcServer::getwatchonlyutilitytokens()
     auto entrys = wallet.getWatchOnlyUtilityTokens();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -771,7 +771,7 @@ auto JsonRpcServer::getallwatchedutilitytokens()
     auto entrys = wallet.getAllWatchedUtilityTokens();
 
     auto json_entrys =
-        utilxx::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
+        utils::transform_into_vector(std::make_move_iterator(std::begin(entrys)),
                                       std::make_move_iterator(std::end(entrys)),
                                       [](auto entry) {
                                           return entry.toJson();
@@ -800,7 +800,7 @@ auto JsonRpcServer::getutilitytokensof(const std::string& owner)
     auto tokens = lookup.getUtilityTokensOfOwner(owner);
 
     auto json_entrys =
-        utilxx::transform_into_vector(
+        utils::transform_into_vector(
             std::make_move_iterator(std::begin(tokens)),
             std::make_move_iterator(std::end(tokens)),
             [](auto entry) {
@@ -974,7 +974,7 @@ auto JsonRpcServer::getLookup()
     -> lookup::LookupManager&
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](LookupManager& lookup)
                 -> LookupManager& {
                 return lookup;
@@ -1019,7 +1019,7 @@ auto JsonRpcServer::getMode() const
     -> std::string
 {
     return std::visit(
-        utilxx::overload{
+        utils::overload{
             [](const LookupManager& /*unused*/) {
                 return "lookuponly";
             },

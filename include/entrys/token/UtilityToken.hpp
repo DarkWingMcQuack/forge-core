@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 #include <vector>
 
@@ -48,7 +48,7 @@ private:
 };
 
 auto parseUtilityToken(const std::vector<std::byte>& metadata)
-    -> utilxx::Opt<UtilityToken>;
+    -> utils::Opt<UtilityToken>;
 
 
 } // namespace forge::core

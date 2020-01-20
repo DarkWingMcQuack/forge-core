@@ -6,11 +6,11 @@
 #include <lookup/LookupManager.hpp>
 #include <lookup/UniqueEntryLookup.hpp>
 #include <unordered_map>
-#include <utilxx/Algorithm.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Algorithm.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Result.hpp>
 
-using utilxx::Opt;
+using forge::utils::Opt;
 using forge::core::UniqueEntryOperation;
 using forge::core::getValue;
 using forge::core::UniqueEntryValue;
@@ -84,7 +84,7 @@ auto UniqueEntryLookup::lookupOwner(const EntryKey& key)
 }
 
 auto UniqueEntryLookup::lookupUniqueEntry(const EntryKey& key) const
-    -> utilxx::Opt<
+    -> utils::Opt<
         std::tuple<std::reference_wrapper<const core::UniqueEntryValue>,
                    std::reference_wrapper<const std::string>,
                    std::reference_wrapper<const std::int64_t>>>
@@ -100,7 +100,7 @@ auto UniqueEntryLookup::lookupUniqueEntry(const EntryKey& key) const
 }
 
 auto UniqueEntryLookup::lookupUniqueEntry(const EntryKey& key)
-    -> utilxx::Opt<
+    -> utils::Opt<
         std::tuple<std::reference_wrapper<core::UniqueEntryValue>,
                    std::reference_wrapper<std::string>,
                    std::reference_wrapper<std::int64_t>>>
@@ -116,7 +116,7 @@ auto UniqueEntryLookup::lookupUniqueEntry(const EntryKey& key)
 }
 
 auto UniqueEntryLookup::lookupActivationBlock(const core::EntryKey& key)
-    -> utilxx::Opt<std::reference_wrapper<std::int64_t>>
+    -> utils::Opt<std::reference_wrapper<std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -127,7 +127,7 @@ auto UniqueEntryLookup::lookupActivationBlock(const core::EntryKey& key)
 }
 
 auto UniqueEntryLookup::lookupActivationBlock(const core::EntryKey& key) const
-    -> utilxx::Opt<std::reference_wrapper<const std::int64_t>>
+    -> utils::Opt<std::reference_wrapper<const std::int64_t>>
 {
     if(auto iter = lookup_map_.find(key);
        iter != lookup_map_.end()) {
@@ -277,7 +277,7 @@ auto UniqueEntryLookup::getUniqueEntrysOfOwner(const std::string& owner) const
     -> std::vector<core::UniqueEntry>
 {
     std::vector<core::UniqueEntry> ret_vec;
-    utilxx::transform_if(
+    utils::transform_if(
         std::cbegin(lookup_map_),
         std::cend(lookup_map_),
         std::back_inserter(ret_vec),

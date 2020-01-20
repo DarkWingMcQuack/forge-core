@@ -4,7 +4,7 @@
 #include <client/odin/ReadWriteOdinClient.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <g3log/g3log.hpp>
-#include <utilxx/Result.hpp>
+#include <utils/Result.hpp>
 
 using forge::client::WriteOnlyClientBase;
 using forge::client::ReadWriteOdinClient;
@@ -19,7 +19,7 @@ auto WriteOnlyClientBase::writeTxToBlockchain(std::string txid_input,
                                                   std::pair<std::string,
                                                             std::int64_t>>
                                                   outputs) const
-    -> utilxx::Result<std::string, ClientError>
+    -> utils::Result<std::string, ClientError>
 {
     return generateRawTx(std::move(txid_input),
                          index,

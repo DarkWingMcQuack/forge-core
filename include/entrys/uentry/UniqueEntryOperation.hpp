@@ -60,7 +60,7 @@ auto extractOperationFlag(const UniqueEntryOperation&)
 auto parseTransactionToUniqueEntry(core::Transaction tx,
                                    std::int64_t block,
                                    const client::ReadOnlyClientBase* client)
-    -> utilxx::Result<utilxx::Opt<UniqueEntryOperation>, client::ClientError>;
+    -> utils::Result<utils::Opt<UniqueEntryOperation>, client::ClientError>;
 
 //parses given metadata and constructs a UniqueEntryOperation from
 //the given information if possible
@@ -68,8 +68,8 @@ auto parseMetadataToUniqueEntryOp(const std::vector<std::byte>& metadata,
                                   std::int64_t block,
                                   std::string&& owner,
                                   std::int64_t value,
-                                  utilxx::Opt<std::string>&& new_owner = std::nullopt)
-    -> utilxx::Opt<UniqueEntryOperation>;
+                                  utils::Opt<std::string>&& new_owner = std::nullopt)
+    -> utils::Opt<UniqueEntryOperation>;
 
 //given a UniqueEntryOperation, this function builds a matching
 //metadata which can be used to write it on the blockchain

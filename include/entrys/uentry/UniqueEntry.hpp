@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <entrys/umentry/UMEntry.hpp>
 #include <json/value.h>
-#include <utilxx/Opt.hpp>
+#include <utils/Opt.hpp>
 #include <variant>
 #include <vector>
 
@@ -49,13 +49,13 @@ private:
 };
 
 auto parseUniqueValue(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UniqueEntryValue>;
+    -> utils::Opt<UniqueEntryValue>;
 
 auto parseUniqueKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryKey>;
+    -> utils::Opt<EntryKey>;
 
 auto parseUniqueEntry(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UniqueEntry>;
+    -> utils::Opt<UniqueEntry>;
 
 auto extractUniqueValueFlag(const UniqueEntryValue& value)
     -> std::byte;
@@ -64,7 +64,7 @@ auto uniqueEntryValueToRawData(const UniqueEntryValue& value)
     -> std::vector<std::byte>;
 
 auto jsonToUniqueEntryValue(Json::Value&& value)
-    -> utilxx::Opt<UniqueEntryValue>;
+    -> utils::Opt<UniqueEntryValue>;
 
 auto uniqueEntryValueToJson(UniqueEntryValue value)
     -> Json::Value;

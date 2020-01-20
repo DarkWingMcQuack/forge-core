@@ -3,12 +3,12 @@
 #include <entrys/umentry/UMEntry.hpp>
 #include <entrys/umentry/UMEntryOperation.hpp>
 #include <g3log/g3log.hpp>
-#include <utilxx/Opt.hpp>
-#include <utilxx/Overload.hpp>
+#include <utils/Opt.hpp>
+#include <utils/Overload.hpp>
 #include <vector>
 
 
-using utilxx::Opt;
+using forge::utils::Opt;
 using forge::core::UMEntry;
 using forge::core::IPv4Value;
 using forge::core::IPv6Value;
@@ -94,7 +94,7 @@ auto UMEntry::operator!=(const UMEntry& rhs) const
 
 
 auto forge::core::parseUMValue(const std::vector<std::byte>& data)
-    -> utilxx::Opt<UMEntryValue>
+    -> utils::Opt<UMEntryValue>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
@@ -145,7 +145,7 @@ auto forge::core::parseUMValue(const std::vector<std::byte>& data)
 }
 
 auto forge::core::parseUMKey(const std::vector<std::byte>& data)
-    -> utilxx::Opt<EntryKey>
+    -> utils::Opt<EntryKey>
 {
     if(data[ENTRY_VALUE_FLAG_INDEX] == NONE_VALUE_FLAG
        && data.size() > ENTRY_VALUE_FLAG_INDEX + 1) {
@@ -221,7 +221,7 @@ auto forge::core::extractValueFlag(const UMEntryValue& value)
     -> std::byte
 {
     static constexpr auto value_flag_visitor =
-        utilxx::overload{
+        utils::overload{
             [](const IPv4Value&) { return static_cast<std::byte>(0b00000001); },
             [](const IPv6Value&) { return static_cast<std::byte>(0b00000010); },
             [](const NoneValue&) { return static_cast<std::byte>(0b00000100); },
@@ -236,7 +236,7 @@ auto forge::core::umEntryValueToRawData(const UMEntryValue& value)
 {
 
     static constexpr auto data_extract_visitor =
-        utilxx::overload{
+        utils::overload{
             [](const IPv4Value& value) {
                 return std::vector<std::byte>(std::begin(value),
                                               std::end(value));
@@ -258,7 +258,7 @@ auto forge::core::umEntryValueToRawData(const UMEntryValue& value)
 
 //TODO: test
 auto forge::core::jsonToUMEntryValue(Json::Value&& value)
-    -> utilxx::Opt<UMEntryValue>
+    -> utils::Opt<UMEntryValue>
 {
     if(value.isNull()) {
         return UMEntryValue{NoneValue{}};
@@ -350,7 +350,7 @@ auto forge::core::umentryValueToJson(UMEntryValue value)
     -> Json::Value
 {
     static const auto visitor =
-        utilxx::overload{
+        utils::overload{
             [](IPv4Value&& value) {
                 Json::Value json;
                 json["type"] = "ipv4";
